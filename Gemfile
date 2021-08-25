@@ -25,7 +25,7 @@ gem 'jbuilder', '~> 2.7'
 # additional gems
 gem 'cancancan'
 gem 'devise'
-gem 'pry'
+gem 'pry', '~> 0.14.1'
 gem 'pry-rails'
 
 # Use Active Storage variant
