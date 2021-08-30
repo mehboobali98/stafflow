@@ -95,13 +95,13 @@ en:
     welcome: "Welcome"
     hello: "Hello"
 
-    headings:
-      change_password: "Change Password"
-      forgot_password: "Forgot Your Password"
-      edit: "Edit"
-      unhappy: "Unhappy ?"
-      cancel_my_account: "Cancel My Account"
-      signin: "Sign In"
-      signup: "Sign Up"
-      resend_lock_instructions: "Resend Lock Instructions"
+  headings:
+    change_password: "Change Password"
+    forgot_password: "Forgot Your Password"
+    edit: "Edit"
+    unhappy: "Unhappy ?"
+    cancel_my_account: "Cancel My Account"
+    signin: "Sign In"
+    signup: "Sign Up"
+    resend_lock_instructions: "Resend Lock Instructions"
 
