@@ -1,0 +1,10 @@
+<h1>Edit department</h1>
+
+<%= form_for @department, :url =>{:action => "update", :id =>@department} do |f| %>
+
+<p>Title: <%= f.text_field 'name' %></p>
+
+<%= f.submit "Save changes" %>
+<% end %>
+
+<%= link_to 'Back', {:action => 'show' } %>
