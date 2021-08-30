@@ -14,8 +14,8 @@ class ApplicationRecord < ActiveRecord::Base
       end
     end
 
-    trace = TracePoint.new(:end) do |tp|
-      if tp.self == subclass && tp.self.check_if_multitenant?
+    trace = TracePoint.new(:end) do |trace_point|
+      if trace_point.self == subclass && tp.self.check_if_multitenant?
         trace.disable
         subclass.instance_eval { default_scope { where(company_id: Company.current_company_id) } }
       end

@@ -10,6 +10,6 @@ class Company < ApplicationRecord
   end
 
   def self.find_company_by_subdomain(subdomain)
-    Company.find_by_subdomain! subdomain
+    Company.find_by_subdomain!(subdomain)
   end
 end
