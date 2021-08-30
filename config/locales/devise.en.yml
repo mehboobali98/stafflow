@@ -91,3 +91,17 @@ en:
     ignore_email_if_not_requested: "If you didn't request this, please ignore this email."
     account_locked: "Your account has been locked due to an excessive number of unsuccessful sign in attempts"
     click_link_to_unlock_account: "Click the link below to unlock your account:"
+    click_to_confirm_email: "You can click the link below to confirm your email"
+    welcome: "Welcome"
+    hello: "Hello"
+
+    headings:
+      change_password: "Change Password"
+      forgot_password: "Forgot Your Password"
+      edit: "Edit"
+      unhappy: "Unhappy ?"
+      cancel_my_account: "Cancel My Account"
+      signin: "Sign In"
+      signup: "Sign Up"
+      resend_lock_instructions: "Resend Lock Instructions"
+

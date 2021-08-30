@@ -1,4 +1,4 @@
-<p>Hello <%= @email %>!</p>
+<p><%= I18n.t 'messages.hello' @email %>!</p>
 
 <% if @resource.try(:unconfirmed_email?) %>
   <p> <%= I18n.t 'messages.email_change_uncomfirmed'  @resource.unconfirmed_email %>.</p>
