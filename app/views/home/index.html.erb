@@ -1,0 +1,9 @@
+<h1>Hello World</h1>
+
+<% if current_user.nil? %>
+	<%= link_to new_user_session_path, class: 'btn btn-primary' do %>Sign in<% end %>
+	<%= link_to '/home', class: 'btn btn-primary' do %>Home<% end %>
+
+<% else %>
+	<%= link_to destroy_user_session_path, method: :delete do %>Log out<% end %>
+<% end %>
