@@ -1,17 +1,19 @@
-<%= form_with model: event do |form| %>
-  <div>
-    <%= form.label :name , 'Event name' %><br>
-    <%= form.text_field :name, placeholder: "Enter event name"%>
+<%= form_with model: event, :html => {'class' => 'card p-3 bg-light'} do |form| %>
+  <div class="input-group mb-3">
+    <%= form.text_field :name, class: 'form-control', placeholder: "Enter event name"%>
+    <% @event.errors.full_messages_for(:name).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+  <div class="input-grouo mb-3 row">
+    <div class="col-md-6">
+      <%= form.date_field :start_date_str, class: "form-control"%>
+    </div>
+    <div class="col-md-6">
+      <%= form.time_field :start_time_str, class: "form-control"%>
+    </div>
   </div>
   <div>
-    <span>
-      <%= form.date_field :start_date_str %>
-    </span>
-    <span>
-      <%= form.time_field :start_time_str %><br>
-    </span>
-  </div>
-  <div>
-    <%= form.submit %>
+    <%= form.submit class: 'card-link btn btn-primary'%>
   </div>
 <% end %>

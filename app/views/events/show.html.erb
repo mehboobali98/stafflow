@@ -1,10 +1,22 @@
 <div class="contrainer">
-  <h1><%= @event.name %></h1>
-  <p><%= @event.start_time %></p>
-  <ul>
-    <li><%= link_to "Edit", edit_event_path(@event) %></li>
-    <li><%= link_to "Destroy", event_path(@event),
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-header">
+          Featured Event
+        </div>
+        <div class="card-body">
+          <h1 class="card-title"><%= @event.name %></h1>
+          <p class="card-text"><%= format_date(@event.start_time)%></p>
+        </div>
+        <div class="card-footer">
+          <%= link_to "Edit", edit_event_path(@event), class: 'btn btn-secondary'%>
+          <%= link_to "Destroy", event_path(@event), class: 'btn btn-danger',
                   method: :delete,
-                  data: { confirm: "Are you sure?" } %></li>
-  </ul>
+                  data: { confirm: "Are you sure?" } %>
+          <%= link_to "View all events", events_path, class: 'btn btn-outline-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
