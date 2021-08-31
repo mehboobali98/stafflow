@@ -1,0 +1,19 @@
+<h1 >Designations</h1>
+<div class="row g-0">
+  <%@designations.each do |designation| %>
+    <div class="card mb-3" style="max-width: 400px;">
+      <div class="row">
+        <div class="card-body col-md-8" >
+          <h5 class="card-title"><%=designation.designation_name%></h5>
+          <h5 class="card-title"><%=designation.department_id%></h5>
+          <%= link_to "Edit", edit_designation_path(designation)%>         
+		      <%= link_to "Destroy", designation, method: :delete, data: { confirm: "Are you sure you want to delete?" } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+
+

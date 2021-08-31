@@ -1,0 +1,14 @@
+<%= form_for @designation do |f| %>
+  <div class=" row">
+    <div class="col-md-4">
+      <div class="mb-3">
+        <%= f.label :Designation_Name, { class: "form-label"} %>
+        <%= f.text_field :designation_name, { class: "form-control", placeholder: "Designation Name" } %>
+      </div>
+      <div class="mb-3 ">
+       <%= f.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'}%>
+      </div>
+      <%= f.submit "Submit", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

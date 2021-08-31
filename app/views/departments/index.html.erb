@@ -1,12 +1,9 @@
-
-<h1>SHOW-DEPARTMENTS</h1>
-<%= link_to "SHOW-DEPARTMENTS", "/departments/show" %>
-<h1>ADD-DEPARTMENT</h1>
-<%= link_to "ADD-DEPARTMENTS", "/departments/new" %>
-
-<h1>UPDATE-DEPARTMENT</h1>
-<%= link_to "EDIT-DEPARTMENTS", "/departments/4/edit" %>
-
-<h1>REMOVE-DEPARTMENT</h1>
-
-<%= link_to "DESTROY-DEPARTMENTS", "/departments/4/destroy" %>
+<%if flash.notice.present? %>
+<%end%>
+<div class="row"> 
+    <div class="col-md-4 mx-auto mt-5 ">
+        <h3 class="p-3">Departments-Module</h3>
+        <%= link_to "SHOW-DEPARTMENTS", "/departments/show" ,class: 'btn btn-primary p-3' %>
+        <%= link_to "ADD-DEPARTMENT", "/departments/new",class: 'btn btn-primary p-3' %>
+    </div>  
+</div>

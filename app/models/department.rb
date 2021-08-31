@@ -1,6 +1,6 @@
-class Department < ApplicationRecord
-	has_one_attached :image
-	validates :name, presence: true
-    validates :image_url, presence: true
+# frozen_string_literal: true
 
+class Department < ApplicationRecord
+  has_many :designations, dependent: :destroy
+  validates :name, presence: true
 end

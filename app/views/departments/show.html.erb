@@ -1,8 +1,21 @@
 <h1>Departments</h1>
-
-<ul>
-  <% @department.each do |department| %>
-    <li>
-      <%= department.name%>
+<div class="row g-0">
+  <%@departments.each do |department| %>
+    <div class="card mb-3" style="max-width: 400px;">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="/test.png" class="img-fluid rounded-start" alt="Department-Image">
+        </div>
+        <div class="card-body col-md-8" >
+          <h5 class="card-title"><%=department.name%></h5>
+          <%= link_to "Edit", edit_department_path(department)%>
+          <%= link_to "Destroy", department, method: :delete, data: { confirm: "Are you sure you want to delete?" } %>
+        </div>
+      </div>
+    </div>
   <% end %>
-</ul>
+</div>
+
+
+
+
