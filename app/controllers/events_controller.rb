@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
-  before_action :set_product_for_edit, only: %i[edit]
-  before_action :set_prodct, only: %i[show update destroy]
+  before_action :set_event_for_edit, only: %i[edit]
+  before_action :set_event, only: %i[show update destroy]
 
   def display_calendar
     @events = Event.all
@@ -30,7 +30,6 @@ class EventsController < ApplicationController
   def edit; end
 
   def update
-    @event = Event.find(params[:id])
     if @event.update(event_params)
       redirect_to @event
     else
@@ -39,7 +38,6 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @event = Event.find(params[:id])
     @event.destroy
 
     redirect_to root_path
@@ -51,15 +49,13 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
   end
 
-  def set_event_for_update
+  def set_event_for_edit
     @event = Event.find(params[:id])
-    @event.start_date_str = Event.convert_to_date(@event.start_time)
+    @event.start_date_str = @event.start_time.to_date
     @event.start_time_str = Event.convert_to_time(@event.start_time)
-    @event.end_date_str = Event.convert_to_date(@event.end_time)
-    @event.end_time_str = Event.convert_to_time(@event.end_time)
   end
 
   def event_params
-    params.require(:event).permit(:name, :start_date_str, :start_time_str, :end_date_str, :end_time_str)
+    params.require(:event).permit(:name, :start_date_str, :start_time_str)
   end
 end

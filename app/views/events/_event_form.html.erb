@@ -1,29 +1,17 @@
-<div class="container">
-  <%= form_with model: event do |form| %>
-    <div>
-      <%= form.label :name , 'Event name' %><br>
-      <%= form.text_field :name %>
-    </div>
-    <div>
-      <span>
-        <%= form.label :start_date_str, 'Event start date' %><br>
-        <%= form.date_field :start_date_str %>
-      </span>
-      <span>
-        <%= form.time_field :start_time_str ,value: "Mehboob 5-2"%><br>
-      </span>
-    </div>
-    <div>
-      <span>
-        <%= form.label :end_date_str, 'Event end date and time' %><br>
-        <%= form.date_field :end_date_str %>
-      </span>
-      <span>
-        <%= form.time_field :end_time_str %><br>
-      </span>
-    </div>
-    <div>
-      <%= form.submit %>
-    </div>
-  <% end %>
-</div>
+<%= form_with model: event do |form| %>
+  <div>
+    <%= form.label :name , 'Event name' %><br>
+    <%= form.text_field :name, placeholder: "Enter event name"%>
+  </div>
+  <div>
+    <span>
+      <%= form.date_field :start_date_str %>
+    </span>
+    <span>
+      <%= form.time_field :start_time_str %><br>
+    </span>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
