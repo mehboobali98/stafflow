@@ -36,6 +36,15 @@
     <%= f.date_field :date_of_birth %>
   </div>
 
+    <%= f.fields_for :company, Company.new do |form|%>
+      <div class="field">
+        <%= form.label :Company %><br />
+        <%= form.text_field :name %>
+      </div>
+
+      
+    <%end%>
+
   <div class="actions">
     <%= f.submit I18n.t 'forms.buttons.signup' %>
   </div>
