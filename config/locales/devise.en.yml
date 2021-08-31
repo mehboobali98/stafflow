@@ -72,6 +72,8 @@ en:
       update: "Update"
       cancel_account: "Cancel My Account"
       back: "Back"
+      edit: "Edit"
+      logout: "Logout"
       change_password: "Change my password"
       send_pswd_reset_instructions: "Send me password reset instructions"
       unlock_account: "Unlock my account"
@@ -82,6 +84,9 @@ en:
       confirm_password: "Confirm Password"
       current_password: "Current Password"
       remember_me: "Remember Me"
+      fname: "First Name"
+      lname: "Last Name"
+      dob: "Date Of Birth"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to"

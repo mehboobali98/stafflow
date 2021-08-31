@@ -18,7 +18,22 @@
 
   <div class="field">
     <%= f.label I18n.t 'forms.labels.confirm_password' %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div class="field">
+    <%= f.label I18n.t 'forms.labels.fname' %><br />
+    <%= f.text_field :first_name %>
+  </div>
+
+   <div class="field">
+    <%= f.label I18n.t 'forms.labels.lname' %><br />
+    <%= f.text_field :last_name %>
+  </div>
+
+   <div class="field">
+    <%= f.label I18n.t 'forms.labels.dob' %><br />
+    <%= f.date_field :date_of_birth %>
   </div>
 
   <div class="actions">

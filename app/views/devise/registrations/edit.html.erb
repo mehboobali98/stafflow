@@ -1,4 +1,4 @@
-<h2><%= I18n.t 'headings.edit' resource_name.to_s.humanize %></h2>
+<h2><%= I18n.t ('headings.edit')%> <%=resource_name.to_s.humanize %></h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -27,8 +27,23 @@
   </div>
 
   <div class="field">
-    <%= f.label I18n.t 'forms.labels.current_password' %> <i>(we need your current password to confirm your changes)</i><br />
+    <%= f.label I18n.t 'forms.labels.current_password' %> <br />
     <%= f.password_field :current_password, autocomplete: "current-password" %>
+  </div>
+
+  <div class="field">
+    <%= f.label I18n.t 'forms.labels.current_password' %> <br />
+    <%= f.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label I18n.t 'forms.labels.current_password' %> <br />
+    <%= f.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label I18n.t 'forms.labels.current_password' %> <br />
+    <%= f.date_field :date_of_birth %>
   </div>
 
   <div class="actions">
@@ -38,6 +53,6 @@
 
 <h3> <%= I18n.t 'headings.cancel_my_account' %> </h3>
 
-<p> <%= I18n.t 'headings.unhappy' button_to I18n.t 'forms.buttons.cancel_account', registration_path(resource_name), data: { confirm: I18n.t 'devise.confirmations.confirm_action' }, method: :delete %></p>
 
-<%= link_to I18n.t 'forms.buttons.back', :back %>
+
+<%= link_to I18n.t('forms.buttons.back'), :back %>
