@@ -1,0 +1,29 @@
+<%= form_with model: event do |form| %>
+  <div>
+    <%= form.label :name , 'Event name' %><br>
+    <%= form.text_field :name %>
+  </div>
+  <div>
+    <span>
+      <%= form.label :start_date, 'Event start date' %><br>
+      <% binding.pry %>
+      <%= form.date_field :start_date %>
+      <% binding.pry %>
+    </span>
+    <span>
+      <%= form.time_field :start_time %><br>
+    </span>
+  </div>
+  <div>
+    <span>
+      <%= form.label :end_date, 'Event end date and time' %><br>
+      <%= form.date_field :end_date %>
+    </span>
+    <span>
+      <%= form.time_field :end_time %><br>
+    </span>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
