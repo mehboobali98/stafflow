@@ -28,6 +28,9 @@ gem 'devise'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 
+# calendar gem
+gem "simple_calendar", "~> 2.4"
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

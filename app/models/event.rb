@@ -1,30 +1,22 @@
 require 'date'
 
 class Event < ApplicationRecord
-  before_save :set_start_date_time, :set_end_date_time
-  attr_writer :start_date, :start_time, :end_date, :end_time
+  before_save :set_event_start_date_time, :set_event_end_date_time
+  attr_accessor :start_date_str, :start_time_str, :end_date_str, :end_time_str
 
-  def start_date
-    start_date_time&.strftime('%m/%d/%Y')
+  def self.convert_to_date(date)
+    Date.parse(date.strftime('%m/%d/%Y'))
   end
 
-  def start_time
-    start_date_time&.strftime('%H:%M')
+  def self.convert_to_time(time)
+    Time.parse(time.strftime('%H:%M'))
   end
 
-  def end_date
-    end_date_time&.strftime('%m/%d/%Y')
+  def set_event_start_date_time
+    self.start_time = DateTime.parse("#{@start_date_str} #{@start_time_str}") if @start_date_str && @start_time_str
   end
 
-  def end_time
-    end_date_time&.strftime('%H:%M') unless end_date_time.is_a?(String)
-  end
-
-  def set_start_date_time
-    self.start_date_time = DateTime.parse("#{@start_date} #{@start_time}") if @start_date && @start_time
-  end
-
-  def set_end_date_time
-    self.end_date_time = DateTime.parse("#{@end_date} #{@end_time}") if @end_date && @end_time
+  def set_event_end_date_time
+    self.end_time = DateTime.parse("#{@end_date_str} #{@end_time_str}") if @end_date_str && @end_time_str
   end
 end

@@ -1,4 +1,11 @@
 class EventsController < ApplicationController
+  before_action :set_product_for_edit, only: %i[edit]
+  before_action :set_prodct, only: %i[show update destroy]
+
+  def display_calendar
+    @events = Event.all
+  end
+
   def index
     @events = Event.all
   end
@@ -12,7 +19,6 @@ class EventsController < ApplicationController
   end
 
   def create
-    binding.pry
     @event = Event.new(event_params)
     if @event.save
       redirect_to @event
@@ -21,9 +27,7 @@ class EventsController < ApplicationController
     end
   end
 
-  def edit
-    @event = Event.find(params[:id])
-  end
+  def edit; end
 
   def update
     @event = Event.find(params[:id])
@@ -43,7 +47,19 @@ class EventsController < ApplicationController
 
   private
 
+  def set_event
+    @event = Event.find(params[:id])
+  end
+
+  def set_event_for_update
+    @event = Event.find(params[:id])
+    @event.start_date_str = Event.convert_to_date(@event.start_time)
+    @event.start_time_str = Event.convert_to_time(@event.start_time)
+    @event.end_date_str = Event.convert_to_date(@event.end_time)
+    @event.end_time_str = Event.convert_to_time(@event.end_time)
+  end
+
   def event_params
-    params.require(:event).permit(:name, :start_date, :start_time, :end_date, :end_time)
+    params.require(:event).permit(:name, :start_date_str, :start_time_str, :end_date_str, :end_time_str)
   end
 end
