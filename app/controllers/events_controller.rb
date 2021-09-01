@@ -19,8 +19,8 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     if @event.save
-      flash[:notice] = 'Event created successfully.'
-      redirect_to root_path
+      flash[:notice] = 'Event created successfully'
+      redirect_to action: 'index'
     else
       flash[:alert] = 'Unable to create event'
       render :new
@@ -32,7 +32,7 @@ class EventsController < ApplicationController
   def update
     if @event.update(event_params)
       flash[:notice] = 'Event updated successfully'
-      redirect_to root_path
+      redirect_to action: 'index'
     else
       flash[:alert] = 'Unable to update event'
       render :edit
@@ -42,7 +42,7 @@ class EventsController < ApplicationController
   def destroy
     @event.destroy
     flash[:notice] = 'Event deleted successfully'
-    redirect_to root_path
+    redirect_to action: 'index'
   end
 
   private
