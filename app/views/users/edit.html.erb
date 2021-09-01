@@ -7,19 +7,6 @@
   </div>
 
   <div class="field">
-    <%= form.label I18n.t 'forms.labels.password' %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= form.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= form.label I18n.t 'forms.labels.confirm_password' %><br />
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div class="field">
     <%= form.label I18n.t 'forms.labels.fname' %><br />
     <%= form.text_field :first_name %>
   </div>

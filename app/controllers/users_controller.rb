@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     @user = User.new(permit_user_params)
     @user.department_id = 1
     @user.company_id = 18
-    if @user.save!
+    if @user.save
       redirect_to users_url, notice: 'Successfully Added Employee'
     else
       render 'new'
@@ -27,9 +27,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    redirect_to users_url, notice: 'The employee was deleted'
+  end
+
+  def show
+    @user = User.find(params[:id])
+  end
+
   def index
     @users = User.all.to_a
   end
+
 
   private
 
