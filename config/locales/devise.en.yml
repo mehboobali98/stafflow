@@ -77,7 +77,7 @@ en:
       change_password: "Change my password"
       send_pswd_reset_instructions: "Send me password reset instructions"
       unlock_account: "Unlock my account"
-      resend_confirmation_instructions: "Resend confirmation instructions"
+      resend_confirmation_instructions: "Resend"
     labels:
       email: "Email"
       password: "Password"

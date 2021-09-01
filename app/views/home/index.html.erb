@@ -1,8 +1,8 @@
 <h1>Hello World</h1>
 
 <% if current_user.nil? %>
-	<%= link_to I18n.t('forms.buttons.signin'), new_user_session_path, class: 'btn btn-primary' %>
-	<%= link_to '/home', class: 'btn btn-primary' do %>Home<% end %>
+	<%= link_to I18n.t('forms.buttons.signin'), new_user_session_path, class: 'btn btn-dark' %>
+	<%= link_to '/home', class: 'btn btn-dark' do %>Home<% end %>
 
 <% else %>
 	<%= link_to I18n.t('forms.buttons.logout'),  destroy_user_session_path, method: :delete%>

@@ -1,59 +1,65 @@
 <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
 
-<h2> <%= I18n.t 'headings.signup'%> </h2>
 
+<div class='card border-dark pb-3 text-center w-25'>
+<h2 class='card-header'> <%= I18n.t 'headings.signup'%> </h2>
+
+
+<div class='card-body px-5'>
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
+  <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.email' %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control pl-5 pr-5' %>
   </div>
 
-  <div class="field">
+  <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.password' %>
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
+    <%= f.password_field :password, autocomplete: "new-password", class: 'form-control pl-5 pr-5' %>
   </div>
 
-  <div class="field">
+  <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.confirm_password' %><br />
-    <%= f.password_field :password_confirmation %>
+    <%= f.password_field :password_confirmation, class: 'form-control pl-5 pr-5' %>
   </div>
 
-  <div class="field">
+  <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.fname' %><br />
-    <%= f.text_field :first_name %>
+    <%= f.text_field :first_name, class: 'form-control pl-5 pr-5' %>
   </div>
 
-   <div class="field">
+   <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.lname' %><br />
-    <%= f.text_field :last_name %>
+    <%= f.text_field :last_name, class: 'form-control pl-5 pr-5' %>
   </div>
 
-   <div class="field">
+   <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.dob' %><br />
-    <%= f.date_field :date_of_birth %>
+    <%= f.date_field :date_of_birth , class: 'form-control pl-5 pr-5' %>
   </div>
 
     <%= f.fields_for :company, Company.new do |form|%>
-      <div class="field">
+      <div class="field mb-2">
         <%= form.label :Company %><br />
-        <%= form.text_field :name, id: "company_name" %>
+        <%= form.text_field :name, id: "company_name", class: 'form-control pl-5 pr-5' %>
       </div>
-      <div class="field">
+      <div class="field mb-2">
         <%= form.label :Subdomain %><br />
-        <%= form.text_field :subdomain, readonly: true , id: "subdomain" %>
+        <%= form.text_field :subdomain, readonly: true , id: "subdomain", class: 'form-control pl-5 pr-5' %>
       </div>
 
       
     <%end%>
 
   <div class="actions">
-    <%= f.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
+    <%= f.submit I18n.t ('forms.buttons.signup'), class: 'btn btn-primary' %>
   </div>
 <% end %>
-
 <%= render "devise/shared/links" %>
+</div>
+</div>
+

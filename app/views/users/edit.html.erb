@@ -1,36 +1,40 @@
-<h1>Edit Employee</h1>
+<div class="card border-dark pb-3 text-center w-25">
+  <h1 class="card-header">Edit Employee</h1>
+  <div class="card-body px-5">
 
-<%= form_with model: @user do |form| %>
-  <div class="field">
-    <%= form.label I18n.t 'forms.labels.email' %><br />
-    <%= form.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= form_with model: @user do |form| %>
+      <div class="field">
+        <%= form.label I18n.t 'forms.labels.email' %><br />
+        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control pl-5 pr-5' %>
+      </div>
+
+      <div class="field">
+        <%= form.label I18n.t 'forms.labels.fname' %><br />
+        <%= form.text_field :first_name, class: 'form-control pl-5 pr-5' %>
+      </div>
+
+      <div class="field">
+        <%= form.label I18n.t 'forms.labels.lname' %><br />
+        <%= form.text_field :last_name, class: 'form-control pl-5 pr-5' %>
+      </div>
+
+      <div class="field">
+        <%= form.label I18n.t 'forms.labels.dob' %><br />
+        <%= form.date_field :date_of_birth, class: 'form-control pl-5 pr-5' %>
+      </div>
+
+      <div class="field">
+        <%= form.label :Role %><br />
+        <%= form.select :role_id, options_for_select(User::ROLES.invert) %>
+      </div>
+
+
+      <div class="actions">
+        <%= form.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
+      </div>
+
+    <% end %>
   </div>
-
-  <div class="field">
-    <%= form.label I18n.t 'forms.labels.fname' %><br />
-    <%= form.text_field :first_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label I18n.t 'forms.labels.lname' %><br />
-    <%= form.text_field :last_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label I18n.t 'forms.labels.dob' %><br />
-    <%= form.date_field :date_of_birth %>
-  </div>
-
-  <div class="field">
-    <%= form.label :Role %><br />
-    <%= form.select :role_id, options_for_select(User::ROLES.invert) %>
-  </div>
-
-
-  <div class="actions">
-    <%= form.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
-  </div>
-
-<% end %>
+</div>
 
 <%= link_to 'Back', users_path %>

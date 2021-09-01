@@ -11,9 +11,15 @@
 
   <body>
   <% if notice %>
-    <%= notice %>
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+      <span><%= notice %></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% elsif alert %>
-    <%= alert %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <span><%= alert %></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
     <%= yield %>
   </body>
