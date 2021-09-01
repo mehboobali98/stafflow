@@ -18,7 +18,7 @@ class DesignationsController < ApplicationController
         redirect_to action: 'index'
       else
         flash[:alert] = 'Designation not created'
-        render :new
+        render :index
       end
     end
   end
@@ -40,7 +40,7 @@ class DesignationsController < ApplicationController
         redirect_to action: 'index'
       else
         flash[:alert] = 'Designation not updated'
-        render :new
+        render :index
       end
 
     end

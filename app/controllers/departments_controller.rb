@@ -12,14 +12,16 @@ class DepartmentsController < ApplicationController
   def create
     if Department.exists?(department_params)
       flash[:notice] = 'Department Already Exist'
-      redirect_to action: 'index' else
-                                    @department = Department.new(department_params)
-                                    if @department.save
-                                      flash[:notice] = 'Department Created Successfully'
-                                      redirect_to action: 'index' else
-                                                                    flash[:alert] = 'Department not created'
-                                                                    render :new
-                                    end
+      redirect_to action: 'index'
+    else
+      @department = Department.new(department_params)
+      if @department.save
+        flash[:notice] = 'Department Created Successfully'
+        redirect_to action: 'index'
+      else
+        flash[:alert] = 'Department not created'
+        render :index
+      end
     end
   end
 
@@ -35,9 +37,10 @@ class DepartmentsController < ApplicationController
       @department = Department.find(params[:id])
       if @department.update(department_params)
         flash[:notice] = 'Department Updated Successfully'
-        redirect_to action: 'index' else
-                                      flash[:alert] = 'Department not updated'
-                                      render :new
+        redirect_to action: 'index'
+      else
+        flash[:alert] = 'Department not updated'
+        render :index
       end
     end
   end
