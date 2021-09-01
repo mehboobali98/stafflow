@@ -1,8 +1,15 @@
 <%= form_with model: event, :html => {'class' => 'card p-3 bg-light'} do |form| %>
   <div class="input-group mb-3">
     <%= form.text_field :name, required: true, class: 'form-control', placeholder: "Enter event name"%>
+    <% event.errors.full_messages_for(:name).each do |message| %>
+      <% binding.pry %>
+      <div><%= message %></div>
+    <% end %>
   </div>
   <div class="input-grouo mb-3 row">
+    <% event.errors.full_messages_for(:start_time).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
     <div class="col-md-6">
       <%= form.date_field :start_date_str, required: true, class: "form-control"%>
     </div>

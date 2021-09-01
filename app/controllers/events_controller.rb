@@ -18,7 +18,6 @@ class EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
-    @event.set_eve
     if @event.save
       flash[:notice] = 'Event created successfully.'
       redirect_to root_path
@@ -33,8 +32,9 @@ class EventsController < ApplicationController
   def update
     if @event.update(event_params)
       flash[:notice] = 'Event updated successfully'
-      redirect_to @event
+      redirect_to root_path
     else
+      flash[:alert] = 'Unable to update event'
       render :edit
     end
   end
@@ -53,8 +53,8 @@ class EventsController < ApplicationController
 
   def set_event_for_edit
     @event = Event.find(params[:id])
-    @event.set_start_date_str(@event.start_time)
-    @event.set_start_time_str(@event.start_time)
+    @event.set_start_date_str
+    @event.set_start_time_str
   end
 
   def event_params
