@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
+  resources :benefits, :user_benefits
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root to: 'home#index'
   get '/home', to: 'home#home'
- 
+  get '/payrolls', to: 'payrolls#index'
 end

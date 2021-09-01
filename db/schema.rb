@@ -10,7 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_103704) do
+ActiveRecord::Schema.define(version: 2021_08_31_092025) do
+
+  create_table "applied_benefits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "amount"
+    t.bigint "user_benefit_id", null: false
+    t.bigint "payroll_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["payroll_id"], name: "index_applied_benefits_on_payroll_id"
+    t.index ["user_benefit_id"], name: "index_applied_benefits_on_user_benefit_id"
+  end
+
+  create_table "benefits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "benefit_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "payrolls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "base_salary"
+    t.integer "tax"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_benefits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "amount"
+    t.boolean "status"
+    t.bigint "benefit_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["benefit_id"], name: "index_user_benefits_on_benefit_id"
+  end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -29,4 +62,7 @@ ActiveRecord::Schema.define(version: 2021_08_25_103704) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "applied_benefits", "payrolls"
+  add_foreign_key "applied_benefits", "user_benefits"
+  add_foreign_key "user_benefits", "benefits"
 end

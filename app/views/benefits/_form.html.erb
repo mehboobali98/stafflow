@@ -1,0 +1,15 @@
+<%= form_for @benefit do |benefit_object| %>
+  <div class = "row">
+    <div class = "col-md-4">
+      <div class = "mb-3">
+        <%= benefit_object.label :Benefit_Name, { class: "form-label"} %>
+        <%= benefit_object.text_field :name, { class: "form-control", placeholder: "Benefit Name" } %>
+      </div>
+      <div class="mb-3 ">
+        <%= benefit_object.label :Benefit_Type, { class: "form-label"} %>
+        <%= benefit_object.text_field :benefit_type, { class: "form-control", placeholder: "Benefit Type" } %>
+      </div>
+      <%= benefit_object.submit "Submit", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
