@@ -6,5 +6,5 @@ class User < ApplicationRecord
 
   belongs_to :company
   accepts_nested_attributes_for :company
-  validates :first_name, :last_name, :date_of_birth, :department_id, presence: true
+  validates :first_name, :last_name, :date_of_birth, presence: true
 end

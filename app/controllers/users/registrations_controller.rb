@@ -11,26 +11,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    binding.pry
-    # company_name = params[:user][:company_attributes][:name]
-    # company_subdomain = company_name.delete(' ')
-    # Company.transaction do
-    #   company = Company.create!(name: company_name, subdomain: company_subdomain)
-    # end
-    # company = Company.new(name: company_name, subdomain: company_subdomain)
-
     params[:user][:department_id] = 1
-    params[:user][:company_id] = 1
-    # params[:user][:first_name] = 'Abdul'
-    # params[:user][:last_name] = 'Basit'
-    # params[:user][:date_of_birth] =name "26/08/2021".to_date
-
-    # # params[:user][:date_of_birth] = Date.new
-
-    # # @user = User.new(configure_sign_up_params)
+    company = Company.new(name: params[:user][:company_attributes][:name], subdomain: params[:user][:company_attributes][:subdomain] )
+    @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
+    @user.department_id = 1
     binding.pry
-
-    super
+    company.save!
+    redirect_to new_user_session_url, notice: 'Your account has been created'
+    # super
   end
 
   # GET /resource/edit
@@ -57,13 +45,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # protected
+  protected
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth, {company_attributes: :name}]
+    permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth, {company_attributes: [:name, :subdomain]}]
     devise_parameter_sanitizer.permit(:sign_up, keys: permitted_attributes)
   end
+
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params

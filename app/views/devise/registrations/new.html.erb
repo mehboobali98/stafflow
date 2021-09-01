@@ -1,3 +1,5 @@
+<%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
+
 <h2> <%= I18n.t 'headings.signup'%> </h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
@@ -39,14 +41,18 @@
     <%= f.fields_for :company, Company.new do |form|%>
       <div class="field">
         <%= form.label :Company %><br />
-        <%= form.text_field :name %>
+        <%= form.text_field :name, id: "company_name" %>
+      </div>
+      <div class="field">
+        <%= form.label :Subdomain %><br />
+        <%= form.text_field :subdomain, readonly: true , id: "subdomain" %>
       </div>
 
       
     <%end%>
 
   <div class="actions">
-    <%= f.submit I18n.t 'forms.buttons.signup' %>
+    <%= f.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
   </div>
 <% end %>
 
