@@ -10,12 +10,12 @@ class DesignationsController < ApplicationController
   def create
     if Designation.exists?(designation_params)
       flash[:notice] = 'Designation Already Exist'
-      render :index
+      redirect_to action: 'index'
     else
       @designation = Designation.new(designation_params)
       if @designation.save
         flash[:notice] = 'Designation Created Successfully'
-        render :index
+        redirect_to action: 'index'
       else
         flash[:alert] = 'Designation not created'
         render :new
@@ -31,12 +31,13 @@ class DesignationsController < ApplicationController
   def update
     if Designation.exists?(designation_params)
       flash[:notice] = 'Designation Already Exist'
-      render :index
+      redirect_to action: 'index'
+
     else
       @designation = Designation.find(params[:id])
       if @designation.update(designation_params)
         flash[:notice] = 'Designation Updated successfully'
-        render :index
+        redirect_to action: 'index'
       else
         flash[:alert] = 'Designation not updated'
         render :new
@@ -47,8 +48,9 @@ class DesignationsController < ApplicationController
 
   def destroy
     @designation = Designation.find(params[:id])
+    @designation.destroy
     flash[:notice] = 'Designation deleted successfully'
-    render :show
+    redirect_to action: 'index'
   end
 
   def new
