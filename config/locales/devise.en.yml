@@ -99,6 +99,7 @@ en:
     click_to_confirm_email: "You can click the link below to confirm your email"
     welcome: "Welcome"
     hello: "Hello"
+    signed_up: "You have been successfully signed up. Please view check your email for instruction"
 
   headings:
     change_password: "Change Password"
