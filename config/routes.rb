@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   get 'displaycalendar', to: 'events#display_calendar'
   resources :events
   root to: 'home#index'
-  get '/home', to: 'home#home' 
+  get '/home', to: 'home#home'
 end
