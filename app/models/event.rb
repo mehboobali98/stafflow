@@ -12,11 +12,11 @@ class Event < ApplicationRecord
   validate :event_date_cannot_be_in_past, :event_date_cannot_be_in_next_century
 
   def event_date_cannot_be_in_past
-    errors.add(:event_start_time, 'cannot be in the past') if start_time < DateTime.now
+    errors.add(:event_start_date, 'cannot be in the past') if start_time < DateTime.now
   end
 
   def event_date_cannot_be_in_next_century
-    errors.add(:event_start_time, 'cannot be in the next century') if start_time.year.to_s.length > 4
+    errors.add(:event_start_date, 'cannot be in the next century') if start_time.year.to_s.length > 4
   end
 
   def set_start_date
