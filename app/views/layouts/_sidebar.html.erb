@@ -1,0 +1,35 @@
+<div class="wrapper">
+    <nav id="sidebar">
+        <div class="sidebar-header row">
+            <div class="col-sm-9">
+                <h3>Company Name</h3>
+                <strong>CN</strong>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" id="sidebarCollapse">
+                    <i class="fas fa-navicon"></i>
+                </button>
+            </div>
+        </div>
+        <!--%if current_user=="admin"%-->
+        <ul class="list-unstyled components">
+            <li class="active">
+                <a href="#"><i class="fas fa-home"></i><span>Departments</span></a>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-briefcase"></i><span>Employees</span></a>
+                <a href="#"><i class="fas fa-copy"></i><span>Payroll</span></a>
+                <a href="#"><i class="fas fa-image"></i><span>Events</span></a>
+                <a href="#"><i class="fas fa-image"></i><span>Benefits</span></a>
+                <a href="#"><i class="fas fa-image"></i><span>Leaves</span></a>
+            </li>
+        </ul>            
+    </nav>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
