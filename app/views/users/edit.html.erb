@@ -2,39 +2,39 @@
   <h1 class="card-header">Edit Employee</h1>
   <div class="card-body px-5">
 
-    <%= form_with model: @user do |form| %>
-      <div class="field">
+    <%= form_with model: @user, url: member_path do |form| %>
+      <div class="field mb-3">
         <%= form.label I18n.t 'forms.labels.email' %><br />
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control pl-5 pr-5' %>
+        <%= form.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
-      <div class="field">
+      <div class="field mb-3">
         <%= form.label I18n.t 'forms.labels.fname' %><br />
-        <%= form.text_field :first_name, class: 'form-control pl-5 pr-5' %>
+        <%= form.text_field :first_name, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
-      <div class="field">
+      <div class="field mb-3">
         <%= form.label I18n.t 'forms.labels.lname' %><br />
-        <%= form.text_field :last_name, class: 'form-control pl-5 pr-5' %>
+        <%= form.text_field :last_name, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
-      <div class="field">
+      <div class="field mb-3">
         <%= form.label I18n.t 'forms.labels.dob' %><br />
-        <%= form.date_field :date_of_birth, class: 'form-control pl-5 pr-5' %>
+        <%= form.date_field :date_of_birth, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
-      <div class="field">
+      <div class="field mb-3">
         <%= form.label :Role %><br />
-        <%= form.select :role_id, options_for_select(User::ROLES.invert) %>
+        <%= form.select :role_id, options_for_select(User::ROLES.invert), {}, class: 'form-control' %>
       </div>
 
 
       <div class="actions">
-        <%= form.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
+        <%= form.submit  class: "btn btn-dark" %>
       </div>
 
     <% end %>
   </div>
 </div>
 
-<%= link_to 'Back', users_path %>
+<%= link_to 'Back', members_path %>

@@ -5,4 +5,7 @@ jQuery(document).ready(function(){
   $('#company_name').on("change keyup paste click", function() {
     $('#subdomain').val($(this).val().replace(/[^A-Z0-9]/ig, "").toLowerCase());
   });
+
+
 })
+

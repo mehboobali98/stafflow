@@ -1,9 +1,12 @@
+<%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
+
+
 <div class="card border-dark pb-3 text-center w-25">
   <h1 class= "card-header">Create A New Employee</h1>
   <div class="card-body px-5">
 
 
-    <%= form_with model: @user, local: true do |form| %>
+    <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form' do |form| %>
 
       <ul>
       <% @user.errors.full_messages.each do |message| %>
@@ -14,7 +17,7 @@
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.email' %><br />
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control pl-5 pr-5'  %>
+        <%= form.email_field :email, class: 'form-control pl-5 pr-5',required: true   %>
       </div>
       
       <div class="field mb-2">
@@ -22,41 +25,46 @@
         <% if @minimum_password_length %>
         <em>(<%= @minimum_password_length %> characters minimum)</em>
         <% end %><br />
-        <%= form.password_field :password, autocomplete: "new-password", class: 'form-control pl-5 pr-5' %>
+        <%= form.password_field :password, required: true , class: 'form-control pl-5 pr-5' %>
       </div>
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.confirm_password' %><br />
-        <%= form.password_field :password_confirmation, class: 'form-control pl-5 pr-5' %>
+        <%= form.password_field :password_confirmation, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.fname' %><br />
-        <%= form.text_field :first_name, class: 'form-control pl-5 pr-5' %>
+        <%= form.text_field :first_name, required: true, class: 'form-control pl-5 pr-5', id: 'first_name' %>
       </div>
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.lname' %><br />
-        <%= form.text_field :last_name, class: 'form-control pl-5 pr-5' %>
+        <%= form.text_field :last_name, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.dob' %><br />
-        <%= form.date_field :date_of_birth, class: 'form-control pl-5 pr-5' %>
+        <%= form.date_field :date_of_birth, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
       <div class="field mb-2">
         <%= form.label :Role %><br />
-        <%= form.select :role_id, options_for_select(User::ROLES.invert), class: 'form-select' %>
+        <%= form.select :role_id, options_for_select(User::ROLES.invert), {},  class: 'form-control' %>
+      </div>
+
+      <div class="field mb-2">
+        <%= form.label :Salary %><br />
+        <%= form.number_field :salary, required: true, class: 'form-control' %>
       </div>
 
 
       <div class="actions">
-        <%= form.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
+        <%= form.submit 'Create Employee',  class: 'card-link btn btn-dark' %>
       </div>
 
     <% end %>
   </div>
 </div>
 
-<%= link_to 'Back', users_path %>
+<%= link_to 'Back', members_path %>

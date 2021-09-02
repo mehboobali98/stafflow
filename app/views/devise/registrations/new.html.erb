@@ -11,7 +11,7 @@
 
   <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.email' %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control pl-5 pr-5' %>
+    <%= f.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
   </div>
 
   <div class="field mb-2">
@@ -19,37 +19,37 @@
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password", class: 'form-control pl-5 pr-5' %>
+    <%= f.password_field :password, required: true, class: 'form-control pl-5 pr-5' %>
   </div>
 
   <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.confirm_password' %><br />
-    <%= f.password_field :password_confirmation, class: 'form-control pl-5 pr-5' %>
+    <%= f.password_field :password_confirmation, required: true, class: 'form-control pl-5 pr-5' %>
   </div>
 
   <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.fname' %><br />
-    <%= f.text_field :first_name, class: 'form-control pl-5 pr-5' %>
+    <%= f.text_field :first_name, required: true, class: 'form-control pl-5 pr-5' %>
   </div>
 
    <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.lname' %><br />
-    <%= f.text_field :last_name, class: 'form-control pl-5 pr-5' %>
+    <%= f.text_field :last_name, required: true, class: 'form-control pl-5 pr-5' %>
   </div>
 
    <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.dob' %><br />
-    <%= f.date_field :date_of_birth , class: 'form-control pl-5 pr-5' %>
+    <%= f.date_field :date_of_birth, required: true , class: 'form-control pl-5 pr-5' %>
   </div>
 
     <%= f.fields_for :company, Company.new do |form|%>
       <div class="field mb-2">
         <%= form.label :Company %><br />
-        <%= form.text_field :name, id: "company_name", class: 'form-control pl-5 pr-5' %>
+        <%= form.text_field :name, required: true, id: "company_name", class: 'form-control pl-5 pr-5' %>
       </div>
       <div class="field mb-2">
         <%= form.label :Subdomain %><br />
-        <%= form.text_field :subdomain, readonly: true , id: "subdomain", class: 'form-control pl-5 pr-5' %>
+        <%= form.text_field :subdomain, required: true, readonly: true , id: "subdomain", class: 'form-control pl-5 pr-5' %>
       </div>
 
       

@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @user.department_id = 1
     @user.company_id = 18
     if @user.save
-      redirect_to users_url, notice: 'Successfully Added Employee'
+      redirect_to members_url, notice: 'Successfully Added Employee'
     else
       render 'new'
     end
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update!(permit_user_params)
-      redirect_to users_url, notice: 'Employee was updated'
+      redirect_to members_url, notice: 'Employee was updated'
     else
       render 'edit'
     end
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    redirect_to users_url, notice: 'The employee was deleted'
+    redirect_to members_url, notice: 'The employee was deleted'
   end
 
   def show
@@ -45,6 +45,6 @@ class UsersController < ApplicationController
   private
 
   def permit_user_params
-    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id)
+    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
   end
 end

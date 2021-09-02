@@ -6,12 +6,12 @@
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class="field mb-2">
         <%= f.label I18n.t 'forms.labels.email', class: 'form-label' %><br />
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control pl-5 pr-5' %>
+        <%= f.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
       
       <div class="field mb-2">
         <%= f.label I18n.t 'forms.labels.password' %><br />
-        <%= f.password_field :password, autocomplete: "current-password", class: 'form-control pl-5 pr-5' %>
+        <%= f.password_field :password, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
       <% if devise_mapping.rememberable? %>

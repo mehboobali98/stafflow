@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_01_114248) do
+ActiveRecord::Schema.define(version: 2021_09_02_103716) do
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2021_09_01_114248) do
     t.string "last_name"
     t.date "date_of_birth"
     t.integer "role_id"
+    t.integer "salary"
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["department_id"], name: "index_users_on_department_id"
