@@ -2,7 +2,7 @@
 
 
 <div class="card border-dark pb-3 text-center w-25">
-  <h1 class= "card-header">Create A New Employee</h1>
+  <h1 class= "card-header"><%= I18n.t 'headings.create_employee' %></h1>
   <div class="card-body px-5">
 
 
@@ -49,18 +49,18 @@
       </div>
 
       <div class="field mb-2">
-        <%= form.label :Role %><br />
+        <%= form.label I18n.t 'forms.labels.role' %><br />
         <%= form.select :role_id, options_for_select(User::ROLES.invert), {},  class: 'form-control' %>
       </div>
 
       <div class="field mb-2">
-        <%= form.label :Salary %><br />
+        <%= form.label I18n.t 'forms.labels.salary' %><br />
         <%= form.number_field :salary, required: true, class: 'form-control' %>
       </div>
 
 
       <div class="actions">
-        <%= form.submit 'Create Employee',  class: 'card-link btn btn-dark' %>
+        <%= form.submit 'Create',  class: 'card-link btn btn-dark' %>
       </div>
 
     <% end %>

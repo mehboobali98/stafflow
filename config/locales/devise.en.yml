@@ -78,6 +78,7 @@ en:
       send_pswd_reset_instructions: "Send me password reset instructions"
       unlock_account: "Unlock my account"
       resend_confirmation_instructions: "Resend"
+      create: "Create"
     labels:
       email: "Email"
       password: "Password"
@@ -87,6 +88,8 @@ en:
       fname: "First Name"
       lname: "Last Name"
       dob: "Date Of Birth"
+      role: "Role"
+      salary: "Salary"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to"
@@ -111,4 +114,5 @@ en:
     signup: "Sign Up"
     resend_lock_instructions: "Resend Lock Instructions"
     resend_confirmation_instructions: "Resend Confirmation Instructions"
+    create_employee: "Add A New Employee"
 
