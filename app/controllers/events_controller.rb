@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Events Controller
 class EventsController < ApplicationController
   before_action :set_event_for_edit, only: %i[edit]
   before_action :set_event, only: %i[show update destroy]
@@ -40,8 +43,11 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @event.destroy
-    flash[:notice] = 'Event deleted successfully'
+    if @event.destroy
+      flash[:notice] = 'Event deleted successfully'
+    else
+      flash[:alert] = 'Unable to delete event'
+    end
     redirect_to action: 'index'
   end
 
@@ -53,8 +59,8 @@ class EventsController < ApplicationController
 
   def set_event_for_edit
     @event = Event.find(params[:id])
-    @event.set_start_date_str
-    @event.set_start_time_str
+    @event.set_start_date
+    @event.set_start_time
   end
 
   def event_params

@@ -2,21 +2,27 @@
   <div class="row justify-content-center">
     <div class="col-4">
       <h1> <%= heading%></h1>
-      <%= form_with model: event, :html => {'class' => 'card p-3 bg-light'} do |form| %>
-        <div class="input-group mb-3">
-          <%= form.text_field :name, required: true, class: 'form-control', placeholder: "Enter event name"%>
-          <% event.errors.full_messages_for(:name).each do |message| %>
-            <div><%= message %></div>
-          <% end %>
+      <% if event.errors.any? %>
+        <div>
+          <ul>
+            <% event.errors.full_messages.each do |message| %>
+              <li class='text-danger'><%= message %></li>
+            <% end %>
+          </ul>
         </div>
-        <div class="input-grouo mb-3 row">
-          <% event.errors.full_messages_for(:start_time).each do |message| %>
-            <div><%= message %></div>
-          <% end %>
+      <% end %>
+      <%= form_with model: event, local:true, :html => {'class' => 'card p-3 bg-light'} do |form| %>
+        <div class="form-group mb-3">
+          <%= form.label :name, 'Event name ' %>
+          <%= form.text_field :name, required: true, class: 'form-control', placeholder: "Enter event name"%>
+        </div>
+        <div class="input-group mb-3 row">
           <div class="col-md-6">
+            <%= form.label :start_date_str, 'Event date ' %>
             <%= form.date_field :start_date_str, required: true, class: "form-control"%>
           </div>
           <div class="col-md-6">
+            <%= form.label :start_time_str, 'Event time ' %>
             <%= form.time_field :start_time_str, required: true, class: "form-control"%>
           </div>
         </div>
