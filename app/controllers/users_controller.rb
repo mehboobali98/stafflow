@@ -20,7 +20,7 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update!(permit_user_params)
+    if @user.update(permit_user_params)
       redirect_to members_url, notice: 'Employee was updated'
     else
       render 'edit'

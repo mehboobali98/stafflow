@@ -1,10 +1,7 @@
 <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
 
-
 <div class='card border-dark pb-3 text-center w-25'>
 <h2 class='card-header'> <%= I18n.t 'headings.signup'%> </h2>
-
-
 <div class='card-body px-5'>
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -42,18 +39,16 @@
     <%= f.date_field :date_of_birth, required: true , class: 'form-control pl-5 pr-5' %>
   </div>
 
-    <%= f.fields_for :company, Company.new do |form|%>
-      <div class="field mb-2">
-        <%= form.label :Company %><br />
-        <%= form.text_field :name, required: true, id: "company_name", class: 'form-control pl-5 pr-5' %>
-      </div>
-      <div class="field mb-2">
-        <%= form.label :Subdomain %><br />
-        <%= form.text_field :subdomain, required: true, readonly: true , id: "subdomain", class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      
-    <%end%>
+  <%= f.fields_for :company, Company.new do |form|%>
+    <div class="field mb-2">
+      <%= form.label :Company %><br />
+      <%= form.text_field :name, required: true, id: "company_name", class: 'form-control pl-5 pr-5' %>
+    </div>
+    <div class="field mb-2">
+      <%= form.label :Subdomain %><br />
+      <%= form.text_field :subdomain, required: true, readonly: true , id: "subdomain", class: 'form-control pl-5 pr-5' %>
+    </div>
+  <%end%>
 
   <div class="actions">
     <%= f.submit I18n.t ('forms.buttons.signup'), class: 'btn btn-primary' %>
