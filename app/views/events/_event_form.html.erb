@@ -18,12 +18,12 @@
         </div>
         <div class="input-group mb-3 row">
           <div class="col-md-6">
-            <%= form.label :start_date_str, I18n.t('event.forms.labels.event_date') %>
-            <%= form.date_field :start_date_str, required: true, class: "form-control"%>
+            <%= form.label :event_start_date, I18n.t('event.forms.labels.event_date') %>
+            <%= form.date_field :event_start_date, required: true, class: "form-control"%>
           </div>
           <div class="col-md-6">
-            <%= form.label :start_time_str, I18n.t('event.forms.labels.event_time') %>
-            <%= form.time_field :start_time_str, required: true, class: "form-control"%>
+            <%= form.label :event_start_time, I18n.t('event.forms.labels.event_time') %>
+            <%= form.time_field :event_start_time, required: true, class: "form-control"%>
           </div>
         </div>
         <div>

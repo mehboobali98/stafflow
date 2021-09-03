@@ -4,11 +4,11 @@ require 'date'
 
 # event model
 class Event < ApplicationRecord
-  attr_accessor :start_date_str, :start_time_str
+  attr_accessor :event_start_date, :event_start_time
 
   before_validation :set_event_start_date_time
 
-  validates :name, :start_date_str, :start_time_str, presence: true
+  validates :name, :event_start_date, :event_start_time, presence: true
   validate :event_date_cannot_be_in_past, :event_date_cannot_be_in_next_century
 
   def event_date_cannot_be_in_past
@@ -20,16 +20,16 @@ class Event < ApplicationRecord
   end
 
   def set_start_date
-    @start_date_str = start_time.to_date
+    @event_start_date = start_time.to_date
   end
 
   def set_start_time
-    @start_time_str = Time.parse(start_time.strftime('%H:%M %p'))
+    @event_start_time = Time.parse(start_time.strftime('%H:%M %p'))
   end
 
   def set_event_start_date_time
-    if @start_date_str && @start_time_str
-      self.start_time = DateTime.strptime("#{@start_date_str} #{@start_time_str}",
+    if @event_start_date && @event_start_time
+      self.start_time = DateTime.strptime("#{@event_start_date} #{@event_start_time}",
                                           '%Y-%m-%d %H:%M')
     end
   rescue Date::Error
