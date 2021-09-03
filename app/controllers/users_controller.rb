@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @user.department_id = 1
     @user.company_id = 18
     if @user.save
-      redirect_to members_url, notice: 'Successfully Added Employee'
+      redirect_to members_url, notice: I18n.t('messages.added_employee')
     else
       render 'new'
     end
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(permit_user_params)
-      redirect_to members_url, notice: 'Employee was updated'
+      redirect_to members_url, notice: I18n.t('messages.updated_employee')
     else
       render 'edit'
     end
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    redirect_to members_url, notice: 'The employee was deleted'
+    redirect_to members_url, notice: I18n.t('messages.deleted_employee')
   end
 
   def show

@@ -103,6 +103,9 @@ en:
     welcome: "Welcome"
     hello: "Hello"
     signed_up: "You have been successfully signed up. Please view check your email for instruction"
+    added_employee: "Employee was successfully added"
+    updated_employee: "Employee was successfully updated"
+    deleted_employee: "Employee was successfully deleted"
 
   headings:
     change_password: "Change Password"
