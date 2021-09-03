@@ -1,11 +1,14 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   around_action :set_current_company
 
   def current_company
-    Company.find_company_by_subdomain(request.subdomain)
+    @current_company ||= Company.find_company_by_subdomain!(request.subdomain)
   end
 
   def set_current_company
+    binding.pry
     Company.current_company_id = current_company.id
     yield
   rescue ActiveRecord::RecordNotFound

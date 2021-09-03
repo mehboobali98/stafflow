@@ -9,13 +9,13 @@ class ApplicationRecord < ActiveRecord::Base
         @not_multitenant = true
       end
 
-      def check_if_multitenant?
+      def multitenant?
         @not_multitenant.nil?
       end
     end
 
     trace = TracePoint.new(:end) do |trace_point|
-      if trace_point.self == subclass && tp.self.check_if_multitenant?
+      if trace_point.self == subclass && trace_point.self.multitenant?
         trace.disable
         subclass.instance_eval { default_scope { where(company_id: Company.current_company_id) } }
       end

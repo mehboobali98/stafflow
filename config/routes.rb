@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
