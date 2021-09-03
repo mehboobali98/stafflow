@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_company
-    binding.pry
     Company.current_company_id = current_company.id
     yield
   rescue ActiveRecord::RecordNotFound
