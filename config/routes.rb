@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
-  devise_for :users
-  resources :benefits, :user_benefits
+  devise_for :users, controllers: { registrations: 'users/registrations' }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  resources :benefits, :user_benefits, :payrolls
   root to: 'home#index'
   get '/home', to: 'home#home'
-  get '/payrolls', to: 'payrolls#index'
+  scope :admin do
+    resources :users
+  end
 end

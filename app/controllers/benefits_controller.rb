@@ -14,19 +14,23 @@ class BenefitsController < ApplicationController
   def update
     @benefit = Benefit.find(params[:id])
     if @benefit.update(benefit_arguments)
-      flash[:notice] = 'Event Updated Successfully'
+      flash[:notice] = 'Benefit Updated Successfully'
       redirect_to action: 'index'
     else
-      flash[:alert] = 'Unable to update event'
+      flash[:alert] = @user_benefit.errors.full_messages.first
       redirect_back(fallback_location: root_path)
-
     end
   end
 
   def create
     @benefit = Benefit.new(benefit_arguments)
-    @benefit.save
-    redirect_to action: 'index'
+    if @benefit.save
+      flash[:notice] = 'Benefit Created Successfully'
+      redirect_to action: 'index'
+    else
+      flash[:alert] = @user_benefit.errors.full_messages.first
+      redirect_back(fallback_location: root_path)
+    end
   end
 
   def destroy

@@ -5,6 +5,7 @@ class CreatePayrolls < ActiveRecord::Migration[6.0]
     create_table :payrolls do |t|
       t.integer :base_salary
       t.integer :tax
+      t.references :user, null: false
 
       t.timestamps
     end

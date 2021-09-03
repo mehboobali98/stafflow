@@ -3,7 +3,8 @@ class CreateUserBenefits < ActiveRecord::Migration[6.0]
     create_table :user_benefits do |t|
       t.integer :amount
       t.boolean :status
-      t.references :benefit, null: false, foreign_key: true
+      t.references :benefit, null: false
+      t.references :user, null: false
 
       t.timestamps
     end

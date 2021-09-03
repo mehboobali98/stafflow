@@ -2,12 +2,12 @@
   <div class = "row">
     <div class = "col-md-4">
       <div class="mb-3 ">
-        <%= user_benefit.label :Benefit_Amount, { class: "form-label"} %>
-        <%= user_benefit.text_field :amount, { class: "form-control", placeholder: "Benefit Amount" } %>
+        <%= user_benefit.label :Benefit_Amount, { class: "form-label m-3"} %>
+        <%= user_benefit.text_field :amount, { class: "form-control m-3", placeholder: "Benefit Amount" } %>
       </div>
         <div class="mb-3 ">
-          <%= user_benefit.label :Benefit_Status, { class: "form-label"} %>
-        <div class="form-check form-check-inline">
+          <%= user_benefit.label :Benefit_Status, { class: "form-label m-3"} %>
+        <div class="form-check form-check-inline ml-3">
           <input class="form-check-input" type="radio" name="status" id="status" value="1">
           <label class="form-check-label" for="inlineRadio1">Active</label>
         </div>
@@ -16,7 +16,8 @@
           <label class="form-check-label" for="inlineRadio2">Inactive</label>
         </div>
       </div>
-      <%= user_benefit.submit "Submit", class: "btn btn-primary" %>
+      
+      <%= user_benefit.submit "Submit", class: "btn btn-primary m-3" %>
     </div>
   </div>
 <% end %>

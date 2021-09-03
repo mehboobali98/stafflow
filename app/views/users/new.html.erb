@@ -1,0 +1,49 @@
+<h1>Create A New Employee</h1>
+
+<%= form_with model: @user, html: {method: :post} do |form| %>
+  <div class="field">
+    <%= form.label I18n.t 'forms.labels.email' %><br />
+    <%= form.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%= form.label I18n.t 'forms.labels.password' %>
+    <% if @minimum_password_length %>
+    <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= form.password_field :password, autocomplete: "new-password" %>
+  </div>
+
+  <div class="field">
+    <%= form.label I18n.t 'forms.labels.confirm_password' %><br />
+    <%= form.password_field :password_confirmation %>
+  </div>
+
+  <div class="field">
+    <%= form.label I18n.t 'forms.labels.fname' %><br />
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label I18n.t 'forms.labels.lname' %><br />
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label I18n.t 'forms.labels.dob' %><br />
+    <%= form.date_field :date_of_birth %>
+  </div>
+
+  <div class="field">
+    <%= form.label :Role %><br />
+    <%= form.select :role_id, options_for_select(User::ROLES.invert) %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit I18n.t 'forms.buttons.signup', html: {class: "btn btn-primary"} %>
+  </div>
+
+<% end %>
+
+<%= link_to 'Back', users_path %>
