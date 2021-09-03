@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-4">
-      <h1> <%= heading%></h1>
+      <h1> <%= heading %></h1>
       <% if event.errors.any? %>
         <div>
           <ul>
@@ -13,16 +13,16 @@
       <% end %>
       <%= form_with model: event, local:true, :html => {'class' => 'card p-3 bg-light'} do |form| %>
         <div class="form-group mb-3">
-          <%= form.label :name, 'Event name ' %>
-          <%= form.text_field :name, required: true, class: 'form-control', placeholder: "Enter event name"%>
+          <%= form.label :name, I18n.t('event.forms.labels.event_name') %>
+          <%= form.text_field :name, required: true, class: 'form-control', placeholder: I18n.t('event.forms.placeholders.event_name')%>
         </div>
         <div class="input-group mb-3 row">
           <div class="col-md-6">
-            <%= form.label :start_date_str, 'Event date ' %>
+            <%= form.label :start_date_str, I18n.t('event.forms.labels.event_date') %>
             <%= form.date_field :start_date_str, required: true, class: "form-control"%>
           </div>
           <div class="col-md-6">
-            <%= form.label :start_time_str, 'Event time ' %>
+            <%= form.label :start_time_str, I18n.t('event.forms.labels.event_time') %>
             <%= form.time_field :start_time_str, required: true, class: "form-control"%>
           </div>
         </div>
