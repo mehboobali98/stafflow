@@ -105,4 +105,5 @@ en:
     signup: "Sign Up"
     resend_lock_instructions: "Resend Lock Instructions"
     resend_confirmation_instructions: "Resend Confirmation Instructions"
+    settings: "Settings"
 

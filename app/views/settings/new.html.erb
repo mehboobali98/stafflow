@@ -1,0 +1,10 @@
+<h1><%= I18n.t('headings.settings') %></h1>
+<%= form_with model: @setting do |form| %>
+  <div>
+    <%= form.label :tax %>
+    <%= form.text_field :tax %>
+  </div>
+
+  <%= form.submit %>
+
+<% end %>
