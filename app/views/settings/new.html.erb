@@ -5,6 +5,14 @@
     <%= form.text_field :tax %>
   </div>
 
+  <div>
+    <%= form.label :Red %>
+    <%= form.radio_button :theme, 'red' %>
+    <%= form.label :Blue %>
+    <%= form.radio_button :theme, 'blue' %>
+    <%= form.label :Black %>
+    <%= form.radio_button :theme, 'black' %>
+  </div>
   <%= form.submit %>
 
 <% end %>

@@ -4,6 +4,7 @@ class SettingsController < ApplicationController
   end
 
   def create
+    binding.pry
     @setting = Setting.new(permit_settings_parameters)
     if @setting.save
       redirect_to root_url, notice: 'Settings were updated'
