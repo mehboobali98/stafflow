@@ -11,13 +11,13 @@ class DepartmentsController < ApplicationController
 
   def create
     if Department.exists?(department_params)
-      flash[:notice] = 'Department Already Exist'
+      flash[:notice] = I18n.t 'department.already_exist'
     else
       @department = Department.new(department_params)
       if @department.save
-        flash[:notice] = 'Department Created Successfully'
+        flash[:notice] = I18n.t 'department.created'
       else
-        flash[:alert] = 'Department not created'
+        flash[:alert] = I18n.t 'department.not_created'
       end
     end
     redirect_to action: 'index'
@@ -29,13 +29,13 @@ class DepartmentsController < ApplicationController
 
   def update
     if Department.exists?(department_params)
-      flash[:notice] = 'Department Already Exist'
+      flash[:notice] = I18n.t 'department.already_exist'
     else
       @department = Department.find(params[:id])
       if @department.update(department_params)
-        flash[:notice] = 'Department Updated Successfully'
+        flash[:notice] = I18n.t 'department.updated'
       else
-        flash[:alert] = 'Department not updated'
+        flash[:alert] = I18n.t 'department.not_updated'
       end
     end
     redirect_to action: 'index'
@@ -44,7 +44,7 @@ class DepartmentsController < ApplicationController
   def destroy
     @department = Department.find(params[:id])
     @department.destroy
-    flash[:notice] = 'Department deleted successfully'
+    flash[:notice] = I18n.t 'department.destroy'
     redirect_to action: 'index'
   end
 

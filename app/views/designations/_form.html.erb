@@ -4,12 +4,12 @@
       <h1><%= @heading %></h1>
       <%= form_for @designation do |f| %>
         <div class="form-group mb-3">
-          <%= f.label :name, 'Designation name ' %>
-          <%= f.text_field :designation_name, required: true, class: 'form-control', placeholder: "Enter Designation Name" %>
+          <%= f.label I18n.t 'designation.name_lable' %>
+          <%= f.text_field :designation_name, required: true, class: 'form-control' %>
         </div>
         <div class="input-group mb-3 row">
           <div class="col-md-6">
-            <%= f.label :department_id, 'Department' %>
+            <%= f.label I18n.t 'designation.select_department' %>
             <%= f.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'} %>        
           </div>
         </div>

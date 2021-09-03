@@ -1,13 +1,13 @@
 <div class="container">
-  <h1 class="mt-1">Designations</h1>
-  <%= link_to "New Designation", new_designation_path, class: 'btn btn-outline-dark' %>
+  <h1 class="mt-1"><%= I18n.t 'designation.table_heading' %></h1>
+  <%= link_to I18n.t('designation.new_link_name'), new_designation_path, class: 'btn btn-outline-dark' %>
   <br>
   <br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
-      <th>Designation-Name</th>
-      <th>Department-ID</th>
-      <th style="text-align:center" colspan="3">Options</th>
+      <th><%= I18n.t 'designation.table_cell_one_name' %></th>
+      <th><%= I18n.t 'designation.table_cell_two_name' %></th>
+      <th style="text-align:center" colspan="3"><%= I18n.t 'designation.table_options' %></th>
   </thead>
   <tbody>
     <% @designations.each do |designation| %>

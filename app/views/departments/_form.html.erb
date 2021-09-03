@@ -4,12 +4,12 @@
       <h1><%= @heading %></h1>
       <%= form_for @department do |f| %>
         <div class="form-group mb-3">
-          <%= f.label :Department_Name, 'Department name ' %>
-          <%= f.text_field :name, required: true, class: 'form-control', placeholder: "Enter Department Name" %>
+          <%= f.label I18n.t 'department.name_lable' %>
+          <%= f.text_field :name, required: true, class: 'form-control' %>
         </div>
         <div class="input-group mb-3 row">
           <div class="col-md-6">
-            <%= f.label :Image, { class: "form-label"} %></br>
+            <%= f.label I18n.t 'department.image_lable' %></br>
             <%= f.file_field :image_url %>
           </div>
         </div>

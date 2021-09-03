@@ -30,4 +30,38 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  department:
+    name_lable: "Department Name"
+    image_lable: "Upload Image"
+    table_heading: "Departments"
+    table_options: "Options"
+    table_cell_name: "Name"
+    new_link_name: "New Department"
+    already_exist: "Department Alread Exist"
+    created: "Department Created Successfully"
+    not_created: "Department Not Created"
+    updated: "Department updated Successfully"
+    not_updated: "Department Not Updated"
+    destroy: "Department destroy Successfully"
+  designation:
+    name_lable: "Designation Name"
+    select_department: "Select Department"
+    table_heading: "Designations"
+    table_options: "Options"
+    table_cell_one_name: "Name"
+    table_cell_two_name: "Department-ID"
+    new_link_name: "New Designation"
+    already_exist: "Designation Alread Exist"
+    created: "Designation Created Successfully"
+    not_created: "Designation Not Created"
+    updated: "Designation updated Successfully"
+    not_updated: "Designation Not Updated"
+    destroy: "Designation destroy Successfully"
+
+
+
+
+
+
+
+
