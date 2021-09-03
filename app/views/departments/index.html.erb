@@ -1,9 +1,1 @@
-<%if flash.notice.present? %>
-<%end%>
-<div class="row"> 
-    <div class="col-md-4 mx-auto mt-5 ">
-        <h3 class="p-3">Departments-Module</h3>
-        <%= link_to "SHOW-DEPARTMENTS", "/departments/show" ,class: 'btn btn-primary p-3' %>
-        <%= link_to "ADD-DEPARTMENT", new_department_path ,class: 'btn btn-primary p-3' %>
-    </div>  
-</div>
+<%= render :partial => 'table' %>

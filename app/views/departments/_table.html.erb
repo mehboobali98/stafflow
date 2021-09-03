@@ -1,6 +1,5 @@
-<!--This File is for table-reference! Change it according to your need-->
 <div class="container">
-  <h1>Department</h1>
+  <h1 class="mt-1">Departments</h1>
   <%= link_to "New Department", new_department_path, class: 'btn btn-outline-dark' %>
   <br>
   <br>
@@ -14,7 +13,6 @@
     <% @departments.each do |department| %>
       <tr>
         <td><%= department.name %></td>
-        <td><%= link_to "Show", department, class:'btn btn-info' %></td>
         <td><%= link_to "Edit", edit_department_path(department), class: 'btn btn-secondary' %></td>
         <td><%= link_to "Destroy", department, method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %></td>
       </tr>

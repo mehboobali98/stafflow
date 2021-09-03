@@ -6,24 +6,13 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%=stylesheet_link_tag 'sidebar'%>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-  <% if notice %>
-    <%= notice %>
-  <% elsif alert %>
-    <%= alert %>
-  <% end %>
-  <div class="row" style="height:100%">
-    <div class="col-sm-3" style="height:100%">
-      <%= render partial:"layouts/sidebar"%>
-    </div>
-    <div class="col-sm-9">
-      <%=yield%>
-     </div>
-  </div>
-  <%= render partial:"layouts/footer"%>
+    <% if notice %>
+      <%= notice %>
+    <% elsif alert %>
+     <%= alert %>
+    <% end %>
+    <%= yield %>
   </body>
 </html>

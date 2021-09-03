@@ -1,15 +1,22 @@
-<%= form_for @department do |f| %>
-  <div class=" row">
-    <div class="col-md-4">
-      <div class="mb-3">
-        <%= f.label :Department_Name, { class: "form-label"} %>
-        <%= f.text_field :name, { class: "form-control", placeholder: "Department Name" } %>
-      </div>
-      <div class="mb-3 ">
-        <%= f.label :Image, { class: "form-label"} %></br>
-        <%= f.file_field :image_url %>
-      </div>
-      <%= f.submit "Submit", class: "btn btn-primary" %>
+<div class="container">
+  <div class="row  mt-4">
+    <div class="col-4">
+      <h1><%= @heading %></h1>
+      <%= form_for @department do |f| %>
+        <div class="form-group mb-3">
+          <%= f.label :Department_Name, 'Department name ' %>
+          <%= f.text_field :name, required: true, class: 'form-control', placeholder: "Enter Department Name" %>
+        </div>
+        <div class="input-group mb-3 row">
+          <div class="col-md-6">
+            <%= f.label :Image, { class: "form-label"} %></br>
+            <%= f.file_field :image_url %>
+          </div>
+        </div>
+        <div>
+          <%= f.submit class: 'card-link btn btn-dark' %>
+        </div>
+      <% end %>
     </div>
   </div>
-<% end %>
+</div>

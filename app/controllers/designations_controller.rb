@@ -1,26 +1,22 @@
 # frozen_string_literal: true
 
 class DesignationsController < ApplicationController
-  def index; end
-
-  def show
+  def index
     @designations = Designation.all
   end
 
   def create
     if Designation.exists?(designation_params)
       flash[:notice] = 'Designation Already Exist'
-      redirect_to action: 'index'
     else
       @designation = Designation.new(designation_params)
       if @designation.save
         flash[:notice] = 'Designation Created Successfully'
-        redirect_to action: 'index'
       else
         flash[:alert] = 'Designation not created'
-        render :index
       end
     end
+    redirect_to action: 'index'
   end
 
   def edit
@@ -31,19 +27,17 @@ class DesignationsController < ApplicationController
   def update
     if Designation.exists?(designation_params)
       flash[:notice] = 'Designation Already Exist'
-      redirect_to action: 'index'
 
     else
       @designation = Designation.find(params[:id])
       if @designation.update(designation_params)
         flash[:notice] = 'Designation Updated successfully'
-        redirect_to action: 'index'
       else
         flash[:alert] = 'Designation not updated'
-        render :index
       end
 
     end
+    redirect_to action: 'index'
   end
 
   def destroy

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DepartmentsController < ApplicationController
-  def show
+  def index
     @departments = Department.all
   end
 
@@ -12,17 +12,15 @@ class DepartmentsController < ApplicationController
   def create
     if Department.exists?(department_params)
       flash[:notice] = 'Department Already Exist'
-      redirect_to action: 'index'
     else
       @department = Department.new(department_params)
       if @department.save
         flash[:notice] = 'Department Created Successfully'
-        redirect_to action: 'index'
       else
         flash[:alert] = 'Department not created'
-        render :index
       end
     end
+    redirect_to action: 'index'
   end
 
   def edit
@@ -32,24 +30,22 @@ class DepartmentsController < ApplicationController
   def update
     if Department.exists?(department_params)
       flash[:notice] = 'Department Already Exist'
-      redirect_to action: 'index'
     else
       @department = Department.find(params[:id])
       if @department.update(department_params)
         flash[:notice] = 'Department Updated Successfully'
-        redirect_to action: 'index'
       else
         flash[:alert] = 'Department not updated'
-        render :index
       end
     end
+    redirect_to action: 'index'
   end
 
   def destroy
     @department = Department.find(params[:id])
     @department.destroy
     flash[:notice] = 'Department deleted successfully'
-    redirect_to action: 'show'
+    redirect_to action: 'index'
   end
 
   private

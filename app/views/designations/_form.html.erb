@@ -1,14 +1,22 @@
-<%= form_for @designation do |f| %>
-  <div class=" row">
-    <div class="col-md-4">
-      <div class="mb-3">
-        <%= f.label :Designation_Name, { class: "form-label"} %>
-        <%= f.text_field :designation_name, { class: "form-control", placeholder: "Designation Name" } %>
-      </div>
-      <div class="mb-3 ">
-       <%= f.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'}%>
-      </div>
-      <%= f.submit "Submit", class: "btn btn-primary" %>
+<div class="container">
+  <div class="row  mt-4">
+    <div class="col-4">
+      <h1><%= @heading %></h1>
+      <%= form_for @designation do |f| %>
+        <div class="form-group mb-3">
+          <%= f.label :name, 'Designation name ' %>
+          <%= f.text_field :designation_name, required: true, class: 'form-control', placeholder: "Enter Designation Name" %>
+        </div>
+        <div class="input-group mb-3 row">
+          <div class="col-md-6">
+            <%= f.label :department_id, 'Department' %>
+            <%= f.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'} %>        
+          </div>
+        </div>
+        <div>
+          <%= f.submit class: 'card-link btn btn-dark' %>
+        </div>
+      <% end %>
     </div>
   </div>
-<% end %>
+</div>
