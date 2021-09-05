@@ -13,15 +13,15 @@
 ActiveRecord::Schema.define(version: 2021_09_03_101307) do
 
   create_table "applied_leaves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "UserLeave_id", null: false
+    t.bigint "user_leave_id", null: false
     t.date "applied_at", null: false
     t.date "applied_till", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["UserLeave_id"], name: "index_applied_leaves_on_UserLeave_id"
+    t.index ["user_leave_id"], name: "index_applied_leaves_on_user_leave_id"
   end
 
-  create_table "leave_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "leaves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "count"
     t.datetime "created_at", precision: 6, null: false
@@ -29,14 +29,14 @@ ActiveRecord::Schema.define(version: 2021_09_03_101307) do
   end
 
   create_table "user_leaves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "LeaveType_id"
-    t.bigint "User_id"
+    t.bigint "leave_id", null: false
+    t.bigint "user_id", null: false
     t.integer "total_count"
     t.integer "remaining_count"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["LeaveType_id"], name: "index_user_leaves_on_LeaveType_id"
-    t.index ["User_id"], name: "index_user_leaves_on_User_id"
+    t.index ["leave_id"], name: "index_user_leaves_on_leave_id"
+    t.index ["user_id"], name: "index_user_leaves_on_user_id"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
