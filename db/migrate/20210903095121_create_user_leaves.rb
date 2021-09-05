@@ -1,8 +1,8 @@
 class CreateUserLeaves < ActiveRecord::Migration[6.0]
   def change
     create_table :user_leaves do |t|
-      t.references :LeaveType, null: false
-      t.references :User, null: false
+      t.references :leave, null: false
+      t.references :user, null: false
       t.integer :total_count
       t.integer :remaining_count
 

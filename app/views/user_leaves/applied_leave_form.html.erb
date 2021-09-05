@@ -1,0 +1,17 @@
+<%= form_tag user_leaves_apply_for_leave_path, method: :post do %>
+  <table>
+    <tr>
+      <th></th>
+      <th> Leave type </th>
+      <th> Count </th>
+    </tr>
+    <% @leave.each do |leave| %>
+      <tr>
+        <td><%= check_box_tag "leave[leave_ids][]", leave.id %></td>
+        <td><%= leave.name %></td>
+        <td><%= number_field_tag "leave[leave_counts][]", leave.count %></td>
+      </tr>
+    <% end %>
+  </table>
+  <%= submit_tag 'Add user leaves' %>
+<% end %>
