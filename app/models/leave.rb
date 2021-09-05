@@ -1,4 +1,4 @@
-class LeaveType < ApplicationRecord
+class Leave < ApplicationRecord
   validates :name, format: { with: /\A[a-z A-Z]+\z/,
                              message: 'Leave type name can only contain letters' }
 
