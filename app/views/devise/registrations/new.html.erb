@@ -36,10 +36,10 @@
 
    <div class="field mb-2">
     <%= f.label I18n.t 'forms.labels.dob' %><br />
-    <%= f.date_field :date_of_birth, required: true , class: 'form-control pl-5 pr-5' %>
+    <%= f.date_field :date_of_birth, required: true, class: 'form-control pl-5 pr-5' %>
   </div>
 
-  <%= f.fields_for :company, Company.new do |form|%>
+  <%= f.fields_for :company_attributes do |form|%>
     <div class="field mb-2">
       <%= form.label :Company %><br />
       <%= form.text_field :name, required: true, id: "company_name", class: 'form-control pl-5 pr-5' %>

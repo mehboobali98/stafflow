@@ -44,13 +44,13 @@
       </div>
 
       <div class="field mb-2">
-        <%= form.label I18n.t 'forms.labels.dob' %><br />
+        <%= form.label I18n.t 'forms.labels.dob' %><br/>
         <%= form.date_field :date_of_birth, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.role' %><br />
-        <%= form.select :role_id, options_for_select(User::ROLES.invert), {},  class: 'form-control' %>
+        <%= form.select :role_id, options_for_select(User::ROLES), {},  class: 'form-control' %>
       </div>
 
       <div class="field mb-2">

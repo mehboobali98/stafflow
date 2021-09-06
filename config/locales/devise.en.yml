@@ -106,6 +106,8 @@ en:
     added_employee: "Employee was successfully added"
     updated_employee: "Employee was successfully updated"
     deleted_employee: "Employee was successfully deleted"
+    user_doesnt_exist: "A user with the ID could not be found"
+    cannot_be_account_owner: "Sorry. You cannot be account owner"
 
   headings:
     change_password: "Change Password"
