@@ -1,6 +1,9 @@
 class SettingsController < ApplicationController
   before_action :load_and_validate_settings, only: %I[show edit update]
 
+  add_breadcrumb 'Home', :settings_path
+  add_breadcrumb 'New', :new_setting_path
+
   # GET /settings/new
   def new
     @setting = Setting.new
