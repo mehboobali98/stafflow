@@ -1,10 +1,8 @@
 <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
 
-
 <div class="card border-dark pb-3 text-center w-25">
   <h1 class= "card-header"><%= I18n.t 'headings.create_employee' %></h1>
   <div class="card-body px-5">
-
 
     <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form' do |form| %>
 
@@ -13,7 +11,6 @@
         <li> <%= message %> </li>  
       <% end %>
       </ul>
-
 
       <div class="field mb-2">
         <%= form.label I18n.t 'forms.labels.email' %><br />
@@ -57,7 +54,6 @@
         <%= form.label I18n.t 'forms.labels.salary' %><br />
         <%= form.number_field :salary, required: true, class: 'form-control', min: 0 %>
       </div>
-
 
       <div class="actions">
         <%= form.submit 'Create',  class: 'card-link btn btn-dark' %>

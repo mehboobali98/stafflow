@@ -1,5 +1,5 @@
 <div class="card border-dark pb-3 text-center w-25">
-  <h1 class="card-header">Edit Employee</h1>
+  <h1 class="card-header"><%= I18n.t('headings.edit_employee') %></h1>
   <div class="card-body px-5">
 
     <%= form_with model: @user, url: member_path do |form| %>
@@ -32,7 +32,6 @@
         <%= form.label I18n.t 'forms.labels.salary' %><br />
         <%= form.number_field :salary, required: true, class: 'form-control' %>
       </div>
-
 
       <div class="actions">
         <%= form.submit  class: "btn btn-dark" %>

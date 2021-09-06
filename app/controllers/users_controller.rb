@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :validate_role_id, only: %I[create update]
+  before_action :find_user_with_id, only: %I[edit update destroy show]
   # GET /members/new
   def new
     @user = User.new
@@ -10,47 +11,37 @@ class UsersController < ApplicationController
     @user = User.new(permit_user_params)
     @user.department_id = 1
     @user.company_id = 18
-    if @user.save
-      redirect_to members_path, notice: I18n.t('messages.added_employee')
-    else
-      render 'new'
+    respond_to do |format|
+      if @user.save
+        format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
+      else
+        format.html { render :new }
+      end
     end
   end
 
   # GET /members/:id/edit
-  def edit
-    @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist')
-  end
+  def edit; end
 
   # PATCH /members/:id
   def update
-    @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render 'index', alert: I18n.t('messages.user_doesnt_exist') and return
-    if @user.update(permit_user_params)
-      redirect_to members_path, notice: I18n.t('messages.updated_employee')
-    else
-      render 'edit'
+    respond_to do |format|
+      if @user.update(permit_user_params)
+        format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
+      else
+        format.html{ render :edit }
+      end
     end
   end
 
   # DELETE /members/:id
   def destroy
-    @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render 'index', alert: I18n.t('messages.user_doesnt_exist') and return
     @user.destroy
     redirect_to members_path, notice: I18n.t('messages.deleted_employee')
   end
 
   # GET /members/:id
-  def show
-    @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist')
-  end
+  def show; end
 
   # GET /members
   def index
@@ -64,8 +55,15 @@ class UsersController < ApplicationController
   end
 
   def validate_role_id
-    return unless params[:user][:role_id] == User::ROLES[:Account_Owner]
+    binding.pry
+    return unless params[:user][:role_id].to_i == User::ROLES[:Account_Owner]
 
     redirect_to members_path, alert: I18n.t('messages.cannot_be_account_owner')
+  end
+
+  def find_user_with_id
+    @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist')
   end
 end

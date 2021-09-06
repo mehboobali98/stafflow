@@ -10,10 +10,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
     @user.role_id = User::ROLES[:Account_Owner]
     @user.department_id = 1 # This line will be removed once DB is recreated. Due to bad migration
-    if company.save
-      redirect_to new_user_session_url, notice: I18n.t('messages.signed_up')
-    else
-      render 'devise/registrations/new'
+    format_to do |format|
+      if company.save
+        format.html { redirect_to new_user_session_url, notice: I18n.t('messages.signed_up') }
+      else
+        format.html { render 'devise/registrations/new' }
+      end
     end
   end
 

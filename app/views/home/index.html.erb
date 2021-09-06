@@ -5,7 +5,7 @@
 	<%= link_to '/home', class: 'btn btn-dark' do %>Home<% end %>
 
 <% else %>
-	<%= link_to I18n.t('forms.buttons.logout'),  destroy_user_session_path, method: :delete%>
-	 <%= link_to I18n.t('forms.buttons.edit'), edit_user_registration_path(current_user)%>
-	 <%= link_to I18n.t('forms.buttons.cancel_account'), '/users', method: :delete, data: {confirm: "You sure?"}%>
+	<%= link_to I18n.t('forms.buttons.logout'),  destroy_user_session_path, method: :delete %>
+	 <%= link_to I18n.t('forms.buttons.edit'), edit_user_registration_path(current_user) %>
+	 <%= link_to I18n.t('forms.buttons.cancel_account'), '/users', method: :delete, data: {confirm: "You sure?"} %>
 <% end %>
