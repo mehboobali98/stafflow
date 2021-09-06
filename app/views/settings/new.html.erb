@@ -2,12 +2,12 @@
 <%= form_with model: @setting do |form| %>
   <div>
     <%= form.label :tax %>
-    <%= form.text_field :tax %>
+    <%= form.number_field :tax, min: 0, required: true %>
   </div>
 
   <div>
     <%= form.label :Red %>
-    <%= form.radio_button :theme, 'red' %>
+    <%= form.radio_button :theme, 'red', required: true %>
     <%= form.label :Blue %>
     <%= form.radio_button :theme, 'blue' %>
     <%= form.label :Black %>
