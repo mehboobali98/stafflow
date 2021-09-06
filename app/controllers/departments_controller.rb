@@ -10,10 +10,10 @@ class DepartmentsController < ApplicationController
   end
 
   def create
-    if Department.exists?(permit_department_params)
+    if Department.exists?(permitted_department_params)
       flash[:notice] = I18n.t 'department.already_exist'
     else
-      @department = Department.new(permit_department_params)
+      @department = Department.new(permitted_department_params)
       if @department.save
         flash[:notice] = I18n.t 'department.created'
       else
@@ -28,11 +28,11 @@ class DepartmentsController < ApplicationController
   end
 
   def update
-    if Department.exists?(permit_department_params)
+    if Department.exists?(permitted_department_params)
       flash[:notice] = I18n.t 'department.already_exist'
     else
       @department = Department.find(params[:id])
-      if @department.update(permit_department_params)
+      if @department.update(permitted_department_params)
         flash[:notice] = I18n.t 'department.updated'
       else
         flash[:alert] = I18n.t 'department.not_updated'
@@ -50,7 +50,7 @@ class DepartmentsController < ApplicationController
 
   private
 
-  def permit_department_params
+  def permitted_department_params
     params.require(:department).permit(:name, :image_url)
   end
 end

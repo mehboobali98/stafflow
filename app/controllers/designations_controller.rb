@@ -6,10 +6,10 @@ class DesignationsController < ApplicationController
   end
 
   def create
-    if Designation.exists?(permit_designation_params)
+    if Designation.exists?(permitted_designation_params)
       flash[:notice] = I18n.t 'designation.already_exist'
     else
-      @designation = Designation.new(permit_designation_params)
+      @designation = Designation.new(permitted_designation_params)
       if @designation.save
         flash[:notice] = I18n.t 'designation.created'
       else
@@ -25,11 +25,11 @@ class DesignationsController < ApplicationController
   end
 
   def update
-    if Designation.exists?(permit_designation_params)
+    if Designation.exists?(permitted_designation_params)
       flash[:notice] = I18n.t 'designation.already_exist'
     else
       @designation = Designation.find(params[:id])
-      if @designation.update(permit_designation_params)
+      if @designation.update(permitted_designation_params)
         flash[:notice] = I18n.t 'designation.updated'
       else
         flash[:alert] = I18n.t 'designation.not_updated'
@@ -52,7 +52,7 @@ class DesignationsController < ApplicationController
 
   private
 
-  def permit_designation_params
+  def permitted_designation_params
     params.require(:designation).permit(:designation_name, :department_id)
   end
 end
