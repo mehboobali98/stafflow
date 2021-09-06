@@ -32,10 +32,10 @@ html,body {
   }
   ul li a:hover {
     background: $hover_background_color;
-    color: $text_color;
+    color: $background_color;
   }
   .sidebar-header #sidebarCollapse {
-    color: $color;
+    color: $text_color;
     background: $background_color;
     font-size: 1.5em;
     border: none;
