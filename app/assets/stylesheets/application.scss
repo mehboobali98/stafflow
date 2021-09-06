@@ -13,3 +13,10 @@
  *= require_tree .
  *= require_self
  */
+@import 'bootstrap/scss/bootstrap';
+.body_wrapper {
+  height: 100%;
+  .sidebar_wrapper {
+    height: 100%;
+  }
+}
