@@ -1,11 +1,11 @@
 $background_color: #000000;
-$color: #FFFFFF;
+$text_color: #FFFFFF;
 $hover_background_color: #FFFFFF;
 html,body {
   height: 100%;
   overflow: hidden;
 }
-.sidebar_wrapper {
+.sidebar-wrapper {
   display: flex;
   align-items: stretch;
   height: 100%;
@@ -15,7 +15,7 @@ html,body {
   min-width: 250px;
   max-width: 250px;
   background: $background_color;
-  color: $color;
+  color: $text_color;
   transition: all 0.3s;
   .sidebar-header {
     padding: 10px;
@@ -32,7 +32,7 @@ html,body {
   }
   ul li a:hover {
     background: $hover_background_color;
-    color: black;
+    color: $text_color;
   }
   .sidebar-header #sidebarCollapse {
     color: $color;

@@ -7,11 +7,13 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'sidebar' %>
+    <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <div class="row body_wrapper">
-      <div class="col-sm-3 sidebar_wrapper">
+    <div class="row body-wrapper">
+      <div class="col-sm-3 sidebar-wrapper">
         <%= render partial:"layouts/sidebar" %>
       </div>
       <div class="col-sm-9">
