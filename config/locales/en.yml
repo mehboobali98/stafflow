@@ -43,6 +43,9 @@ en:
     updated: "Department updated Successfully"
     not_updated: "Department Not Updated"
     destroy: "Department destroy Successfully"
+    edit_message: "Update Department"
+    add_message: "Add Department"
+
   designation:
     name_lable: "Designation Name"
     select_department: "Select Department"
@@ -57,6 +60,9 @@ en:
     updated: "Designation updated Successfully"
     not_updated: "Designation Not Updated"
     destroy: "Designation destroy Successfully"
+    edit_message: "Update Designation"
+    add_message: "Add Designation"
+
 
 
 
