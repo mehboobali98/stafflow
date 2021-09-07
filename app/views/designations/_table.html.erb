@@ -8,16 +8,16 @@
       <th><%= I18n.t 'designation.table_cell_one_name' %></th>
       <th><%= I18n.t 'designation.table_cell_two_name' %></th>
       <th style="text-align:center" colspan="3"><%= I18n.t 'designation.table_options' %></th>
-  </thead>
-  <tbody>
-    <% @designations.each do |designation| %>
-      <tr>
-        <td><%= designation.designation_name %></td>
-        <td><%= designation.department_id %></td>
-        <td><%= link_to "Edit", edit_designation_path(designation), class: 'btn btn-secondary' %></td>
-        <td><%= link_to "Destroy", designation, method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @designations.each do |designation| %>
+        <tr>
+          <td><%= designation.designation_name %></td>
+          <td><%= designation.department_id %></td>
+          <td><%= link_to t('designation.edit_btn_message'), edit_designation_path(designation), class: 'btn btn-secondary' %></td>
+          <td><%= link_to t('designation.destroy_btn_message'), designation, method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

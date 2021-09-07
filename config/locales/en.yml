@@ -46,7 +46,8 @@ en:
     edit_message: "Update Department"
     add_message: "Add Department"
     not_exist: "Department not Exist"
-
+    edit_btn_message: "Edit"
+    destroy_btn_message: "Destroy"
   designation:
     name_lable: "Designation Name"
     select_department: "Select Department"
@@ -64,3 +65,5 @@ en:
     edit_message: "Update Designation"
     add_message: "Add Designation"
     not_exist: "Designation not Exist"
+    edit_btn_message: "Edit"
+    destroy_btn_message: "Destroy"
