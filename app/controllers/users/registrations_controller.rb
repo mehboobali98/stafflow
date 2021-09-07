@@ -9,8 +9,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     company = Company.new(company_permitted_parameters)
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
     @user.role_id = User::ROLES[:account_owner]
+    is_saved = company.save
     respond_to do |format|
-      if company.save
+      if is_saved
         format.html { redirect_to new_user_session_url, notice: I18n.t('messages.signed_up') }
       else
         format.html { render 'devise/registrations/new' }
