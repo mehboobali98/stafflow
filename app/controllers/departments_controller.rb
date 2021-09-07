@@ -3,7 +3,7 @@
 class DepartmentsController < ApplicationController
   before_action :find_department_with_id, only: %I[edit update destroy]
   def index
-    @departments = Department.paginate(page: params[:page], per_page: 3)
+    @departments = Department.paginate(page: params[:page], per_page: $ITEMS_PER_PAGE)
   end
 
   def new

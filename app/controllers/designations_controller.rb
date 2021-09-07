@@ -3,7 +3,7 @@
 class DesignationsController < ApplicationController
   before_action :find_designation_with_id, only: %I[edit update destroy]
   def index
-    @designations = Designation.paginate(page: params[:page], per_page: 3)
+    @designations = Designation.paginate(page: params[:page], per_page: $ITEMS_PER_PAGE)
   end
 
   def create

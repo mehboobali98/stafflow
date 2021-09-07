@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../config/initializers/constants'
+
 class ApplicationController < ActionController::Base
   around_action :set_current_company
 
