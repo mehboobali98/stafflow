@@ -9,8 +9,6 @@ require("channels")
 global.$ = global.jQuery = require("jquery"); 
 require("bootstrap")
 import "@fortawesome/fontawesome-free/css/all"
-global.$ = global.jQuery = require("jquery"); 
-require("bootstrap")
 document.addEventListener("turbolinks:load", function() {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
