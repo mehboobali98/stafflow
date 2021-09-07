@@ -2,12 +2,9 @@
 
 class PayrollsController < ApplicationController
   def index
+    @user_benefit = UserBenefit.includes(:benefit).includes(:user)
+    payroll_id = Payroll.generate_payroll(@user_benefit)
+    Payroll.generate_applied_benefits(@user_benefit, payroll_id)
     @payroll = Payroll.includes(:user).last
-    @user_benefit = UserBenefit.includes(:benefit)
-    @gross_salary = Payroll.calculate_gross_salary(@user_benefit, @payroll)
-  end
-
-  def create
-    puts
   end
 end

@@ -11,6 +11,8 @@ class UserBenefitsController < ApplicationController
   def create
     @benefit = Benefit.all
     @user_benefit = UserBenefit.includes(:benefit).all
+    # this isn't in the model because I need flash messages I don't know how to
+    # add flash messages from the model, this will be moved to the model later on
     loop_iterator = 0
     params['user_benefit']['amount'].each do |amount|
       next if amount == ''
@@ -21,7 +23,6 @@ class UserBenefitsController < ApplicationController
                                          user_id: 1)
       loop_iterator += 1
       begin
-        # binding.pry
         new_user_benefit.save!
         flash[:notice] = 'Benefit Created Successfully'
       rescue ActiveRecord::RecordInvalid
@@ -51,7 +52,6 @@ class UserBenefitsController < ApplicationController
 
   def update
     @user_benefit = UserBenefit.find(params[:id])
-    binding.pry
     if @user_benefit.update(user_benefit_arguments_update)
       flash[:notice] = 'User benefit Updated Successfully'
       redirect_to action: 'index'
