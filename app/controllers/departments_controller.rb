@@ -12,17 +12,12 @@ class DepartmentsController < ApplicationController
 
   def create
     respond_to do |format|
-      if Department.exists?(permitted_department_params)
-        flash[:notice] = I18n.t 'department.already_exist'
+      @department = Department.new(permitted_department_params)
+      if @department.save
+        format.html { redirect_to action: 'index', notice: I18n.t('department.created') }
       else
-        @department = Department.new(permitted_department_params)
-        if @department.save
-          flash[:notice] = I18n.t 'department.created'
-        else
-          flash[:alert] = I18n.t 'department.not_created'
-        end
+        format.html { render :new }
       end
-      format.html { redirect_to action: 'index' }
     end
   end
 
@@ -30,14 +25,11 @@ class DepartmentsController < ApplicationController
 
   def update
     respond_to do |format|
-      if Department.exists?(permitted_department_params)
-        flash[:notice] = I18n.t 'department.already_exist'
-      elsif @department.update(permitted_department_params)
-        flash[:notice] = I18n.t 'department.updated'
+      if @department.update(permitted_department_params)
+        format.html { redirect_to action: 'index', notice: I18n.t('department.updated') }
       else
-        flash[:alert] = I18n.t 'department.not_updated'
+        format.html { render :edit }
       end
-      format.html { redirect_to action: 'index' }
     end
   end
 

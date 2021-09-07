@@ -8,17 +8,12 @@ class DesignationsController < ApplicationController
 
   def create
     respond_to do |format|
-      if Designation.exists?(permitted_designation_params)
-        flash[:notice] = I18n.t 'designation.already_exist'
+      @designation = Designation.new(permitted_designation_params)
+      if @designation.save
+        format.html { redirect_to action: 'index', notice: I18n.t('designation.created') }
       else
-        @designation = Designation.new(permitted_designation_params)
-        if @designation.save
-          flash[:notice] = I18n.t 'designation.created'
-        else
-          flash[:alert] = I18n.t 'designation.not_created'
-        end
+        format.html { redirect_to action: 'index' }
       end
-      format.html { redirect_to action: 'index' }
     end
   end
 
@@ -28,14 +23,11 @@ class DesignationsController < ApplicationController
 
   def update
     respond_to do |format|
-      if Designation.exists?(permitted_designation_params)
-        flash[:notice] = I18n.t 'designation.already_exist'
-      elsif @designation.update(permitted_designation_params)
-        flash[:notice] = I18n.t 'designation.updated'
+      if @designation.update(permitted_designation_params)
+        format.html { redirect_to action: 'index', notice: I18n.t('designation.updated') }
       else
-        flash[:alert] = I18n.t 'designation.not_updated'
+        format.html { redirect_to action: 'index' }
       end
-      format.html { redirect_to action: 'index' }
     end
   end
 
