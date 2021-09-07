@@ -1,6 +1,6 @@
 <div class='card border-dark pb-3 text-center w-25'>
 
-  <h2 class='card-header'> <%= I18n.t 'headings.forgot_password'%> </h2>
+  <h2 class='card-header'> <%= I18n.t 'headings.forgot_password' %> </h2>
 
   <div class="card-body px-5">
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
