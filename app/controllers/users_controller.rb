@@ -55,7 +55,6 @@ class UsersController < ApplicationController
   end
 
   def validate_role_id
-    binding.pry
     return unless params[:user][:role_id].to_i == User::ROLES[:Account_Owner]
 
     redirect_to members_path, alert: I18n.t('messages.cannot_be_account_owner')
