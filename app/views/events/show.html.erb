@@ -1,13 +1,13 @@
-<div class="contrainer">
+<div class="container">
   <div class="row justify-content-center">
     <div class="col-md-4">
       <div class="card text-center">
         <div class="card-header">
-          <%= I18n.t 'event.forms.headings.show'%>
+          <%= I18n.t 'event.forms.headings.show' %>
         </div>
         <div class="card-body">
           <h1 class="card-title"><%= @event.name %></h1>
-          <p class="card-text"><%= format_date(@event.start_time)%></p>
+          <p class="card-text"><%= format_date(@event.starts_at) %></p>
         </div>
         <div class="card-footer">
           <%= link_to I18n.t('event.forms.links.edit'), edit_event_path(@event), class: 'btn btn-secondary'%>

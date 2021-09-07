@@ -1,1 +1,1 @@
-<%= render "event_form", event: @event, heading: I18n.t('event.forms.headings.add_event') %>
+<%= render partial: 'form', locals: { event: @event, heading: I18n.t('event.forms.headings.add_event')} %>

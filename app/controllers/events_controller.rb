@@ -1,69 +1,98 @@
-# frozen_string_literal: true
-
 # Events Controller
 class EventsController < ApplicationController
-  before_action :set_event_for_edit, only: %i[edit]
-  before_action :set_event, only: %i[show update destroy]
+  before_action :set_event, only: %i[show edit update destroy]
+  before_action :set_events, only: %i[index display_calendar]
 
-  def display_calendar
-    @events = Event.all
-  end
-
+  # GET /events
   def index
-    @events = Event.all
+    respond_to do |format|
+      format.html
+    end
   end
 
+  # GET /events/1
   def show; end
 
+  # GET /events/new
   def new
     @event = Event.new
   end
 
+  # POST /events
   def create
-    @event = Event.new(event_params)
-    if @event.save
-      flash[:notice] = I18n.t 'event.messages.success.create_success'
-      redirect_to action: 'index'
-    else
-      flash[:alert] = I18n.t 'event.messages.failure.create_failure'
-      render :new
+    @event = Event.new
+    @event.set_event_fields(event_params)
+    respond_to do |format|
+      if @event.save
+        format.html do
+          flash[:notice] = I18n.t('event.messages.success.create_success')
+          redirect_to action: 'index'
+        end
+      else
+        format.html do
+          flash[:errors] = @event.errors.full_messages
+          render :new
+        end
+      end
     end
   end
 
+  # GET /events/1/edit
   def edit; end
 
+  # PATCH/PUT /events/1
   def update
-    if @event.update(event_params)
-      flash[:notice] = I18n.t 'event.messages.success.update_success'
-      redirect_to action: 'index'
-    else
-      flash[:alert] = I18n.t 'event.messages.failure.update_failure'
-      render :edit
+    @event.set_event_fields(event_params)
+    respond_to do |format|
+      if @event.save
+        format.html do
+          redirect_to action: 'index'
+          flash[:notice] = I18n.t('event.messages.success.update_success')
+        end
+      else
+        format.html do
+          flash[:errors] = @event.errors.full_messages
+          render :edit
+        end
+      end
     end
   end
 
+  # DELETE /events/1
   def destroy
-    if @event.destroy
-      flash[:notice] = I18n.t 'event.messages.success.delete_success'
-    else
-      flash[:alert] = I18n.t 'event.messages.failure.delete_failure'
+    respond_to do |format|
+      if @event.destroy
+        format.html do
+          flash[:notice] = I18n.t('event.messages.success.delete_success')
+          redirect_to action: 'index'
+        end
+      else
+        format.html { redirect_to action: 'index', errors: I18n.t('event.messages.failure.delete_failure') }
+      end
     end
-    redirect_to action: 'index'
+  end
+
+  # GET /events
+  def display_calendar
+    respond_to do |format|
+      format.html
+    end
   end
 
   private
 
   def set_event
     @event = Event.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:errors] = e.message
+    redirect_to action: 'index'
   end
 
-  def set_event_for_edit
-    @event = Event.find(params[:id])
-    @event.set_start_date
-    @event.set_start_time
+  def set_events
+    @events = Event.all
   end
 
   def event_params
-    params.require(:event).permit(:name, :event_start_date, :event_start_time)
+    params.require(:event).permit(:name, :event_date, :event_time)
   end
 end
