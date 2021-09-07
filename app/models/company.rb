@@ -3,7 +3,8 @@
 class Company < ApplicationRecord
   validates :name, :subdomain, presence: true
   validates :subdomain, uniqueness: { case_sensitive: false }
-  # set_not_multitenant
+  has_many :users
+  set_not_multitenant
 
   def self.current_company_id=(company_id)
     Thread.current[:current_company_id] = company_id

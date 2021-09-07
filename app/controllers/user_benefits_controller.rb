@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class UserBenefitsController < ApplicationController
   def index
     @user_benefit = UserBenefit.includes(:user)
@@ -14,7 +12,7 @@ class UserBenefitsController < ApplicationController
     @benefit = Benefit.all
     @user_benefit = UserBenefit.includes(:benefit).all
     # this isn't in the model because I need flash messages I don't know how to
-    # add flash messages from the model, this will be moved to the model later on
+    # add flash messages from the model, this will be moved to the model later
     loop_iterator = 0
     params['user_benefit']['amount'].each do |amount|
       next if amount == ''
@@ -26,9 +24,9 @@ class UserBenefitsController < ApplicationController
       loop_iterator += 1
       begin
         new_user_benefit.save!
-        flash[:notice] = 'Benefit Created Successfully'
+        flash[:notice] = I18n.t('user_benefit.messages.success.')
       rescue ActiveRecord::RecordInvalid
-        flash[:alert] = new_user_benefit.errors.full_messages
+        flash[:errors] = new_user_benefit.errors.full_messages
       end
     end
     redirect_to action: 'index'
@@ -45,9 +43,9 @@ class UserBenefitsController < ApplicationController
   def destroy
     @user_benefit = UserBenefit.find(params[:id])
     if @user_benefit.destroy
-      flash[:notice] = 'Benefit Deleted Successfully'
+      flash[:notice] = I18n.t('user_benefit.messages.success.delete')
     else
-      flash[:alert] = @user_benefit.errors.full_messages
+      flash[:errors] = @user_benefit.errors.full_messages
     end
     redirect_to action: 'index'
   end
@@ -55,10 +53,10 @@ class UserBenefitsController < ApplicationController
   def update
     @user_benefit = UserBenefit.find(params[:id])
     if @user_benefit.update(user_benefit_arguments_update)
-      flash[:notice] = 'User benefit Updated Successfully'
+      flash[:notice] = I18n.t('user_benefit.messages.success.update')
       redirect_to action: 'index'
     else
-      flash[:alert] = @user_benefit.errors.full_messages.first
+      flash[:errors] = @user_benefit.errors.full_messages.first
       redirect_back(fallback_location: root_path)
     end
   end

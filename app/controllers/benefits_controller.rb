@@ -16,10 +16,10 @@ class BenefitsController < ApplicationController
   def update
     @benefit = Benefit.find(params[:id])
     if @benefit.update(benefit_arguments)
-      flash[:notice] = 'Benefit Updated Successfully'
+      flash[:notice] = I18n.t('benefit.messages.success.update')
       redirect_to action: 'index'
     else
-      flash[:alert] = @benefit.errors.full_messages
+      flash[:errors] = @benefit.errors.full_messages
       redirect_back(fallback_location: root_path)
     end
   end
@@ -27,10 +27,10 @@ class BenefitsController < ApplicationController
   def create
     @benefit = Benefit.new(benefit_arguments)
     if @benefit.save
-      flash[:notice] = 'Benefit Created Successfully'
+      flash[:notice] = I18n.t('benefit.messages.success.create')
       redirect_to action: 'index'
     else
-      flash[:alert] = @benefit.errors.full_messages
+      flash[:errors] = @benefit.errors.full_messages
       redirect_back(fallback_location: root_path)
     end
   end
@@ -38,9 +38,9 @@ class BenefitsController < ApplicationController
   def destroy
     @benefit = Benefit.find(params[:id])
     if @benefit.destroy
-      flash[:notice] = 'Benefit Deleted Successfully'
+      flash[:notice] = I18n.t('benefit.messages.success.delete')
     else
-      flash[:alert] = @benefit.errors.full_messages
+      flash[:errors] = @benefit.errors.full_messages
     end
     redirect_to action: 'index'
   end

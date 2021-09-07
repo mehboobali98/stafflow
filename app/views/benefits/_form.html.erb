@@ -3,13 +3,13 @@
     <div class = "col-md-4">
       <div class = "mb-3">
         <%= benefit_object.label :Benefit_Name, { class: "form-label"} %>
-        <%= benefit_object.text_field :name, { class: "form-control", placeholder: "Benefit Name" } %>
+        <%= benefit_object.text_field :name, { class: "form-control", placeholder: I18n.t('form.field.benefit_name') } %>
       </div>
       <div class="mb-3 ">
         <%= benefit_object.label :Benefit_Type, { class: "form-label"} %>
-        <%= benefit_object.text_field :benefit_type, { class: "form-control", placeholder: "Benefit Type" } %>
+        <%= benefit_object.text_field :benefit_type, { class: "form-control", placeholder: I18n.t('form.field.benefit_type') } %>
       </div>
-      <%= benefit_object.submit "Submit", class: "btn btn-primary" %>
+      <%= benefit_object.submit I18n.t('form.button.submit'), class: "btn btn-primary" %>
     </div>
   </div>
 <% end %>

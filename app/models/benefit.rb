@@ -5,6 +5,6 @@ class Benefit < ApplicationRecord
   has_many :applied_benefits
   belongs_to :company
   validates :name, uniqueness: true
-  validates :name, presence: { message: 'This field cannot be left empty' }
-  validates :benefit_type, presence: { message: 'This field cannot be left empty' }
+  validates :name, presence: { message: I18n.t('benefit.validation.presence.') }
+  validates :benefit_type, presence: { message: I18n.t('benefit.validation.presence.') }
 end

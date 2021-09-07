@@ -30,4 +30,50 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  payroll:
+    table:
+      amount: "Amount"
+      salary_item: "Salary Item"
+      base_salary: "Base Salary"
+      salary_after_tax: "Salary After Tax"
+      gross_salary: "Gross Salary"
+  benefit:
+    table:
+      name: "Name"
+      type: "Type"
+    messages:
+      success:
+        create: "Benefit Created Successfully"
+        update: "Benefit Updated Successfully"
+        delete: "Benefit Deleted Successfully"
+    validation:
+      presence: "This field cannot be left empty"
+  form:
+    message:
+      confirmation: "Are you sure?"
+    button:
+      submit: "submit"
+      create_benefit: "Create Benefit"
+      update: "Update"
+      delete: "delete"
+    field:
+      benefit_type: "Benefit Type"
+      benefit_name: "Benefit Name"
+  user_benefit:
+    messages:
+      success:
+        create: "User Benefit Created Successfully"
+        update: "User Benefit Updated Successfully"
+        delete: "User Benefit Deleted Successfully"
+    validation:
+      presence: "This field cannot be left empty"
+    table:
+      benefit_amount: "Benefit Amount"
+      active: "Active"
+      inactive: "Inactive"
+      new_user_benefit: "New User Benefit"
+      user_name: "User Name"
+      benefit_name: "Benefit name"
+      amount: "Amount"
+      status: "Status"
+      select: "Select"

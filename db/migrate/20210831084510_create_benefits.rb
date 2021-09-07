@@ -5,6 +5,7 @@ class CreateBenefits < ActiveRecord::Migration[6.0]
     create_table :benefits do |t|
       t.string :name
       t.string :benefit_type
+      t.references :company, null: false
 
       t.timestamps
     end

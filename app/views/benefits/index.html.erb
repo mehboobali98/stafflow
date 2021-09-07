@@ -1,12 +1,12 @@
 <div class="container">
   <h1>Benefits</h1>
-  <%= link_to "Create Benefit", new_benefit_path, class: 'btn btn-outline-dark' %>
+  <%= link_to I18n.t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-dark' %>
   <br>
   <br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
-      <th>Name</th>
-      <th>Type</th>
+      <th><%=I18n.t('benefit.table.name')%></th>
+      <th><%=I18n.t('benefit.table.type')%></th>
       <th style="text-align:left" colspan="2">Options</th>
     </tr>
   </thead>
@@ -15,8 +15,8 @@
       <tr>
         <td><%= benefit.name %></td>
         <td><%= benefit.benefit_type %></td>
-        <td><%= link_to "update", benefit_path(benefit), class: 'btn btn-secondary' %></td>
-        <td><%= link_to "Destroy", benefit, method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %></td>
+        <td><%= link_to I18n.t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' %></td>
+        <td><%= link_to I18n.t('form.button.delete'), benefit, method: :delete, data: { confirm: I18n.t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
       </tr>
     <% end %>
   </tbody>
