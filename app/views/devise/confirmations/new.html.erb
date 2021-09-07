@@ -7,7 +7,7 @@
 
       <div class="field mb-3">
         <%= f.label I18n.t 'forms.labels.email' %><br />
-        <%= f.email_field :email, class: "form-control pl-5 pr-5", autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+        <%= f.email_field :email, class: "form-control pl-5 pr-5", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
       </div>
 
       <div class="actions mb-2">
