@@ -64,6 +64,8 @@ class UsersController < ApplicationController
   def find_user_with_id
     @user = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist')
+    respond_to do |format|
+      format.html { redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist') }
+    end
   end
 end
