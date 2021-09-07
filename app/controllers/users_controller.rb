@@ -91,7 +91,7 @@ class UsersController < ApplicationController
   end
 
   def validate_user(date_of_birth, role)
-    return false if date_of_birth.year.to_s > 4 || role.to_i == User::ROLES[:account_owner]
+    return false if Date.parse(date_of_birth).year.to_s.length > 4 || role.to_i == User::ROLES[:account_owner]
 
     true
   end

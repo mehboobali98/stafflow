@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :members, controller: 'users'
 
-  constraints(SubdomainValidator) do
-    get '/home', to: 'home#home'
-  end
+  # constraints(subdomain: '7vas') do
+  #   get '/home', to: 'home#home'
+  # end
 end

@@ -1,6 +1,6 @@
 <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
 
-<div class='card border-dark pb-3 text-center w-25'>
+<div class='card border-dark pb-3 text-center w-75'>
   <h2 class='card-header'> <%= I18n.t('headings.signup') %> </h2>
   <div class='card-body px-5'>
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
@@ -50,7 +50,7 @@
       <%end%>
 
       <div class="actions">
-        <%= f.submit I18n.t('forms.buttons.signup'), class: 'btn btn-primary' %>
+        <%= f.submit I18n.t('forms.buttons.signup'), class: 'btn btn-dark' %>
       </div>
 
     <% end %>
