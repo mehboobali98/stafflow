@@ -9,4 +9,8 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end

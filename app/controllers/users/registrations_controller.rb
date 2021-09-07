@@ -9,7 +9,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     company = Company.new(company_permitted_parameters)
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
     @user.role_id = User::ROLES[:account_owner]
-    @user.department_id = 1 # This line will be removed once DB is recreated. Due to bad migration
     respond_to do |format|
       if company.save
         format.html { redirect_to new_user_session_url, notice: I18n.t('messages.signed_up') }
@@ -23,14 +22,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth, {company_attributes: [:name, :subdomain]}]
+    permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth, { company_attributes: [:name, :subdomain] }]
     devise_parameter_sanitizer.permit(:sign_up, keys: permitted_attributes)
   end
 
   # If you have extra params to permit, append them to the sanitizer.
 
   def configure_account_update_params
-    permitted_attributes = %I[email password first_name last_name department_id company_id date_of_birth]
+    permitted_attributes = %i[email password first_name last_name department_id company_id date_of_birth]
     devise_parameter_sanitizer.permit(:account_update, keys: permitted_attributes)
   end
 

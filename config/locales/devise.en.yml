@@ -114,7 +114,7 @@ en:
   headings:
     change_password: "Change Password"
     forgot_password: "Forgot Your Password"
-    edit: "Edit"
+    edit: "Edit %{user}"
     unhappy: "Unhappy ?"
     cancel_my_account: "Cancel My Account"
     signin: "Sign In"

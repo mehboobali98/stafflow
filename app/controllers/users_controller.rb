@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :validate_role, only: %i[create update]
   before_action :find_user, only: %i[edit update destroy show]
-  before_action :check_for_valid_date, only: :create
+
   # GET /members/new
   def new
     @user = User.new
@@ -13,9 +13,11 @@ class UsersController < ApplicationController
   # POST /members
   def create
     @user = User.new(permit_user_params)
-    @user.department_id = 1 # Temporary
+    if validate_user(params.dig(:user, :date_of_birth), params.dig(:user, :role_id))
+      is_saved = @user.save
+    end
     respond_to do |format|
-      if @user.save
+      if is_saved
         format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
       else
         format.html { render :new }
@@ -26,14 +28,17 @@ class UsersController < ApplicationController
   # GET /members/:id/edit
   def edit
     respond_to do |format|
-      format.html { render :edit }
+      format.html
     end
   end
 
   # PATCH /members/:id
   def update
+    if validate_user(params.dig(:user, :date_of_birth), params.dig(:user, :role_id))
+      is_updated = @user.update(permit_user_params)
+    end
     respond_to do |format|
-      if @user.update(permit_user_params)
+      if is_updated
         format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
       else
         format.html { render :edit }
@@ -43,16 +48,20 @@ class UsersController < ApplicationController
 
   # DELETE /members/:id
   def destroy
+    is_destroyed = @user.destroy
     respond_to do |format|
-      message = @user.destroy ? I18n.t('messages.deleted_employee') : I18n.t('messages.error_deleting')
-      format.html { redirect_to members_path, notice: message }
+      if is_destroyed
+        format.html { redirect_to members_path, notice: I18n.t('messages.deleted_employee') }
+      else
+        format.html { redirect_to members_path, alert: I18n.t('messages.error_deleting') }
+      end
     end
   end
 
   # GET /members/:id
   def show
     respond_to do |format|
-      format.html { render :show }
+      format.html
     end
   end
 
@@ -81,10 +90,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def check_for_valid_date
-    date_of_birth = params[:user][:date_of_birth]
-    respond_to do |format|
-      format.html { render :new, alert: I18n.t('messages.date_error') } if date_of_birth.year.to_s.length > 4
-    end
+  def validate_user(date_of_birth, role)
+    return false if date_of_birth.year.to_s > 4 || role.to_i == User::ROLES[:account_owner]
+
+    true
   end
 end

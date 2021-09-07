@@ -6,7 +6,7 @@
     <div class="card text-center w-75 m-2">
       <h2 class='card-header'><%= I18n.t('headings.employee_profile') %></h2>
       <div class="card-body">
-        <h3><%= @user.first_name + ' ' + @user.last_name %></h3>
+        <h3><%= @user.full_name %></h3>
         <h4><%= @user.email %></h4>
         <h4><%= @user.date_of_birth %></h4>
       </div>
