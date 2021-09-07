@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  before_action :validate_role, only: %i[create update]
   before_action :find_user, only: %i[edit update destroy show]
 
   # GET /members/new
@@ -74,12 +73,6 @@ class UsersController < ApplicationController
 
   def permit_user_params
     params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
-  end
-
-  def validate_role
-    return unless params[:user][:role_id].to_i == User::ROLES[:account_owner]
-
-    redirect_to members_path, alert: I18n.t('messages.cannot_be_account_owner')
   end
 
   def find_user
