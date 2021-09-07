@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserBenefit < ApplicationRecord
   belongs_to :benefit
   belongs_to :user

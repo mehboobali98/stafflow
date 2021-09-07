@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Benefit < ApplicationRecord
   has_many :user_benefits
   has_many :applied_benefits

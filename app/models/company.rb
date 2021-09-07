@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Company < ApplicationRecord
   validates :subdomain, :name, presence: true
   validates :subdomain, uniqueness: true

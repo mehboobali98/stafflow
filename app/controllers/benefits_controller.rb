@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BenefitsController < ApplicationController
   def index
     @benefit = Benefit.all

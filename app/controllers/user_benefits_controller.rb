@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserBenefitsController < ApplicationController
   def index
     @user_benefit = UserBenefit.includes(:user)
