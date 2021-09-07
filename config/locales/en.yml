@@ -45,6 +45,7 @@ en:
     destroy: "Department destroy Successfully"
     edit_message: "Update Department"
     add_message: "Add Department"
+    not_exist: "Department not Exist"
 
   designation:
     name_lable: "Designation Name"
@@ -62,3 +63,4 @@ en:
     destroy: "Designation destroy Successfully"
     edit_message: "Update Designation"
     add_message: "Add Designation"
+    not_exist: "Designation not Exist"
