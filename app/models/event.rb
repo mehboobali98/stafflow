@@ -13,7 +13,7 @@ class Event < ApplicationRecord
   end
 
   def validate_event_year
-    errors.add(:event_year, 'cannot have 5 digits') if starts_at.year.to_s.length > 4
+    errors.add(:event_year, 'cannot have more than 4 digits') if starts_at.year.to_s.length > 4
   end
 
   def set_event_fields(event_params)
