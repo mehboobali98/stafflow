@@ -1,1 +1,39 @@
-<%=render :partial => 'form'%> 
+<%= form_tag user_benefits_path do |user_benefit| %>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-bordered table-striped">
+          <thead class = "table-dark">
+            <tr>
+              <th scope="col">Select</th>
+              <th scope="col">Benefit Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Status Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%@benefit.each do |benefit| %>
+              <tr>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <%= check_box_tag  'user_benefit[benefit_id][]', benefit.id%>
+                  </div>
+                </td>
+                <td><%=benefit.name%></td>
+                <td>
+                  <div class="form-group">
+                  <%= number_field_tag 'user_benefit[amount][]', required: true %>
+                  </div>
+                </td>
+                <td>
+                  <%= check_box_tag  'user_benefit[status][]'%>
+                </td>
+              </tr>  
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <%= submit_tag 'Submit', class: "btn btn-primary m-1" %>
+  </div>
+<%end%>

@@ -2,12 +2,12 @@
 
 class PayrollsController < ApplicationController
   def index
-    @payrolls = Payroll.all
+    @payroll = Payroll.includes(:user).last
+    @user_benefit = UserBenefit.includes(:benefit)
+    @gross_salary = Payroll.calculate_gross_salary(@user_benefit, @payroll)
   end
 
-  def show
-    @payrolls = Payroll.find(params[:id])
+  def create
+    puts
   end
-
-  def update; end
 end

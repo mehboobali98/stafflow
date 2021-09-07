@@ -1,40 +1,30 @@
-<div class = "table-responsive">
-  <table class="table table-striped table-bordered">
-    <thead class="blue">
-      <tr class = "table-striped">
-        <th style = 'text-align:center' style = 'text-align:top' scope="col">Basic Salary</th>
-        <th style = 'text-align:center' scope="col">Tax Deduction</th>
-        <th style = 'text-align:center' scope="col">Bonus</th>
-        <th style = 'text-align:center' scope="col">Compensatory Pay</th>
-        <th style = 'text-align:center' scope="col">Residence Allowance</th>
-        <th style = 'text-align:center' scope="col">Travel Allowance</th>
-        <th style = 'text-align:center' scope="col">GYM Allowance</th>
-        <th style = 'text-align:center' scope="col">Training & Development Policy Reimbursement</th>
-        <th style = 'text-align:center' scope="col">Coupon Reimbursement</th>
-        <th style = 'text-align:center' scope="col">Device Policy Reimbursement</th>
-        <th style = 'text-align:center' scope="col">Miscellaneous Additions</th>
-        <th style = 'text-align:center' style = 'text-align:top' scope="col">EOBI</th>
-        <th style = 'text-align:center' scope="col">Provident Fund</th>
-      </tr>
+<div class="container">
+  <h1>Payrolls</h1>
+  <br>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <th>Salary Item</th>
+      <th>Amount</th>
     </thead>
     <tbody>
-      <% @payrolls.each do |payroll| %>
-      <tr class = "table-striped">
-        <td style = 'text-align:center'><%=payroll.base_salary%></td>
-        <td style = 'text-align:center'><%=payroll.tax%></td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
-        <td style = 'text-align:center'>0</td>
+      <tr>
+        <td>Base Salary</td>
+        <td><%=@payroll.user.base_salary%></td>
+      </tr>
+      <tr>
+        <td>Salary after Tax</td>
+        <td><%=@payroll.salary_after_tax%></td>
+      </tr>
+      <%@user_benefit.each do |user_benefit|%>
+      <tr>
+        <td><%=user_benefit.benefit.name%></td>
+        <td><%=user_benefit.amount%></td>
       </tr>
       <%end%>
+      <tr>
+        <td>Gross Salary</td>
+        <td><%=@gross_salary%></td>
+      </tr>
     </tbody>
-  </table>
-</div>
+  </table> 
+</div> 
