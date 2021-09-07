@@ -38,6 +38,9 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # set tld length to 0
+  config.action_dispatch.tld_length = 0
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
