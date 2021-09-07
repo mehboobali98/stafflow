@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-4">
-      <h1> <%= heading if local_assigns.has_key?(:heading) %></h1>
-      <%= form_with model: @event, local:true, html: {class: 'card p-3 bg-light'} do |form| %>
+      <h1> <%= heading if local_assigns.key?(:heading) %></h1>
+      <%= form_with model: @event, local:true, html: { class: 'card p-3 bg-light' } do |form| %>
         <div class="form-group mb-3">
           <%= form.label :name, I18n.t('event.forms.labels.event_name') %>
           <%= form.text_field :name, required: true, class: 'form-control', placeholder: I18n.t('event.forms.placeholders.event_name') %>

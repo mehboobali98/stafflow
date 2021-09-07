@@ -7,10 +7,10 @@ module EventsHelper
   end
 
   def extract_time(date)
-    date&.strftime('%H:%M') unless date.nil?
+    date&.strftime('%H:%M')
   end
 
   def extract_date(date)
-    date&.to_date unless date.nil?
+    date&.to_date
   end
 end
