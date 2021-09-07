@@ -8,7 +8,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     company = Company.new(company_permitted_parameters)
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
-    @user.role_id = User::ROLES[:Account_Owner]
+    @user.role_id = User::ROLES[:account_owner]
     @user.department_id = 1 # This line will be removed once DB is recreated. Due to bad migration
     respond_to do |format|
       if company.save
