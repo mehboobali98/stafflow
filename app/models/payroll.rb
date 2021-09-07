@@ -3,6 +3,7 @@
 class Payroll < ApplicationRecord
   has_many :applied_benefit
   belongs_to :user
+  belongs_to :company
 
   def self.calculate_gross_salary(user_benefit)
     gross_salary = 0

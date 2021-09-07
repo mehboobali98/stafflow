@@ -8,6 +8,7 @@ class CreateAppliedBenefits < ActiveRecord::Migration[6.0]
       t.references :payroll
       t.references :user, null: false
       t.references :benefit, null: false
+      t.references :company, null: false
 
       t.timestamps
     end
