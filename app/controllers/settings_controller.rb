@@ -8,7 +8,8 @@ class SettingsController < ApplicationController
 
   # GET /settings
   def index
-    @setting = Setting.all
+    @setting = current_company.setting
+    render :edit
   end
 
   # POST /settings
@@ -30,7 +31,7 @@ class SettingsController < ApplicationController
   def update
     respond_to do |format|
       if @setting.update(permit_settings_parameters)
-        format.html { redirect_to @setting, notice: 'Successfully updated' }
+        format.html { redirect_to settings_path, notice: 'Successfully updated' }
       else
         format.html { render :edit, notice: 'Not updated' }
       end

@@ -1,18 +1,36 @@
-<h1><%= I18n.t('headings.settings') %></h1>
-<%= form_with model: setting do |form| %>
-  <div>
-    <%= form.label :tax %>
-    <%= form.number_field :tax, min: 0, required: true %>
-  </div>
+<%= javascript_pack_tag 'settings', 'data-turbolinks-track': 'reload' %>
 
-  <div>
-    <%= form.label :Red %>
-    <%= form.radio_button :theme, 'red', required: true %>
-    <%= form.label :Blue %>
-    <%= form.radio_button :theme, 'blue' %>
-    <%= form.label :Black %>
-    <%= form.radio_button :theme, 'black' %>
-  </div>
-  <%= form.submit %>
+<div class = 'm-0 p-0'>
 
-<% end %>
+  <h1 class = 'card-header'><%= I18n.t('headings.settings') %></h1>
+  <div class = 'w-75 mt-5'>
+    <%= form_with model: setting, id: 'setting_form' do |form| %>
+
+      <div class = 'card p-3 card-header'>
+        <div class = 'm-3 card p-3'>
+          <%= form.label :tax, class: 'form-label' %>
+          <%= form.number_field :tax, min: 0, required: true, class: 'form-control' %>
+        </div>
+
+        <div class = 'm-3 card p-3'>
+        <%= form.label :Theme, class: 'form-label' %>
+          <div class = 'form-check'>
+            <%= form.radio_button :theme, 'red', required: true, class: 'form-check-input' %>
+            <%= form.label :Red %>
+          </div>
+          <div class = 'form-check'>
+            <%= form.radio_button :theme, 'blue', required: true, class: 'form-check-input' %>
+            <%= form.label :Blue %>
+          </div>
+          <div class = 'form-check'>
+            <%= form.radio_button :theme, 'black', required: true, class: 'form-check-input' %>
+            <%= form.label :Black %>
+          </div>
+        </div>
+      </div>
+      <%= form.submit disabled: !setting.changed?, class: 'btn btn-dark m-3 pull-right', id: 'submit_button' %>
+
+    <% end %>
+    
+  </div>
+</div>
