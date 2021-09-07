@@ -1,1 +1,5 @@
 <%= render partial: 'table' %>
+<%= stylesheet_link_tag 'pagination' %>
+<div class="pagination-wrapper">
+  <%= will_paginate @departments, :container => false %>
+</div>
