@@ -5,21 +5,21 @@
         <table class="table table-bordered table-striped">
           <thead class = "table-dark">
             <tr>
-              <th scope="col"><%=I18n.t('user_benefit.table.select')%></th>
-              <th scope="col"><%=I18n.t('user_benefit.table.benefit_name')%></th>
-              <th scope="col"><%=I18n.t('user_benefit.table.amount')%></th>
-              <th scope="col"><%=I18n.t('user_benefit.table.status')%></th>
+              <th scope="col"><%= I18n.t('user_benefit.table.select') %></th>
+              <th scope="col"><%= I18n.t('user_benefit.table.benefit_name') %></th>
+              <th scope="col"><%= I18n.t('user_benefit.table.amount') %></th>
+              <th scope="col"><%= I18n.t('user_benefit.table.status') %></th>
             </tr>
           </thead>
           <tbody>
-            <%@benefit.each do |benefit| %>
+            <% @benefit.each do |benefit| %>
               <tr>
                 <td>
                   <div class="custom-control custom-checkbox">
-                    <%= check_box_tag  'user_benefit[benefit_id][]', benefit.id%>
+                    <%= check_box_tag  'user_benefit[benefit_id][]', benefit.id %>
                   </div>
                 </td>
-                <td><%=benefit.name%></td>
+                <td><%= benefit.name %></td>
                 <td>
                   <div class="form-group">
                   <%= number_field_tag 'user_benefit[amount][]', required: true %>

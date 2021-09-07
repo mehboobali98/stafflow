@@ -1,13 +1,16 @@
 class UserBenefitsController < ApplicationController
+  # GET /user_benefits
   def index
     @user_benefit = UserBenefit.includes(:user)
   end
 
+  # GET /user_benefits/new
   def new
     @user_benefit = UserBenefit.includes(:benefit).all
     @benefit = Benefit.all
   end
 
+  # POST /user_benefits
   def create
     @benefit = Benefit.all
     @user_benefit = UserBenefit.includes(:benefit).all
@@ -32,14 +35,12 @@ class UserBenefitsController < ApplicationController
     redirect_to action: 'index'
   end
 
-  def generate_payroll
-    UserBenefit.create_applied_benefit
-  end
-
+  # GET /user_benefits/:id
   def show
     @user_benefit = UserBenefit.find(params[:id])
   end
 
+  # DELETE /user_benefits/:id
   def destroy
     @user_benefit = UserBenefit.find(params[:id])
     if @user_benefit.destroy
@@ -50,6 +51,7 @@ class UserBenefitsController < ApplicationController
     redirect_to action: 'index'
   end
 
+  # PATCH/PUT /user_benefits/:id
   def update
     @user_benefit = UserBenefit.find(params[:id])
     if @user_benefit.update(user_benefit_arguments_update)

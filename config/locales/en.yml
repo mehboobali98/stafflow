@@ -52,10 +52,10 @@ en:
     message:
       confirmation: "Are you sure?"
     button:
-      submit: "submit"
+      submit: "Submit"
       create_benefit: "Create Benefit"
       update: "Update"
-      delete: "delete"
+      delete: "Delete"
     field:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
