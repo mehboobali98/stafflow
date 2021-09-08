@@ -1,8 +1,3 @@
-module Users
-  class RegistrationsController < Devise::RegistrationsController
-    before_action :configure_sign_up_params, only: [:create]
-    before_action :configure_account_update_params, only: [:update]
-
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
@@ -20,16 +15,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
         format.html { render 'devise/registrations/new' }
       end
     end
+  end
 
-    protected
+  protected
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth, { company_attributes: [:name, :subdomain] }]
+    permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth,
+                            { company_attributes: %i[name subdomain] }]
     devise_parameter_sanitizer.permit(:sign_up, keys: permitted_attributes)
   end
 
-    # If you have extra params to permit, append them to the sanitizer.
+  # If you have extra params to permit, append them to the sanitizer.
 
   def configure_account_update_params
     permitted_attributes = %i[email password first_name last_name department_id company_id date_of_birth]
