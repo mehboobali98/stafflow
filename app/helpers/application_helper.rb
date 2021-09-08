@@ -2,7 +2,7 @@
 
 # Application helper
 module ApplicationHelper
-  def flash_class(message_type)
+  def add_flash_bootstrap_class(message_type)
     case message_type.to_sym
     when :notice then 'alert alert-info'
     when :success then 'alert alert-success'
