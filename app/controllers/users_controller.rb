@@ -5,7 +5,11 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     respond_to do |format|
-      format.html { render :new }
+      if can? :create, User
+        format.html { render :new }
+      else
+        format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
+      end
     end
   end
 
@@ -27,7 +31,11 @@ class UsersController < ApplicationController
   # GET /members/:id/edit
   def edit
     respond_to do |format|
-      format.html
+      if can? :update, @user
+        format.html
+      else
+        format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
+      end
     end
   end
 
@@ -60,12 +68,17 @@ class UsersController < ApplicationController
   # GET /members/:id
   def show
     respond_to do |format|
-      format.html
+      if can? :read, @user
+        format.html
+      else
+        format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
+      end
     end
   end
 
   # GET /members
   def index
+    # @users = User.accessible_by(current_ability)
     @users = User.all
   end
 

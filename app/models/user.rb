@@ -24,8 +24,24 @@ class User < ApplicationRecord
   end
 
   def validate_role(role)
-    return unless role.to_i == ROLES[:account_owner]
+    return true unless role.to_i == ROLES[:account_owner]
 
     errors.add(:role_id, I18n.t('messages.cannot_be_account_owner'))
+  end
+
+  def owner?
+    role_id == ROLES[:account_owner]
+  end
+
+  def hr?
+    role_id == ROLES[:hr]
+  end
+
+  def department_head?
+    role_id == ROLES[:department_head]
+  end
+
+  def employee?
+    role_id == ROLES[:employee]
   end
 end
