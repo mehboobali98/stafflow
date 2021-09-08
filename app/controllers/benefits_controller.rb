@@ -1,58 +1,71 @@
 # frozen_string_literal: true
 
 class BenefitsController < ApplicationController
+  before_action :load_benefit_object, only: %i[destroy update show]
+
   # GET /benefits
   def index
-    @benefit = Benefit.all
+    @benefits = Benefit.all
+    respond_to do |format|
+      format.html
+    end
   end
 
   # GET /benefits/new
   def new
-    @benefit = Benefit.new
+    @benefits = Benefit.new
+    respond_to do |format|
+      format.html
+    end
   end
 
   # GET /benefits/:id
-  def show
-    @benefit = Benefit.find(params[:id])
-  end
+  def show; end
 
   # PATCH/PUT /benefits/:id
   def update
-    @benefit = Benefit.find(params[:id])
-    if @benefit.update(benefit_arguments)
-      flash[:notice] = I18n.t('benefit.messages.success.update')
-      redirect_to action: 'index'
-    else
-
-      flash[:errors] = @benefit.errors.full_messages
-      redirect_back(fallback_location: root_path)
+    is_updated = @benefits.update(permitted_benefit_arguments)
+    respond_to do |format|
+      if is_updated
+        format.html { redirect_to benefits_path, notice: t('benefit.messages.success.update') }
+      else
+        format.html { redirect_to benefits_path, alert: is_updated.errors.full_messages }
+      end
     end
   end
 
   # POST /benefits
   def create
-    @benefit = Benefit.new(benefit_arguments)
-    if @benefit.save
-      flash[:notice] = I18n.t('benefit.messages.success.create')
-      redirect_to action: 'index'
-    else
-      flash[:errors] = @benefit.errors.full_messages
-      redirect_back(fallback_location: root_path)
+    @benefits = Benefit.new(permitted_benefit_arguments)
+    is_saved = @benefits.save
+    respond_to do |format|
+      if is_saved
+        format.html { redirect_to benefits_path, notice: t('benefit.messages.success.create') }
+      else
+        format.html { redirect_to benefits_path, alert: is_saved.errors.full_messages }
+      end
     end
   end
 
   # DELETE /benefits/:id
   def destroy
-    @benefit = Benefit.find(params[:id])
-    if @benefit.destroy
-      flash[:notice] = I18n.t('benefit.messages.success.delete')
-    else
-      flash[:errors] = @benefit.errors.full_messages
+    is_destroyed = @benefits.destroy
+    respond_to do |format|
+      if is_destroyed
+        format.html { redirect_to benefits_path, notice: t('benefit.messages.success.delete') }
+      else
+        format.html { redirect_to benefits_path, alert: is_destroyed.errors.full_messages }
+      end
     end
-    redirect_to action: 'index'
   end
 
-  def benefit_arguments
+  private
+
+  def permitted_benefit_arguments
     params.require(:benefit).permit(:name, :benefit_type)
+  end
+
+  def load_benefit_object
+    @benefits = Benefit.find(params[:id])
   end
 end

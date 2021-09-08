@@ -1,21 +1,21 @@
 class UserBenefitsController < ApplicationController
+  before_action :load_user_benefit_object, only: %i[destroy update show]
+  before_action :load_user_benefits_and_benefits, only: %i[new create]
+
   # GET /user_benefits
   def index
-    @user_benefit = UserBenefit.includes(:user)
+    @user_benefits = UserBenefit.includes(:user)
+    respond_to do |format|
+      format.html
+    end
   end
 
   # GET /user_benefits/new
-  def new
-    @user_benefit = UserBenefit.includes(:benefit).all
-    @benefit = Benefit.all
-  end
+  def new; end
 
   # POST /user_benefits
   def create
-    @benefit = Benefit.all
-    @user_benefit = UserBenefit.includes(:benefit).all
-    # this isn't in the model because I need flash messages I don't know how to
-    # add flash messages from the model, this will be moved to the model later
+    # this function is to refactored, using jquery
     loop_iterator = 0
     params['user_benefit']['amount'].each do |amount|
       next if amount == ''
@@ -27,7 +27,7 @@ class UserBenefitsController < ApplicationController
       loop_iterator += 1
       begin
         new_user_benefit.save!
-        flash[:notice] = I18n.t('user_benefit.messages.success.')
+        flash[:notice] = t('user_benefit.messages.success.')
       rescue ActiveRecord::RecordInvalid
         flash[:errors] = new_user_benefit.errors.full_messages
       end
@@ -36,38 +36,48 @@ class UserBenefitsController < ApplicationController
   end
 
   # GET /user_benefits/:id
-  def show
-    @user_benefit = UserBenefit.find(params[:id])
-  end
+  def show; end
 
   # DELETE /user_benefits/:id
   def destroy
-    @user_benefit = UserBenefit.find(params[:id])
-    if @user_benefit.destroy
-      flash[:notice] = I18n.t('user_benefit.messages.success.delete')
-    else
-      flash[:errors] = @user_benefit.errors.full_messages
+    is_destroyed = @user_benefits.destroy
+    respond_to do |format|
+      if is_destroyed
+        format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.delete') }
+      else
+        format.html { redirect_to user_benefits_path, alert: is_destroyed.errors.full_messages }
+      end
     end
-    redirect_to action: 'index'
   end
 
   # PATCH/PUT /user_benefits/:id
   def update
-    @user_benefit = UserBenefit.find(params[:id])
-    if @user_benefit.update(user_benefit_arguments_update)
-      flash[:notice] = I18n.t('user_benefit.messages.success.update')
-      redirect_to action: 'index'
-    else
-      flash[:errors] = @user_benefit.errors.full_messages.first
-      redirect_back(fallback_location: root_path)
+    is_updated = @user_benefits.update(permitted_user_benefit_arguments_for_update)
+    respond_to do |format|
+      if is_updated
+        format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.updated') }
+      else
+        format.html { redirect_to user_benefits_path, alert: is_updated.errors.full_messages }
+      end
     end
   end
 
-  def user_benefit_arguments_create
+  def permitted_user_benefit_arguments_for_create
     params.require(:user_benefit).permit(benefit_id[], amount[], status[])
   end
 
-  def user_benefit_arguments_update
+  def permitted_user_benefit_arguments_for_update
     params.require(:user_benefit).permit(:amount, :status)
+  end
+
+  private
+
+  def load_user_benefit_object
+    @user_benefits = UserBenefit.find(params[:id])
+  end
+
+  def load_user_benefits_and_benefits
+    @benefits = Benefit.all
+    @user_benefits = UserBenefit.includes(:benefit).all
   end
 end

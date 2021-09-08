@@ -1,18 +1,18 @@
 <%= form_tag user_benefits_path do |user_benefit| %>
   <div class="container">
     <div class="row">
-      <div class="col-12">
+      <div>
         <table class="table table-bordered table-striped">
           <thead class = "table-dark">
             <tr>
-              <th scope="col"><%= I18n.t('user_benefit.table.select') %></th>
-              <th scope="col"><%= I18n.t('user_benefit.table.benefit_name') %></th>
-              <th scope="col"><%= I18n.t('user_benefit.table.amount') %></th>
-              <th scope="col"><%= I18n.t('user_benefit.table.status') %></th>
+              <th scope="col"><%= t('user_benefit.table.select') %></th>
+              <th scope="col"><%= t('user_benefit.table.benefit_name') %></th>
+              <th scope="col"><%= t('user_benefit.table.amount') %></th>
+              <th scope="col"><%= t('user_benefit.table.status') %></th>
             </tr>
           </thead>
           <tbody>
-            <% @benefit.each do |benefit| %>
+            <% @benefits.each do |benefit| %>
               <tr>
                 <td>
                   <div class="custom-control custom-checkbox">
@@ -26,7 +26,7 @@
                   </div>
                 </td>
                 <td>
-                  <%= check_box_tag  'user_benefit[status][]'%>
+                  <%= check_box_tag  'user_benefit[status][]' %>
                 </td>
               </tr>  
             <% end %>
@@ -34,6 +34,6 @@
         </table>
       </div>
     </div>
-    <%= submit_tag I18n.t('form.button.submit'), class: "btn btn-primary m-1" %>
+    <%= submit_tag t('form.button.submit'), class: "btn btn-primary m-1" %>
   </div>
-<%end%>
+<% end %>

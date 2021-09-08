@@ -1,25 +1,24 @@
 <div class="container">
-  <h1>Benefits</h1>
-  <%= link_to I18n.t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-dark' %>
+  <h1><%= t('benefit.headings.benefit') %></h1>
+  <%= link_to t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-dark' %>
   <br>
   <br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
-      <th><%= I18n.t('benefit.table.name') %></th>
-      <th><%= I18n.t('benefit.table.type') %></th>
-      <th style="text-align:left" colspan="2">Options</th>
+      <th><%= t('benefit.table.name') %></th>
+      <th><%= t('benefit.table.type') %></th>
+      <th colspan="2"><%= t('benefit.table.options') %></th>
     </tr>
   </thead>
   <tbody>
-    <% @benefit.each do |benefit| %>
+    <% @benefits.each do |benefit| %>
       <tr>
         <td><%= benefit.name %></td>
         <td><%= benefit.benefit_type %></td>
-        <td><%= link_to I18n.t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' %></td>
-        <td><%= link_to I18n.t('form.button.delete'), benefit, method: :delete, data: { confirm: I18n.t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
+        <td><%= link_to t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' %></td>
+        <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-  
 </div> 

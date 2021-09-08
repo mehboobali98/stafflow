@@ -7,6 +7,7 @@ require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
 import "@fortawesome/fontawesome-free/css/all"
+import "chartkick/chart.js"
 global.$ = global.jQuery = require("jquery"); 
 require("bootstrap")
 document.addEventListener("turbolinks:load", function() {

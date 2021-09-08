@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Users
   class RegistrationsController < Devise::RegistrationsController
     before_action :configure_sign_up_params, only: [:create]
@@ -14,7 +12,7 @@ module Users
       @user.role_id = 1
       @user.department_id = 1 # This line will be removed once DB is recreated. Due to bad migration
       if company.save
-        redirect_to new_user_session_url, notice: I18n.t('messages.signed_up')
+        redirect_to new_user_session_url, notice: t('messages.signed_up')
       else
         render 'devise/registrations/new'
       end

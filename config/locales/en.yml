@@ -37,6 +37,9 @@ en:
       base_salary: "Base Salary"
       salary_after_tax: "Salary After Tax"
       gross_salary: "Gross Salary"
+      options: "Options"
+    headings:
+      payroll: "Payrolls"
   benefit:
     table:
       name: "Name"
@@ -48,6 +51,8 @@ en:
         delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+    headings:
+      benefit: "Benefits"
   form:
     message:
       confirmation: "Are you sure?"
@@ -67,6 +72,8 @@ en:
         delete: "User Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+    headings:
+      user_benefits: "User Benefits"
     table:
       benefit_amount: "Benefit Amount"
       active: "Active"
@@ -77,3 +84,4 @@ en:
       amount: "Amount"
       status: "Status"
       select: "Select"
+      options: "Options"
