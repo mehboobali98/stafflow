@@ -1,55 +1,26 @@
 class SettingsController < ApplicationController
-  before_action :load_and_validate_settings, only: %I[show edit update]
-
-  # GET /settings/new
-  def new
-    @setting = Setting.new
-  end
-
   # GET /settings
   def index
     @setting = current_company.setting
     render :edit
   end
 
-  # POST /settings
-  def create
-    @setting = Setting.new(permit_settings_parameters)
-    respond_to do |format|
-      if @setting.save
-        format.html { redirect_to @setting, notice: 'Successfully Saved' }
-      else
-        format.html { render :new, notice: 'Not Saved' }
-      end
-    end
-  end
-
-  # GET /settings/:id/edit
-  def edit; end
-
   # PATCH /settings/:id
   def update
+    @setting = current_company.setting
+    is_updated = @setting.update(permit_settings_parameters)
     respond_to do |format|
-      if @setting.update(permit_settings_parameters)
-        format.html { redirect_to settings_path, notice: 'Successfully updated' }
+      if is_updated
+        format.html { redirect_to settings_path, notice: I18n.t('settings.updated') }
       else
-        format.html { render :edit, notice: 'Not updated' }
+        format.html { render :edit, notice: I18n.t('settings.not_updated') }
       end
     end
   end
-
-  # GET /settings/:id
-  def show; end
 
   private
 
   def permit_settings_parameters
     params.require(:setting).permit(:tax, :theme)
-  end
-
-  def load_and_validate_settings
-    @setting = Setting.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to settings_path, alert: 'Settings not found'
   end
 end
