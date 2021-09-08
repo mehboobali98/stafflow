@@ -1,7 +1,7 @@
 <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
 
 <div class='card border-dark pb-3 text-center w-75'>
-  <h2 class='card-header'> <%= I18n.t('headings.signup') %> </h2>
+  <h2 class='card-header'><%= I18n.t('headings.signup') %></h2>
   <div class='card-body px-5'>
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>

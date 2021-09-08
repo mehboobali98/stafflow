@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   # POST /members
   def create
     @user = User.new(permit_user_params)
-    if validate_user(params.dig(:user, :date_of_birth), params.dig(:user, :role_id))
+    if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
       is_saved = @user.save
     end
     respond_to do |format|
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
   # PATCH /members/:id
   def update
-    if validate_user(params.dig(:user, :date_of_birth), params.dig(:user, :role_id))
+    if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
       is_updated = @user.update(permit_user_params)
     end
     respond_to do |format|
@@ -81,11 +81,5 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist') }
     end
-  end
-
-  def validate_user(date_of_birth, role)
-    return false if Date.parse(date_of_birth).year.to_s.length > 4 || role.to_i == User::ROLES[:account_owner]
-
-    true
   end
 end

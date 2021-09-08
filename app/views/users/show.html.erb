@@ -1,18 +1,18 @@
-<div class="row">
-  <div class="col-3">
+<div class='row'>
+  <div class='col-3'>
     <%= link_to 'Back', members_path, class: 'btn btn-dark m-3' %>
   </div>
-  <div class="col-6">
-    <div class="card text-center w-75 m-2">
+  <div class='col-6'>
+    <div class='card text-center w-75 m-2'>
       <h2 class='card-header'><%= I18n.t('headings.employee_profile') %></h2>
-      <div class="card-body">
+      <div class='card-body'>
         <h3><%= @user.full_name %></h3>
         <h4><%= @user.email %></h4>
         <h4><%= @user.date_of_birth %></h4>
       </div>
     </div>
   </div>
-  <div class="col-3 text-end">
+  <div class='col-3 text-end'>
     <%= link_to t('forms.buttons.edit'), edit_member_path(@user), class: 'btn btn-dark m-3' %>
   </div>
 </div>
