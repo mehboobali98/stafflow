@@ -1,12 +1,12 @@
-<%= form_for @user_benefits do |user_benefit| %>
-  <div class = "row">
-    <div class = "col-md-4">
+<%= form_for @user_benefit do |user_benefit| %>
+  <div class="row">
+    <div class="col-md-4">
       <div class="mb-3 ">
-        <%= user_benefit.label :Benefit_Amount, { class: "form-label m-3"} %>
+        <%= user_benefit.label :Benefit_Amount, { class: "form-label m-3" } %>
         <%= user_benefit.text_field :amount, { class: "form-control m-3", required: "required", placeholder: t('user_benefit.table.benefit_amount') } %>
       </div>
-        <div class="mb-3 ">
-          <%= user_benefit.label :Benefit_Status, { class: "form-label m-3"} %>
+        <div class="mb-3">
+          <%= user_benefit.label :Benefit_Status, { class: "form-label m-3" } %>
         <div class="form-check form-check-inline ml-3">
           <%= label :status, t('user_benefit.table.active'), value: false %>
           <%= user_benefit.radio_button :status, true, checked: true, value: true %>

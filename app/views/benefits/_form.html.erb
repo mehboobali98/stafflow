@@ -1,12 +1,12 @@
-<%= form_for @benefits do |benefit_object| %>
-  <div class = "row">
-    <div class = "col-md-4">
-      <div class = "mb-3">
-        <%= benefit_object.label :Benefit_Name, { class: "form-label"} %>
+<%= form_for @benefit do |benefit_object| %>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="mb-3">
+        <%= benefit_object.label :Benefit_Name, { class: "form-label" } %>
         <%= benefit_object.text_field :name, { class: "form-control", placeholder: t('form.field.benefit_name') } %>
       </div>
-      <div class="mb-3 ">
-        <%= benefit_object.label :Benefit_Type, { class: "form-label"} %>
+      <div class="mb-3">
+        <%= benefit_object.label :Benefit_Type, { class: "form-label" } %>
         <%= benefit_object.text_field :benefit_type, { class: "form-control", placeholder: t('form.field.benefit_type') } %>
       </div>
       <%= benefit_object.submit t('form.button.submit'), class: "btn btn-primary" %>

@@ -15,7 +15,7 @@
   <tbody>
     <% @user_benefits.each do |user_benefit| %>
       <tr>  
-        <td><%= user_benefit.user.first_name + ' ' + user_benefit.user.last_name%></td>
+        <td><%= user_benefit.user.full_name%></td>
         <td><%= user_benefit.benefit.name %></td>
         <td><%= user_benefit.amount %></td>
         <td><%= user_benefit.status ? t('user_benefit.table.active') : t('user_benefit.table.inactive') %></td>

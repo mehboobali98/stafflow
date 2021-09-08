@@ -11,7 +11,11 @@ class UserBenefitsController < ApplicationController
   end
 
   # GET /user_benefits/new
-  def new; end
+  def new
+    respond_to do |format|
+      format.html
+    end
+  end
 
   # POST /user_benefits
   def create
@@ -32,32 +36,38 @@ class UserBenefitsController < ApplicationController
         flash[:errors] = new_user_benefit.errors.full_messages
       end
     end
-    redirect_to action: 'index'
+    respond_to do |format|
+      format.html { redirect_to action: 'index' }
+    end
   end
 
   # GET /user_benefits/:id
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+    end
+  end
 
   # DELETE /user_benefits/:id
   def destroy
-    is_destroyed = @user_benefits.destroy
+    is_destroyed = @user_benefit.destroy
     respond_to do |format|
       if is_destroyed
         format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.delete') }
       else
-        format.html { redirect_to user_benefits_path, alert: is_destroyed.errors.full_messages }
+        format.html { redirect_to user_benefits_path, alert: @user_benefit.errors.full_messages }
       end
     end
   end
 
   # PATCH/PUT /user_benefits/:id
   def update
-    is_updated = @user_benefits.update(permitted_user_benefit_arguments_for_update)
+    is_updated = @user_benefit.update(permitted_user_benefit_arguments_for_update)
     respond_to do |format|
       if is_updated
         format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.updated') }
       else
-        format.html { redirect_to user_benefits_path, alert: is_updated.errors.full_messages }
+        format.html { redirect_to user_benefits_path, alert: @user_benefit.errors.full_messages }
       end
     end
   end
@@ -73,7 +83,7 @@ class UserBenefitsController < ApplicationController
   private
 
   def load_user_benefit_object
-    @user_benefits = UserBenefit.find(params[:id])
+    @user_benefit = UserBenefit.find(params[:id])
   end
 
   def load_user_benefits_and_benefits

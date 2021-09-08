@@ -14,12 +14,12 @@ class Payroll < ApplicationRecord
     gross_salary
   end
 
-  def self.generate_payroll(user_benefit)
+  def self.generates_payroll_and_returns_id_of_generated_object(user_benefit)
     gross_salary = calculate_gross_salary(user_benefit)
     user_benefit = user_benefit.first
     payroll = Payroll.new(user_id: user_benefit.user.id, gross_salary: gross_salary,
                           salary_after_tax: user_benefit.user.base_salary * 0.9)
-    payroll.save
+    errors.add_to_base(payroll.errors.full_messages) unless payroll.save
     payroll.id
   end
 

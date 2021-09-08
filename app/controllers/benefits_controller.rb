@@ -13,48 +13,52 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/new
   def new
-    @benefits = Benefit.new
+    @benefit = Benefit.new
     respond_to do |format|
       format.html
     end
   end
 
   # GET /benefits/:id
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+    end
+  end
 
   # PATCH/PUT /benefits/:id
   def update
-    is_updated = @benefits.update(permitted_benefit_arguments)
+    is_updated = @benefit.update(permitted_benefit_arguments)
     respond_to do |format|
       if is_updated
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.update') }
       else
-        format.html { redirect_to benefits_path, alert: is_updated.errors.full_messages }
+        format.html { redirect_to benefits_path, alert: @benefit.errors.full_messages }
       end
     end
   end
 
   # POST /benefits
   def create
-    @benefits = Benefit.new(permitted_benefit_arguments)
+    @benefit = Benefit.new(permitted_benefit_arguments)
     is_saved = @benefits.save
     respond_to do |format|
       if is_saved
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.create') }
       else
-        format.html { redirect_to benefits_path, alert: is_saved.errors.full_messages }
+        format.html { redirect_to benefits_path, alert: @benefit.errors.full_messages }
       end
     end
   end
 
   # DELETE /benefits/:id
   def destroy
-    is_destroyed = @benefits.destroy
+    is_destroyed = @benefit.destroy
     respond_to do |format|
       if is_destroyed
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.delete') }
       else
-        format.html { redirect_to benefits_path, alert: is_destroyed.errors.full_messages }
+        format.html { redirect_to benefits_path, alert: @benefit.errors.full_messages }
       end
     end
   end
@@ -66,6 +70,6 @@ class BenefitsController < ApplicationController
   end
 
   def load_benefit_object
-    @benefits = Benefit.find(params[:id])
+    @benefit = Benefit.find(params[:id])
   end
 end
