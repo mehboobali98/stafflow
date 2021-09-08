@@ -7,26 +7,21 @@ class UserLeavesController < ApplicationController
   end
 
   def create
-    binding.pry
     @user = current_user
+    user_leave_params.values[0].each_value do |value|
+      @user.user_leaves.build(value.merge(remaining_count: value[:total_count]))
+    end
+    @user.save
+    redirect_to controller: :home, action: :index
   end
 
   def edit; end
 
   def update; end
 
-  def apply_for_leave
-    @user_leaves = get_current_user.user_leaves
-  end
-
   private
 
   def user_leave_params
-    params.require(:leave).permit(leave: {})
-    #params.require(:leave).permit
-  end
-
-  def get_current_user
-    @get_current_user ||= current_user
+    params.require(:user_leave).permit(leave: {})
   end
 end

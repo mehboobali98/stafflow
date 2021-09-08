@@ -8,9 +8,9 @@
     </tr>
     <% @leave.each do |leave| %>
       <tr>
-        <td><%= check_box_tag "leave[#{leave.id}][selected]", leave.id %></td>
+        <td><%= check_box_tag "user_leave[leave][#{leave.id}][leave_id]", leave.id %></td>
         <td><%= leave.name %></td>
-        <td><%= number_field_tag "leave[#{leave.id}][count]", leave.count, disabled: true %></td>
+        <td><%= number_field_tag "user_leave[leave][#{leave.id}][total_count]", leave.count, disabled: true %></td>
       </tr>
     <% end %>
   </table>
