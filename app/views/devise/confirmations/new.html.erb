@@ -1,5 +1,5 @@
 <div class='card border-dark pb-3 text-center w-25'>
-  <h2 class= 'card-header'> <%= I18n.t 'headings.resend_confirmation_instructions'%></h2>
+  <h2 class= 'card-header'> <%= I18n.t 'headings.resend_confirmation_instructions' %></h2>
   <div class='card-body px-5'>
     <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
       <%= render 'devise/shared/error_messages', resource: resource %>
