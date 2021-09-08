@@ -7,6 +7,7 @@ class UserLeavesController < ApplicationController
   end
 
   def create
+    binding.pry
     @user = current_user
   end
 
@@ -21,7 +22,8 @@ class UserLeavesController < ApplicationController
   private
 
   def user_leave_params
-    #params.require(:leave).permit(leave_ids: [], leave_counts: [])
+    params.require(:leave).permit(leave: {})
+    #params.require(:leave).permit
   end
 
   def get_current_user

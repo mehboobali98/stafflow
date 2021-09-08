@@ -11,7 +11,6 @@ class LeavesController < ApplicationController
   end
 
   def create
-    binding.pry
     @leave = Leave.new(leave_params)
     if @leave.save
       flash[:notice] = 'Leave created successfully'

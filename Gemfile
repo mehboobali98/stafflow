@@ -27,6 +27,7 @@ gem 'cancancan'
 gem 'devise'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
+gem "transitions", :require => ["transitions", "active_model/transitions"]
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_03_101307) do
+ActiveRecord::Schema.define(version: 2021_09_05_164825) do
 
   create_table "applied_leaves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_leave_id", null: false
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2021_09_03_101307) do
     t.date "applied_till", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "state"
     t.index ["user_leave_id"], name: "index_applied_leaves_on_user_leave_id"
   end
 

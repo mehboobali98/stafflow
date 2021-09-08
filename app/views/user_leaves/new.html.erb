@@ -1,3 +1,4 @@
+<%= javascript_pack_tag "user_leaves/user_leave" %>
 <%= form_tag user_leaves_create_path, method: :post do %>
   <table>
     <tr>
@@ -7,16 +8,11 @@
     </tr>
     <% @leave.each do |leave| %>
       <tr>
-        <td><%= check_box_tag "leave[leave_ids][]", leave.id %></td>
+        <td><%= check_box_tag "leave[#{leave.id}][selected]", leave.id %></td>
         <td><%= leave.name %></td>
-        <td><%= number_field_tag "leave[leave_counts][]", leave.count %></td>
+        <td><%= number_field_tag "leave[#{leave.id}][count]", leave.count, disabled: true %></td>
       </tr>
     <% end %>
   </table>
   <%= submit_tag 'Add user leaves' %>
 <% end %>
-<script>
-  $(document).on('change', '[type=checkbox]', function (e) {
-  alert('clicked');
-  });
-</script>

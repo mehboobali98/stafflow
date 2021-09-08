@@ -1,14 +1,15 @@
 <h1>New Leave Application</h1>
 <%= form_with model: @applied_leave do |form| %>
   <div>
+    <%= form.label :user_leave_id, "Available Leaves" %><br>
     <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, prompt: true, required: true) %>
   </div>
   <div>
-    <%= form.label :applied_at %><br>
+    <%= form.label :applied_at, "Leave From" %><br>
     <%= form.date_field :applied_at, required: true %>
   </div>
   <div>
-    <%= form.label :applied_till %><br>
+    <%= form.label :applied_till, "Leave To" %><br>
     <%= form.date_field :applied_till, required: true %>
   </div>
   <div>
