@@ -1,14 +1,13 @@
 <div class="row justify-content-center">
-  <% binding.pry %>
   <% flash.each do |error_type, error_message| %>
     <% if error_message.is_a?(Array) %>
       <ul>
         <% error_message.each do |message| %>
-          <li><%= message %></li>
+          <li class="text-center"><%= message %></li>
         <% end %>
       </ul>
     <% else %>
-      <%= error_message %>
+      <p class="text-center"><%= error_message %></p>
     <% end %>
   <% end %>
 </div>

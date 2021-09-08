@@ -29,23 +29,17 @@ class EventsController < ApplicationController
   # POST /events
   def create
     @event = Event.new
-    binding.pry
-    if validate_event_year
+    if @event.validate_event_year(event_date)
       set_event_fields(@event)
       is_saved = @event.save
-      binding.pry
-    else
-      binding.pry
-      respond_to do |format|
-        format.html do
-          if is_saved
-            flash[:notice] = I18n.t('event.messages.success.create_success')
-            redirect_to events_path
-          else
-            binding.pry
-            flash.now[:errors] = @event.errors.full_messages
-            render :new
-          end
+    end
+    respond_to do |format|
+      format.html do
+        if is_saved
+          redirect_to events_path, notice: t('event.messages.success.create_success')
+        else
+          flash.now[:error] = @event.errors.full_messages
+          render :new
         end
       end
     end
@@ -60,15 +54,16 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    set_event_fields(@event)
-    is_saved = @event.save
+    if @event.validate_event_year(event_date)
+      set_event_fields(@event)
+      is_saved = @event.save
+    end
     respond_to do |format|
       format.html do
         if is_saved
-          flash[:notice] = I18n.t('event.messages.success.update_success')
-          redirect_to events_path
+          redirect_to events_path, notice: t('event.messages.success.update_success')
         else
-          flash.now[:errors] = @event.errors.full_messages
+          flash.now[:error] = @event.errors.full_messages
           render :edit
         end
       end
@@ -77,13 +72,14 @@ class EventsController < ApplicationController
 
   # DELETE /events/1
   def destroy
-    is_destroyed = @event.destroy
+    deleted_event = @event.destroy
+    is_destroyed = deleted_event.destroyed?
     respond_to do |format|
       format.html do
         if is_destroyed
           flash[:notice] = I18n.t('event.messages.success.delete_success')
         else
-          flash[:errors] = I18n.t('event.messages.failure.delete_failure')
+          flash[:error] = @event.errors.full_messages
         end
         redirect_to events_path
       end
@@ -102,7 +98,7 @@ class EventsController < ApplicationController
   def set_event
     @event = Event.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
-    flash[:errors] = e.message
+    flash[:error] = e.message
     redirect_to events_path
   end
 
@@ -115,19 +111,11 @@ class EventsController < ApplicationController
     event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"
   end
 
-  def validate_event_year
-    if Date.parse(event_params[:event_date]).year.to_s.length > 4
-      binding.pry
-      flash.now[:errors] = 'Event year cannot have more than 4 digits'
-      false
-    else
-      true
-    end
-  rescue Date::Error => e
-    flash[:errors] = e.message
-  end
-
   def event_params
     params.require(:event).permit(:name, :event_date, :event_time)
+  end
+
+  def event_date
+    event_params[:event_date]
   end
 end
