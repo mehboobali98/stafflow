@@ -1,4 +1,8 @@
 class SettingsController < ApplicationController
+  before_action :load_and_validate_settings, only: %I[show edit update]
+
+  add_breadcrumb 'Settings', :settings_path
+
   # GET /settings
   def index
     @setting = current_company.setting
