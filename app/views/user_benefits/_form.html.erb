@@ -1,7 +1,7 @@
 <%= form_for @user_benefit do |user_benefit| %>
   <div class="row">
     <div class="col-md-4">
-      <div class="mb-3 ">
+      <div class="mb-3">
         <%= user_benefit.label :Benefit_Amount, { class: "form-label m-3" } %>
         <%= user_benefit.text_field :amount, { class: "form-control m-3", required: "required", placeholder: t('user_benefit.table.benefit_amount') } %>
       </div>
