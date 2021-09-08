@@ -6,12 +6,10 @@ class Event < ApplicationRecord
   validate :validate_past_event_date, on: :create
 
   def validate_event_year(event_date)
-    if Date.parse(event_date).year.to_s.length > 4
-      errors.add(:event_year, 'cannot have more than 4 digits')
-      false
-    else
-      true
-    end
+    return true unless Date.parse(event_date).year.to_s.length > 4
+
+    errors.add(:event_year, 'cannot have more than 4 digits')
+    false
   rescue Date::Error => e
     errors.add(e.message)
     false

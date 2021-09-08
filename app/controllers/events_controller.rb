@@ -35,12 +35,10 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        if is_saved
-          redirect_to events_path, notice: t('event.messages.success.create_success')
-        else
-          flash.now[:error] = @event.errors.full_messages
-          render :new
-        end
+        return redirect_to events_path, notice: t('event.messages.success.create_success') if is_saved
+
+        flash.now[:error] = @event.errors.full_messages
+        render :new
       end
     end
   end
@@ -60,12 +58,10 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        if is_saved
-          redirect_to events_path, notice: t('event.messages.success.update_success')
-        else
-          flash.now[:error] = @event.errors.full_messages
-          render :edit
-        end
+        return redirect_to events_path, notice: t('event.messages.success.update_success') if is_saved
+
+        flash.now[:error] = @event.errors.full_messages
+        render :edit
       end
     end
   end
@@ -76,11 +72,8 @@ class EventsController < ApplicationController
     is_destroyed = deleted_event.destroyed?
     respond_to do |format|
       format.html do
-        if is_destroyed
-          flash[:notice] = I18n.t('event.messages.success.delete_success')
-        else
-          flash[:error] = @event.errors.full_messages
-        end
+        flash[:error] = @event.errors.full_messages unless is_destroyed
+        flash[:notice] = I18n.t('event.messages.success.delete_success')
         redirect_to events_path
       end
     end
