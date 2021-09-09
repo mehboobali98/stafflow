@@ -226,7 +226,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap (>= 1.4.2)
-  breadcrumbs_on_rails
+  breadcrumbs_on_rails (= 4.1.0)
   byebug
   cancancan
   capybara (>= 2.15)

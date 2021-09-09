@@ -34,7 +34,7 @@ gem 'pry-rails', '~> 0.3.9'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
-gem 'breadcrumbs_on_rails'
+gem 'breadcrumbs_on_rails', '=4.1.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
