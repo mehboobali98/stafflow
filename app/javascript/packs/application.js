@@ -6,7 +6,6 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
-
 global.$ = global.jQuery = require("jquery"); 
 require("bootstrap")
 document.addEventListener("turbolinks:load", function() {

@@ -18,11 +18,11 @@
               <%= link_to t('forms.buttons.edit'), edit_member_path(user), class:'btn btn-info' %>
             <% end %>
             <% if can? :delete, user %>
-              <%= link_to t('forms.buttons.delete'), member_path(user), method: :delete, data: { confirm: "Are you sure?" }, class:'btn btn-danger' %>
+              <%= link_to t('forms.buttons.delete'), member_path(user), method: :delete, data: { confirm: t('messages.confirmation') }, class:'btn btn-danger' %>
             <% end %>
           </td>
         </tr>
-        <% end %>
+      <% end %>
     </tbody>
   </table>
   <!-- This line below is temporary for testing -->

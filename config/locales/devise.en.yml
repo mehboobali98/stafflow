@@ -114,6 +114,7 @@ en:
     error_deleting: "An error occured while deleting user."
     date_error: "There is an error in date format"
     unauthorized: "You are unauthorized to perform this action"
+    confirmation: "Are you sure about this action?"
 
   headings:
     change_password: "Change Password"
@@ -129,4 +130,3 @@ en:
     edit_employee: "Edit Employee"
     all_employees: "All Employees"
     employee_profile: "Employee Profile"
-
