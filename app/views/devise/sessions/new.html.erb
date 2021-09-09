@@ -1,4 +1,7 @@
-<% if request.subdomain!=(""&&"www")%>
+
+<% if request.subdomain=="www"||request.subdomain==""%>
+    <%= render  partial: "find_by_email" %>
+<%else%>
 <div class="card border-dark pb-3 text-center w-75">
 <h2 class="card-header"><%= I18n.t 'headings.signin' %></h2>
 
@@ -31,7 +34,5 @@
   </div>
 
 </div>
-<%else%>
-    <%= render  partial: "find_by_email" %>
 
 <%end%>
