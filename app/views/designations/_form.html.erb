@@ -1,15 +1,16 @@
 <div class="container">
-  <div class="row  mt-4">
+  <div class="row mt-4">
     <div class="col-4">
-      <h1><%= @heading %></h1>
+      <h1><%= local_assigns&.dig(:heading) %></h1>
+
       <%= form_for @designation do |f| %>
         <div class="form-group mb-3">
-          <%= f.label I18n.t 'designation.name_lable' %>
+          <%= f.label t 'designation.name_lable' %>
           <%= f.text_field :designation_name, required: true, class: 'form-control' %>
         </div>
         <div class="input-group mb-3">
           <div class="col-md-6">
-            <%= f.label I18n.t 'designation.select_department' %>
+            <%= f.label t 'designation.select_department' %>
             <%= f.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'},{class: "form-control"} %>        
           </div>
         </div>
