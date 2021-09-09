@@ -2,15 +2,13 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+         :recoverable, :rememberable, :confirmable
 
   belongs_to :company
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
-  validate :validate_date_of_birth, on: %i[create update]
-  validate :validate_role, on: %i[create update]
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
-
+  validates_uniqueness_of :email, scope: :company_id
   def full_name
     "#{first_name} #{last_name}"
   end

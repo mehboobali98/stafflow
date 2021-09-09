@@ -4,6 +4,7 @@ class Company < ApplicationRecord
   validates :name, :subdomain, presence: true
   validates :subdomain, uniqueness: { case_sensitive: false }
   set_not_multitenant
+  has_many :users, dependent: :destroy
 
   def self.current_company_id=(company_id)
     Thread.current[:current_company_id] = company_id
@@ -14,6 +15,9 @@ class Company < ApplicationRecord
   end
 
   def self.find_company_by_subdomain!(subdomain)
+    if subdomain==""|| subdomain=="www"
+      return nil
+    end
     Company.find_by!(subdomain: subdomain)
   end
 end

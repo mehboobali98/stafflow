@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
       is_saved = @user.save
     end
-    respond_to do |format|
+      respond_to do |format|
       if is_saved
         format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
       else

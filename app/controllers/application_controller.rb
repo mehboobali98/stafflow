@@ -8,13 +8,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_company
-    Company.current_company_id = current_company.id
+    Company.current_company_id = current_company&.id
     yield
-  rescue ActiveRecord::RecordNotFound
-    redirect_to '/?NoRecordFound'
   ensure
     Company.current_company_id = nil
   end
-
   private :current_company, :set_current_company
 end
