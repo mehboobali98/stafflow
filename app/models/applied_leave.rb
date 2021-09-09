@@ -29,6 +29,10 @@ class AppliedLeave < ApplicationRecord
     user_leave.remaining_count -= calculate_leave_count
   end
 
+  def current_state_pending?
+    pending?
+  end
+
   def approve_applied_leave
     return false unless state.eql?('pending')
 

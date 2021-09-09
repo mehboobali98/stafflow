@@ -9,11 +9,12 @@ Rails.application.routes.draw do
   post '/user_leaves/create', to: 'user_leaves#create'
   resources :applied_leaves do
     collection do
-      get 'display_pending_leaves'
+      get 'show_applied_leaves', as: 'show'
+      post 'approve_multiple_leaves', as: 'approve_multiple'
     end
     member do
-      post 'approve_leave'
-      post 'reject_leave'
+      patch 'approve_leave', as: 'approve'
+      patch 'reject_leave', as: 'reject'
     end
   end
 end

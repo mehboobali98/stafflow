@@ -26,9 +26,7 @@ class AppliedLeavesController < ApplicationController
 
   def create
     @applied_leave = AppliedLeave.new(applied_leave_params)
-    binding.pry
     is_saved = @applied_leave.save if @applied_leave.leave_count_available?
-    binding.pry
     respond_to do |format|
       format.html do
         return redirect_to action: 'index', notice: 'Leave applied successfully' if is_saved
@@ -55,8 +53,8 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  def display_pending_leaves
-    @applied_leaves = AppliedLeave.where(state: 'pending')
+  def show_applied_leaves
+    @applied_leaves = AppliedLeave.all
     respond_to do |format|
       format.html
     end
@@ -68,10 +66,10 @@ class AppliedLeavesController < ApplicationController
     binding.pry
     respond_to do |format|
       format.html do
-        return redirect_to action: 'display_pending_leaves', notice: 'Leave approved successfully' if is_saved
+        return redirect_to action: 'show_applied_leaves', notice: 'Leave approved successfully' if is_saved
 
         flash.now[:error] = @applied_leave.errors.full_messages
-        render :display_pending_leaves
+        render :show_applied_leaves
       end
     end
   end
@@ -92,6 +90,13 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  def approve_multiple_leaves
+    binding.pry
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def set_applied_leave
@@ -103,5 +108,9 @@ class AppliedLeavesController < ApplicationController
 
   def applied_leave_params
     params.require(:applied_leave).permit(:user_leave_id, :applied_at, :applied_till, :leave_duration_id)
+  end
+
+  def multiple_leave_params
+    params.permit(:applied_leave_ids)
   end
 end
