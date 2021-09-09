@@ -2,7 +2,9 @@ class SettingsController < ApplicationController
   # GET /settings
   def index
     @setting = current_company.setting
-    render :edit
+    respond_to do |format|
+      format.html { render :edit }
+    end
   end
 
   # PATCH /settings/:id
