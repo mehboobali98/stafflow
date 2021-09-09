@@ -45,5 +45,4 @@ class User < ApplicationRecord
   def employee?
     role_id == ROLES[:employee]
   end
->>>>>>> 8a4e19b18b32cbce75d58bfc9430a6b32d0d6da4
 end
