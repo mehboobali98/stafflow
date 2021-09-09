@@ -29,7 +29,7 @@ class User < ApplicationRecord
     errors.add(:role_id, I18n.t('messages.cannot_be_account_owner'))
   end
 
-  def owner?
+  def account_owner?
     role_id == ROLES[:account_owner]
   end
 

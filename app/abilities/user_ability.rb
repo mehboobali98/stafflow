@@ -6,7 +6,7 @@ class UserAbility
   def initialize(user)
     return unless user.present?
 
-    if user.owner?
+    if user.account_owner?
       can :manage, User
     elsif user.hr?
       can :manage, User
