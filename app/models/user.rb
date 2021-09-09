@@ -13,20 +13,20 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def validate_date_of_birth(date_of_birth)
-    return true unless Date.parse(date_of_birth).year.to_s.length > 4
+  def date_of_birth_valid?
+    return true unless date_of_birth.year.to_s.length > 4
 
-    errors.add(:date_of_birth, I18n.t('messages.date_error'))
+    errors.add(:base, I18n.t('messages.date_error'))
     false
   rescue Date::Error => e
     errors.add(e.message)
     false
   end
 
-  def validate_role(role)
-    return true unless role.to_i == ROLES[:account_owner]
+  def role_id_valid?
+    return true unless role_id == ROLES[:account_owner]
 
-    errors.add(:role_id, I18n.t('messages.cannot_be_account_owner'))
+    errors.add(:base, I18n.t('messages.cannot_be_account_owner'))
   end
 
   def account_owner?

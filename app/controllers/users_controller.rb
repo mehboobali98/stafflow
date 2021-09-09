@@ -12,9 +12,7 @@ class UsersController < ApplicationController
 
   # POST /members
   def create
-    if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
-      is_saved = @user.save
-    end
+    is_saved = @user.save if @user.date_of_birth_valid? && @user.role_id_valid?
     respond_to do |format|
       if is_saved
         format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
@@ -33,9 +31,7 @@ class UsersController < ApplicationController
 
   # PATCH /members/:id
   def update
-    if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
-      is_updated = @user.update(user_params)
-    end
+    is_updated = @user.update(user_params) if @user.date_of_birth_valid? && @user.role_id_valid?
     respond_to do |format|
       if is_updated
         format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
@@ -69,10 +65,6 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
     end
-  end
-
-  def current_ability
-    @current_ability ||= UserAbility.new(current_user)
   end
 
   private
