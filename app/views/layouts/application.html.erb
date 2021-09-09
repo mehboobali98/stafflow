@@ -6,10 +6,21 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'sidebar' %>
+    <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-    <div id="test">
+    <div class="row body-wrapper">
+      <div class="col-sm-3 sidebar-wrapper">
+        <%= render partial: "layouts/sidebar" %>
+      </div>
+          <div id="test">
     </div>
-    <%= yield %>
+      <div class="col-sm-9">
+        <%= yield %>
+      </div>
+    </div>
+    <%= render partial: "layouts/footer" %>
   </body>
 </html>

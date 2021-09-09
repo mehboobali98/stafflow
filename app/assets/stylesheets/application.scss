@@ -13,3 +13,11 @@
  *= require_tree .
  *= require_self
  */
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import 'bootstrap/scss/bootstrap';
+.body-wrapper {
+  height: 100%;
+  .sidebar-wrapper {
+    height: 100%;
+  }
+}
