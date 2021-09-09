@@ -7,7 +7,7 @@
       <div class='card p-3 card-header'>
         <div class='m-3 card p-3'>
           <%= form.label :tax, class: 'form-label' %>
-          <%= form.number_field :tax, min: 0, required: true, class: 'form-control' %>
+          <%= form.number_field :tax, min: 0, max: 99, required: true, class: 'form-control' %>
         </div>
 
         <div class='m-3 card p-3'>

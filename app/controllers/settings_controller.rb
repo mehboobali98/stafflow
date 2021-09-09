@@ -1,17 +1,17 @@
 class SettingsController < ApplicationController
-  before_action :load_and_validate_settings, only: %I[show edit update]
+  before_action :load_settings, only: %I[index update]
 
   add_breadcrumb 'Settings', :settings_path
 
   # GET /settings
   def index
-    @setting = current_company.setting
-    render :edit
+    respond_to do |format|
+      format.html { render :edit }
+    end
   end
 
   # PATCH /settings/:id
   def update
-    @setting = current_company.setting
     is_updated = @setting.update(permit_settings_parameters)
     respond_to do |format|
       if is_updated
@@ -23,6 +23,10 @@ class SettingsController < ApplicationController
   end
 
   private
+
+  def load_settings
+    @setting = current_company.setting
+  end
 
   def permit_settings_parameters
     params.require(:setting).permit(:tax, :theme)
