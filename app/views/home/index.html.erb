@@ -1,9 +1,11 @@
 <h1>Hello World</h1>
 
 <% if current_user.nil? %>
-	<%= link_to new_user_session_path, class: 'btn btn-primary' do %>Sign in<% end %>
-	<%= link_to '/home', class: 'btn btn-primary' do %>Home<% end %>
+	<%= link_to I18n.t('forms.buttons.signin'), new_user_session_path, class: 'btn btn-dark' %>
+	<%= link_to '/home', class: 'btn btn-dark' do %>Home<% end %>
 
 <% else %>
-	<%= link_to destroy_user_session_path, method: :delete do %>Log out<% end %>
+	<%= link_to I18n.t('forms.buttons.logout'), destroy_user_session_path, method: :delete %>
+	 <%= link_to I18n.t('forms.buttons.edit'), edit_user_registration_path(current_user) %>
+	 <%= link_to I18n.t('forms.buttons.cancel_account'), user_registration_path, method: :delete, data: { confirm: "You sure?" } %>
 <% end %>
