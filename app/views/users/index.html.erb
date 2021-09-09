@@ -1,8 +1,30 @@
-<h1><%= I18n.t('headings.all_employees') %></h1>
-<% @users.each do |user| %>
-  <h1><%= user.first_name %><%= link_to 'Edit', edit_member_path(user) %><%= link_to 'Destroy', member_path(user), method: :delete, data: {confirm: 'Are you sure?'} %><%= link_to 'Details', member_path(user) %></h1>
-<% end %>
-
-<%= link_to t('headings.create_employee'), new_member_path %>
-<!-- This line below is temporary for testing -->
-<%= link_to 'Logout', destroy_user_session_path, method: :delete %> 
+<div class='container'>
+  <h1><%= I18n.t('headings.all_employees') %></h1>
+  <%= link_to t('headings.create_employee'), new_member_path, class: 'btn btn-outline-dark' if can? :create, User %>
+  <br><br>
+  <table class='table table-striped table-hover'>
+    <thead class='table-dark'>
+      <th><%= t('forms.labels.full_name') %></th>
+      <th><%= t('forms.labels.email') %></th>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.full_name %></td>
+          <td><%= user.email %></td>
+          <td>
+            <% if can? :show, user %>
+              <%= link_to t('forms.buttons.details'), member_path(user), class:'btn btn-info' %>
+              <%= link_to t('forms.buttons.edit'), edit_member_path(user), class:'btn btn-info' %>
+            <% end %>
+            <% if can? :delete, user %>
+              <%= link_to t('forms.buttons.delete'), member_path(user), method: :delete, data: { confirm: "Are you sure?" }, class:'btn btn-danger' %>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+    </tbody>
+  </table>
+  <!-- This line below is temporary for testing -->
+  <%= link_to 'Logout', destroy_user_session_path, method: :delete %> 
+</div> 
