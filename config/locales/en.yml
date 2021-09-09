@@ -31,3 +31,5 @@
 
 en:
   hello: "Hello world"
+  messages:
+    unauthorized: "You are unauthorized to perform this action"

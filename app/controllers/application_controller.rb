@@ -3,6 +3,12 @@
 class ApplicationController < ActionController::Base
   around_action :set_current_company
 
+  rescue_from CanCan::AccessDenied do |exception|
+    respond_to do |format|
+      format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
+    end
+  end
+
   def current_company
     @current_company ||= Company.find_company_by_subdomain!(request.subdomain)
   end

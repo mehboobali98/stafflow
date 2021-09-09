@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   load_and_authorize_resource
 
@@ -67,6 +69,10 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
     end
+  end
+
+  def current_ability
+    @current_ability ||= UserAbility.new(current_user)
   end
 
   private
