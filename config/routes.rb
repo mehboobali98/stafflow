@@ -7,7 +7,13 @@ Rails.application.routes.draw do
   resources :leaves
   get '/user_leaves/new', to: 'user_leaves#new'
   post '/user_leaves/create', to: 'user_leaves#create'
-  # get '/applied_leaves/new', to: 'applied_leaves#new'
-  # post '/applied_leaves/create', to: 'applied_leaves#create'
-  resources :applied_leaves
+  resources :applied_leaves do
+    collection do
+      get 'display_pending_leaves'
+    end
+    member do
+      post 'approve_leave'
+      post 'reject_leave'
+    end
+  end
 end

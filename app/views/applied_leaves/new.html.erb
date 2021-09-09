@@ -5,6 +5,10 @@
     <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, prompt: true, required: true) %>
   </div>
   <div>
+    <%= form.label :leave_duration_id, "Leave Duration" %><br />
+    <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION), {}, prompt: true, required: true, class: 'form-control' %>
+  </div>
+  <div>
     <%= form.label :applied_at, "Leave From" %><br>
     <%= form.date_field :applied_at, required: true %>
   </div>
