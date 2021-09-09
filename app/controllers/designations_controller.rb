@@ -5,7 +5,7 @@ class DesignationsController < ApplicationController
 
   # GET /designations
   def index
-    @designations = Designation.all
+    @designations = Designation.paginate(page: params[:page], per_page: $ITEMS_PER_PAGE)
     respond_to do |format|
       format.html
     end

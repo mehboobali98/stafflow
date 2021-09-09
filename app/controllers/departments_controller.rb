@@ -5,7 +5,7 @@ class DepartmentsController < ApplicationController
 
   # GET /departments
   def index
-    @departments = Department.all
+    @departments = Department.paginate(page: params[:page], per_page: $ITEMS_PER_PAGE)
     respond_to do |format|
       format.html
     end
