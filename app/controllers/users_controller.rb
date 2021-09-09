@@ -1,21 +1,15 @@
 class UsersController < ApplicationController
-  before_action :find_user, only: %i[edit update destroy show]
+  load_and_authorize_resource
 
   # GET /members/new
   def new
-    @user = User.new
     respond_to do |format|
-      if can? :create, User
-        format.html { render :new }
-      else
-        format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
-      end
+      format.html
     end
   end
 
   # POST /members
   def create
-    @user = User.new(permit_user_params)
     if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
       is_saved = @user.save
     end
@@ -31,18 +25,14 @@ class UsersController < ApplicationController
   # GET /members/:id/edit
   def edit
     respond_to do |format|
-      if can? :update, @user
-        format.html
-      else
-        format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
-      end
+      format.html
     end
   end
 
   # PATCH /members/:id
   def update
     if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
-      is_updated = @user.update(permit_user_params)
+      is_updated = @user.update(user_params)
     end
     respond_to do |format|
       if is_updated
@@ -68,31 +58,20 @@ class UsersController < ApplicationController
   # GET /members/:id
   def show
     respond_to do |format|
-      if can? :read, @user
-        format.html
-      else
-        format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
-      end
+      format.html
     end
   end
 
   # GET /members
   def index
-    # @users = User.accessible_by(current_ability)
-    @users = User.all
+    respond_to do |format|
+      format.html
+    end
   end
 
   private
 
-  def permit_user_params
+  def user_params
     params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
-  end
-
-  def find_user
-    @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html { redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist') }
-    end
   end
 end
