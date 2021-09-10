@@ -1,30 +1,30 @@
 <% if request.subdomain == "www" || request.subdomain.blank? %>
-  <%= render  partial: "find_by_email" %>
+  <%= render partial: "find_by_email" %>
 <% else %>
   <div class="card border-dark pb-3 text-center w-75">
-    <h2 class="card-header"><%= I18n.t 'headings.signin' %></h2>
+    <h2 class="card-header"><%= t('headings.signin') %></h2>
 
     <div class="card-body px-5">
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |form| %>
         <div class="field mb-2">
-          <%= f.label I18n.t 'forms.labels.email', class: 'form-label' %><br />
-          <%= f.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
+          <%= form.label t('forms.labels.email', class: 'form-label') %><br />
+          <%= form.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
         </div>
       
         <div class="field mb-2">
-          <%= f.label I18n.t 'forms.labels.password' %><br />
-          <%= f.password_field :password, required: true, class: 'form-control pl-5 pr-5' %>
+          <%= form.label t('forms.labels.password') %><br />
+          <%= form.password_field :password, required: true, class: 'form-control pl-5 pr-5' %>
         </div>
 
         <% if devise_mapping.rememberable? %>
           <div class="field mb-2">
-            <%= f.check_box :remember_me, class: 'form-check-input' %>
-            <%= f.label I18n.t 'forms.labels.remember_me' %>
+            <%= form.check_box :remember_me, class: 'form-check-input' %>
+            <%= form.label t('forms.labels.remember_me')%>
           </div>
         <% end %>
 
         <div class="actions">
-          <%= f.submit I18n.t('forms.buttons.signin'), class: 'btn btn-primary' %>
+          <%= form.submit t('forms.buttons.signin'), class: 'btn btn-primary' %>
         </div>
       <% end %>
 
