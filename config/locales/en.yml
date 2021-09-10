@@ -58,8 +58,18 @@ en:
         show: 'Show'
         edit: 'Edit'
         delete: 'Delete'
-        view_all: 'View all leaves'
-
+        view_all: 'View all leave(s)'
+  user_leave:
+    messages:
+      success:
+        create_success: 'User leaves(s) created succcessfully'
+      failure:
+        create_failure: 'User leave(s) not created'
+    headings:
+      leave_type: 'Leave type'
+      leave_count: 'Leave count'
+    buttons:
+      add_leaves: 'Add user leave'
   applied_leave:
     messages:
       success:

@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :members, controller: 'users'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root to: 'home#index'
   get '/home', to: 'home#home'
   resources :leaves
@@ -16,7 +15,8 @@ Rails.application.routes.draw do
   resources :applied_leaves do
     collection do
       get 'show_applied_leaves', as: 'show'
-      post 'approve_multiple_leaves', as: 'approve_multiple'
+      patch 'approve_multiple_leaves', as: 'approve_multiple'
+      patch 'reject_multiple_leaves', as: 'reject_multiple'
     end
     member do
       patch 'approve_leave', as: 'approve'

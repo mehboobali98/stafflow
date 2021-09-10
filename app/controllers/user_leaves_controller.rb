@@ -1,4 +1,5 @@
 class UserLeavesController < ApplicationController
+  # GET    /user_leaves/new
   def new
     @leave = Leave.all
     respond_to do |format|
@@ -6,18 +7,20 @@ class UserLeavesController < ApplicationController
     end
   end
 
+  # POST   /user_leaves/create
   def create
-    @user = current_user
-    user_leave_params.values[0].each_value do |value|
-      @user.user_leaves.build(value.merge(remaining_count: value[:total_count]))
+    is_saved = UserLeave.add_user_leave(current_user.id, user_leave_params)
+    respond_to do |format|
+      format.html do
+        if is_saved
+          return redirect_to controller: :home, action: :index,
+                             notice: t('user_leave.messages.success.create_success')
+        end
+        flash.now[:error] = t('user_leave.messages.failure.create_failure')
+        render :new
+      end
     end
-    @user.save
-    redirect_to controller: :home, action: :index
   end
-
-  def edit; end
-
-  def update; end
 
   private
 

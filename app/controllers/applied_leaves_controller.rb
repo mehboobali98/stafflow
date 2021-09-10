@@ -1,6 +1,8 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_applied_leave, only: %i[show edit update destroy approve_leave]
+
+  # GET    /applied_leaves
   def index
     @applied_leaves = AppliedLeave.joins(:user_leave).where(user_leaves: { user_id: current_user.id })
     respond_to do |format|
@@ -8,12 +10,14 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # GET    /applied_leaves/:id
   def show
     respond_to do |format|
       format.html
     end
   end
 
+  # GET    /applied_leaves/new
   def new
     @user_leaves = UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
       'user_id = ? AND remaining_count > ?', current_user.id, 0
@@ -24,6 +28,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # POST   /applied_leaves
   def create
     @applied_leave = AppliedLeave.new(applied_leave_params)
     is_saved = @applied_leave.save if @applied_leave.leave_count_available?
@@ -37,10 +42,13 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # GET    /applied_leaves/:id/edit
   def edit; end
 
+  # PATCH/PUT  /applied_leaves/:id
   def update; end
 
+  # DELETE /applied_leaves/:id
   def destroy
     @applied_leave.destroy
     is_destroyed = @applied_leave.destroyed?
@@ -53,6 +61,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # GET    /applied_leaves/show_applied_leaves
   def show_applied_leaves
     @applied_leaves = AppliedLeave.all
     respond_to do |format|
@@ -60,7 +69,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # POST   /applied_leaves/:id/approve_leave
+  # PATCH  /applied_leaves/:id/approve_leave
   def approve_leave
     is_saved = @applied_leave.approve_applied_leave
     binding.pry
@@ -74,15 +83,15 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # POST   /applied_leaves/:id/reject_leave
+  # PATCH  /applied_leaves/:id/reject_leave
   def reject_leave
-    return unless @applied_leave.state.eql?('pending')
+    return unless @applied_leave.pending?
 
     @applied_leave.request_rejected
     is_saved = @applied_leave.save
     respond_to do |format|
       format.html do
-        return redirect_to action: 'display_pending_leaves', notice: 'Leave rejected successfully' if is_saved
+        return redirect_to action: 'show_applied_leaves', notice: 'Leave rejected successfully' if is_saved
 
         flash.now[:error] = @applied_leave.errors.full_messages
         render :display_pending_leaves
@@ -90,8 +99,16 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # PATCH  /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
     binding.pry
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # PATCH  /applied_leaves/reject_multiple_leaves
+  def reject_multiple_leaves
     respond_to do |format|
       format.js
     end

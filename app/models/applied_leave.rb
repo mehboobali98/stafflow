@@ -35,7 +35,7 @@ class AppliedLeave < ApplicationRecord
 
   def approve_applied_leave
     leave_count = calculate_leave_count
-    return false unless pending? || leave_count <= 0
+    return false unless pending? || leave_count.negative
 
     ActiveRecord::Base.transaction do
       request_accepted # change state

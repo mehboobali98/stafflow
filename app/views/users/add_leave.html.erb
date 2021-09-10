@@ -3,8 +3,8 @@
   <table>
     <tr>
       <th></th>
-      <th><%= t('user_leave.headings.leave_type') %></th>
-      <th><%= t('user_leave.headings.leave_count') %></th>
+      <th> Leave type </th>
+      <th> Count </th>
     </tr>
     <% @leave.each do |leave| %>
       <tr>
@@ -14,5 +14,5 @@
       </tr>
     <% end %>
   </table>
-  <%= submit_tag t('user_leave.buttons.add_leaves') %>
+  <%= submit_tag 'Add user leaves' %>
 <% end %>
