@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :find_user, only: %i[edit update destroy show]
   before_action :authenticate_user!, only: %i[index]
   load_and_authorize_resource
 
