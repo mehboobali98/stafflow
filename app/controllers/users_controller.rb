@@ -66,7 +66,7 @@ class UsersController < ApplicationController
   def index
     respond_to do |format|
       format.html
-      format.js
+      format.js { render :user_filters }
     end
   end
 
