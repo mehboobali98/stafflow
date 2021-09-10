@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :leaves
   get '/user_leaves/new', to: 'user_leaves#new'
   post '/user_leaves/create', to: 'user_leaves#create'
-  resources :applied_leaves do
+  resources :applied_leaves, except: :show do
     collection do
       get 'show_applied_leaves', as: 'show'
       get 'filter_applied_leaves', as: 'filter'

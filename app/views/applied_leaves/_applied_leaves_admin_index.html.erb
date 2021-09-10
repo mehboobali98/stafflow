@@ -1,4 +1,3 @@
-<% binding.pry %>
 <% @applied_leaves.each do |applied_leave| %>
   <tr>
     <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, disabled: !(applied_leave.pending?) %></td>
@@ -8,8 +7,8 @@
     <td><%= applied_leave.applied_at %></td>
     <td><%= applied_leave.applied_till %></td>
     <td><%= applied_leave.state %></td>
-    <td><%= link_to 'Show', applied_leave, class: 'btn btn-info' %></td>
-    <td><%= link_to 'Accept', approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-secondary' %></td>
-    <td><%= link_to 'Reject', reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' %></td>
+    <td><%= link_to t('applied_leave.links.show'), applied_leave, class: 'btn btn-info' %></td>
+    <td><%= link_to t('applied_leave.links.accept'), approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-secondary' %></td>
+    <td><%= link_to t('applied_leave.links.reject'), reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' %></td>
   </tr>
 <% end %>

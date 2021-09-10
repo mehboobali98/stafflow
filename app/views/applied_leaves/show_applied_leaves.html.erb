@@ -1,31 +1,29 @@
 <%= javascript_pack_tag "applied_leaves" %>
 <div class="container">
-  <h1> Applied Leaves </h1>
+  <h1><%= t('applied_leave.headings.applied_leaves') %></h1>
   <br>
   <br>
-  <%= form_tag approve_multiple_applied_leaves_path, method: :patch, local: false, remote: true, id: 'applied_leaves_form' do %>
-    <%= submit_tag "Approve leaves", id: 'approve_leaves_btn' %>
-    <%= submit_tag "Disapprove leaves", id: 'approve_leaves_btn' %>
-    <%= select_tag "filter", options_for_select(['Select Filter',
+  <%= link_to <%= t('applied_leave.links.approve_leaves') %>, "javascript:void(0)", class:'btn btn-info', id: 'approve_leaves_btn' %>
+  <%= link_to <%= t('applied_leave.links.reject_leaves') %>, reject_multiple_applied_leaves_path, class:'btn btn-danger', id: 'reject_leaves_btn' %>
+  <%= select_tag "filter", options_for_select([
       'Pending',
       'Accepted',
-      'Rejected']), class: 'custom-select' %>
-    <table class="table table-striped table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th></th>
-          <th> Applicant Name </th>
-          <th> Leave Type </th>
-          <th> Leave Duration </th>
-          <th> Leave From </th>
-          <th> Leave To </th>
-          <th> Leave Status </th>
-          <th class="text-center" colspan="3"> Options </th>
-        </tr>
-      </thead>
-      <tbody id="applied_leaves_admin_table">
-        <%= render partial: 'applied_leaves_admin_index', locals: { applied_leaves: @applied_leaves } %>
-      </tbody>
-    </table>
-  <% end %>
+      'Rejected'].freeze), prompt: <%= t('applied_leave.placeholders.leave_filter') %>, class: 'custom-select' %>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th></th>
+        <th><%= t('applied_leave.headings.applicant_email') %></th>
+        <th><%= t('applied_leave.headings.leave_type') %></th>
+        <th><%= t('applied_leave.headings.leave_duration') %></th>
+        <th><%= t('applied_leave.headings.leave_from') %></th>
+        <th><%= t('applied_leave.headings.leave_to') %></th>
+        <th><%= t('applied_leave.headings.leave_status') %></th>
+        <th class="text-center" colspan="3"><%= t('applied_leave.headings.options') %></th>
+      </tr>
+    </thead>
+    <tbody id="applied_leaves_admin_table">
+      <%= render partial: 'applied_leaves_admin_index', locals: { applied_leaves: @applied_leaves } %>
+    </tbody>
+  </table>
 </div>

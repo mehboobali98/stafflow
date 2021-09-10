@@ -1,18 +1,17 @@
 <div class="container">
-  <h1>Applied Leaves</h1>
-  <%= link_to "Apply for leave", new_applied_leave_path, class: 'btn btn-outline-dark' %>
+  <h1><%= t('applied_leave.headings.applied_leaves') %></h1>
+  <%= link_to t('applied_leave.links.apply_for_leave') , new_applied_leave_path, class: 'btn btn-outline-dark' %>
   <br>
   <br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
-      <th> Leave type </th>
-      <th> Leave from </th>
-      <th> Leave to </th>
-      <th class="text-center" colspan="3">Options</th>
+      <th><%= t('applied_leave.headings.leave_type') %></th>
+      <th><%= t('applied_leave.headings.leave_from') %></th>
+      <th><%= t('applied_leave.headings.leave_to') %></th>
+      <th class="text-center" colspan="3"><%= t('applied_leave.headings.options') %></th>
     </tr>
   </thead>
   <tbody id="applied_leave_table_body">
-    <% binding.pry %>
     <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves} %>
   </tbody>
 </table>

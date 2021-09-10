@@ -72,4 +72,42 @@ en:
       add_leaves: 'Add user leave'
   applied_leave:
     messages:
-      success:
+      delete_confirm: 'Are you sure you want to delete this?'
+      leave_applied_success: 'Leave applied successfully'
+      leave_delete_success: 'Leave deleted succcessfully'
+      leave_approve_success: 'Leave approved succcessfully'
+      leave_reject_success: 'Leave rejected successfully'
+      leave_update_success: 'Leave updated succcessfully'
+      error:
+        leave_count: 'is greater than the remaining count of leaves. Request rejected'
+        leave_date_year: 'cannot have more than 4 digits'
+        past_leave_date: 'cannot be in the past'
+        end_leave_date: 'cannot be lesser than the leave starting date'
+    headings:
+      applicant_email: 'Applicant email'
+      leave_type: 'Leave type'
+      leave_duration: 'Leave duraiton'
+      leave_from: 'Leave from'
+      leave_to: 'Leave to'
+      leave_status: 'Leave status'
+      options: 'Options'
+      applied_leaves: 'Applied leaves'
+      new_leave_application: 'New leave application'
+      applied_leaves: 'Applied leaves'
+      edit_leave: 'Edit applied leave'
+    links:
+      approve_leaves: 'Approve leaves'
+      reject_leaves: 'Reject leaves'
+      apply_for_leave: 'Apply for leave'
+      accept: 'Accept'
+      reject: 'Reject'
+      show: 'Show'
+      edit: 'Edit'
+      delete: 'Delete'
+    labels:
+      available_leaves: 'Available leaves'
+      leave_duration: 'Leave duration'
+      leave_from: 'Leave from'
+      leave_to: 'Leave to'
+    placeholders:
+      leave_filter: 'Select leave filter'

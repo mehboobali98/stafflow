@@ -2,6 +2,9 @@ class AppliedLeave < ApplicationRecord
   include ActiveModel::Transitions
   belongs_to :user_leave
   LEAVE_DURATION = { 'Full day': 1, 'Half day': 2 }.freeze
+  validates :applied_at, :applied_till, presence: true
+  validate :validate_past_leave_date
+  validate :validate_leave_dates
 
   def leave_duration_name_from_id
     LEAVE_DURATION.invert[leave_duration_id]
@@ -21,16 +24,12 @@ class AppliedLeave < ApplicationRecord
   def leave_count_available?
     return true if calculate_leave_count < user_leave.remaining_count
 
-    errors.add(:leave_count, 'is greater than the remaining count of leaves. Request rejected.')
+    errors.add(:leave_count, I18n.t('applied_leave.messages.error.leave_count'))
     false
   end
 
   def update_remaining_leave_count(leave_count)
     user_leave.remaining_count -= leave_count
-  end
-
-  def current_state_pending?
-    pending?
   end
 
   def approve_applied_leave
@@ -53,6 +52,55 @@ class AppliedLeave < ApplicationRecord
 
     request_rejected # change state
     save
+  end
+
+  def validate_leave_date_year
+    validate_date_year(applied_from) && validate_date_year(applied_till)
+  end
+
+  def validate_date_year(leave_date)
+    return true unless Date.parse(leave_date).year.to_s.length > 4
+
+    errors.add(:leave_date_year, I18n.t('applied_leave.messages.error.leave_date_year'))
+    false
+  rescue Date::Error => e
+    errors.add(e.message)
+    false
+  end
+
+  def self.approve_multiple_applied_leaves(applied_leave_ids)
+    applied_leave_ids.each do |leave_id|
+      applied_leave = AppliedLeave.find(leave_id)
+      applied_leave.approve_applied_leave
+    rescue ActiveRecord::RecordNotFound => e
+      puts e.message
+    end
+  end
+
+  def self.reject_multiple_applied_leaves(applied_leave_ids)
+    applied_leave_ids.each do |leave_id|
+      applied_leave = AppliedLeave.find(leave_id)
+      applied_leave.reject_applied_leave
+    rescue ActiveRecord::RecordNotFound => e
+      puts e.message
+    end
+  end
+
+  def validate_past_leave_date
+    if applied_at < DateTime.now || applied_till < DateTime.now
+      errors.add(:leave_date,
+                 I18n.t('applied_leave.messages.error.past_leave_date'))
+    end
+  end
+
+  def validate_leave_dates
+    errors.add(:ending_leave_date, I18n.t('applied_leave.messages.error.end_leave_date')) if applied_till < applied_at
+  end
+
+  def self.get_filtered_records(filter)
+    return AppliedLeave.all if filter.nil?
+
+    AppliedLeave.where(state: filter)
   end
 
   state_machine do

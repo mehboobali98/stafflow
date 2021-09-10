@@ -1,0 +1,22 @@
+<h1>t('applied_leave.headings.new_application_leave')</h1>
+<%= form_with model: @applied_leave do |form| %>
+  <div>
+    <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves') %><br>
+    <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, required: true) %>
+  </div>
+  <div>
+    <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %><br/>
+    <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION), {} %>
+  </div>
+  <div>
+    <%= form.label :applied_at, t('applied_leave.labels.leave_from') %><br>
+    <%= form.date_field :applied_at, required: true %>
+  </div>
+  <div>
+    <%= form.label :applied_till, t('applied_leave.labels.leave_to') %><br>
+    <%= form.date_field :applied_till, required: true %>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
