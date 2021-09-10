@@ -20,5 +20,7 @@ Rails.application.routes.draw do
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :settings, only: %i[update index]
     resources :members, controller: 'users'
+    resources :departments
+    resources :designations
   end
 end

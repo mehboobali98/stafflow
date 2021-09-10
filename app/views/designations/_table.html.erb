@@ -1,0 +1,23 @@
+<div class="container">
+  <h1 class="mt-1"><%= t 'designation.table_heading' %></h1>
+  <%= link_to I18n.t('designation.new_link_name'), new_designation_path, class: 'btn btn-outline-dark' %>
+  <br>
+  <br>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <th><%= t 'designation.table_cell_one_name' %></th>
+      <th><%= t 'designation.table_cell_two_name' %></th>
+      <th class="text-center" colspan="3"><%= t 'designation.table_options' %></th>
+    </thead>
+    <tbody>
+      <% @designations.each do |designation| %>
+        <tr>
+          <td><%= designation.designation_name %></td>
+          <td><%= designation.department_id %></td>
+          <td><%= link_to t('designation.edit_btn_message'), edit_designation_path(designation), class: 'btn btn-secondary' %></td>
+          <td><%= link_to t('designation.destroy_btn_message'), designation, method: :delete, data: { confirm: t('designation.sure_message') }, class: 'btn btn-danger' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
