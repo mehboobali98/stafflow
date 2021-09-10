@@ -9,11 +9,11 @@
     </tr>
     </thead>
     <tbody>
-      <%= @total_companies.each do |company| %>
+      <%= @companies.each do |company| %>
       <tr>
         <td><%= company.name %></td>
         <td><%= company.subdomain %></td>
-        <td><%= link_to "login", new_user_session_url(subdomain:company.subdomain), class: 'btn btn-primary m-1' %></td>
+        <td><%= link_to "login", new_user_session_url(subdomain: company.subdomain), class: 'btn btn-primary m-1' %></td>
       </tr>
       <% end %>
     </tbody>
