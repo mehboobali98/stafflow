@@ -25,6 +25,7 @@ gem 'jbuilder', '~> 2.7'
 # additional gems
 gem 'cancancan'
 gem 'devise'
+gem 'has_scope'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 

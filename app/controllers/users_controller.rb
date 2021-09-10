@@ -2,7 +2,9 @@
 
 class UsersController < ApplicationController
   load_and_authorize_resource
-
+  has_scope :role_id
+  has_scope :department_id
+  has_scope :fname
   # GET /members/new
   def new
     respond_to do |format|
@@ -64,7 +66,12 @@ class UsersController < ApplicationController
   def index
     respond_to do |format|
       format.html
+      format.js
     end
+  end
+
+  def user_filters
+    @users = apply_scopes(User).all
   end
 
   private

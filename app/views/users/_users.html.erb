@@ -1,0 +1,13 @@
+<% users.each do |user| %>
+  <tr>
+    <td><%= user.full_name %></td>
+    <td><%= user.email %></td>
+    <td>
+      <%= link_to t('forms.buttons.details'), member_path(user), class:'btn btn-info' if can?(:read, user) %>
+      <%= link_to t('forms.buttons.edit'), edit_member_path(user), class:'btn btn-info' if can?(:update, user) %>
+      <%= link_to t('forms.buttons.delete'), member_path(user), method: :delete,
+                                            data: { confirm: t('messages.confirmation') }, 
+                                            class:'btn btn-danger' if can?(:destroy, user) %>
+    </td>
+  </tr>
+<% end %>
