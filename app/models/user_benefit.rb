@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserBenefit < ApplicationRecord
+  sequenceid :company, :user_benefits
   belongs_to :benefit
   belongs_to :user
   belongs_to :company
@@ -10,7 +11,7 @@ class UserBenefit < ApplicationRecord
   def self.initialze_user_benefits(params)
     user_benefit_objects = []
     params['user_benefit']['benefit_id'].each_with_index do |benefit_id, index|
-      status = Benefit.find_by_id(benefit_id).benefit_type == 'Monthly'
+      status = Benefit.find_by_sequence_num!(benefit_id).benefit_type == 'Monthly'
       user_benefit_objects.append(UserBenefit.create(amount: params['user_benefit']['amount'][index],
                                                      status: status,
                                                      benefit_id: benefit_id,

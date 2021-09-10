@@ -70,6 +70,6 @@ class BenefitsController < ApplicationController
   end
 
   def load_benefit_object
-    @benefit = Benefit.find(params[:id])
+    @benefit = Benefit.find_by_sequence_num!(params[:id])
   end
 end

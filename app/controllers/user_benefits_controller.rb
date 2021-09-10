@@ -74,7 +74,7 @@ class UserBenefitsController < ApplicationController
   private
 
   def load_user_benefit_object
-    @user_benefit = UserBenefit.find(params[:id])
+    @user_benefit = UserBenefit.find_by_sequence_num!(params[:id])
   end
 
   def load_user_benefits_and_benefits

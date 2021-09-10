@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Payroll < ApplicationRecord
+  sequenceid :company, :payrolls
   has_many :applied_benefit
   belongs_to :user
   belongs_to :company

@@ -27,6 +27,7 @@ gem 'cancancan'
 gem 'devise'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
+gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
