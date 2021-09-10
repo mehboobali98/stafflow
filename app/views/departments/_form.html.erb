@@ -2,19 +2,19 @@
   <div class="row mt-4">
     <div class="col-4">
       <h1><%= local_assigns&.dig(:heading) %></h1>
-      <%= form_for @department do |f| %>
+      <%= form_for @department do |form| %>
         <div class="form-group mb-3">
-          <%= f.label t 'department.name_lable' %>
-          <%= f.text_field :name, required: true, class: 'form-control' %>
+          <%= form.label t 'department.name_lable' %>
+          <%= form.text_field :name, required: true, class: 'form-control' %>
         </div>
         <div class="input-group mb-3 row">
           <div class="col-md-6">
-            <%= f.label t 'department.image_lable' %></br>
-            <%= f.file_field :image_url %>
+            <%= form.label t 'department.image_lable' %></br>
+            <%= form.file_field :image_url %>
           </div>
         </div>
         <div>
-          <%= f.submit class: 'card-link btn btn-dark' %>
+          <%= form.submit class: 'card-link btn btn-dark' %>
         </div>
       <% end %>
     </div>
