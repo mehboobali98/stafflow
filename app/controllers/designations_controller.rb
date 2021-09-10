@@ -2,7 +2,7 @@
 
 class DesignationsController < ApplicationController
   before_action :find_designation_with_id, only: %I[edit update destroy]
-
+  before_action :authenticate_user!
   # GET /designations
   def index
     @designations = Designation.all

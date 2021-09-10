@@ -4,6 +4,8 @@ class Company < ApplicationRecord
   validates :name, :subdomain, presence: true
   validates :subdomain, uniqueness: { case_sensitive: false }
   has_many :users, dependent: :destroy
+  has_many :departments, dependent: :destroy
+
   set_not_multitenant
 
   def self.current_company_id=(company_id)

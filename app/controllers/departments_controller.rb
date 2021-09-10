@@ -2,7 +2,7 @@
 
 class DepartmentsController < ApplicationController
   before_action :find_department_with_id, only: %I[edit update destroy]
-
+  before_action :authenticate_user!
   # GET /departments
   def index
     @departments = Department.all
