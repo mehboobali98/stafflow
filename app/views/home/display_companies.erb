@@ -1,12 +1,21 @@
-<%= @total_companies.each do |company| %>
-  <div class='col-6'>
-    <div class='card text-center w-75 m-2'>
-      <h2 class='card-header'>Companies-List</h2>
-      <div class='card-body'>
-        <h3>Name: <%= company.name %></h3>
-        <h3>Subdomain: <%= company.subdomain %></h3>
-        <%= link_to "login", new_user_session_url(subdomain:company.subdomain), class: 'btn btn-dark m-1' %>
-      </div>
-    </div>
-  </div>
-<% end %>
+<div class="container">
+  <h1><%= t('company.table_header.list') %></h1>
+  <br>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <th><%= t('company.table_header.name') %></th>
+      <th><%= t('company.table_header.subdomain') %></th>
+      <th class="text-center"><%= t('company.table_header.options') %></th>
+    </tr>
+    </thead>
+    <tbody>
+      <%= @total_companies.each do |company| %>
+      <tr>
+        <td><%= company.name %></td>
+        <td><%= company.subdomain %></td>
+        <td><%= link_to "login", new_user_session_url(subdomain:company.subdomain), class: 'btn btn-primary m-1' %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
