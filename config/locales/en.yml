@@ -30,6 +30,7 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+<<<<<<< HEAD
   department:
     name_lable: "Department Name"
     image_lable: "Upload Image"
@@ -69,3 +70,6 @@ en:
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
+=======
+  
+>>>>>>> 8a4e19b18b32cbce75d58bfc9430a6b32d0d6da4
