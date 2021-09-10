@@ -10,8 +10,4 @@ Rails.application.routes.draw do
       get :user_filters, as: :filtered
     end
   end
-  get 'users/user_filters', to: 'users#user_filters'
-  # constraints(subdomain: '7vas') do
-  #   get '/home', to: 'home#home'
-  # end
 end

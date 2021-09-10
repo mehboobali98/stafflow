@@ -70,8 +70,12 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET /members/user_filters
   def user_filters
     @users = apply_scopes(User).all
+    respond_to do |format|
+      format.js
+    end
   end
 
   private

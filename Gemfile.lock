@@ -231,7 +231,7 @@ DEPENDENCIES
   cancancan
   capybara (>= 2.15)
   devise
-  has_scope
+  has_scope (= 0.8.0)
   jbuilder (~> 2.7)
   listen (~> 3.2)
   mysql2 (>= 0.4.4)
