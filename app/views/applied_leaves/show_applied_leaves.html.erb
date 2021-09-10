@@ -3,9 +3,13 @@
   <h1> Applied Leaves </h1>
   <br>
   <br>
-  <%= form_tag approve_multiple_applied_leaves_path, method: :post, local: false, remote: true, id: 'applied_leaves_form' do %>
+  <%= form_tag approve_multiple_applied_leaves_path, method: :patch, local: false, remote: true, id: 'applied_leaves_form' do %>
     <%= submit_tag "Approve leaves", id: 'approve_leaves_btn' %>
     <%= submit_tag "Disapprove leaves", id: 'approve_leaves_btn' %>
+    <%= select_tag "filter", options_for_select(['Select Filter',
+      'Pending',
+      'Accepted',
+      'Rejected']), class: 'custom-select' %>
     <table class="table table-striped table-hover">
       <thead class="table-dark">
         <tr>
@@ -19,21 +23,8 @@
           <th class="text-center" colspan="3"> Options </th>
         </tr>
       </thead>
-      <tbody>
-        <% @applied_leaves.each do |applied_leave| %>
-          <tr>
-            <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, disabled: !(applied_leave.pending?) %></td>
-            <td><%= applied_leave.user_leave.user.email %></td>
-            <td><%= applied_leave.user_leave.leave.name %></td>
-            <td><%= applied_leave.leave_duration_name_from_id %></td>
-            <td><%= applied_leave.applied_at %></td>
-            <td><%= applied_leave.applied_till %></td>
-            <td><%= applied_leave.state %></td>
-            <td><%= link_to 'Show', applied_leave, class: 'btn btn-info' %></td>
-            <td><%= link_to 'Accept', approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-secondary' %></td>
-            <td><%= link_to 'Reject', reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' %></td>
-          </tr>
-        <% end %>
+      <tbody id="applied_leaves_admin_table">
+        <%= render partial: 'applied_leaves_admin_index', locals: { applied_leaves: @applied_leaves } %>
       </tbody>
     </table>
   <% end %>

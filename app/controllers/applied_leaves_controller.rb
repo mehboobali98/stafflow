@@ -85,10 +85,7 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH  /applied_leaves/:id/reject_leave
   def reject_leave
-    return unless @applied_leave.pending?
-
-    @applied_leave.request_rejected
-    is_saved = @applied_leave.save
+    is_saved = @applied_leave.reject_applied_leave
     respond_to do |format|
       format.html do
         return redirect_to action: 'show_applied_leaves', notice: 'Leave rejected successfully' if is_saved
@@ -102,6 +99,7 @@ class AppliedLeavesController < ApplicationController
   # PATCH  /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
     binding.pry
+    multiple_leave_params.
     respond_to do |format|
       format.js
     end
@@ -109,6 +107,20 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH  /applied_leaves/reject_multiple_leaves
   def reject_multiple_leaves
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # GET    /applied_leaves/filter_applied_leaves
+  def filter_applied_leaves
+    binding.pry
+    @applied_leaves = if filter_params.eql?('Select Filter')
+                        AppliedLeave.All
+                      else
+                        AppliedLeave.where(state: filter_params[:filter_type].downcase)
+                      end
+    binding.pry
     respond_to do |format|
       format.js
     end
@@ -129,5 +141,9 @@ class AppliedLeavesController < ApplicationController
 
   def multiple_leave_params
     params.permit(:applied_leave_ids)
+  end
+
+  def filter_params
+    params.permit(:filter_type)
   end
 end

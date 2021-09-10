@@ -1,0 +1,12 @@
+<% applied_leaves.each do |applied_leave| %>
+  <tr>
+    <% binding.pry %>
+    <td><%= applied_leave.id %></td>
+    <td><%= applied_leave.applied_at %></td>
+    <td><%= applied_leave.applied_till %></td>
+    <td><%= link_to 'Show', applied_leave, class: 
+        'btn btn-info' %></td>
+    <td><%= link_to 'Edit', edit_applied_leave_path(applied_leave), class: 'btn btn-secondary' %></td>
+    <td><%= link_to 'Delete', applied_leave, method: :delete, data: { confirm: 'Are you sure you want to delete this?' }, class: 'btn btn-danger' %></td>
+  </tr>
+<% end %>

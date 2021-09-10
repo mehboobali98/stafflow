@@ -8,22 +8,12 @@
       <th> Leave type </th>
       <th> Leave from </th>
       <th> Leave to </th>
-      <th style="text-align:center" colspan="3">Options</th>
+      <th class="text-center" colspan="3">Options</th>
     </tr>
   </thead>
-  <tbody>
-    <% @applied_leaves.each do |applied_leave| %>
-      <tr>
-        <% binding.pry %>
-        <td><%= applied_leave.id %></td>
-        <td><%= applied_leave.applied_at %></td>
-        <td><%= applied_leave.applied_till %></td>
-        <td><%= link_to 'Show', applied_leave, class: 
-        'btn btn-info' %></td>
-        <td><%= link_to 'Edit', edit_applied_leave_path(applied_leave), class: 'btn btn-secondary' %></td>
-        <td><%= link_to 'Delete', applied_leave, method: :delete, data: { confirm: 'Are you sure you want to delete this?' }, class: 'btn btn-danger' %></td>
-      </tr>
-    <% end %>
+  <tbody id="applied_leave_table_body">
+    <% binding.pry %>
+    <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves} %>
   </tbody>
 </table>
 </div>

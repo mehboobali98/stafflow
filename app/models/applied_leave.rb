@@ -48,6 +48,13 @@ class AppliedLeave < ApplicationRecord
     end
   end
 
+  def reject_applied_leave
+    return false unless pending?
+
+    request_rejected # change state
+    save
+  end
+
   state_machine do
     state :pending # first one is initial state
     state :accepted
