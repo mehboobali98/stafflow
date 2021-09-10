@@ -41,7 +41,7 @@ class BenefitsController < ApplicationController
   # POST /benefits
   def create
     @benefit = Benefit.new(permitted_benefit_arguments)
-    is_saved = @benefits.save
+    is_saved = @benefit.save
     respond_to do |format|
       if is_saved
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.create') }

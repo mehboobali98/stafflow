@@ -1,3 +1,5 @@
+<%= javascript_pack_tag 'user_benefit_new', 'data-turbolinks-track': 'reload' %>
+
 <%= form_tag user_benefits_path do |user_benefit| %>
   <div class="container">
     <div class="row">
@@ -5,10 +7,9 @@
         <table class="table table-bordered table-striped">
           <thead class="table-dark">
             <tr>
-              <th scope="col"><%= t('user_benefit.table.select') %></th>
-              <th scope="col"><%= t('user_benefit.table.benefit_name') %></th>
-              <th scope="col"><%= t('user_benefit.table.amount') %></th>
-              <th scope="col"><%= t('user_benefit.table.status') %></th>
+              <th><%= t('user_benefit.table.select') %></th>
+              <th><%= t('user_benefit.table.benefit_name') %></th>
+              <th><%= t('user_benefit.table.amount') %></th>
             </tr>
           </thead>
           <tbody>
@@ -22,11 +23,8 @@
                 <td><%= benefit.name %></td>
                 <td>
                   <div class="form-group">
-                  <%= number_field_tag 'user_benefit[amount][]', required: true %>
+                  <%= number_field_tag 'user_benefit[amount][]', nil, disabled: true, required: true %>
                   </div>
-                </td>
-                <td>
-                  <%= check_box_tag 'user_benefit[status][]' %>
                 </td>
               </tr>  
             <% end %>
