@@ -1,51 +1,83 @@
 class LeavesController < ApplicationController
-  before_action :set_leave, only: %i[show edit update destroy]
+  before_action :set_leave_type, only: %i[show edit update destroy]
+
+  # GET /leaves
   def index
     @leaves = Leave.all
+    respond_to do |format|
+      format.html
+    end
   end
 
-  def show; end
+  # GET /leaves/1
+  def show
+    respond_to do |format|
+      format.html
+    end
+  end
 
+  # GET /leaves/new
   def new
     @leave = Leave.new
+    respond_to do |format|
+      format.html
+    end
   end
 
+  # POST /leaves
   def create
     @leave = Leave.new(leave_params)
-    if @leave.save
-      flash[:notice] = 'Leave created successfully'
-      redirect_to action: 'index'
-    else
-      flash[:alert] = 'Unable to create leave'
-      render :new
+    is_saved = @leave.save
+    respond_to do |format|
+      format.html do
+        return redirect_to leaves_path, notice: t('leave.messages.success.create_success') if is_saved
+
+        flash.now[:error] = @leave.errors.full_messages
+        render :new
+      end
     end
   end
 
-  def edit; end
+  # GET /leaves/1/edit
+  def edit
+    respond_to do |format|
+      format.html
+    end
+  end
 
+  # PATCH/PUT /leaves/1
   def update
-    if @leave.update(leave_params)
-      flash[:notice] = 'Leave updated successfully'
-      redirect_to action: 'index'
-    else
-      flash[:alert] = 'Unable to update leave'
-      render :edit
+    is_updated = @leave.update(leave_params)
+    respond_to do |format|
+      format.html do
+        return redirect_to leaves_path, notice: t('leave.messages.success.edit_success') if is_updated
+
+        flash.now[:error] = @leave.errors.full_messages
+        render :edit
+      end
     end
   end
 
+  # DELETE /leaves/1
   def destroy
-    if @leave.destroy
-      flash[:notice] = 'Leave deleted successfully'
-    else
-      flash[:alert] = 'Unable to delete leave'
+    @leave.destroy
+    is_destroyed = @leave.destroyed?
+    respond_to do |format|
+      format.html do
+        flash[:error] = @leave.errors.full_messages unless is_destroyed
+        flash[:notice] = I18n.t('leave.messages.success.delete_success')
+        redirect_to leaves_path
+      end
     end
-    redirect_to action: 'index'
   end
 
   private
 
   def set_leave_type
     @leave = Leave.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:error] = e.message
+    redirect_to leaves_path
   end
 
   def leave_params

@@ -30,7 +30,36 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  leave:
+    messages:
+      name_error: 'Leave type name can only contain letters'
+      delete_confirm: 'Are your sure?'
+      featured_leave: 'Featured leave'
+      success:
+        create_success: 'Leave created succcessfully'
+        edit_success: 'Leave edited succcessfully'
+        delete_success: 'Leave deleted succcessfully'
+    headings:
+      edit_leave: 'Edit leave'
+      add_leave: 'Add leave'
+      leave: 'Leave'
+      name: 'Name'
+      count_allowed: 'Count allowed'
+      options: 'Options'
+    forms:
+      labels:
+        name: 'leave name'
+        count: 'leave count'
+      placeholders:
+        name: 'Enter leave name'
+        count: 'Enter leave count'
+      links:
+        create: 'New leave'
+        show: 'Show'
+        edit: 'Edit'
+        delete: 'Delete'
+        view_all: 'View all leaves'
+
   applied_leave:
     messages:
       success:

@@ -1,8 +1,8 @@
 class Leave < ApplicationRecord
   validates :name, format: { with: /\A[a-z A-Z]+\z/,
-                             message: 'Leave type name can only contain letters' }
+                             message: I18n.t('leave.messages.name_error') }
 
-  validates :name, uniqueness: { case_sensitive: false }
+  validates :name, uniqueness: { scope: :company_id, case_sensitive: false }
   validates :count, numericality: { only_integer: true }
   validates :count, length: { in: 1..20 }
   validates :name, :count, presence: true

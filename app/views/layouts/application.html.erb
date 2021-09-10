@@ -11,14 +11,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
+    <% if notice %>
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <span><%= notice %></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% elsif alert %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span><%= alert %></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
     <div class="row body-wrapper">
       <div class="col-sm-3 sidebar-wrapper">
         <%= render partial: "layouts/sidebar" %>
       </div>
-          <div id="test">
-    </div>
       <div class="col-sm-9">
         <%= yield %>
+      </div>
+      <div id="test">
       </div>
     </div>
     <%= render partial: "layouts/footer" %>

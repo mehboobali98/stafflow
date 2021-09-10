@@ -3,18 +3,18 @@
     <div class="col-md-4">
       <div class="card text-center">
         <div class="card-header">
-          Featured Leave
+          <%= t('leave.messages.featured_leave') %>
         </div>
         <div class="card-body">
           <h1 class="card-title"><%= @leave.name %></h1>
           <p class="card-text"><%= @leave.count %></p>
         </div>
         <div class="card-footer">
-          <%= link_to "Edit", edit_leave_path(@leave), class: 'btn btn-secondary'%>
-          <%= link_to "Destroy", leave_path(@leave), class: 'btn btn-danger',
+          <%= link_to t('leave.forms.links.edit'), edit_leave_path(@leave), class: 'btn btn-secondary' %>
+          <%= link_to t('leave.forms.links.delete'), leave_path(@leave), class: 'btn btn-danger',
                   method: :delete,
-                  data: { confirm: "Are you sure?" } %>
-          <%= link_to "View all leave types", leaves_path, class: 'btn btn-outline-primary' %>
+                  data: { confirm: t('leave.messages.delete_confirm') } %>
+          <%= link_to t('leave.forms.links.view_all'), leaves_path, class: 'btn btn-outline-primary' %>
         </div>
       </div>
     </div>

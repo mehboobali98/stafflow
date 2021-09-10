@@ -25,8 +25,8 @@ class AppliedLeave < ApplicationRecord
     false
   end
 
-  def update_remaining_leave_count
-    user_leave.remaining_count -= calculate_leave_count
+  def update_remaining_leave_count(leave_count)
+    user_leave.remaining_count -= leave_count
   end
 
   def current_state_pending?
@@ -34,11 +34,12 @@ class AppliedLeave < ApplicationRecord
   end
 
   def approve_applied_leave
-    return false unless state.eql?('pending')
+    leave_count = calculate_leave_count
+    return false unless pending? || leave_count <= 0
 
     ActiveRecord::Base.transaction do
       request_accepted # change state
-      update_remaining_leave_count
+      update_remaining_leave_count(leave_count)
       save!
       user_leave.save!
       true

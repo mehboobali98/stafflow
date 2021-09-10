@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_09_125410) do
+ActiveRecord::Schema.define(version: 2021_09_10_010407) do
 
   create_table "applied_leaves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_leave_id", null: false
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2021_09_09_125410) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "state"
     t.integer "leave_duration_id"
+    t.bigint "company_id", null: false
+    t.index ["company_id"], name: "index_applied_leaves_on_company_id"
     t.index ["user_leave_id"], name: "index_applied_leaves_on_user_leave_id"
   end
 
@@ -47,6 +49,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_125410) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "company_id", null: false
     t.index ["company_id"], name: "index_leaves_on_company_id"
+    t.index ["name", "company_id"], name: "index_leaves_on_name_and_company_id", unique: true
   end
 
   create_table "user_leaves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -56,6 +59,8 @@ ActiveRecord::Schema.define(version: 2021_09_09_125410) do
     t.integer "remaining_count"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "company_id", null: false
+    t.index ["company_id"], name: "index_user_leaves_on_company_id"
     t.index ["leave_id"], name: "index_user_leaves_on_leave_id"
     t.index ["user_id"], name: "index_user_leaves_on_user_id"
   end
