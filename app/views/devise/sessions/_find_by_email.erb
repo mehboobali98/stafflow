@@ -1,22 +1,16 @@
-
-
 <div class="card border-dark pb-3 text-center w-75">
-
-<h2 class="card-header">Search Your Company</h2>
-
+  <h2 class="card-header">Search Your Company</h2>
   <div class="card-body px-5">
-      <%= form_for(resource, as: resource_name, url:home_index_url,method: "get") do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url:display_companies_home_index_url,method: "post") do |f| %>
       <div class="field mb-2">
         <%= f.label I18n.t 'forms.labels.email', class: 'form-label' %><br />
         <%= f.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
       </div>
-
       <div class="actions">
         <%= f.submit "Find Companies", class: 'btn btn-primary' %>
       </div>
     <% end %>
-      <%= link_to "Sign up", new_registration_path(resource_name),class: 'btn btn-primary m-2' %><br />
+    <%= link_to "Sign up", new_registration_path(resource_name),class: 'btn btn-primary m-2' %><br />
   </div>
 </div>
 

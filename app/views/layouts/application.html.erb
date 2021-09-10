@@ -4,7 +4,6 @@
     <title>PMS</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'sidebar' %>
@@ -13,18 +12,17 @@
   </head>
 
   <body>
-
     <% if notice %>
- <div class="alert alert-primary alert-dismissible fade show" role="alert">
-      <span><%= notice %></span>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% elsif alert %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <span><%= alert %></span>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <span><%= notice %></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% elsif alert %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span><%= alert %></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
   
     <div class="row body-wrapper">
       <div class="col-sm-3 sidebar-wrapper">

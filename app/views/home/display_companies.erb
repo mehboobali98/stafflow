@@ -1,0 +1,12 @@
+<%= @total_companies.each do |company| %>
+  <div class='col-6'>
+    <div class='card text-center w-75 m-2'>
+      <h2 class='card-header'>Companies-List</h2>
+      <div class='card-body'>
+        <h3>Name: <%= company.name %></h3>
+        <h3>Subdomain: <%= company.subdomain %></h3>
+        <%= link_to "login", new_user_session_url(subdomain:company.subdomain), class: 'btn btn-dark m-1' %>
+      </div>
+    </div>
+  </div>
+<% end %>

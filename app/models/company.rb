@@ -15,9 +15,10 @@ class Company < ApplicationRecord
   end
 
   def self.find_company_by_subdomain!(subdomain)
-    if subdomain==""|| subdomain=="www"
+    if subdomain.blank? || subdomain == 'www'
       return nil
     end
+
     Company.find_by!(subdomain: subdomain)
   end
 end
