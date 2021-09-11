@@ -13,4 +13,8 @@ module EventsHelper
   def extract_date(date)
     date&.to_date
   end
+
+  def truncate_event_name(name)
+    name.truncate(15)
+  end
 end
