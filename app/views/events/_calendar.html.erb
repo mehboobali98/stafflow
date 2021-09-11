@@ -1,7 +1,7 @@
 <%= month_calendar events: @events do |date, events| %>
   <div class="d-flex flex-row justify-content-between">
     <%= date.day %>
-    <%= link_to "+", new_event_path, class: 'text-sm text-primary' if date > DateTime.now %>
+    <%= link_to t('event.simple_calendar.plus'),new_event_path, class: 'text-sm text-primary' if date > DateTime.now %>
   </div>
   <% events.each do |event| %>
     <%= link_to truncate_event_name(event.name), event, class: 'bg-primary text-white d-inline-block w-100 mt-1' %>
