@@ -5,7 +5,7 @@ class CreateDepartments < ActiveRecord::Migration[6.0]
     create_table :departments do |t|
       t.string :name
       t.string :image_url
-      t.integer :company_id
+      t.bigint :company_id
       t.timestamps
     end
   end
