@@ -1,6 +1,6 @@
-<div class="row justify-content-center">
+<div class="row justify-content-cente">
   <% flash.each do |message_type, error_message| %>
-    <div class="<%= flash_class(message_type) %> col-md-4">
+    <div class="<%= add_bootstrap_class(message_type) %> ">
       <a href="#" data-dismiss="alert" class="close far fa-times-circle"></a>
       <% if error_message.is_a?(Array) %>
         <ul>

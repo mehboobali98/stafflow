@@ -68,12 +68,12 @@ class EventsController < ApplicationController
 
   # DELETE /events/1
   def destroy
-    deleted_event = @event.destroy
-    is_destroyed = deleted_event.destroyed?
+    @event.destroy
+    is_destroyed = @event.destroyed?
     respond_to do |format|
       format.html do
         flash[:error] = @event.errors.full_messages unless is_destroyed
-        flash[:notice] = I18n.t('event.messages.success.delete_success')
+        flash[:notice] = t('event.messages.success.delete_success')
         redirect_to events_path
       end
     end

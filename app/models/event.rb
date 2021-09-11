@@ -8,7 +8,7 @@ class Event < ApplicationRecord
   def validate_event_year(event_date)
     return true unless Date.parse(event_date).year.to_s.length > 4
 
-    errors.add(:event_year, 'cannot have more than 4 digits')
+    errors.add(:event_year, I18n.t('event.messages.error.event_year'))
     false
   rescue Date::Error => e
     errors.add(e.message)
@@ -16,7 +16,11 @@ class Event < ApplicationRecord
   end
 
   def validate_past_event_date
-    errors.add(:event_date, 'cannot be in the past') if starts_at < DateTime.now
+    errors.add(:event_date, I18n.t('event.messages.error.event_date')) if starts_at < DateTime.now
+  end
+
+  def start_time
+    starts_at
   end
 
   private :validate_past_event_date

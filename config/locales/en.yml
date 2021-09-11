@@ -37,6 +37,9 @@ en:
         delete_success: 'Event deleted successfully'
       failure:
         delete_failure: 'Unable to delete event'
+      error:
+        event_year: 'cannot have more than 4 digits'
+        event_date: 'cannot be in the past'
     forms:
       confirmation:
         deletion: 'Are you sure?'
