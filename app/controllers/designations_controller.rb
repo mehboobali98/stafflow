@@ -71,14 +71,14 @@ class DesignationsController < ApplicationController
   private
 
   def permitted_designation_params
-    params.require(:designation).permit(:designation_name, :department_id)
+    params.require(:designation).permit(:name, :department_id)
   end
 
   def find_designation_with_id
     @designation = Designation.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     respond_to do |format|
-      format.html { redirect_to action: 'index', alert: t('designation.not_exist') }
+      format.html { redirect_to designations_path, alert: t('designation.not_exist') }
     end
   end
 end

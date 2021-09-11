@@ -30,15 +30,12 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-<<<<<<< HEAD
   company:
     table_header:
       list: "Companies-List"
       name: "Company-Name"
       subdomain: "Subdomain"
       options: "Options"
-=======
->>>>>>> 1d4be000fd644cf802a43d696610ce36887f75d7
   department:
     name_lable: "Department Name"
     image_lable: "Upload Image"
@@ -77,8 +74,4 @@ en:
     not_exist: "Designation Does Not Exist"
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
-<<<<<<< HEAD
     sure_message: "Are You Sure?"
-=======
-    sure_message: "Are You Sure?"
->>>>>>> 1d4be000fd644cf802a43d696610ce36887f75d7
