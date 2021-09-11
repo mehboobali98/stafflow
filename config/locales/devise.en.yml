@@ -93,6 +93,7 @@ en:
       role: "Role"
       salary: "Salary"
       full_name: "Full Name"
+      portal_message: "Your portal will be live at"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to %{email}"
