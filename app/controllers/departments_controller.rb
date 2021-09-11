@@ -71,12 +71,4 @@ class DepartmentsController < ApplicationController
   def department_params
     params.require(:department).permit(:name, :image_url)
   end
-
-  # def find_department_with_id
-  #   @department = Department.find(params[:id])
-  # rescue ActiveRecord::RecordNotFound
-  #   respond_to do |format|
-  #     format.html { redirect_to action: 'index', alert: t('department.not_exist') }
-  #   end
-  # end
 end
