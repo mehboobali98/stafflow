@@ -1,0 +1,64 @@
+<%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
+
+<div class='card pb-3 text-center w-75'>
+  <h1 class='card-header'><%= I18n.t 'headings.create_employee' %></h1>
+  <div class='card-body px-5'>
+    <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form' do |form| %>
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li> <%= message %> </li>  
+      <% end %>
+      </ul>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.email') %><br />
+        <%= form.email_field :email, class: 'form-control',required: true %>
+      </div>
+      
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.password') %>
+        <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= form.password_field :password, required: true , class: 'form-control' %>
+      </div>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.confirm_password') %><br />
+        <%= form.password_field :password_confirmation, required: true, class: 'form-control' %>
+      </div>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.fname') %><br />
+        <%= form.text_field :first_name, required: true, class: 'form-control', id: 'first_name' %>
+      </div>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.lname') %><br />
+        <%= form.text_field :last_name, required: true, class: 'form-control' %>
+      </div>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.dob') %><br/>
+        <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
+      </div>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.role') %><br />
+        <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {},  class: 'form-control' %>
+      </div>
+
+      <div class='field mb-2'>
+        <%= form.label I18n.t('forms.labels.salary') %><br />
+        <%= form.number_field :salary, required: true, class: 'form-control', min: 0 %>
+      </div>
+
+      <div class='actions'>
+        <%= form.submit t('forms.buttons.signup'), class: 'card-link btn btn-dark' %>
+      </div>
+
+    <% end %>
+  </div>
+</div>
+
+<%= link_to 'Back', members_path %>
