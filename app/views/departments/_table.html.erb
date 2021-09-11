@@ -1,6 +1,6 @@
 <div class="container">
   <h1 class="mt-1"><%= t 'department.table_heading' %></h1>
-  <%= link_to t('department.new_link_name'), new_department_path, class: 'btn btn-outline-dark' %>
+  <%= link_to t('department.new_link_name'), new_department_path, class: 'btn btn-outline-dark' if can?(:create, Department)  %>
   <br>
   <br>
   <table class="table table-striped table-hover">
@@ -12,8 +12,8 @@
       <% @departments.each do |department| %>
         <tr>
           <td><%= department.name %></td>
-          <td><%= link_to t('department.edit_btn_message'), edit_department_path(department), class: 'btn btn-secondary' %></td>
-          <td><%= link_to t('department.destroy_btn_message'), department, method: :delete, data: { confirm: t('department.sure_message') }, class: 'btn btn-danger' %></td>
+          <td><%= link_to t('department.edit_btn_message'), edit_department_path(department), class: 'btn btn-secondary' if can?(:update, department) %></td>
+          <td><%= link_to t('department.destroy_btn_message'), department, method: :delete, data: { confirm: t('department.sure_message')}, class: 'btn btn-danger' if can?(:destroy, department) %></td>
         </tr>
       <% end %>
     </tbody>

@@ -53,6 +53,7 @@ en:
     add_message: "Add Department"
     not_exist: "Department Does Not Exist"
     edit_btn_message: "Edit"
+    show_btn_message: "Show"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
   designation:

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class DepartmentsController < ApplicationController
-  before_action :find_department_with_id, only: %I[edit update destroy]
   before_action :authenticate_user!
+  load_and_authorize_resource
   # GET /departments
   def index
     @departments = Department.all
@@ -21,7 +21,7 @@ class DepartmentsController < ApplicationController
 
   # POST /departments
   def create
-    @department = Department.new(permitted_department_params)
+    @department = Department.new(department_params)
     is_saved = @department.save
     respond_to do |format|
       format.html do
@@ -42,7 +42,7 @@ class DepartmentsController < ApplicationController
 
   # PATCH/PUT /departments/1
   def update
-    is_updated = @department.update(permitted_department_params)
+    is_updated = @department.update(department_params)
     respond_to do |format|
       format.html do
         return redirect_to departments_path, notice: t('department.updated') if is_updated
@@ -68,15 +68,15 @@ class DepartmentsController < ApplicationController
 
   private
 
-  def permitted_department_params
+  def department_params
     params.require(:department).permit(:name, :image_url)
   end
 
-  def find_department_with_id
-    @department = Department.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html { redirect_to action: 'index', alert: t('department.not_exist') }
-    end
-  end
+  # def find_department_with_id
+  #   @department = Department.find(params[:id])
+  # rescue ActiveRecord::RecordNotFound
+  #   respond_to do |format|
+  #     format.html { redirect_to action: 'index', alert: t('department.not_exist') }
+  #   end
+  # end
 end

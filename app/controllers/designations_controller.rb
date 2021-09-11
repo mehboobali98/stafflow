@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class DesignationsController < ApplicationController
-  before_action :find_designation_with_id, only: %I[edit update destroy]
   before_action :authenticate_user!
+  load_and_authorize_resource
   # GET /designations
   def index
     @designations = Designation.all
@@ -13,7 +13,7 @@ class DesignationsController < ApplicationController
 
   # POST /designations
   def create
-    @designation = Designation.new(permitted_designation_params)
+    @designation = Designation.new(designation_params)
     is_saved = @designation.save
     respond_to do |format|
       format.html do
@@ -35,7 +35,7 @@ class DesignationsController < ApplicationController
 
   # PATCH/PUT /designations/1
   def update
-    is_updated = @designation.update(permitted_designation_params)
+    is_updated = @designation.update(designation_params)
     respond_to do |format|
       format.html do
         return redirect_to designations_path, notice: t('department.updated') if is_updated
@@ -70,15 +70,7 @@ class DesignationsController < ApplicationController
 
   private
 
-  def permitted_designation_params
+  def designation_params
     params.require(:designation).permit(:name, :department_id)
-  end
-
-  def find_designation_with_id
-    @designation = Designation.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html { redirect_to designations_path, alert: t('designation.not_exist') }
-    end
   end
 end
