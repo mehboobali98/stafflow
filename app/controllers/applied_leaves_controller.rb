@@ -2,6 +2,7 @@ class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_applied_leave, only: %i[show edit update destroy]
   before_action :get_filtered_records, only: %i[approve_multiple_leaves reject_multiple_leaves filter_applied_leaves]
+
   # GET    /applied_leaves
   def index
     @applied_leaves = AppliedLeave.joins(:user_leave).where(user_leaves: { user_id: current_user.id })
@@ -23,8 +24,9 @@ class AppliedLeavesController < ApplicationController
 
   # POST   /applied_leaves
   def create
-    @applied_leave = AppliedLeave.new
-    is_saved = @applied_leave.save if @applied_leave.validate_leave_date_year && @applied_leave.leave_count_available?
+    @applied_leave = AppliedLeave.new(applied_leave_params)
+    is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_count_available?
+    binding.pry
     respond_to do |format|
       format.html do
         return redirect_to action: 'index', notice: t('applied_leave.messages.leave_applied_success') if is_saved
@@ -36,7 +38,11 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET    /applied_leaves/:id/edit
-  def edit; end
+  def edit
+    @user_leaves = UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
+      'user_id = ? AND remaining_count > ?', current_user.id, 0
+    )
+  end
 
   # PATCH/PUT  /applied_leaves/:id
   def update
@@ -79,7 +85,7 @@ class AppliedLeavesController < ApplicationController
       format.html do
         if is_saved
           return redirect_to action: 'show_applied_leaves',
-                             notice: t('applied_leave.messages.leave_approve_success')
+            notice: t('applied_leave.messages.leave_approve_success')
         end
 
         flash.now[:error] = @applied_leave.errors.full_messages
@@ -95,7 +101,7 @@ class AppliedLeavesController < ApplicationController
       format.html do
         if is_saved
           return redirect_to action: 'show_applied_leaves',
-                             notice: t('applied_leave.messages.leave_reject_success')
+            notice: t('applied_leave.messages.leave_reject_success')
         end
 
         flash.now[:error] = @applied_leave.errors.full_messages

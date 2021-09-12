@@ -1,7 +1,7 @@
 class AppliedLeave < ApplicationRecord
   include ActiveModel::Transitions
   belongs_to :user_leave
-  LEAVE_DURATION = { 'Full day': 1, 'Half day': 2 }.freeze
+  LEAVE_DURATION = { full_day: 1, half_day: 2 }.freeze
   validates :applied_at, :applied_till, presence: true
   validate :validate_past_leave_date
   validate :validate_leave_dates
@@ -12,7 +12,7 @@ class AppliedLeave < ApplicationRecord
 
   def calculate_leave_count
     number_of_days = week_days_in_date_range(applied_at..applied_till)
-    return number_of_days unless leave_duration_name_from_id.eql?('Full day'.to_sym)
+    return number_of_days unless leave_duration_name_from_id.eql?(:full_day)
 
     number_of_days / 2 unless number_of_days.nil?
   end
@@ -54,12 +54,12 @@ class AppliedLeave < ApplicationRecord
     save
   end
 
-  def validate_leave_date_year
-    validate_date_year(applied_from) && validate_date_year(applied_till)
+  def validate_leave_year
+    validate_date_year(applied_at) && validate_date_year(applied_till)
   end
 
   def validate_date_year(leave_date)
-    return true unless Date.parse(leave_date).year.to_s.length > 4
+    return true unless Date.parse(leave_date.to_s).year.to_s.length > 4
 
     errors.add(:leave_date_year, I18n.t('applied_leave.messages.error.leave_date_year'))
     false
@@ -90,11 +90,13 @@ class AppliedLeave < ApplicationRecord
     if applied_at < DateTime.now || applied_till < DateTime.now
       errors.add(:leave_date,
                  I18n.t('applied_leave.messages.error.past_leave_date'))
+      binding.pry
     end
   end
 
   def validate_leave_dates
     errors.add(:ending_leave_date, I18n.t('applied_leave.messages.error.end_leave_date')) if applied_till < applied_at
+    binding.pry
   end
 
   def self.get_filtered_records(filter)

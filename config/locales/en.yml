@@ -48,8 +48,8 @@ en:
       options: 'Options'
     forms:
       labels:
-        name: 'leave name'
-        count: 'leave count'
+        name: 'Leave name'
+        count: 'Leave count'
       placeholders:
         name: 'Enter leave name'
         count: 'Enter leave count'

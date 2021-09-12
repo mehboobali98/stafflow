@@ -5,14 +5,16 @@
   <br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
-      <th><%= t('applied_leave.headings.leave_type') %></th>
-      <th><%= t('applied_leave.headings.leave_from') %></th>
-      <th><%= t('applied_leave.headings.leave_to') %></th>
-      <th class="text-center" colspan="3"><%= t('applied_leave.headings.options') %></th>
-    </tr>
-  </thead>
-  <tbody id="applied_leave_table_body">
-    <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves} %>
-  </tbody>
-</table>
+      <tr>
+        <th><%= t('applied_leave.headings.leave_type') %></th>
+        <th><%= t('applied_leave.headings.leave_from') %></th>
+        <th><%= t('applied_leave.headings.leave_to') %></th>
+        <th><%= t('applied_leave.headings.leave_status') %></th>
+        <th class="text-center" colspan="3"><%= t('applied_leave.headings.options') %></th>
+      </tr>
+    </thead>
+    <tbody id="applied_leave_table_body">
+      <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves} %>
+    </tbody>
+  </table>
 </div>

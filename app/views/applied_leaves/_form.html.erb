@@ -1,22 +1,25 @@
-<h1>t('applied_leave.headings.new_application_leave')</h1>
-<%= form_with model: @applied_leave do |form| %>
-  <div>
-    <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves') %><br>
-    <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, required: true) %>
-  </div>
-  <div>
-    <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %><br/>
-    <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION), {} %>
-  </div>
-  <div>
-    <%= form.label :applied_at, t('applied_leave.labels.leave_from') %><br>
-    <%= form.date_field :applied_at, required: true %>
-  </div>
-  <div>
-    <%= form.label :applied_till, t('applied_leave.labels.leave_to') %><br>
-    <%= form.date_field :applied_till, required: true %>
-  </div>
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>
+<div class="container py-4">
+  <h1><%= t('applied_leave.headings.new_leave_application') %></h1>
+  <%= form_with model: @applied_leave do |form| %>
+    <div class="form mb-4">
+      <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves'), class: "form-label" %>
+      <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, {}, {class: "form-control"}) %>
+    </div>
+    <div class="form mb-4">
+      <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %>
+      <% binding.pry %>
+      <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION.transform_keys{ |key| key.to_s.humanize }), {}, class: "form-control" %>
+    </div>
+    <div class="form mb-4">
+      <%= form.label :applied_at, t('applied_leave.labels.leave_from'), class: "form-label" %>
+      <%= form.date_field :applied_at, required: true, class: "form-control" %>
+    </div>
+    <div class="form mb-4">
+      <%= form.label :applied_till, t('applied_leave.labels.leave_to'), class: "form-label" %>
+      <%= form.date_field :applied_till, required: true, class: "form-control" %>
+    </div>
+    <div class="form mb-4">
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
