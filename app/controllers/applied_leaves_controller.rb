@@ -59,7 +59,7 @@ class AppliedLeavesController < ApplicationController
       format.html do
         flash[:error] = @applied_leave.errors.full_messages unless is_destroyed
         flash[:notice] = t('applied_leave.messages.leave_delete_success')
-        redirect_to events_path
+        redirect_to applied_leaves_path
       end
     end
   end
