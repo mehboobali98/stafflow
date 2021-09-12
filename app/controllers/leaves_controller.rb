@@ -1,5 +1,6 @@
 class LeavesController < ApplicationController
   before_action :set_leave_type, only: %i[show edit update destroy]
+  layout 'leave_layout'
 
   # GET /leaves
   def index

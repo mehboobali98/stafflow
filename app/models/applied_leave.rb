@@ -90,13 +90,11 @@ class AppliedLeave < ApplicationRecord
     if applied_at < DateTime.now || applied_till < DateTime.now
       errors.add(:leave_date,
                  I18n.t('applied_leave.messages.error.past_leave_date'))
-      binding.pry
     end
   end
 
   def validate_leave_dates
     errors.add(:ending_leave_date, I18n.t('applied_leave.messages.error.end_leave_date')) if applied_till < applied_at
-    binding.pry
   end
 
   def self.get_filtered_records(filter)

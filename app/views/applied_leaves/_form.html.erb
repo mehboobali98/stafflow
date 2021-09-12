@@ -7,7 +7,6 @@
     </div>
     <div class="form mb-4">
       <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %>
-      <% binding.pry %>
       <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION.transform_keys{ |key| key.to_s.humanize }), {}, class: "form-control" %>
     </div>
     <div class="form mb-4">
@@ -19,7 +18,7 @@
       <%= form.date_field :applied_till, required: true, class: "form-control" %>
     </div>
     <div class="form mb-4">
-      <%= form.submit class: "btn btn-primary" %>
+      <%= form.submit t('applied_leave.links.submit'), class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>

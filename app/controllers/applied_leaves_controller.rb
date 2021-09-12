@@ -1,7 +1,7 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_applied_leave, only: %i[show edit update destroy]
-  before_action :get_filtered_records, only: %i[approve_multiple_leaves reject_multiple_leaves filter_applied_leaves]
+  before_action :set_applied_leave, only: %i[show edit update destroy approve_leave reject_leave]
+  layout 'leave_layout'
 
   # GET    /applied_leaves
   def index
@@ -13,9 +13,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET    /applied_leaves/new
   def new
-    @user_leaves = UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
-      'user_id = ? AND remaining_count > ?', current_user.id, 0
-    )
+    @user_leaves = UserLeave.get_user_leaves(current_user.id)
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
@@ -26,12 +24,12 @@ class AppliedLeavesController < ApplicationController
   def create
     @applied_leave = AppliedLeave.new(applied_leave_params)
     is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_count_available?
-    binding.pry
     respond_to do |format|
       format.html do
-        return redirect_to action: 'index', notice: t('applied_leave.messages.leave_applied_success') if is_saved
+        return redirect_to applied_leaves_path, notice: t('applied_leave.messages.leave_applied_success') if is_saved
 
         flash.now[:error] = @applied_leave.errors.full_messages
+        @user_leaves = UserLeave.get_user_leaves(current_user.id)
         render :new
       end
     end
@@ -39,9 +37,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET    /applied_leaves/:id/edit
   def edit
-    @user_leaves = UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
-      'user_id = ? AND remaining_count > ?', current_user.id, 0
-    )
+    @user_leaves = UserLeave.get_user_leaves(current_user.id)
   end
 
   # PATCH/PUT  /applied_leaves/:id
@@ -52,6 +48,7 @@ class AppliedLeavesController < ApplicationController
         return redirect_to leaves_path, notice: t('applied_leave.messages.leave_update_success') if is_updated
 
         flash.now[:error] = @leave.errors.full_messages
+        @user_leaves = UserLeave.get_user_leaves(current_user.id)
         render :edit
       end
     end
@@ -72,7 +69,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET    /applied_leaves/show_applied_leaves
   def show_applied_leaves
-    @applied_leaves = AppliedLeave.all
+    @applied_leaves = AppliedLeave.all # use joins here
     respond_to do |format|
       format.html
     end
@@ -84,10 +81,9 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_saved
-          return redirect_to action: 'show_applied_leaves',
-            notice: t('applied_leave.messages.leave_approve_success')
+          return redirect_to show_applied_leaves_path,
+                             notice: t('applied_leave.messages.leave_approve_success')
         end
-
         flash.now[:error] = @applied_leave.errors.full_messages
         render :show_applied_leaves
       end
@@ -100,10 +96,9 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_saved
-          return redirect_to action: 'show_applied_leaves',
-            notice: t('applied_leave.messages.leave_reject_success')
+          return redirect_to show_applied_leaves_path,
+                             notice: t('applied_leave.messages.leave_reject_success')
         end
-
         flash.now[:error] = @applied_leave.errors.full_messages
         render :display_pending_leaves
       end
@@ -113,6 +108,7 @@ class AppliedLeavesController < ApplicationController
   # PATCH  /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
     AppliedLeave.approve_multiple_applied_leaves(multiple_leave_params)
+    get_filtered_records
     respond_to do |format|
       format.js
     end
@@ -121,6 +117,7 @@ class AppliedLeavesController < ApplicationController
   # PATCH  /applied_leaves/reject_multiple_leaves
   def reject_multiple_leaves
     AppliedLeave.reject_multiple_applied_leaves(multiple_leave_params)
+    get_filtered_records
     respond_to do |format|
       format.js
     end
@@ -128,6 +125,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET    /applied_leaves/filter_applied_leaves
   def filter_applied_leaves
+    get_filtered_records
     respond_to do |format|
       format.js
     end
@@ -155,6 +153,6 @@ class AppliedLeavesController < ApplicationController
   end
 
   def filter_params
-    params.permit(:filter_type)
+    params.require(:filter_type).permit(:filter_type)
   end
 end

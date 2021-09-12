@@ -1,14 +1,14 @@
 <%= javascript_pack_tag "applied_leaves" %>
 <div class="container">
-  <h1><%= t('applied_leave.headings.applied_leaves') %></h1>
-  <br>
-  <br>
-  <%= link_to <%= t('applied_leave.links.approve_leaves') %>, "javascript:void(0)", class:'btn btn-info', id: 'approve_leaves_btn' %>
-  <%= link_to <%= t('applied_leave.links.reject_leaves') %>, reject_multiple_applied_leaves_path, class:'btn btn-danger', id: 'reject_leaves_btn' %>
-  <%= select_tag "filter", options_for_select([
+  <h1 class="my-2"><%= t('applied_leave.headings.applied_leaves') %></h1>
+  <div class="d-flex justify-content-between">
+    <%= link_to t('applied_leave.links.approve_leaves'), "javascript:void(0)", class:'btn btn-success mb-2 p-2', id: 'approve_leaves_btn' %>
+    <%= link_to t('applied_leave.links.reject_leaves'), reject_multiple_applied_leaves_path, class:'btn btn-danger mb-2 p-2', id: 'reject_leaves_btn' %>
+    <%= select_tag "filter", options_for_select([
       'Pending',
       'Accepted',
-      'Rejected'].freeze), prompt: <%= t('applied_leave.placeholders.leave_filter') %>, class: 'custom-select' %>
+      'Rejected'].freeze), class: 'w-25 d-inline mb-2 p-2' %>
+  </div>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
       <tr>

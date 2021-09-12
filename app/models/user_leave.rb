@@ -15,4 +15,10 @@ class UserLeave < ApplicationRecord
       false
     end
   end
+
+  def self.get_user_leaves(user_id)
+    UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
+      'user_id = ? AND remaining_count > ?', user_id, 0
+    )
+  end
 end

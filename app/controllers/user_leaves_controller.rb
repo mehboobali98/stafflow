@@ -1,4 +1,6 @@
 class UserLeavesController < ApplicationController
+  layout 'leave_layout'
+
   # GET    /user_leaves/new
   def new
     @leave = Leave.all
