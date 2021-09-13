@@ -13,9 +13,9 @@ class SettingsController < ApplicationController
     is_updated = @setting.update(permit_settings_parameters)
     respond_to do |format|
       if is_updated
-        format.html { redirect_to settings_path, notice: I18n.t('settings.updated') }
+        format.html { redirect_to settings_path, notice: t('settings.updated') }
       else
-        format.html { render :edit, notice: I18n.t('settings.not_updated') }
+        format.html { render :edit, notice: t('settings.not_updated') }
       end
     end
   end
