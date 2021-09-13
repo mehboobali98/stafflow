@@ -1,0 +1,21 @@
+<div class="container">
+  <h1><%= t('user_leave.headings.user_leaves') %></h1>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th><%= t('user_leave.headings.leave_type') %></th>
+        <th><%= t('user_leave.headings.leave_count') %></th>
+        <th><%= t('user_leave.headings.leave_remaining_count') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @user_leaves.each do |user_leave| %>
+        <tr>
+          <td><%= user_leave.leave.name %></td>
+          <td><%= user_leave.total_count %></td>
+          <td><%= user_leave.remaining_count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

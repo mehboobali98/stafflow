@@ -1,5 +1,12 @@
 class UserLeavesController < ApplicationController
+  before_action :authenticate_user!
   layout 'leave_layout'
+
+  # GET    /members/:member_id/user_leaves/show
+  def show
+    @user = find_user_by_id
+    @user_leaves = @user.user_leaves
+  end
 
   # GET    /user_leaves/new
   def new
@@ -28,5 +35,16 @@ class UserLeavesController < ApplicationController
 
   def user_leave_params
     params.require(:user_leave).permit(leave: {})
+  end
+
+  def user_params
+    params.require(:member_id)
+  end
+
+  def find_user_by_id
+    @user = User.find_by(id: user_params)
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:error] = e.message
+    redirect_to leaves_path
   end
 end

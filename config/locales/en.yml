@@ -68,6 +68,8 @@ en:
     headings:
       leave_type: 'Leave type'
       leave_count: 'Leave count'
+      leave_remaining_count: 'Remaining count'
+      user_leaves: 'User leaves'
     buttons:
       add_leaves: 'Add user leave'
   applied_leave:
@@ -101,7 +103,9 @@ en:
       leave_application: 'Leave application'
       leave_apply: 'Apply for leave'
       view_all: 'View all leaves'
-      leave_type: 'Leave type(s)'
+      leave_type: 'Leave types'
+      add_user_leave: 'Add user leave'
+      view_user_leave: 'View user leave'
     links:
       approve_leaves: 'Approve leaves'
       reject_leaves: 'Reject leaves'

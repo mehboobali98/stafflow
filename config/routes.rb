@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   get 'leave_types/resources'
   devise_for :users, controllers: { registrations: 'users/registrations' }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :members, controller: 'users'
+  resources :members, controller: 'users' do
+    get '/user_leaves/show', to: 'user_leaves#show'
+  end
   root to: 'home#index'
   get '/home', to: 'home#home'
   resources :leaves
