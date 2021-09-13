@@ -14,19 +14,25 @@
           </thead>
           <tbody>
             <% @benefits.each do |benefit| %>
-              <tr>
-                <td>
-                  <div class="custom-control custom-checkbox">
-                    <%= check_box_tag 'user_benefit[benefit_id][]', benefit.id %>
-                  </div>
-                </td>
-                <td><%= benefit.name %></td>
-                <td>
-                  <div class="form-group">
-                  <%= number_field_tag 'user_benefit[amount][]', nil, disabled: true, required: true %>
-                  </div>
-                </td>
-              </tr>  
+              <% check = true %>
+              <% @user_benefits.each do |user_benefit| %>
+                <% check = false if user_benefit.benefit.name == benefit.name %>
+              <% end %>
+              <% if check %>
+                <tr>
+                  <td>
+                    <div class="custom-control custom-checkbox">
+                      <%= check_box_tag 'user_benefit[benefit_id][]', benefit.id %>
+                    </div>
+                  </td>
+                  <td><%= benefit.name %></td>
+                  <td>
+                    <div class="form-group">
+                    <%= number_field_tag 'user_benefit[amount][]', nil, disabled: true, required: true %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>  
             <% end %>
           </tbody>
         </table>

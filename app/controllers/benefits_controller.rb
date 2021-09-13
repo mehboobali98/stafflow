@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BenefitsController < ApplicationController
-  before_action :load_benefit_object, only: %i[destroy update show]
+  before_action :load_benefit, only: %i[destroy update show]
 
   # GET /benefits
   def index
@@ -28,48 +28,48 @@ class BenefitsController < ApplicationController
 
   # PATCH/PUT /benefits/:id
   def update
-    is_updated = @benefit.update(permitted_benefit_arguments)
+    is_updated = @benefit.update(permitted_benefit_params)
     respond_to do |format|
       if is_updated
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.update') }
       else
-        format.html { redirect_to benefits_path, alert: @benefit.errors.full_messages }
+        format.html { redirect_to benefits_path, errors: @benefit.errors.full_messages }
       end
     end
   end
 
   # POST /benefits
   def create
-    @benefit = Benefit.new(permitted_benefit_arguments)
+    @benefit = Benefit.new(permitted_benefit_params)
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.create') }
       else
-        format.html { redirect_to benefits_path, alert: @benefit.errors.full_messages }
+        format.html { redirect_to benefits_path, errors: @benefit.errors.full_messages }
       end
     end
   end
 
   # DELETE /benefits/:id
   def destroy
-    is_destroyed = @benefit.destroy
+    @benefit.destroy
     respond_to do |format|
-      if is_destroyed
+      if @benefit.destroyed?
         format.html { redirect_to benefits_path, notice: t('benefit.messages.success.delete') }
       else
-        format.html { redirect_to benefits_path, alert: @benefit.errors.full_messages }
+        format.html { redirect_to benefits_path, errors: @benefit.errors.full_messages }
       end
     end
   end
 
   private
 
-  def permitted_benefit_arguments
+  def permitted_benefit_params
     params.require(:benefit).permit(:name, :benefit_type)
   end
 
-  def load_benefit_object
+  def load_benefit
     @benefit = Benefit.find_by_sequence_num!(params[:id])
   end
 end
