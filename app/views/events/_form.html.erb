@@ -10,15 +10,15 @@
         <div class="input-group mb-3 row">
           <div class="col-md-6">
             <%= form.label :event_date, t('event.forms.labels.event_date') %>
-            <%= form.date_field :event_date, value: extract_date(@event.starts_at), required: true, class: "form-control"%>
+            <%= form.date_field :event_date, value: extract_date(@event.starts_at), required: true, class: "form-control" %>
           </div>
           <div class="col-md-6">
             <%= form.label :event_time, t('event.forms.labels.event_time') %>
-            <%= form.time_field :event_time, value: extract_time(@event.starts_at), required: true, class: "form-control"%>
+            <%= form.time_field :event_time, value: extract_time(@event.starts_at), required: true, class: "form-control" %>
           </div>
         </div>
         <div>
-          <%= form.submit class: 'card-link btn btn-primary'%>
+          <%= form.submit class: 'card-link btn btn-primary' %>
         </div>
       <% end %>
     </div>
