@@ -1,0 +1,21 @@
+<nav class="navbar sticky-top navbar-light bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="#">KDB</a>
+    <div class='d-flex'>
+      <div class="dropstart">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          N
+        </button>
+        <ul class="dropdown-menu notifications bg-dark text-white" role="menu" aria-labelledby="dLabel">
+          <div class="notification-heading">
+            <h4 class="card-header p-3">Notifications</h4>
+          </div>
+          <li class="divider"></li>
+          <div class="notifications-wrapper">
+            <%= render partial: 'layouts/notifications' %>
+          </div><br>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
