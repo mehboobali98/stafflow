@@ -12,6 +12,9 @@
   </head>
   <body>
     <div class="row body-wrapper">
+      <div class="col-sm-3 sidebar-wrapper">
+        <%= render partial: "layouts/sidebar" %>
+      </div>
       <div class="col">
         <%= render partial: "layouts/leave_navbar" %>
         <%= yield %>
