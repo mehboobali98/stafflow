@@ -5,7 +5,7 @@
     <div class='w-75'>
       <h2><%= t('headings.signup') %></h2>
       <hr>
-      <div class=''>
+      <div>
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
           <div class="form-floating mb-2">
