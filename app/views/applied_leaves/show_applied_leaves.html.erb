@@ -3,7 +3,7 @@
   <h1 class="my-2"><%= t('applied_leave.headings.applied_leaves') %></h1>
   <div class="d-flex justify-content-between">
     <%= link_to t('applied_leave.links.approve_leaves'), "javascript:void(0)", class:'btn btn-success mb-2 p-2', id: 'approve_leaves_btn' %>
-    <%= link_to t('applied_leave.links.reject_leaves'), reject_multiple_applied_leaves_path, class:'btn btn-danger mb-2 p-2', id: 'reject_leaves_btn' %>
+    <%= link_to t('applied_leave.links.reject_leaves'), "javascript:void(0)", class:'btn btn-danger mb-2 p-2', id: 'reject_leaves_btn' %>
     <%= select_tag "filter", options_for_select([
       'Pending',
       'Accepted',
