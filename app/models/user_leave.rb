@@ -8,7 +8,9 @@ class UserLeave < ApplicationRecord
   def self.add_user_leave(user_id, user_leave_params)
     ActiveRecord::Base.transaction do
       user_leave_params.values.first.each_value do |value|
-        UserLeave.create!(value.merge(user_id: user_id, remaining_count: value[:total_count]))
+        UserLeave.create!(value.merge(user_id: user_id, remaining_count: value[:total_count])) unless UserLeave.exists?(
+          user_id: user_id, leave_id: value[:leave_id]
+        )
       end
       true
     rescue ActiveRecord::RecordInvalid
