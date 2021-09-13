@@ -1,5 +1,5 @@
 class UserBenefitsController < ApplicationController
-  before_action :load_user_benefit_object, only: %i[destroy update show]
+  before_action :load_user_benefit, only: %i[destroy update show]
   before_action :load_user_benefits_and_benefits, only: %i[new create]
 
   # GET /user_benefits
@@ -56,7 +56,7 @@ class UserBenefitsController < ApplicationController
     is_updated = @user_benefit.update(permitted_user_benefit_arguments_for_update)
     respond_to do |format|
       if is_updated
-        format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.updated') }
+        format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.update') }
       else
         format.html { redirect_to user_benefits_path, alert: @user_benefit.errors.full_messages }
       end
@@ -73,7 +73,7 @@ class UserBenefitsController < ApplicationController
 
   private
 
-  def load_user_benefit_object
+  def load_user_benefit
     @user_benefit = UserBenefit.find(params[:id])
   end
 
