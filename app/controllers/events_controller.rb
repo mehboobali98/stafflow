@@ -1,8 +1,8 @@
 # Events Controller
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: %i[show edit update destroy]
-  before_action :set_events, only: %i[index]
+  load_and_authorize_resource except: %i[display_calendar create]
+  authorize_resource only: %i[display_calendar create]
 
   # GET /events
   def index
@@ -20,7 +20,6 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    @event = Event.new
     respond_to do |format|
       format.html
     end
@@ -96,10 +95,6 @@ class EventsController < ApplicationController
   rescue ActiveRecord::RecordNotFound => e
     flash[:error] = e.message
     redirect_to events_path
-  end
-
-  def set_events
-    @events = Event.all
   end
 
   def set_event_fields(event)
