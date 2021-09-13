@@ -79,6 +79,8 @@ en:
       unlock_account: "Unlock my account"
       resend_confirmation_instructions: "Resend"
       create: "Create"
+      details: "Details"
+      delete: "Delete"
     labels:
       email: "Email"
       password: "Password"
@@ -90,6 +92,7 @@ en:
       dob: "Date Of Birth"
       role: "Role"
       salary: "Salary"
+      full_name: "Full Name"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to %{email}"
@@ -110,6 +113,8 @@ en:
     cannot_be_account_owner: "Sorry. You cannot be account owner"
     error_deleting: "An error occured while deleting user."
     date_error: "There is an error in date format"
+    unauthorized: "You are unauthorized to perform this action"
+    confirmation: "Are you sure about this action?"
 
   headings:
     change_password: "Change Password"
@@ -126,4 +131,3 @@ en:
     edit_employee: "Edit Employee"
     all_employees: "All Employees"
     employee_profile: "Employee Profile"
-
