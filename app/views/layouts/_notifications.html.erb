@@ -1,9 +1,12 @@
-<% notis = ['Your request for a leave has been approved', 'You have been fired'] %>
-<% notis.each do |notification| %>
-  <hr>
-  <a class="p-3" href="#"> 
-    <div> 
-      <h5><%= notification %></h5>  
-    </div> 
-  </a> 
+<% if notifications.nil? || notifications.empty? %>
+  <h5 class='p-3'>No New Notifications</h5>
+<% else %>
+  <% notifications.each do |notification| %>
+    <hr>
+    <a class="p-3" href="#"> 
+      <div> 
+        <h5><%= notification.body %></h5>  
+      </div> 
+    </a> 
+  <% end %>
 <% end %>

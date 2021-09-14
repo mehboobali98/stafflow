@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   belongs_to :company
   accepts_nested_attributes_for :company
+  has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
 
