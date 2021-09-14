@@ -9,7 +9,9 @@ class Ability
   include SettingsAbilities
 
   def initialize(user)
+    return if user.blank?
+
     define_user_abilities(user)
-    define_settings_abilities(user)
+    define_setting_abilities(user)
   end
 end
