@@ -6,14 +6,13 @@
       <th><%= t('company.table_header.name') %></th>
       <th><%= t('company.table_header.subdomain') %></th>
       <th class="text-center"><%= t('company.table_header.options') %></th>
-    </tr>
     </thead>
     <tbody>
       <%= @companies.each do |company| %>
       <tr>
         <td><%= company.name %></td>
         <td><%= company.subdomain %></td>
-        <td><%= link_to "login", new_user_session_url(subdomain: company.subdomain), class: 'btn btn-primary m-1' %></td>
+        <td><%= link_to t('forms.buttons.signup'), new_user_session_url(subdomain: company.subdomain), class: 'btn btn-primary m-1' %></td>
       </tr>
       <% end %>
     </tbody>
