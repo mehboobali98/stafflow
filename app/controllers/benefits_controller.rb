@@ -31,10 +31,11 @@ class BenefitsController < ApplicationController
     is_updated = @benefit.update(permitted_benefit_params)
     respond_to do |format|
       if is_updated
-        format.html { redirect_to benefits_path, notice: t('benefit.messages.success.update') }
+        flash[:notice] = t('benefit.messages.success.update')
       else
-        format.html { redirect_to benefits_path, errors: @benefit.errors.full_messages }
+        flash[:errors] = @benefit.errors.full_messages
       end
+      format.html { redirect_to benefits_path }
     end
   end
 
@@ -44,10 +45,11 @@ class BenefitsController < ApplicationController
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved
-        format.html { redirect_to benefits_path, notice: t('benefit.messages.success.create') }
+        flash[:notice] = t('benefit.messages.success.create')
       else
-        format.html { redirect_to benefits_path, errors: @benefit.errors.full_messages }
+        flash[:errors] = @benefit.errors.full_messages
       end
+      format.html { redirect_to benefits_path }
     end
   end
 
@@ -56,9 +58,12 @@ class BenefitsController < ApplicationController
     @benefit.destroy
     respond_to do |format|
       if @benefit.destroyed?
-        format.html { redirect_to benefits_path, notice: t('benefit.messages.success.delete') }
-      else
-        format.html { redirect_to benefits_path, errors: @benefit.errors.full_messages }
+        if is_updated
+          flash[:notice] = t('benefit.messages.success.delete')
+        else
+          flash[:errors] = @benefit.errors.full_messages
+        end
+        format.html { redirect_to benefits_path }
       end
     end
   end

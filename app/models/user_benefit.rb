@@ -10,11 +10,12 @@ class UserBenefit < ApplicationRecord
 
   def self.initialze_user_benefits(params)
     user_benefit_objects = []
-    params['user_benefit']['benefit_id'].each_with_index do |benefit_id, index|
-      status = Benefit.find_by_sequence_num!(benefit_id).benefit_type == 'Monthly'
+    params['user_benefit']['sequence_num'].each_with_index do |sequence_num, index|
+      benefit_object = Benefit.find_by_sequence_num!(sequence_num)
+      status = benefit_object.benefit_type == 'Monthly'
       user_benefit_objects.append(UserBenefit.create(amount: params['user_benefit']['amount'][index],
                                                      status: status,
-                                                     benefit_id: benefit_id,
+                                                     benefit_id: benefit_object.id,
                                                      user_id: 1))
     end
     user_benefit_objects

@@ -6,29 +6,31 @@ class Payroll < ApplicationRecord
   belongs_to :user
   belongs_to :company
 
-  def self.calculate_gross_salary(user_benefit)
-    gross_salary = 0
-    gross_salary += user_benefit.first.user.base_salary * 0.9
-    user_benefit.each do |benefit|
+  def self.generates_payroll_object_and_applied_benefits(user_benefits, user)
+    gross_salary = calculate_gross_salary(user_benefits)
+    payroll = Payroll.create(user_id: user.id, gross_salary: gross_salary,
+                             salary_after_tax: user.base_salary * 0.9)
+    generate_applied_benefits(user_benefits, payroll.id, user)
+  end
+
+  def self.generate_applied_benefits(user_benefits, payroll_id, user)
+    user_benefits.each do |user_benefit|
+      AppliedBenefit.create(user_benefit_id: user_benefit.id, payroll_id: payroll_id, amount: user_benefit.amount,
+                            benefit_id: user_benefit.benefit_id, user_id: user.id)
+    end
+  end
+
+  def self.calculate_gross_salary(user_benefits)
+    gross_salary = user_benefits.first.user.base_salary * 0.9
+    user_benefits.each do |benefit|
       gross_salary += benefit.amount
     end
     gross_salary
   end
 
-  def self.generates_payroll_and_returns_id_of_generated_object(user_benefit)
-    gross_salary = calculate_gross_salary(user_benefit)
-    user_benefit = user_benefit.first
-    payroll = Payroll.new(user_id: user_benefit.user.id, gross_salary: gross_salary,
-                          salary_after_tax: user_benefit.user.base_salary * 0.9)
-    errors.add_to_base(payroll.errors.full_messages) unless payroll.save
-    payroll.id
-  end
+  def self.check_last_payroll_date(payroll_created_at)
+    return false if payroll_created_at.month == DateTime.now.month && payroll_created_at.year == DateTime.now.year
 
-  def self.generate_applied_benefits(user_benefits, payroll_id)
-    user_benefits.each do |user_benefit|
-      applied_benefit_object = AppliedBenefit.new(user_benefit_id: user_benefit.id, payroll_id: payroll_id, amount: user_benefit.amount,
-                                                  benefit_id: user_benefit.benefit_id, user_id: user_benefit.user.id)
-      applied_benefit_object.save
-    end
+    true
   end
 end

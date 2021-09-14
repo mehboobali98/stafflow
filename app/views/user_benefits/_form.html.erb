@@ -1,4 +1,4 @@
-<%= form_for @user_benefit do |user_benefit| %>
+<%= form_for [@member, @user_benefit], url: member_user_benefit_path do |user_benefit| %>
   <div class="row">
     <div class="col-md-4">
       <div class="mb-3">

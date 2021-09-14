@@ -40,6 +40,17 @@ en:
       options: "Options"
     headings:
       payroll: "Payrolls"
+    button:
+      generate_payroll: "Generate Payroll"
+      save_payroll: "Save Payroll"
+      payroll: "Payroll"
+    messages:
+      success:
+        create: "Payroll Generated Successfully"
+      failure:
+        created_already: "Payroll for this month has been generated already"
+      payroll_generation: "Are you sure you want to generate new payroll?"
+
   benefit:
     table:
       name: "Name"
@@ -53,6 +64,9 @@ en:
       presence: "This field cannot be left empty"
     headings:
       benefit: "Benefits"
+    label:
+      benefit_name: "Benefit Name"
+      benefit_type: "Benefit Type"
   form:
     message:
       confirmation: "Are you sure?"
@@ -64,6 +78,7 @@ en:
     field:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
+
   user_benefit:
     messages:
       success:
@@ -85,3 +100,5 @@ en:
       status: "Status"
       select: "Select"
       options: "Options"
+    button:
+      user_benefit: "Benefits"

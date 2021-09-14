@@ -1,10 +1,14 @@
 class UserBenefitsController < ApplicationController
   before_action :load_user_benefit, only: %i[destroy update show]
-  before_action :load_user_benefits_and_benefits, only: %i[new create]
+  before_action :load_user_benefits, only: %i[new create]
+  before_action :load_benefits, only: %i[new create]
+  before_action :load_user, only: %i[new create]
+  before_action :load_user, only: %i[destroy update show]
 
   # GET /user_benefits
   def index
-    @user_benefits = UserBenefit.includes(:user)
+    @user = User.find_by_id(params['member_id'])
+    @user_benefits = UserBenefit.includes(:user).includes(:benefit)
     respond_to do |format|
       format.html
     end
@@ -23,19 +27,14 @@ class UserBenefitsController < ApplicationController
     user_benefit_objects = UserBenefit.initialze_user_benefits(params)
     user_benefit_objects.each do |new_user_benefit|
       new_user_benefit.save!
-      flash[:notice] = t('user_benefit.messages.success.')
+      flash[:notice] ||= []
+      flash[:notice] << new_user_benefit.benefit.name + ' ' + t('user_benefit.messages.success.create')
     rescue ActiveRecord::RecordInvalid
-      flash[:errors] = new_user_benefit.errors.full_messages
+      flash[:errors] ||= []
+      flash[:errors] << (new_user_benefit.benefit.name + ' ' + new_user_benefit.errors.full_messages.first)
     end
     respond_to do |format|
-      format.html { redirect_to action: 'index' }
-    end
-  end
-
-  # GET /user_benefits/:id
-  def show
-    respond_to do |format|
-      format.html
+      format.html { redirect_to member_user_benefits_path }
     end
   end
 
@@ -44,10 +43,11 @@ class UserBenefitsController < ApplicationController
     is_destroyed = @user_benefit.destroy
     respond_to do |format|
       if is_destroyed
-        format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.delete') }
+        flash[:notice] = t('user_benefit.messages.success.delete')
       else
-        format.html { redirect_to user_benefits_path, alert: @user_benefit.errors.full_messages }
+        flash[:error] =  @user_benefit.errors.full_messages
       end
+      format.html { redirect_to member_user_benefits_path }
     end
   end
 
@@ -56,9 +56,9 @@ class UserBenefitsController < ApplicationController
     is_updated = @user_benefit.update(permitted_user_benefit_arguments_for_update)
     respond_to do |format|
       if is_updated
-        format.html { redirect_to user_benefits_path, notice: t('user_benefit.messages.success.update') }
+        format.html { redirect_to member_user_benefits_path, notice: t('user_benefit.messages.success.update') }
       else
-        format.html { redirect_to user_benefits_path, alert: @user_benefit.errors.full_messages }
+        format.html { redirect_to member_user_benefits_path, alert: @user_benefit.errors.full_messages }
       end
     end
   end
@@ -77,8 +77,15 @@ class UserBenefitsController < ApplicationController
     @user_benefit = UserBenefit.find_by_sequence_num!(params[:id])
   end
 
-  def load_user_benefits_and_benefits
-    @benefits = Benefit.all
+  def load_user_benefits
     @user_benefits = UserBenefit.includes(:benefit).all
+  end
+
+  def load_benefits
+    @benefits = Benefit.all
+  end
+
+  def load_user
+    @user = User.find_by_id(params[:member_id])
   end
 end
