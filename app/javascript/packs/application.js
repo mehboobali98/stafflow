@@ -6,6 +6,7 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
+require ('select2')
 global.jQuery = global.$ = require('jquery'); 
 require("bootstrap")
 document.addEventListener("turbolinks:load", function() {
@@ -14,6 +15,16 @@ document.addEventListener("turbolinks:load", function() {
         $('[data-toggle="popover"]').popover()
     })
 })
+
+import 'select2/dist/css/select2.css';
+
+$(document).ready(function() {
+  $(".js-select-field").select2({
+    theme: "bootstrap"
+    // placeholder: "Please Select",
+    // allowClear: true
+  });
+});
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.

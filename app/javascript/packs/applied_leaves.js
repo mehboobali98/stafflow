@@ -1,7 +1,10 @@
 $(document).ready(function() {
 
-  $("#approve_leaves_btn").hide();
-  $("#reject_leaves_btn").hide();
+  toggle_check_box_vibility();
+  
+  $("body").on('change', '[type=checkbox]', function(e) {
+    toggle_check_box_vibility();
+  });
 
   $("#approve_leaves_btn").on("click", function(event) {
     let applied_leave_ids = get_applied_leave_ids();
@@ -15,6 +18,15 @@ $(document).ready(function() {
     event.preventDefault();
   });
 
+  function toggle_check_box_vibility() {
+    let count_checked = get_count_of_checked_boxes();
+    if (count_checked > 1) {
+      $("#submit_buttons").removeClass("d-none");
+    } else {
+      $("#submit_buttons").addClass("d-none");
+    }
+  }
+
   function get_applied_leave_ids() {
     let applied_leave_ids = []
 
@@ -22,6 +34,11 @@ $(document).ready(function() {
       applied_leave_ids.push(this.value)
     });
     return applied_leave_ids;
+  }
+
+  function get_count_of_checked_boxes() {
+    let count_checked = $('input[name="applied_leave_ids[]"]:checked').length;
+    return count_checked;
   }
 
   function send_mass_update_request(method_type, path, data) {
@@ -48,15 +65,4 @@ $(document).ready(function() {
       }
     });
   });
-});
-
-$(document).on('change', '[type=checkbox]', function(e) {
-  let count_checked = $('input[name="applied_leave_ids[]"]:checked').length;
-  if (count_checked > 1) {
-    $("#approve_leaves_btn").show();
-    $("#reject_leaves_btn").show();
-  } else {
-    $("#approve_leaves_btn").hide();
-    $("#reject_leaves_btn").hide();
-  }
 });

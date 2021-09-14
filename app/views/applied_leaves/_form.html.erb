@@ -3,7 +3,7 @@
   <%= form_with model: @applied_leave do |form| %>
     <div class="form mb-4">
       <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves'), class: "form-label" %>
-      <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, {}, {class: "form-control"}) %>
+      <%= collection_select(:applied_leave, :user_leave_id, @user_leaves, :id, :name, {}, { class: "form-control" }) %>
     </div>
     <div class="form mb-4">
       <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %>

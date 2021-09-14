@@ -12,7 +12,7 @@ class AppliedLeave < ApplicationRecord
 
   def calculate_leave_count
     number_of_days = week_days_in_date_range(applied_at..applied_till)
-    return number_of_days unless leave_duration_name_from_id.eql?(:full_day)
+    return number_of_days if leave_duration_name_from_id.eql?(:full_day)
 
     number_of_days / 2 unless number_of_days.nil?
   end
@@ -34,7 +34,7 @@ class AppliedLeave < ApplicationRecord
 
   def approve_applied_leave
     leave_count = calculate_leave_count
-    return false unless pending? || leave_count.negative
+    return false unless pending? && leave_count.positive?
 
     ActiveRecord::Base.transaction do
       request_accepted # change state
@@ -72,8 +72,8 @@ class AppliedLeave < ApplicationRecord
     applied_leave_ids.each do |leave_id|
       applied_leave = AppliedLeave.find(leave_id)
       applied_leave.approve_applied_leave
-    rescue ActiveRecord::RecordNotFound => e
-      puts e.message
+    rescue ActiveRecord::RecordNotFound
+      nil
     end
   end
 
@@ -81,26 +81,33 @@ class AppliedLeave < ApplicationRecord
     applied_leave_ids.each do |leave_id|
       applied_leave = AppliedLeave.find(leave_id)
       applied_leave.reject_applied_leave
-    rescue ActiveRecord::RecordNotFound => e
-      puts e.message
+    rescue ActiveRecord::RecordNotFound
+      nil
     end
   end
 
   def validate_past_leave_date
-    if applied_at < DateTime.now || applied_till < DateTime.now
-      errors.add(:leave_date,
-                 I18n.t('applied_leave.messages.error.past_leave_date'))
-    end
+    return true unless applied_at < Date.today && applied_till < Date.today
+
+    errors.add(:leave_date, I18n.t('applied_leave.messages.error.past_leave_date'))
+    false
   end
 
   def validate_leave_dates
-    errors.add(:ending_leave_date, I18n.t('applied_leave.messages.error.end_leave_date')) if applied_till < applied_at
+    return true unless applied_till < applied_at
+
+    errors.add(:ending_leave_date, I18n.t('applied_leave.messages.error.end_leave_date'))
+    false
   end
 
   def self.get_filtered_records(filter)
-    return AppliedLeave.all if filter.nil?
+    return AppliedLeave.all if filter.empty?
 
     AppliedLeave.where(state: filter)
+  end
+
+  def self.get_applied_leaves
+    AppliedLeave.includes(user_leave: %i[user leave])
   end
 
   state_machine do

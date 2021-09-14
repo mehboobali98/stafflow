@@ -69,7 +69,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET    /applied_leaves/show_applied_leaves
   def show_applied_leaves
-    @applied_leaves = AppliedLeave.all # use joins here
+    @applied_leaves = AppliedLeave.get_applied_leaves
     respond_to do |format|
       format.html
     end
@@ -80,12 +80,9 @@ class AppliedLeavesController < ApplicationController
     is_saved = @applied_leave.approve_applied_leave
     respond_to do |format|
       format.html do
-        if is_saved
-          return redirect_to show_applied_leaves_path,
-                             notice: t('applied_leave.messages.leave_approve_success')
-        end
+        flash[:notice] = t('applied_leave.messages.leave_approve_success') if is_saved
         flash.now[:error] = @applied_leave.errors.full_messages
-        render :show_applied_leaves
+        return redirect_to show_applied_leaves_path
       end
     end
   end
@@ -95,12 +92,9 @@ class AppliedLeavesController < ApplicationController
     is_saved = @applied_leave.reject_applied_leave
     respond_to do |format|
       format.html do
-        if is_saved
-          return redirect_to show_applied_leaves_path,
-                             notice: t('applied_leave.messages.leave_reject_success')
-        end
-        flash.now[:error] = @applied_leave.errors.full_messages
-        render :display_pending_leaves
+        flash[:notice] = t('applied_leave.messages.leave_reject_success') if is_saved
+        flash[:error] = @applied_leave.errors
+                                      .return redirect_to show_applied_leaves_path
       end
     end
   end
