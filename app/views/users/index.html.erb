@@ -21,6 +21,9 @@
       <%= render partial: 'users_list', locals: { users: @users } %>
     </tbody>
   </table>
+  <div class='pagination-wrapper'>
+    <%= will_paginate @users, container: false %>
+  </div>
   <!-- This line below is temporary for testing -->
   <%= link_to 'Logout', destroy_user_session_path, method: :delete %> 
 </div> 

@@ -28,7 +28,7 @@ gem 'devise'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
-
+gem "will_paginate", "~> 3.1.7"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
