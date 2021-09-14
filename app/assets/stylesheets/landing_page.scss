@@ -1,17 +1,22 @@
+$header_image_background_color: #00BFFF;
+$body_text_color: #444444;
+$headings_color: #fff;
+$sections_background_color: #f3f5fa;
+
 body {
   overflow: scroll;
-  color: #444444;
+  color: $body_text_color;
 }
 #hero {
   width: 100%;
   height: 50vh;
-  background: deepskyblue;
+  background: $header_image_background_color;
   h1 {
     margin: 0 0 10px 0;
     font-size: 48px;
     font-weight: 700;
     line-height: 56px;
-    color: #fff;
+    color: $headings_color;
   }
   h2 {
     color: rgba(255, 255, 255, 0.6);
@@ -21,15 +26,15 @@ body {
   .animated {
     animation: up-down 2s ease-in-out infinite alternate-reverse both;
   }
-  img{
+  img {
     height: 45%;
-    margin-top:30%;
+    margin-top: 30%;
   }
 }
 section {
   padding: 60px 0;
   .section-bg {
-    background-color: #f3f5fa;
+    background-color: $sections_background_color;
   }
   .section-title {
     text-align: center;
@@ -186,7 +191,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 997;
   padding: 15px 0;
   position: fixed;
-  background: deepskyblue;
+  background: #header_image_background_color;
   .logo {
     font-size: 30px;
     margin: 0;
@@ -218,14 +223,14 @@ h1, h2, h3, h4, h5, h6 {
       padding: 8px 20px;
       margin-left: 30px;
       border-radius: 50px;
-      color: deepskyblue;
+      color: $header_image_background_color;
       background: white;
       font-size: 14px;
       border: 2px solid #47b2e4;
       font-weight: 600;
     }
     .sign-in-up:hover {
-      color: deepskyblue;
+      color: $header_image_background_color;
     }
   }
   a,a:focus {
@@ -252,7 +257,7 @@ h1, h2, h3, h4, h5, h6 {
 #footer {
   font-size: 14px;
   background: #37517e;
-  position:relative;
+  position: relative;
   .footer-bottom {
     padding-top: 30px;
     padding-bottom: 30px;
