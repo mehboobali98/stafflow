@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :members, controller: 'users' do
     collection do
-      get :user_filters, as: :filtered
+      get :filters, as: :filtered
     end
   end
 end

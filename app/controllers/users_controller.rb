@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource
   has_scope :role_id
   has_scope :department_id
-  has_scope :fname
+  has_scope :members_name
   # GET /members/new
   def new
     respond_to do |format|
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
   end
 
   # GET /members/user_filters
-  def user_filters
+  def filters
     @users = apply_scopes(User).all
     respond_to do |format|
       format.js
