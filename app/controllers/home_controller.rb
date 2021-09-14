@@ -1,6 +1,5 @@
 class HomeController < ApplicationController
   before_action :authenticate_user!
-  binding.pry
   skip_before_action :authenticate_user!, only: %i[display_companies index]
   layout 'landing'
 
