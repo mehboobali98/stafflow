@@ -77,6 +77,7 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH  /applied_leaves/:id/approve_leave
   def approve_leave
+    binding.pry
     is_saved = @applied_leave.approve_applied_leave
     respond_to do |format|
       format.html do

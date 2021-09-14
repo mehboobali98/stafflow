@@ -1,6 +1,6 @@
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_user_by_id
+  before_action :set_user
   layout 'leave_layout'
 
   # GET    /members/:member_id/user_leaves/:id
@@ -18,8 +18,7 @@ class UserLeavesController < ApplicationController
 
   # GET    /members/:member_id/user_leaves/new
   def new
-    binding.pry
-    @user = find_user_by_id
+    @user = set_user
     @leave = Leave.all
     respond_to do |format|
       format.html
@@ -33,7 +32,7 @@ class UserLeavesController < ApplicationController
       format.html do
         if is_saved
           return redirect_to controller: :home, action: :index,
-            notice: t('user_leave.messages.success.create_success')
+                             notice: t('user_leave.messages.success.create_success')
         end
         flash.now[:error] = t('user_leave.messages.failure.create_failure')
         render :new
@@ -43,10 +42,8 @@ class UserLeavesController < ApplicationController
 
   # GET    /members/:member_id/applied_leaves/:id/edit
   def edit
-    binding.pry
-    @user = find_user_by_id
-    @user_leave = UserLeave.find_by(id: params[:id])
-    binding.pry
+    @user = set_user
+    @user_leave = set_user_leave
     respond_to do |format|
       format.js
     end
@@ -55,17 +52,26 @@ class UserLeavesController < ApplicationController
   # PATCH/PUT  /members/:member_id/applied_leaves/:id
   def update
     binding.pry
+    @user_leave = set_user_leave
+    is_updated = @user_leave.update(user_leave_update_params)
+    respond_to do |format|
+      format.html do
+        return redirect_to leaves_path, notice: t('leave.messages.success.edit_success') if is_updated
+
+        flash.now[:error] = @user_leave.errors.full_messages
+        render :edit
+      end
+    end
   end
 
   # Destroy /members/:member_id/applied_leaves/:id
-  def destroy
-  end
+  def destroy; end
 
   private
 
   def user_leave_update_params
     binding.pry
-    params.require(:user_leave).permit(:member_id, :id)
+    params.require(:user_leave).permit(:member_id, :id, :remaining_count)
   end
 
   def user_leave_params
@@ -76,7 +82,14 @@ class UserLeavesController < ApplicationController
     params.require(:member_id)
   end
 
-  def find_user_by_id
+  def set_user_leave
+    @user_leave = UserLeave.find_by(id: params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:error] = e.message
+    redirect_to leaves_path
+  end
+
+  def set_user
     @user = User.find_by(id: user_params)
   rescue ActiveRecord::RecordNotFound => e
     flash[:error] = e.message

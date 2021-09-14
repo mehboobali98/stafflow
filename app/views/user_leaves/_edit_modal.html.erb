@@ -1,19 +1,18 @@
-<% binding.pry %>
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Edit user leave</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
-      <%= form_with url: member_user_leave_path(user, user_leave) , local:true, html: { class: 'card p-3 bg-light' } do |form| %>
+    <%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch, local:true, html: { class: 'card p-3 bg-light' } do |form| %>
+      <div class="modal-body">
         <div class="form-group mb-3">
           <%= form.label :leave_name, t('leave.forms.labels.name'), class: 'text-grey-darkest' %>
-          <%= form.text_field :leave_name, readonly: true, class: 'form-control' %>
+          <%= form.text_field :leave_name, disabled: true, value: user_leave.leave.name, class: 'form-control' %>
         </div>
         <div class="form-group mb-3">
           <%= form.label :total_count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :count, in: 1..20, required: true, readonly: true, class: 'form-control', placeholder: t('leave.forms.placeholders.count') %>
+          <%= form.number_field :total_count, in: 1..20, required: true, readonly: true, class: 'form-control' %>
         </div>
         <div class="form-group mb-3">
           <%= form.label :remaining_count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
@@ -22,10 +21,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <div class="form-group mb-3">
-          <%= form.submit class: 'card-link btn btn-primary' %>
-        <% end %>
+        <%= form.submit class: 'card-link btn btn-primary' %>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
