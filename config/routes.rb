@@ -11,8 +11,4 @@ Rails.application.routes.draw do
       get '/', to: 'notifications#fetch_user_notifications'
     end
   end
-  get '/notifications_count', to: 'notifications#notifications_count'
-  # constraints(subdomain: '7vas') do
-  #   get '/home', to: 'home#home'
-  # end
 end

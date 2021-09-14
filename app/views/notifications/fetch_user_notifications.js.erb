@@ -1,1 +1,2 @@
+$('#notifications_count').html("<%= @notifications.length %>")
 $('#notifications_wrapper').html("<%= escape_javascript render partial: 'layouts/notifications', locals: { notifications: @notifications } %>")
