@@ -70,6 +70,8 @@ en:
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
       user_leaves: 'User leaves'
+      options: 'Options'
+      edit: 'Edit'
     buttons:
       add_leaves: 'Add user leave'
   applied_leave:

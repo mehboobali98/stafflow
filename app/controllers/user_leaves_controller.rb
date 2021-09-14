@@ -1,15 +1,25 @@
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_user_by_id
   layout 'leave_layout'
 
-  # GET    /members/:member_id/user_leaves/show
+  # GET    /members/:member_id/user_leaves/:id
   def show
-    @user = find_user_by_id
     @user_leaves = @user.user_leaves
   end
 
-  # GET    /user_leaves/new
+  # GET    /members/:member_id/user_leaves
+  def index
+    @user_leaves = @user.user_leaves
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # GET    /members/:member_id/user_leaves/new
   def new
+    binding.pry
+    @user = find_user_by_id
     @leave = Leave.all
     respond_to do |format|
       format.html
@@ -23,7 +33,7 @@ class UserLeavesController < ApplicationController
       format.html do
         if is_saved
           return redirect_to controller: :home, action: :index,
-                             notice: t('user_leave.messages.success.create_success')
+            notice: t('user_leave.messages.success.create_success')
         end
         flash.now[:error] = t('user_leave.messages.failure.create_failure')
         render :new
@@ -31,7 +41,32 @@ class UserLeavesController < ApplicationController
     end
   end
 
+  # GET    /members/:member_id/applied_leaves/:id/edit
+  def edit
+    binding.pry
+    @user = find_user_by_id
+    @user_leave = UserLeave.find_by(id: params[:id])
+    binding.pry
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # PATCH/PUT  /members/:member_id/applied_leaves/:id
+  def update
+    binding.pry
+  end
+
+  # Destroy /members/:member_id/applied_leaves/:id
+  def destroy
+  end
+
   private
+
+  def user_leave_update_params
+    binding.pry
+    params.require(:user_leave).permit(:member_id, :id)
+  end
 
   def user_leave_params
     params.require(:user_leave).permit(leave: {})

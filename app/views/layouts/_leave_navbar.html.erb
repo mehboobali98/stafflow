@@ -14,8 +14,7 @@
             <%= t('applied_leave.headings.user_leaves') %>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><%= link_to t('applied_leave.headings.add_user_leave'), user_leaves_new_path, class: "dropdown-item" %></li>
-            <li><%= link_to t('applied_leave.headings.view_user_leave'), member_user_leaves_show_path(current_user), class: "dropdown-item" %></li>
+            <li><%= link_to t('applied_leave.headings.view_user_leave'), member_user_leaves_path(current_user), class: "dropdown-item" %></li>
           </ul>
         </li>
         <li class="nav-item dropdown">

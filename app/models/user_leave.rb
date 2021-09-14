@@ -1,7 +1,7 @@
 class UserLeave < ApplicationRecord
   belongs_to :user
   belongs_to :leave
-  has_many :applied_leaves
+  has_many :applied_leaves, dependent: :nullify
   validates :total_count, :remaining_count, presence: true
   validates :total_count, :remaining_count, numericality: { only_integer: true }
 
@@ -21,6 +21,12 @@ class UserLeave < ApplicationRecord
   def self.get_user_leaves(user_id)
     UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
       'user_id = ? AND remaining_count > ?', user_id, 0
+    )
+  end
+
+  def self.get_all_user_leaves(user_id)
+    UserLeave.joins(:leave).select('user_leaves.id, leaves.name').where(
+      'user_id = ? ', user_id
     )
   end
 end
