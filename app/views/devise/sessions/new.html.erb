@@ -1,4 +1,4 @@
-<% if request.subdomain == "www" || request.subdomain.blank? %>
+<% if !sub_domain?(request) %>
   <%= render partial: "find_by_email" %>
 <% else %>
   <div class="card border-dark pb-3 text-center w-75">
