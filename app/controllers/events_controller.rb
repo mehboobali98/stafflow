@@ -79,7 +79,7 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events
+  # GET    /events/display_calendar
   def display_calendar
     respond_to do |format|
       format.html
