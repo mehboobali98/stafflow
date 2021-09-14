@@ -8,8 +8,6 @@ require("@rails/activestorage").start()
 require("channels")
 global.$ = global.jQuery = require("jquery"); 
 require("./settings")
-// import "@fortawesome/fontawesome-free/css/all"
-
 require("bootstrap")
 document.addEventListener("turbolinks:load", function() {
     $(function () {
