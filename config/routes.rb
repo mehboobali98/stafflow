@@ -3,10 +3,7 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
-  as :user do
-    root to: 'devise/sessions#new'
-  end
-
+  root to: "home#index"
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
