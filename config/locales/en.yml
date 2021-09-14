@@ -32,8 +32,8 @@
 en:
   company:
     table_header:
-      list: "Companies-List"
-      name: "Company-Name"
+      list: "Companies List"
+      name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
   landing_page:
