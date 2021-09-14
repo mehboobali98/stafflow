@@ -34,4 +34,5 @@ en:
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
+    title: "Settings"
     
