@@ -16,7 +16,7 @@
           <td><%= format_date(event.starts_at) %></td>
           <td><%= link_to t('event.forms.links.show'), event, class: 'btn btn-info' %></td>
           <td><%= link_to t('event.forms.links.edit'), edit_event_path(event), class: 'btn btn-secondary' %></td>
-          <td><%= link_to t('event.forms.links.delete'), event, method: :delete, data: { confirm: t('event.forms.links.confirmation.deletion') }, class: 'btn btn-danger' %></td>
+          <td><%= link_to t('event.forms.links.delete'), event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') }, class: 'btn btn-danger' %></td>
         </tr>
       <% end %>
     </tbody>

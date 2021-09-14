@@ -1,16 +1,14 @@
-<div class="row justify-content-cente">
-  <% flash.each do |message_type, error_message| %>
-    <div class="<%= add_bootstrap_class(message_type) %> ">
-      <a href="#" data-dismiss="alert" class="close far fa-times-circle"></a>
-      <% if error_message.is_a?(Array) %>
-        <ul>
-          <% error_message.each do |message| %>
-            <li class="text-center"><%= message %></li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="text-center"><%= error_message %></p>
-      <% end %>
-    </div>
-  <% end %>
-</div>
+<% flash.each do |message_type, error_message| %>
+  <div class="<%= add_bootstrap_class(message_type) %> alert-dismissible fade show text-center" role="alert" >
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <% if error_message.is_a?(Array) %>
+      <ul>
+        <% error_message.each do |message| %>
+          <li class="text-center"><%= message %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-center"><%= error_message %></p>
+    <% end %>
+  </div>
+<% end %>
