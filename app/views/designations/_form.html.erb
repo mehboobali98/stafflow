@@ -3,19 +3,19 @@
     <div class="col-4">
       <h1><%= local_assigns&.dig(:heading) %></h1>
 
-      <%= form_for @designation do |f| %>
+      <%= form_for @designation do |form| %>
         <div class="form-group mb-3">
-          <%= f.label t 'designation.name_lable' %>
-          <%= f.text_field :designation_name, required: true, class: 'form-control' %>
+          <%= form.label t 'designation.name_lable' %>
+          <%= form.text_field :name, required: true, class: 'form-control' %>
         </div>
         <div class="input-group mb-3">
           <div class="col-md-6">
-            <%= f.label t 'designation.select_department' %>
-            <%= f.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'},{class: "form-control"} %>        
+            <%= form.label t 'designation.select_department' %>
+            <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'},{class: "form-control"} %>        
           </div>
         </div>
         <div>
-          <%= f.submit class: 'card-link btn btn-dark' %>
+          <%= form.submit class: 'card-link btn btn-dark' %>
         </div>
       <% end %>
     </div>
