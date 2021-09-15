@@ -35,10 +35,12 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        return redirect_to events_path, notice: t('event.messages.success.create_success') if is_saved
-
-        flash.now[:error] = @event.errors.full_messages
-        render :new
+        if is_saved
+          redirect_to events_path, notice: t('event.messages.success.create_success')
+        else
+          flash.now[:error] = @event.errors.full_messages
+          render :new
+        end
       end
     end
   end
@@ -58,10 +60,12 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        return redirect_to events_path, notice: t('event.messages.success.update_success') if is_saved
-
-        flash.now[:error] = @event.errors.full_messages
-        render :edit
+        if is_saved
+          redirect_to events_path, notice: t('event.messages.success.update_success')
+        else
+          flash.now[:error] = @event.errors.full_messages
+          render :edit
+        end
       end
     end
   end

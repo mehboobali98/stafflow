@@ -10,10 +10,18 @@ class Event < ApplicationRecord
 
     errors.add(:event_year, I18n.t('event.messages.error.event_year'))
     false
-  rescue Date::Error => e
-    errors.add(e.message)
+  rescue Type::Error
+    errors.add(:event_date, I18n.t('event.messages.error.nil_date_input'))
     false
   end
+
+  #   method required for simple_calendar gem as it uses start_time
+  #   as default attribute to create calendar
+  # def start_time
+  #   starts_at
+  # end
+
+  private
 
   def validate_past_event_date
     return true unless starts_at < DateTime.now
@@ -21,10 +29,4 @@ class Event < ApplicationRecord
     errors.add(:event_date, I18n.t('event.messages.error.event_date'))
     false
   end
-
-  def start_time
-    starts_at
-  end
-
-  private :validate_past_event_date
 end
