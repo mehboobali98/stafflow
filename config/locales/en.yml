@@ -34,7 +34,6 @@ en:
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'
-      featured_leave: 'Featured leave'
       success:
         create_success: 'Leave created succcessfully'
         edit_success: 'Leave edited succcessfully'
@@ -46,6 +45,7 @@ en:
       name: 'Name'
       count_allowed: 'Count allowed'
       options: 'Options'
+      featured_leave: 'Featured leave'
     forms:
       labels:
         name: 'Leave name'
@@ -63,15 +63,27 @@ en:
     messages:
       success:
         create_success: 'User leaves(s) created succcessfully'
+        update: 'User leave updated succcessfully'
+        delete: 'User leave deleted succcessfully'
       failure:
         create_failure: 'User leave(s) not created'
+        total_leave_count: 'must be greater than remaining leave count'
+      confirmation:
+        delete: 'Are you sure?'
     headings:
       leave_type: 'Leave type'
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
       user_leaves: 'User leaves'
       options: 'Options'
+      show: 'Show'
       edit: 'Edit'
+      delete: 'Delete'
+      edit_user_leave: 'Edit User Leave'
+      save: 'Save'
+      close: 'Close'
+      feature_user_leave: 'Feature user leave'
+      back: "Back"
     buttons:
       add_leaves: 'Add user leave'
   applied_leave:

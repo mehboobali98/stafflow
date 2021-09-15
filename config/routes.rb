@@ -17,7 +17,8 @@ Rails.application.routes.draw do
   resources :leaves
   # get '/user_leaves/new', to: 'user_leaves#new'
   # post '/user_leaves/create', to: 'user_leaves#create'
-  resources :applied_leaves, except: :show do
+  #  use only and empty array
+  resources :applied_leaves, except: %i[show index new create edit update destroy] do
     collection do
       get 'show_applied_leaves', as: 'show'
       get 'filter_applied_leaves', as: 'filter'

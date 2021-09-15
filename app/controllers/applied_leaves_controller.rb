@@ -1,7 +1,6 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_applied_leave, only: %i[show edit update destroy approve_leave reject_leave]
-  layout 'leave_layout'
 
   # GET    /applied_leaves
   def index
