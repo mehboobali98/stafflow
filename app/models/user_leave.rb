@@ -3,7 +3,7 @@ class UserLeave < ApplicationRecord
   belongs_to :leave
   has_many :applied_leaves, dependent: :nullify
   validates :total_count, :remaining_count, presence: true
-  validates :total_count, :remaining_count, numericality: { only_integer: true }
+  validates :total_count, :remaining_count, numericality: { in: VALID_RANGE, only_integer: true }
 
   def self.add_user_leave(user_id, user_leave_params)
     ActiveRecord::Base.transaction do
