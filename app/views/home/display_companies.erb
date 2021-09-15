@@ -1,30 +1,18 @@
-<div class='d-flex justify-content-around'>
-  <div class='card w-50 p-5 mt-5'>
-    <div class='row px-5'>
-      <div class='col-12 d-flex justify-content-start'>
-        <h4 class='border border-primary rounded bg-primary text-white p-2'><%= t('labels.ems') %></h4>
-        <h5 class='mt-3 ms-2 text-muted'><%= t('labels.byteam') %></h5>
-      </div>
+
+<h3><%= t('labels.signin') %></h3>
+<h5 class='text-muted mt-2 mb-4'><%= t('labels.choosecompany') %></h5>
+<% @companies.each do |company| %>
+  <%= link_to new_user_session_url(subdomain: company.subdomain, email: params.dig(:user, :email)), class: 'text-decoration-none text-dark' do %>
+    <div class='p-3 mt-3 company-show'>
+      <%= image_tag("building.svg", class: 'icon') %>
+      <div class='border-start border-dark d-inline pt-3 pb-3 ms-2'></div>
+      <h4 class='d-inline ms-3'><%= company.name %></h4>
     </div>
-    <hr>
-    <div class='card-body px-5'>
-      <h3><%= t('labels.signin') %></h3>
-      <h5 class='text-muted mt-2 mb-4'><%= t('labels.choosecompany') %></h5>
-      <% @companies.each do |company| %>
-        <%= link_to new_user_session_url(subdomain: company.subdomain, email: params.dig(:user, :email)), class: 'text-decoration-none text-dark' do %>
-          <div class='p-3 mt-3 company-show'>
-            <%= image_tag("building.svg", class: 'icon') %>
-            <div class='border-start border-dark d-inline pt-3 pb-3 ms-2'></div>
-            <h4 class='d-inline ms-3'><%= company.name %></h4>
-          </div>
-        <% end %>
-      <% end %>
-      <% if @companies.empty? %>
-        <h1 class='text-center text-muted'><%= t('labels.nocompanies') %></h1>
-        <div class='d-flex justify-content-around'>
-          <%= image_tag("nodata.svg", class: 'illustration') %>
-        </div>
-      <% end %>
-    </div>
+  <% end %>
+<% end %>
+<% if @companies.empty? %>
+  <h1 class='text-center text-muted'><%= t('labels.nocompanies') %></h1>
+  <div class='d-flex justify-content-around'>
+    <%= image_tag("nodata.svg", class: 'illustration') %>
   </div>
-</div>
+<% end %>

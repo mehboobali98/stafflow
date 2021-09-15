@@ -10,6 +10,19 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class='d-flex justify-content-around'>
+      <div class='card w-50 p-5 mt-5'>
+        <div class='row px-5'>
+          <div class='col-12 d-flex justify-content-start'>
+            <h4 class='border border-primary rounded bg-primary text-white p-2'><%= t('labels.ems') %></h4>
+            <h5 class='mt-3 ms-2 text-muted'><%= t('labels.byteam') %></h5>
+          </div>
+        </div>
+      <hr>
+      <div class='card-body px-5'>
+        <%= yield %>
+      </div>
+     </div>
+    </div>
   </body>
 </html>
