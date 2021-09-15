@@ -41,6 +41,7 @@ en:
         event_year: 'cannot have more than 4 digits'
         event_date: 'cannot be in the past'
         nil_date_input: 'date cannot be empty'
+        invalid_date: 'is invalid'
     forms:
       confirmation:
         deletion: 'Are you sure?'

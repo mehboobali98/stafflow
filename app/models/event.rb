@@ -13,6 +13,9 @@ class Event < ApplicationRecord
   rescue Type::Error
     errors.add(:event_date, I18n.t('event.messages.error.nil_date_input'))
     false
+  rescue Date::Error
+    errors.add(:event_date, I18n.t('event.messages.error.invalid_date'))
+    false
   end
 
   #   method required for simple_calendar gem as it uses start_time
