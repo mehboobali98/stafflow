@@ -58,13 +58,11 @@ class BenefitsController < ApplicationController
     @benefit.destroy
     respond_to do |format|
       if @benefit.destroyed?
-        if is_updated
-          flash[:notice] = t('benefit.messages.success.delete')
-        else
-          flash[:errors] = @benefit.errors.full_messages
-        end
-        format.html { redirect_to benefits_path }
+        flash[:notice] = t('benefit.messages.success.delete')
+      else
+        flash[:errors] = @benefit.errors.full_messages
       end
+      format.html { redirect_to benefits_path }
     end
   end
 

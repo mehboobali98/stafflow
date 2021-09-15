@@ -3,7 +3,7 @@
 class Company < ApplicationRecord
   validates :name, :subdomain, presence: true
   validates :subdomain, uniqueness: { case_sensitive: false }
-  has_many :users
+  has_many :users, dependent: :destroy
   has_many :benefits
   has_many :user_benefits
   has_many :payrolls

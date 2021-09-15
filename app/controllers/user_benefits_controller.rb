@@ -2,10 +2,9 @@ class UserBenefitsController < ApplicationController
   before_action :load_user_benefit, only: %i[destroy update show]
   before_action :load_user_benefits, only: %i[new create]
   before_action :load_benefits, only: %i[new create]
-  before_action :load_user, only: %i[new create]
-  before_action :load_user, only: %i[destroy update show]
+  before_action :load_user
 
-  # GET /user_benefits
+  # GET members/:id/user_benefits
   def index
     @user = User.find_by_id(params['member_id'])
     @user_benefits = UserBenefit.includes(:user).includes(:benefit)
@@ -14,17 +13,24 @@ class UserBenefitsController < ApplicationController
     end
   end
 
-  # GET /user_benefits/new
+  # GET members/:id/user_benefits/new
   def new
     respond_to do |format|
       format.html
     end
   end
 
-  # POST /user_benefits
+  # GET members/:id/user_benefits/:id
+  def show
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # POST members/:id/user_benefits
   def create
     # this function is to refactored, using jquery
-    user_benefit_objects = UserBenefit.initialze_user_benefits(params)
+    user_benefit_objects = UserBenefit.initialze_user_benefits(params, @user.id)
     user_benefit_objects.each do |new_user_benefit|
       new_user_benefit.save!
       flash[:notice] ||= []
@@ -38,7 +44,7 @@ class UserBenefitsController < ApplicationController
     end
   end
 
-  # DELETE /user_benefits/:id
+  # DELETE members/:id/user_benefits/:id
   def destroy
     is_destroyed = @user_benefit.destroy
     respond_to do |format|
@@ -51,7 +57,7 @@ class UserBenefitsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /user_benefits/:id
+  # PATCH/PUT members/:id/user_benefits/:id
   def update
     is_updated = @user_benefit.update(permitted_user_benefit_arguments_for_update)
     respond_to do |format|

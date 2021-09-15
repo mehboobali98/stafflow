@@ -55,6 +55,9 @@ en:
     table:
       name: "Name"
       type: "Type"
+      one_time: "One Time"
+      annual: "Annual"
+      monthly: "Monthly"
     messages:
       success:
         create: "Benefit Created Successfully"
