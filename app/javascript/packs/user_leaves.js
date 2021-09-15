@@ -1,9 +1,32 @@
-$(document).on('change', '[type=checkbox]', function(e) {
-  let number_field_id = e.target.id.split('_').slice(0, 4).join("_").concat("_total_count");
-  if (this.checked) //when check box is checked
+$(document).ready(function() {
+
+  $("body").on('change', '[type=checkbox]', function(e) {
+    let disabledFieldsClassName = $(this).data('id');
+    if (this.checked) //when check box is checked
+    {
+      $(".".concat(disabledFieldsClassName)).attr("disabled", false);
+    } else {
+      $(".".concat(disabledFieldsClassName)).attr("disabled", true);
+    }
+  });
+  
+  $('#user_leave_edit_form').submit(function(e){
+    let isValid = validate_user_leave_count();
+    if (isValid==false) {
+      e.preventDefault();
+      alert("Remaining leave count cannot be greater than leave count");
+      return false;
+    }
+  }); 
+  
+  function validateUserLeaveCount()
   {
-    $("#".concat(number_field_id)).attr("disabled", false);
-  } else {
-    $("#".concat(number_field_id)).attr("disabled", true);
+    let totalCount = $('#user_leave_total_count').val();
+    let remainingCount = $('#user_leave_remaining_count').val();
+    if(remainingCount > totalCount)
+    {
+      return false;
+    }
+    return true;
   }
 });
