@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  PAGE_SIZE = 3
-  load_and_authorize_resource
+  PAGE_SIZE = 2
+  load_and_authorize_resource except: %i[index filters]
   has_scope :role_id
   has_scope :department_id
   has_scope :members_name
-  # before_action :load_by_pagination, only: :index
+
   # GET /members/new
   def new
     respond_to do |format|
@@ -66,17 +66,16 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    @users = User.paginate(page: params[:page], per_page: PAGE_SIZE)
-
+    @users = User.accessible_by(current_ability).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
-      format.js { render :user_filters }
+      format.js { render :filters }
     end
   end
 
-  # GET /members/user_filters
+  # GET /members/filters
   def filters
-    @users = apply_scopes(User).all
+    @users = apply_scopes(User).accessible_by(current_ability).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.js
     end
@@ -86,9 +85,5 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
-  end
-
-  def load_by_pagination
-    @users = Users.paginate(page: params[:page], per_page: PAGE_SIZE)
   end
 end

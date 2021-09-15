@@ -6,4 +6,14 @@ $(document).ready(function() {
     subdomain = $(this).val().replace(/[^A-Z0-9]/ig, "").toLowerCase();
     $('#subdomain').val(subdomain);
   });
-})
+});
+
+$(document).on('click', '.pagination-wrapper a', function() {
+  $.ajax({
+    type: 'GET',
+    url: this.href,
+    data: $('#filter_form').serialize(),
+    dataType: 'script'
+  });
+  return false;
+});
