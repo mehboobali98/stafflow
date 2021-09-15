@@ -69,6 +69,8 @@ class UserBenefitsController < ApplicationController
     end
   end
 
+  private
+
   def permitted_user_benefit_arguments_for_create
     params.require(:user_benefit).permit(benefit_id[], amount[])
   end
@@ -76,8 +78,6 @@ class UserBenefitsController < ApplicationController
   def permitted_user_benefit_arguments_for_update
     params.require(:user_benefit).permit(:amount, :status)
   end
-
-  private
 
   def load_user_benefit
     @user_benefit = UserBenefit.find_by_sequence_num!(params[:id])

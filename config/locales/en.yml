@@ -38,6 +38,9 @@ en:
       salary_after_tax: "Salary After Tax"
       gross_salary: "Gross Salary"
       options: "Options"
+      month: "Month"
+      year: "Year"
+      salary_slip: "Salary Slip"
     headings:
       payroll: "Payrolls"
     button:

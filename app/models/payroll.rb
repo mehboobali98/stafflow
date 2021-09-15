@@ -7,9 +7,9 @@ class Payroll < ApplicationRecord
   belongs_to :company
 
   def self.generates_payroll_object_and_applied_benefits(user_benefits, user)
-    gross_salary = calculate_gross_salary(user_benefits)
+    gross_salary = calculate_gross_salary(user_benefits, user.base_salary)
     payroll = Payroll.create(user_id: user.id, gross_salary: gross_salary,
-                             salary_after_tax: user.base_salary * 0.9)
+                             salary_after_tax: user.base_salary * 0.9, base_salary: user.base_salary)
     generate_applied_benefits(user_benefits, payroll.id, user)
   end
 
@@ -20,8 +20,8 @@ class Payroll < ApplicationRecord
     end
   end
 
-  def self.calculate_gross_salary(user_benefits)
-    gross_salary = user_benefits.first.user.base_salary * 0.9
+  def self.calculate_gross_salary(user_benefits, base_salary, tax = 10)
+    gross_salary = base_salary * (1 - (tax / 100))
     user_benefits.each do |benefit|
       gross_salary += benefit.amount
     end

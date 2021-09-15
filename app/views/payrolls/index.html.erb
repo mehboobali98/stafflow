@@ -5,28 +5,20 @@
   <br><br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
-      <th><%= t('payroll.table.salary_item') %></th>
-      <th><%= t('payroll.table.amount') %></th>
+      <th><%= t('payroll.table.salary_slip') %></th>
+      <th><%= t('payroll.table.month') %></th>
+      <th><%= t('payroll.table.year') %></th>
     </thead>
-    <tbody>
-      <tr>
-        <td><%= t('payroll.table.base_salary') %></td>
-        <td><%= @payroll.user.base_salary %></td>
-      </tr>
-      <tr>
-        <td><%= t('payroll.table.salary_after_tax') %></td>
-        <td><%= @payroll.salary_after_tax %></td>
-      </tr>
-      <% @applied_benefits.each do |applied_benefit| %>
-      <tr>
-        <td><%= applied_benefit.benefit.name %></td>
-        <td><%= applied_benefit.amount %></td>
-      </tr>
-      <% end %>
-      <tr>
-        <td><%= t('payroll.table.gross_salary') %></td>
-        <td><%= @payroll.gross_salary %></td>
-      </tr>
-    </tbody>
+    <% if @payrolls %>    
+      <tbody>
+        <% @payrolls.each_with_index do |payroll, index| %>
+          <tr>
+            <td><%= link_to "#{index.to_i + 1}", member_payroll_path(id: payroll.sequence_num) %></td>
+            <td><%= payroll.created_at.month %></td>
+            <td><%= payroll.created_at.year %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    <% end %>
   </table> 
 </div> 

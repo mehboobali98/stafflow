@@ -1,0 +1,34 @@
+<div class="container">
+  <h1><%= t('payroll.headings.payroll') %></h1>
+  <br>
+  <%= link_to t('payroll.button.generate_payroll'), member_payrolls_path, method: :create, data: { confirm: t('payroll.messages.payroll_generation') }, class: 'btn btn-outline-dark' %>
+  <br><br>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <th><%= t('payroll.table.salary_item') %></th>
+      <th><%= t('payroll.table.amount') %></th>
+    </thead>
+    <% if @payroll %>    
+      <tbody>
+        <tr>
+          <td><%= t('payroll.table.base_salary') %></td>
+          <td><%= @payroll.base_salary %></td>
+        </tr>
+        <tr>
+          <td><%= t('payroll.table.salary_after_tax') %></td>
+          <td><%= @payroll.salary_after_tax %></td>
+        </tr>
+        <% @applied_benefits.each do |applied_benefit| %>
+        <tr>
+          <td><%= applied_benefit.benefit.name %></td>
+          <td><%= applied_benefit.amount %></td>
+        </tr>
+        <% end %>
+        <tr>
+          <td><%= t('payroll.table.gross_salary') %></td>
+          <td><%= @payroll.gross_salary %></td>
+        </tr>
+      </tbody>
+    <% end %>
+  </table> 
+</div> 
