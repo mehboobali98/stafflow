@@ -9,7 +9,7 @@
         </div>
         <div class="form-group mb-3">
           <%= form.label :count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :count, in: 1..20, required: true, class: 'form-control', placeholder: t('leave.forms.placeholders.count') %>
+          <%= form.number_field :count, in: VALID_RANGE, required: true, class: 'form-control', placeholder: t('leave.forms.placeholders.count') %>
         </div>
         <div class="form-group mb-3">
           <%= form.submit class: 'card-link btn btn-primary' %>
