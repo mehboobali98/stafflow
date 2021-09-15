@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   }
   resources :home do
     collection do
-      post :display_companies
+      get :display_companies
     end
   end
 

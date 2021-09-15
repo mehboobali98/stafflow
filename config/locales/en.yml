@@ -36,3 +36,9 @@ en:
       name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
+  labels:
+    signin: "Sign In"
+    ems: "EMS"
+    byteam: "by team ABC"
+    nocompanies: "No Companies Found"
+  
