@@ -18,11 +18,11 @@ class Event < ApplicationRecord
     false
   end
 
-  #   method required for simple_calendar gem as it uses start_time
-  #   as default attribute to create calendar
-  # def start_time
-  #   starts_at
-  # end
+  # method required for simple_calendar gem as it uses start_time
+  # as default attribute to create calendar
+  def start_time
+    starts_at
+  end
 
   private
 
