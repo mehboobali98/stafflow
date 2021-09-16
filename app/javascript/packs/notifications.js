@@ -1,50 +1,39 @@
-const { data } = require("jquery");
-
-$(document).ready(function(){
-  $.ajax({
-    type: 'GET',
-    url: '/notifications/count',
-    success: function(data, textStatus, jqXHR) {
-      console.log(data);
-      $('#notifications_count').html(data)
-    },
-    error: function(jqXHR, textStatus, errorThrown) { console.log(errorThrown) }
-  })
+$(document).ready(function() {
+  $('#read-button').prop('disabled', true);
 
   $('#read-button').on('click', function() {
     let idsOfObjectsToMarkRead = []
     $('.js-notifications-list input:checkbox:checked').each(function() {
       idsOfObjectsToMarkRead.push(this.id)
-    })
+    });
     $.ajax({
       type: 'POST',
       data: { authenticity_token: $('[name="csrf-token"]')[0].content, ids: idsOfObjectsToMarkRead },
       url: 'notifications/read'
     })
-  })
+  });
 
   $('#select_all').on('change', function() {
-    $('.js-notifications-list input:checkbox').prop('checked', this.checked)
-  })
+    $('body .js-notifications-list input:checkbox').prop('checked', this.checked)
+  });
 
   $('#notification_status').on('change', function() {
     $.ajax({
       type: 'GET',
       url: '/notifications',
       data: {status: this.value}
-    })
+    });
   })
 
-  
+  $('#notification_status').val(0);
 
-  $('.js-notifications-list input:checkbox').on('click', function() {
-    console.log('Yes')
-    if ($('.js-notifications-list input:checkbox:checked').length == 0) {
-      $('#read-button').prop('disabled', true)
+  $('body').on('change','[type=checkbox]', function() {
+    if ($('.js-notifications-list input:checkbox:checked').length == 0 || $('#notification_status').val() == 1 ) {
+      $('#read-button').prop('disabled', true);
       console.log('yes')
     } else {
-      $('#read-button').prop('disabled', false)
+      $('#read-button').prop('disabled', false);
     }
-  })
+  });
 
 });
