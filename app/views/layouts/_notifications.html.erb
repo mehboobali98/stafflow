@@ -1,12 +1,16 @@
-<% if notifications.nil? || notifications.empty? %>
-  <h5 class='p-3'>No New Notifications</h5>
-<% else %>
-  <% notifications.each do |notification| %>
+<div class='overflow-auto'>
+  <% if notifications.nil? || notifications.empty? %>
+    <h5 class='p-3'>No New Notifications</h5>
+  <% else %>
+    <% notifications.each do |notification| %>
+      <hr>
+      <a href="#"> 
+        <div> 
+          <h5><%= notification.body %></h5>  
+        </div> 
+      </a> 
+    <% end %>
     <hr>
-    <a class="p-3" href="#"> 
-      <div> 
-        <h5><%= notification.body %></h5>  
-      </div> 
-    </a> 
   <% end %>
-<% end %>
+</div>
+<%= link_to 'View All', notifications_path, class: 'navbar navbar-default navbar-fixed-bottom no-gutters' %>

@@ -8,6 +8,7 @@ require("@rails/activestorage").start()
 require("channels")
 global.$ = global.jQuery = require("jquery"); 
 require("bootstrap")
+require('./notifications')
 document.addEventListener("turbolinks:load", function() {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()

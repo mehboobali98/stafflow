@@ -6,6 +6,15 @@ class NotificationsController < ApplicationController
     @notifications = current_user.notifications
     respond_to do |format|
       format.js
+      format.html
     end
+  end
+
+  # POST /notifications/read
+  def mark_notifications_as_read
+    binding.pry
+    Notification.where(recipient_id: current_user.id).where(status: Notification::STATUS[:unread])
+                .update_all(status: Notification::STATUS[:read])
+    redirect_to notifications_path
   end
 end

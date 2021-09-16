@@ -1,0 +1,20 @@
+<h1>Notifications</h1>
+<%= select_tag :status, options_for_select(Notification::STATUS), class: 'form-control w-25' %>
+<br><br><br>
+<button class='btn btn-primary' id='read-button'>Mark As Read</button>
+<br><br>
+
+<div class='please-scroll'>
+  <label class="list-group-item active">
+    <input class="form-check-input me-1" type="checkbox" value="">
+    Select All
+  </label>
+  <div class='list-group js-notifications-list'>
+    <% @notifications.each do |notification| %>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" id= <%= notification.id %>>
+        <%= notification.body %>
+      </label>
+    <% end %>
+  </div>
+</div>
