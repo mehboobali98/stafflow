@@ -28,12 +28,12 @@ class UserLeavesController < ApplicationController
 
   # POST   /members/:member_id/user_leaves
   def create
-    is_saved = UserLeave.add_user_leave(current_user.id, user_leave_params)
+    is_saved = UserLeave.add_user_leave(@user.id, user_leave_params)
     respond_to do |format|
       format.html do
         if is_saved
-          return redirect_to member_user_leaves_path(@user),
-            notice: t('user_leave.messages.success.create_success')
+          redirect_to member_user_leaves_path(@user),
+                      notice: t('user_leave.messages.success.create_success')
         end
         flash.now[:error] = t('user_leave.messages.failure.create_failure')
         render :new
@@ -53,7 +53,6 @@ class UserLeavesController < ApplicationController
     is_updated = @user_leave.update(user_leave_update_params)
     respond_to do |format|
       format.js do
-        binding.pry
         return flash.now[:error] = @user_leave.errors.full_messages unless is_updated
 
         flash.now[:notice] = t('user_leave.messages.success.create_success')
@@ -91,14 +90,14 @@ class UserLeavesController < ApplicationController
   end
 
   def set_user_leave
-    @user_leave = @user.user_leaves.find_by(id: params[:id])
+    @user_leave = @user.user_leaves.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     flash[:error] = e.message
     redirect_to member_user_leaves_path(@user)
   end
 
   def set_user
-    @user = User.find_by(id: user_params)
+    @user = User.find(user_params)
   rescue ActiveRecord::RecordNotFound => e
     flash[:error] = e.message
     redirect_to members_path

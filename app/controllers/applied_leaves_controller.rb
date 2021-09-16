@@ -1,50 +1,59 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_user, only: %i[index new create edit update destroy]
   before_action :set_applied_leave, only: %i[show edit update destroy approve_leave reject_leave]
 
-  # GET    /applied_leaves
+  # GET    /members/:member_id/applied_leaves
   def index
-    @applied_leaves = AppliedLeave.joins(:user_leave).where(user_leaves: { user_id: current_user.id })
+    @applied_leaves = @user.applied_leaves
     respond_to do |format|
       format.html
     end
   end
 
-  # GET    /applied_leaves/new
+  # GET    /members/:member_id/applied_leaves/new
   def new
-    @user_leaves = UserLeave.get_user_leaves(current_user.id)
+    @user_leaves = UserLeave.get_user_leaves(@user.id)
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
     end
   end
 
-  # POST   /applied_leaves
+  # POST   /members/:member_id/applied_leaves
   def create
     @applied_leave = AppliedLeave.new(applied_leave_params)
+    @applied_leave.user_id = @user.id
+    @applied_leave.leave_id = @user.user_leaves.where(id: applied_leave_params[:user_leave_id]).pluck(:leave_id).first
     is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_count_available?
     respond_to do |format|
       format.html do
-        return redirect_to applied_leaves_path, notice: t('applied_leave.messages.leave_applied_success') if is_saved
+        if is_saved
+          return redirect_to member_applied_leaves_path,
+                             notice: t('applied_leave.messages.leave_applied_success')
+        end
 
         flash.now[:error] = @applied_leave.errors.full_messages
-        @user_leaves = UserLeave.get_user_leaves(current_user.id)
+        @user_leaves = UserLeave.get_user_leaves(@user.id)
         render :new
       end
     end
   end
 
-  # GET    /applied_leaves/:id/edit
+  # GET    /members/:member_id/applied_leaves/:id/edit
   def edit
-    @user_leaves = UserLeave.get_user_leaves(current_user.id)
+    @user_leaves = UserLeave.get_user_leaves(@user.id)
   end
 
-  # PATCH/PUT  /applied_leaves/:id
+  # PATCH  /members/:member_id/applied_leaves/:id
   def update
     is_updated = @applied_leave.update(applied_leave_params)
     respond_to do |format|
       format.html do
-        return redirect_to leaves_path, notice: t('applied_leave.messages.leave_update_success') if is_updated
+        if is_updated
+          return redirect_to member_applied_leaves_path(@user),
+                             notice: t('applied_leave.messages.leave_update_success')
+        end
 
         flash.now[:error] = @leave.errors.full_messages
         @user_leaves = UserLeave.get_user_leaves(current_user.id)
@@ -53,7 +62,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # DELETE /applied_leaves/:id
+  # DELETE /members/:member_id/applied_leaves/:id
   def destroy
     @applied_leave.destroy
     is_destroyed = @applied_leave.destroyed?
@@ -61,7 +70,7 @@ class AppliedLeavesController < ApplicationController
       format.html do
         flash[:error] = @applied_leave.errors.full_messages unless is_destroyed
         flash[:notice] = t('applied_leave.messages.leave_delete_success')
-        redirect_to applied_leaves_path
+        redirect_to member_applied_leaves_path(@user)
       end
     end
   end
@@ -76,7 +85,6 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH  /applied_leaves/:id/approve_leave
   def approve_leave
-    binding.pry
     is_saved = @applied_leave.approve_applied_leave
     respond_to do |format|
       format.html do
@@ -94,7 +102,7 @@ class AppliedLeavesController < ApplicationController
       format.html do
         flash[:notice] = t('applied_leave.messages.leave_reject_success') if is_saved
         flash[:error] = @applied_leave.errors
-                                      .return redirect_to show_applied_leaves_path
+        return redirect_to show_applied_leaves_path
       end
     end
   end
@@ -127,13 +135,6 @@ class AppliedLeavesController < ApplicationController
 
   private
 
-  def set_applied_leave
-    @applied_leave = AppliedLeave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
-    redirect_to applied_leaves_path
-  end
-
   def get_filtered_records
     @applied_leaves = AppliedLeave.get_filtered_records(filter_params[:filter_type].downcase)
   end
@@ -148,5 +149,23 @@ class AppliedLeavesController < ApplicationController
 
   def filter_params
     params.require(:filter_type).permit(:filter_type)
+  end
+
+  def user_params
+    params.require(:member_id)
+  end
+
+  def set_user
+    @user = User.find(user_params)
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:error] = e.message
+    redirect_to members_path
+  end
+
+  def set_applied_leave
+    @applied_leave = AppliedLeave.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:error] = e.message
+    redirect_to member_applied_leaves_path(@user)
   end
 end

@@ -1,8 +1,8 @@
-<% @applied_leaves.each do |applied_leave| %>
+<% applied_leaves.each do |applied_leave| %>
   <tr>
     <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, disabled: !(applied_leave.pending?) %></td>
-    <td><%= applied_leave.user_leave.user.email %></td>
-    <td><%= applied_leave.user_leave.leave.name %></td>
+    <td><%= applied_leave.user.email %></td>
+    <td><%= applied_leave.leave.name %></td>
     <td><%= applied_leave.leave_duration_name_from_id.to_s.humanize %></td>
     <td><%= applied_leave.applied_at %></td>
     <td><%= applied_leave.applied_till %></td>

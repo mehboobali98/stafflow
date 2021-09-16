@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     # collection do
     #   get '/show', to: 'user_leaves#show'
     # end
-    resources :applied_leaves
+    resources :applied_leaves, except: :show
   end
   root to: 'home#index'
   get '/home', to: 'home#home'

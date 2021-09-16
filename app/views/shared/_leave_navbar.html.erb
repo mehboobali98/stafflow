@@ -22,8 +22,8 @@
             <%= t('applied_leave.headings.leave_application') %>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><%= link_to t('applied_leave.headings.leave_apply'), new_applied_leave_path, class: "dropdown-item" %></li>
-            <li><%= link_to t('applied_leave.headings.view_all'), applied_leaves_path, class: 'dropdown-item' %></li>
+            <li><%= link_to t('applied_leave.headings.leave_apply'), new_member_applied_leave_path(current_user), class: "dropdown-item" %></li>
+            <li><%= link_to t('applied_leave.headings.view_all'), member_applied_leaves_path(current_user), class: 'dropdown-item' %></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
