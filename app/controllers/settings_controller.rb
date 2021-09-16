@@ -24,20 +24,11 @@ class SettingsController < ApplicationController
 
   private
 
-<<<<<<< HEAD
-  def load_settings
-    @setting = current_company.setting
-  end
-
-  def permit_settings_parameters
-    params.require(:setting).permit(:tax, :theme)
-=======
   def settings_params
     params.require(:setting).permit(:tax_rate, :theme)
   end
 
   def load_setting
     @setting = current_company.setting
->>>>>>> feature/company_settings
   end
 end
