@@ -25,7 +25,7 @@ class NotificationsController < ApplicationController
 
   # POST /notifications/read
   def mark_notifications_as_read
-    Notification.where(recipient_id: current_user.id).unread.where(id: params[:ids])
+    current_user.notifications.where(recipient_id: current_user.id).unread.where(id: params[:ids])
                 .update_all(status: Notification::STATUS[:read])
     redirect_to notifications_url
   end

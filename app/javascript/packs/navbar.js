@@ -8,4 +8,4 @@ $(document).ready(function() {
     },
     error: function(jqXHR, textStatus, errorThrown) { console.log(errorThrown) }
   });
-})
+});

@@ -30,4 +30,7 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  
+  notifications:
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
