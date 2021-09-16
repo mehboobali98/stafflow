@@ -29,6 +29,7 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+<<<<<<< HEAD
   leave:
     messages:
       name_error: 'Leave type name can only contain letters'
@@ -140,6 +141,10 @@ en:
       leave_to: 'Leave to'
     placeholders:
       leave_filter: 'Select leave filter'
+  settings:
+    updated: "Settings were successfully updated"
+    not_updated: "Settings were not updated due to an error"
+    title: "Settings"
   event:
     messages:
       success:
