@@ -3,14 +3,19 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
+  resources :settings, only: %i[update] do
+    collection do
+      get '/', to: 'settings#settings'
+    end
+  end
+  resources :events do
+    collection do
+      get 'display_calendar'
+    end
+  end
   resources :departments
   resources :designations
 
-  constraints(SubdomainValidator) do
-    root to: 'home#index'
-    get '/home', to: 'home#home'
-    devise_for :users, controllers: { registrations: 'users/registrations' }
-    # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-    resources :members, controller: 'users'
-  end
+  resources :members, controller: 'users'
+  devise_for :users, controllers: { registrations: 'users/registrations' }
 end
