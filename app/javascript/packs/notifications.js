@@ -17,4 +17,8 @@ $(document).ready(function(){
       url: 'notifications/read'
     })
   })
+
+  $('#select_all').change(function() {
+    $('.js-notifications-list input:checkbox').prop('checked', this.checked)
+  })
 });
