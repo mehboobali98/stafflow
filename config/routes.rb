@@ -5,6 +5,12 @@ require_relative 'initializers/subdomain_validator'
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :events do
+    collection do
+      get 'display_calendar'
+    end
+  end
+
   resources :members, controller: 'users'
 
   # constraints(subdomain: '7vas') do
