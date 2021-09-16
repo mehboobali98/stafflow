@@ -72,7 +72,7 @@ class AppliedLeave < ApplicationRecord
 
   def self.approve_multiple_applied_leaves(applied_leave_ids)
     applied_leave_ids.each do |leave_id|
-      applied_leave = AppliedLeave.find(leave_id)
+      applied_leave = find(leave_id)
       applied_leave.approve_applied_leave
     rescue ActiveRecord::RecordNotFound
       nil
@@ -81,7 +81,7 @@ class AppliedLeave < ApplicationRecord
 
   def self.reject_multiple_applied_leaves(applied_leave_ids)
     applied_leave_ids.each do |leave_id|
-      applied_leave = AppliedLeave.find(leave_id)
+      applied_leave = find(leave_id)
       applied_leave.reject_applied_leave
     rescue ActiveRecord::RecordNotFound
       nil
@@ -103,13 +103,13 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.get_filtered_records(filter)
-    return AppliedLeave.all if filter.empty?
+    return all if filter.empty?
 
-    AppliedLeave.where(state: filter)
+    where(state: filter)
   end
 
   def self.get_applied_leaves
-    AppliedLeave.includes(user_leave: %i[user leave])
+    includes(user_leave: %i[user leave])
   end
 
   state_machine do

@@ -68,8 +68,8 @@ class UserLeavesController < ApplicationController
     is_destroyed = @user_leave.destroyed?
     respond_to do |format|
       format.html do
-        flash[:notice] = t('user_leave.messages.success.delete') if is_destroyed
-        flash[:error] = @user_leave.errors.full_messages
+        flash[:error] = @user_leave.errors.full_messages unless is_destroyed
+        flash[:notice] = t('user_leave.messages.success.delete')
         redirect_to member_user_leaves_path(@user)
       end
     end

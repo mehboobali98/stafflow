@@ -86,10 +86,11 @@ class AppliedLeavesController < ApplicationController
   # PATCH  /applied_leaves/:id/approve_leave
   def approve_leave
     is_saved = @applied_leave.approve_applied_leave
+    binding.pry
     respond_to do |format|
       format.html do
         flash[:notice] = t('applied_leave.messages.leave_approve_success') if is_saved
-        flash.now[:error] = @applied_leave.errors.full_messages
+        flash[:error] = t('applied_leave.messages.leave_approve_failure')
         return redirect_to show_applied_leaves_path
       end
     end
@@ -101,7 +102,7 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:notice] = t('applied_leave.messages.leave_reject_success') if is_saved
-        flash[:error] = @applied_leave.errors
+        flash[:error] = t('applied_leave.messages.leave_reject_failure')
         return redirect_to show_applied_leaves_path
       end
     end
@@ -148,7 +149,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   def filter_params
-    params.require(:filter_type).permit(:filter_type)
+    params.require(:filterType).permit(:filter_type)
   end
 
   def user_params

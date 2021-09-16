@@ -93,11 +93,14 @@ en:
       leave_approve_success: 'Leave approved succcessfully'
       leave_reject_success: 'Leave rejected successfully'
       leave_update_success: 'Leave updated succcessfully'
+      leave_reject_failure: 'Leave cannot be rejected'
+      leave_approve_failure: 'Leave cannot be approved'
       error:
         leave_count: 'is greater than the remaining count of leaves. Request rejected'
         leave_date_year: 'cannot have more than 4 digits'
         past_leave_date: 'cannot be in the past'
         end_leave_date: 'cannot be lesser than the leave starting date'
+        rejection_error: 'applied leave cannot be rejected'
     headings:
       applicant_email: 'Applicant email'
       leave_type: 'Leave type'

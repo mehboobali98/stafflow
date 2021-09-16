@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
   $("body").on('change', '[type=checkbox]', function(e) {
     let disabledFieldsClassName = $(this).data('id');
     if (this.checked) //when check box is checked
@@ -11,7 +10,7 @@ $(document).ready(function() {
   });
   
   $('#user_leave_edit_form').submit(function(e){
-    let isValid = validate_user_leave_count();
+    let isValid = validateUserLeaveCount();
     if (isValid==false) {
       e.preventDefault();
       alert("Remaining leave count cannot be greater than leave count");
