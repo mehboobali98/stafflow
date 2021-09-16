@@ -11,10 +11,6 @@ Rails.application.routes.draw do
     end
   end
 
-  constraints(SubdomainValidator) do
-    root to: 'home#index'
-    get '/home', to: 'home#home'
-  end
   resources :members, controller: 'users'
 
   # constraints(subdomain: '7vas') do
