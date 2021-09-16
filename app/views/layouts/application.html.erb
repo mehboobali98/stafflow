@@ -10,7 +10,6 @@
     <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
-
   <body>
     <% if notice %>
       <div class="alert alert-primary alert-dismissible fade show" role="alert">
@@ -29,6 +28,7 @@
         <%= render partial: "layouts/sidebar" %>
       </div>
       <div class="col-sm-9">
+        <%= render partial: "shared/flash_message" %>
         <%= yield %>
       </div>
     </div>
