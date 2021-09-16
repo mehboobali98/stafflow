@@ -30,7 +30,9 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  hello: "Hello world"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
+    title: "Settings"
     
