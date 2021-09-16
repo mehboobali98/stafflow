@@ -8,7 +8,7 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   validates_uniqueness_of :email, scope: :company_id
-  validates_presence_of :email, if: :email_required?
+  validates_presence_of :email
   validates_format_of   :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
   validates_presence_of     :password, if: :password_required?
   validates_confirmation_of :password, if: :password_required?
@@ -52,10 +52,6 @@ class User < ApplicationRecord
   end
 
   def password_required?
-    !persisted? || !password.nil? || !password_confirmation.nil?
-  end
-
-  def email_required?
-    true
+    !persisted? || password.present? || !password_confirmation.nil?
   end
 end

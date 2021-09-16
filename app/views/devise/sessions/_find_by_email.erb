@@ -1,7 +1,7 @@
 <div class="card border-dark pb-3 text-center w-75">
   <h2 class="card-header"><%= t('headings.search_company') %></h2>
   <div class="card-body px-5">
-    <%= form_for(resource, as: resource_name, url: display_companies_home_index_url, method: :post) do |form| %>
+    <%= form_for(resource, as: resource_name, url: display_companies_home_index_url, method: :get) do |form| %>
       <div class="field mb-2">
         <%= form.label t('forms.labels.email'), class: 'form-label' %><br />
         <%= form.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>

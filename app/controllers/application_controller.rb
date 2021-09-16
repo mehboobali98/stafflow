@@ -29,6 +29,6 @@ class ApplicationController < ActionController::Base
   private :current_company, :set_current_company
 
   def sub_domain?(request)
-    true if !request.subdomain.blank? && request.subdomain != 'www'
+    !request.subdomain.blank? && request.subdomain != 'www'
   end
 end
