@@ -71,3 +71,4 @@ en:
       previous: "<"
       next: ">"
       plus: "+"
+      invalid_date: "Date is invalid"

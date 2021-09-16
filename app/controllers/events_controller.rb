@@ -83,7 +83,7 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET    /events/display_calendar
+  # GET /events/display_calendar
   def display_calendar
     @start_date = event_calendar_start_date
     @events = Event.get_events_in_a_month(@start_date.month)
@@ -112,11 +112,11 @@ class EventsController < ApplicationController
   end
 
   def event_calendar_start_date
-    if event_calendar_params[:start_date].nil?
-      Date.today
-    else
-      Date.parse(event_calendar_params[:start_date])
-    end
+    return Date.today if event_calendar_params[:start_date].nil?
+
+    Date.parse(event_calendar_params[:start_date])
+  rescue Date::Error
+    flash[:error] = t('event.simple_calendar.invalid_date')
   end
 
   def event_params
