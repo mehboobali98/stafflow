@@ -2,7 +2,7 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |form| %>
   <div class="row mb-2">
     <div class='col-3 mt-2'>
-      <%= form.label t('forms.labels.email', class: 'form-label') %><br />
+      <%= form.label t('forms.labels.email'), class: 'form-label') %><br />
     </div>
     <div class='col-9'>
       <%= form.email_field :email, required: true, class: 'form-control', value: params.dig(:email) %>
