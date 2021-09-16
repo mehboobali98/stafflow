@@ -40,6 +40,9 @@ en:
       error:
         event_year: 'cannot have more than 4 digits'
         event_date: 'cannot be in the past'
+        nil_date_input: 'date cannot be empty'
+        invalid_date: 'is invalid'
+        event_not_found: 'Event with the given id does not exist'
     forms:
       confirmation:
         deletion: 'Are you sure?'

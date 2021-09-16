@@ -34,10 +34,12 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        return redirect_to events_path, notice: t('event.messages.success.create_success') if is_saved
-
-        flash.now[:error] = @event.errors.full_messages
-        render :new
+        if is_saved
+          redirect_to events_path, notice: t('event.messages.success.create_success')
+        else
+          flash.now[:error] = @event.errors.full_messages
+          render :new
+        end
       end
     end
   end
@@ -57,10 +59,12 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        return redirect_to events_path, notice: t('event.messages.success.update_success') if is_saved
-
-        flash.now[:error] = @event.errors.full_messages
-        render :edit
+        if is_saved
+          redirect_to events_path, notice: t('event.messages.success.update_success')
+        else
+          flash.now[:error] = @event.errors.full_messages
+          render :edit
+        end
       end
     end
   end
@@ -78,7 +82,7 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events
+  # GET    /events/display_calendar
   def display_calendar
     @start_date = event_calendar_start_date
     @events = Event.get_events_in_a_month(@start_date.month)
@@ -92,8 +96,8 @@ class EventsController < ApplicationController
 
   def set_event
     @event = Event.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('event.messages.error.event_not_found')
     redirect_to events_path
   end
 

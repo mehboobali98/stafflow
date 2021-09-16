@@ -20,9 +20,15 @@
         <tr>
           <td><%= truncate_event_name(event.name) %></td>
           <td><%= format_date(event.starts_at) %></td>
+<<<<<<< HEAD
           <td><%= link_to t('event.forms.links.show'), event, class: 'btn btn-info' if can?(:show, event) %></td>
           <td><%= link_to t('event.forms.links.edit'), edit_event_path(event), class: 'btn btn-secondary' if can?(:edit, event) %></td>
           <td><%= link_to t('event.forms.links.delete'), event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') }, class: 'btn btn-danger' if can?(:delete, event) %></td>
+=======
+          <td><%= link_to t('event.forms.links.show'), event, class: 'btn btn-info' %></td>
+          <td><%= link_to t('event.forms.links.edit'), edit_event_path(event), class: 'btn btn-secondary' %></td>
+          <td><%= link_to t('event.forms.links.delete'), event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') }, class: 'btn btn-danger' %></td>
+>>>>>>> 69e625b9c30bcd7162dbb5e30852b92d78b77b8d
         </tr>
       <% end %>
     </tbody>
