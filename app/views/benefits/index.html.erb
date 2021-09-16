@@ -7,7 +7,7 @@
     <thead class="table-dark">
       <th><%= t('benefit.table.name') %></th>
       <th><%= t('benefit.table.type') %></th>
-      <th colspan="2"><%= t('benefit.table.options') %></th>
+      <th colspan="2"><%= t('benefit.table.options') if can?(:edit, @benefits.first) %></th>
     </tr>
   </thead>
   <tbody>
@@ -15,8 +15,8 @@
       <tr>
         <td><%= benefit.name %></td>
         <td><%= benefit.benefit_type %></td>
-        <td><%= link_to t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' %></td>
-        <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
+        <td><%= link_to t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' if can?(:update, benefit)  %></td>
+        <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' if can?(:destroy, benefit) %></td>
       </tr>
     <% end %>
   </tbody>

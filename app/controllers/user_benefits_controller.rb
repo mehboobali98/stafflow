@@ -7,7 +7,7 @@ class UserBenefitsController < ApplicationController
   # GET members/:id/user_benefits
   def index
     @user = User.find_by_id(params['member_id'])
-    @user_benefits = UserBenefit.includes(:user).includes(:benefit)
+    @user_benefits = UserBenefit.where('user_benefits.user_id = ?', @user.id).includes(:benefit)
     respond_to do |format|
       format.html
     end

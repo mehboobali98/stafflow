@@ -45,7 +45,7 @@ class PayrollsController < ApplicationController
   end
 
   def load_all_payrolls
-    @payrolls = Payroll.joins(:user)
+    @payrolls = Payroll.where('payrolls.user_id = ?', @user.id)
   end
 
   def load_a_payroll
