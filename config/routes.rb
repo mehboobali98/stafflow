@@ -7,17 +7,12 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :members, controller: 'users' do
     resources :user_leaves
-    # collection do
-    #   get '/show', to: 'user_leaves#show'
-    # end
     resources :applied_leaves, except: :show
   end
   root to: 'home#index'
   get '/home', to: 'home#home'
   resources :leaves
-  # get '/user_leaves/new', to: 'user_leaves#new'
-  # post '/user_leaves/create', to: 'user_leaves#create'
-  #  use only and empty array
+
   resources :applied_leaves, except: %i[show index new create edit update destroy] do
     collection do
       get 'show_applied_leaves', as: 'show'
@@ -30,4 +25,16 @@ Rails.application.routes.draw do
       patch 'reject_leave', as: 'reject'
     end
   end
+
+  resources :events do
+    collection do
+      get 'display_calendar'
+    end
+  end
+
+  resources :members, controller: 'users'
+
+  # constraints(subdomain: '7vas') do
+  #   get '/home', to: 'home#home'
+  # end
 end
