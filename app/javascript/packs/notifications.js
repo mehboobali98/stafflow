@@ -21,7 +21,7 @@ $(document).ready(function() {
     $.ajax({
       type: 'GET',
       url: '/notifications',
-      data: {status: this.value}
+      data: { status: this.value }
     });
   })
 
@@ -36,4 +36,15 @@ $(document).ready(function() {
     }
   });
 
+});
+
+
+$(document).on('click', '.pagination-wrapper a', function() {
+  $.ajax({
+    type: 'GET',
+    url: this.href,
+    data: { status: $('#notification_status').val() },
+    dataType: 'script'
+  });
+  return false;
 });

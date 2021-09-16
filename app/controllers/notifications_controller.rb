@@ -1,14 +1,16 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
+  PAGE_SIZE = 2 # Temporary line
 
   # GET /notifications
   def fetch_user_notifications
     respond_to do |format|
       format.js do
         @notifications = current_user.notifications.read_status(params[:status])
+                                     .paginate(page: params[:page], per_page: PAGE_SIZE)
       end
       format.html do
-        @notifications = current_user.notifications.unread
+        @notifications = current_user.notifications.unread.paginate(page: params[:page], per_page: PAGE_SIZE)
       end
     end
   end
