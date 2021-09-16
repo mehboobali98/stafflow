@@ -2,20 +2,11 @@
   <div class="container-fluid">
     <h2 class="ms-3 mt-2 text-white" href="#">KDB</h2>
     <div class='d-flex'>
-      <div class="dropstart" id='notifications_dropdown'>
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          N (<span id='notifications_count'></span>)
-        </button>
-        <ul class="dropdown-menu notifications bg-dark text-white" role="menu" aria-labelledby="dLabel">
-          <div class="notification-heading">
-            <h4 class="card-header p-3">Notifications</h4>
-          </div>
-          <li class="divider"></li>
-          <div class="notifications-wrapper" id='notifications_wrapper'>
-            <%= render partial: 'layouts/notifications', locals: { notifications: nil } %>
-          </div><br>
-        </ul>
-      </div>
+        <%= link_to notifications_path do %>
+        <div class='d-inline text-white btn btn-primary mt-4'>
+          Notifications <span id='notifications_count'></span>
+        </div>
+        <% end %>
       <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'ms-3 btn btn-danger' %> 
     </div>
   </div>

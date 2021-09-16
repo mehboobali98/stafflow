@@ -3,18 +3,28 @@ class NotificationsController < ApplicationController
 
   # GET /notifications
   def fetch_user_notifications
-    @notifications = current_user.notifications
     respond_to do |format|
-      format.js
-      format.html
+      format.js do
+        @notifications = current_user.notifications.read_status(params[:status])
+      end
+      format.html do
+        @notifications = current_user.notifications.unread
+      end
+    end
+  end
+
+  # GET /notifications/count
+  def notifications_count
+    @count = current_user.notifications.unread.length
+    respond_to do |format|
+      format.json { render json: @count }
     end
   end
 
   # POST /notifications/read
   def mark_notifications_as_read
-    binding.pry
-    Notification.where(recipient_id: current_user.id).where(status: Notification::STATUS[:unread])
-                .where(id: params[:ids]).update_all(status: Notification::STATUS[:read])
+    Notification.where(recipient_id: current_user.id).unread.where(id: params[:ids])
+                .update_all(status: Notification::STATUS[:read])
     redirect_to notifications_path
   end
 end

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     collection do
       get '/', to: 'notifications#fetch_user_notifications'
       post '/read', to: 'notifications#mark_notifications_as_read'
+      get '/count', to: 'notifications#notifications_count'
     end
   end
 end

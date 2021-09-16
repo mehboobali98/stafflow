@@ -1,0 +1,14 @@
+<div class='please-scroll'>
+  <label class="list-group-item bg-dark text-white">
+    <input class="form-check-input me-1" type="checkbox" value="" id='select_all'>
+    Select All
+  </label>
+  <div class='list-group js-notifications-list'>
+    <% notifications.each do |notification| %>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" id= <%= notification.id %>>
+        <%= notification.body %>
+      </label>
+    <% end %>
+  </div>
+</div>

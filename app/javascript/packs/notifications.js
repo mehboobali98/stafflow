@@ -1,8 +1,13 @@
+const { data } = require("jquery");
+
 $(document).ready(function(){
   $.ajax({
     type: 'GET',
-    url: '/notifications',
-    success: function(data, textStatus, jqXHR) {},
+    url: '/notifications/count',
+    success: function(data, textStatus, jqXHR) {
+      console.log(data);
+      $('#notifications_count').html(data)
+    },
     error: function(jqXHR, textStatus, errorThrown) { console.log(errorThrown) }
   })
 
@@ -18,7 +23,28 @@ $(document).ready(function(){
     })
   })
 
-  $('#select_all').change(function() {
+  $('#select_all').on('change', function() {
     $('.js-notifications-list input:checkbox').prop('checked', this.checked)
   })
+
+  $('#notification_status').on('change', function() {
+    $.ajax({
+      type: 'GET',
+      url: '/notifications',
+      data: {status: this.value}
+    })
+  })
+
+  
+
+  $('.js-notifications-list input:checkbox').on('click', function() {
+    console.log('Yes')
+    if ($('.js-notifications-list input:checkbox:checked').length == 0) {
+      $('#read-button').prop('disabled', true)
+      console.log('yes')
+    } else {
+      $('#read-button').prop('disabled', false)
+    }
+  })
+
 });
