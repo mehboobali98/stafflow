@@ -94,8 +94,8 @@ class EventsController < ApplicationController
 
   def set_event
     @event = Event.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('event.messages.error.event_not_found')
     redirect_to events_path
   end
 
