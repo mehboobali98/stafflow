@@ -9,10 +9,10 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   validates_uniqueness_of :email, scope: :company_id
   validates_presence_of :email
-  validates_format_of   :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
-  validates_presence_of     :password, if: :password_required?
+  validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
+  validates_presence_of :password, if: :password_required?
   validates_confirmation_of :password, if: :password_required?
-  validates_length_of       :password, within: PASSWORD_LENGTH, allow_blank: true
+  validates_length_of :password, within: PASSWORD_LENGTH, allow_blank: true
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   def full_name
