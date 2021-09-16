@@ -29,6 +29,9 @@ gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 gem "transitions", :require => ["transitions", "active_model/transitions"]
 
+# cron job
+gem 'whenever', require: false
+
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
 
