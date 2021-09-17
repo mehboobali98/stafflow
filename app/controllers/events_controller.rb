@@ -1,8 +1,8 @@
 # Events Controller
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource except: %i[display_calendar create]
-  authorize_resource only: %i[display_calendar create]
+  load_resource except: %i[display_calendar create]
+  authorize_resource
 
   # GET /events
   def index
