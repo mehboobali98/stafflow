@@ -1,7 +1,5 @@
 module DesignationAbilities
   def define_designation_abilities(user)
-    return if user.blank?
-
     if user.account_owner?
       can :manage, Designation, company_id: user.company_id
     elsif user.hr?

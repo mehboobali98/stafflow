@@ -1,7 +1,5 @@
 module DepartmentAbilities
   def define_department_abilities(user)
-    return if user.blank?
-
     if user.account_owner?
       can :manage, Department, company_id: user.company_id
     elsif user.hr?
