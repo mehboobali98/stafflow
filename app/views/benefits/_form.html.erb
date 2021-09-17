@@ -17,6 +17,10 @@
         <%= label t('benefit.label.benefit_type'), t('benefit.table.one_time'), value: false %>
         <%= benefit_object.radio_button :benefit_type, 'One Time' %>
       </div>
+      <div class="mb-3">
+        <%= benefit_object.label t('benefit.label.amount'), { class: "form-label" } %>
+        <%= benefit_object.text_field :amount, { class: "form-control", placeholder: t('benefit.label.amount') } %>
+      </div>
       <%= benefit_object.submit t('form.button.submit'), class: "btn btn-primary" %>
     </div>
   </div>

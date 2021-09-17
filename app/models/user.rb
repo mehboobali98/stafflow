@@ -5,6 +5,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable
 
   belongs_to :company
+  has_many :applied_benefits
+  has_many :payrolls
+  has_many :users_benefits
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze

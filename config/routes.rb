@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :benefits
   resources :members, controller: 'users' do
-    resources :payrolls, :user_benefits
+    resources :payrolls, :users_benefits
   end
   scope :admin do
     resources :users

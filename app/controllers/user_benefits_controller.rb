@@ -1,90 +1,90 @@
 class UserBenefitsController < ApplicationController
-  before_action :load_user_benefit, only: %i[destroy update show]
-  before_action :load_user_benefits, only: %i[new create]
+  before_action :load_users_benefit, only: %i[destroy update show]
+  before_action :load_users_benefits, only: %i[new create]
   before_action :load_benefits, only: %i[new create]
   before_action :load_user
 
-  # GET members/:id/user_benefits
+  # GET members/:id/users_benefits
   def index
     @user = User.find_by_id(params['member_id'])
-    @user_benefits = UserBenefit.includes(:user).includes(:benefit)
+    @users_benefits = UserBenefit.includes(:user).includes(:benefit)
     respond_to do |format|
       format.html
     end
   end
 
-  # GET members/:id/user_benefits/new
+  # GET members/:id/users_benefits/new
   def new
     respond_to do |format|
       format.html
     end
   end
 
-  # GET members/:id/user_benefits/:id
+  # GET members/:id/users_benefits/:id
   def show
     respond_to do |format|
       format.html
     end
   end
 
-  # POST members/:id/user_benefits
+  # POST members/:id/users_benefits
   def create
     # this function is to refactored, using jquery
-    user_benefit_objects = UserBenefit.initialze_user_benefits(params, @user.id)
-    user_benefit_objects.each do |new_user_benefit|
-      new_user_benefit.save!
+    users_benefit_objects = UserBenefit.initialze_users_benefits(params, @user.id)
+    users_benefit_objects.each do |new_users_benefit|
+      new_users_benefit.save!
       flash[:notice] ||= []
-      flash[:notice] << new_user_benefit.benefit.name + ' ' + t('user_benefit.messages.success.create')
+      flash[:notice] << new_users_benefit.benefit.name + ' ' + t('users_benefit.messages.success.create')
     rescue ActiveRecord::RecordInvalid
       flash[:errors] ||= []
-      flash[:errors] << (new_user_benefit.benefit.name + ' ' + new_user_benefit.errors.full_messages.first)
+      flash[:errors] << (new_users_benefit.benefit.name + ' ' + new_users_benefit.errors.full_messages.first)
     end
     respond_to do |format|
-      format.html { redirect_to member_user_benefits_path }
+      format.html { redirect_to member_users_benefits_path }
     end
   end
 
-  # DELETE members/:id/user_benefits/:id
+  # DELETE members/:id/users_benefits/:id
   def destroy
-    is_destroyed = @user_benefit.destroy
+    is_destroyed = @users_benefit.destroy
     respond_to do |format|
       if is_destroyed
-        flash[:notice] = t('user_benefit.messages.success.delete')
+        flash[:notice] = t('users_benefit.messages.success.delete')
       else
-        flash[:error] =  @user_benefit.errors.full_messages
+        flash[:error] =  @users_benefit.errors.full_messages
       end
-      format.html { redirect_to member_user_benefits_path }
+      format.html { redirect_to member_users_benefits_path }
     end
   end
 
-  # PATCH/PUT members/:id/user_benefits/:id
+  # PATCH/PUT members/:id/users_benefits/:id
   def update
-    is_updated = @user_benefit.update(permitted_user_benefit_arguments_for_update)
+    is_updated = @users_benefit.update(permitted_users_benefit_arguments_for_update)
     respond_to do |format|
       if is_updated
-        format.html { redirect_to member_user_benefits_path, notice: t('user_benefit.messages.success.update') }
+        format.html { redirect_to member_users_benefits_path, notice: t('users_benefit.messages.success.update') }
       else
-        format.html { redirect_to member_user_benefits_path, alert: @user_benefit.errors.full_messages }
+        format.html { redirect_to member_users_benefits_path, alert: @users_benefit.errors.full_messages }
       end
     end
   end
 
   private
 
-  def permitted_user_benefit_arguments_for_create
-    params.require(:user_benefit).permit(benefit_id[], amount[])
+  def permitted_users_benefit_arguments_for_create
+    params.require(:users_benefit).permit(benefit_id[], amount[])
   end
 
-  def permitted_user_benefit_arguments_for_update
-    params.require(:user_benefit).permit(:amount, :status)
+  def permitted_users_benefit_arguments_for_update
+    params.require(:users_benefit).permit(:amount, :status)
   end
 
-  def load_user_benefit
-    @user_benefit = UserBenefit.find_by_sequence_num!(params[:id])
+  def load_users_benefit
+    @users_benefit = UserBenefit.find_by_sequence_num!(params[:id])
   end
 
-  def load_user_benefits
-    @user_benefits = UserBenefit.includes(:benefit).all
+  def load_users_benefits
+    @users_benefits = UserBenefit.includes(:benefit).all
   end
 
   def load_benefits

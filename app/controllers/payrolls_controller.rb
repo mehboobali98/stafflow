@@ -2,9 +2,11 @@
 
 class PayrollsController < ApplicationController
   before_action :load_user
-  before_action :load_a_payroll, only: :show
-  before_action :load_all_payrolls, only: :index
-
+  before_action :load_payroll, only: :show
+  before_action :load_payrolls, only: :index
+  before_action :check_payroll_existence, only: :create
+  before_action :load_users_benefits_and_include_benefits, only: :create
+  
   # GET members/:id/payrolls
   def index
     respond_to do |format|
@@ -14,7 +16,7 @@ class PayrollsController < ApplicationController
 
   # GET members/:id/payrolls/:id
   def show
-    @applied_benefits = AppliedBenefit.where('applied_benefits.payroll_id = ?', @payroll.id) if @payroll
+    @payroll.applied_benefits
     respond_to do |format|
       format.html
     end
@@ -22,33 +24,40 @@ class PayrollsController < ApplicationController
 
   # POST members/:id/payrolls
   def create
-    @user_benefits = UserBenefit.joins(:user).includes(:benefit)
-    if Payroll.exists?
-      if Payroll.check_last_payroll_date(Payroll.joins(:user).last.created_at)
-        flash[:notice] = t('payroll.messages.success.create')
-        @payroll = Payroll.generates_payroll_object_and_applied_benefits(@user_benefits, @user)
+    
+    
+    
+    
+    Payroll.check_last_payroll_date(Payroll.joins(:user).last.created_at)    
+    @payroll = Payroll.generate_payroll(@user)  
+    flash[:notice] = t('payroll.messages.success.create')
       else
         flash[:alert] = t('payroll.messages.failure.created_already')
       end
     else
-      Payroll.generates_payroll_object_and_applied_benefits(@user_benefits, @user)
+      Payroll.generate_payroll(@users_benefits, @user)
     end
     respond_to do |format|
       format.html { redirect_to member_payrolls_path }
     end
   end
 
-  private
+  protected
 
   def load_user
-    @user = User.find_by_id(params[:member_id])
+    @user = User.find_by(id: params[:member_id])
   end
 
-  def load_all_payrolls
-    @payrolls = Payroll.joins(:user)
+  def load_payrolls
+    @payrolls = @user.payrolls
   end
 
-  def load_a_payroll
-    @payroll = Payroll.find_by_sequence_num!(params[:id])
+  def load_payroll
+    @payroll = Payroll.find_by!(sequence_num: params[:id])
   end
+
+  def load_users_benefits_and_include_benefits
+    @user = @user.users_benefits.includes(:benefit)
+  end
+
 end

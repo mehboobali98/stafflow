@@ -1,22 +1,22 @@
-<%= form_for [@member, @user_benefit], url: member_user_benefit_path do |user_benefit| %>
+<%= form_for [@member, @users_benefit], url: member_users_benefit_path do |users_benefit| %>
   <div class="row">
     <div class="col-md-4">
       <div class="mb-3">
-        <%= user_benefit.label :Benefit_Amount, { class: "form-label m-3" } %>
-        <%= user_benefit.text_field :amount, { class: "form-control m-3", required: "required", placeholder: t('user_benefit.table.benefit_amount') } %>
+        <%= users_benefit.label :Benefit_Amount, { class: "form-label m-3" } %>
+        <%= users_benefit.text_field :amount, { class: "form-control m-3", required: "required", placeholder: t('users_benefit.table.benefit_amount') } %>
       </div>
         <div class="mb-3">
-          <%= user_benefit.label :Benefit_Status, { class: "form-label m-3" } %>
+          <%= users_benefit.label :Benefit_Status, { class: "form-label m-3" } %>
         <div class="form-check form-check-inline ml-3">
-          <%= label :status, t('user_benefit.table.active'), value: false %>
-          <%= user_benefit.radio_button :status, true, checked: true, value: true %>
+          <%= label :status, t('users_benefit.table.active'), value: false %>
+          <%= users_benefit.radio_button :status, true, checked: true, value: true %>
         </div>
         <div class="form-check form-check-inline">
-          <%= label :status, t('user_benefit.table.inactive'), value: false %>
-          <%= user_benefit.radio_button :status, false, checked: true, value: false %>
+          <%= label :status, t('users_benefit.table.inactive'), value: false %>
+          <%= users_benefit.radio_button :status, false, checked: true, value: false %>
         </div>
       </div>
-      <%= user_benefit.submit t('form.button.submit'), class: "btn btn-primary m-3" %>
+      <%= users_benefit.submit t('form.button.submit'), class: "btn btn-primary m-3" %>
     </div>
   </div>
 <% end %>

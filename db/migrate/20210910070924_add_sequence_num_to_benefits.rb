@@ -6,7 +6,7 @@ class AddSequenceNumToBenefits < ActiveRecord::Migration[6.0]
   end
 
   def self.down
-    remove_index :benefits, column: %i[sequence_num company_id]
+    remove_index :benefits, column: %i[company_id sequence_num]
     remove_column :benefits, :sequence_num
   end
 

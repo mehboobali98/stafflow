@@ -68,11 +68,13 @@ en:
         delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+      benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
     headings:
       benefit: "Benefits"
     label:
       benefit_name: "Benefit Name"
       benefit_type: "Benefit Type"
+      amount: "Default Amount"
   form:
     message:
       confirmation: "Are you sure?"
@@ -85,7 +87,7 @@ en:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
 
-  user_benefit:
+  users_benefit:
     messages:
       success:
         create: "User Benefit Created Successfully"
@@ -94,12 +96,12 @@ en:
     validation:
       presence: "This field cannot be left empty"
     headings:
-      user_benefits: "User Benefits"
+      users_benefits: "User Benefits"
     table:
       benefit_amount: "Benefit Amount"
       active: "Active"
       inactive: "Inactive"
-      new_user_benefit: "New User Benefit"
+      new_users_benefit: "New User Benefit"
       user_name: "User Name"
       benefit_name: "Benefit name"
       amount: "Amount"
@@ -107,4 +109,4 @@ en:
       select: "Select"
       options: "Options"
     button:
-      user_benefit: "Benefits"
+      users_benefit: "Benefits"
