@@ -1,6 +1,7 @@
 class UserLeave < ApplicationRecord
   belongs_to :user
   belongs_to :leave
+  belongs_to :company
   has_many :applied_leaves, dependent: :nullify
   validates_uniqueness_of :user_id, scope: :leave_id
   validates :total_count, :remaining_count, presence: true
