@@ -60,6 +60,7 @@ class DesignationsController < ApplicationController
           flash[:notice] = t('designation.destroy')
         else
           flash[:error] = @designation.errors.full_messages
+        end
         redirect_to designations_path
       end
     end

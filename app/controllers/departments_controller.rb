@@ -67,6 +67,7 @@ class DepartmentsController < ApplicationController
           flash[:notice] = t('department.destroy')
         else
           flash[:error] = @department.errors.full_messages
+        end
         redirect_to departments_path
       end
     end

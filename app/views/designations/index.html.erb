@@ -1,5 +1,2 @@
 <%= render partial: 'designations_listing' %>
-<%= stylesheet_link_tag 'pagination' %>
-<div class="pagination-wrapper m-3">
-  <%= will_paginate @designations, container: false %>
-</div>
+<%= render partial: 'shared/pagination', locals: { resource: @designations } %>
