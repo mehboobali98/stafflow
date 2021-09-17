@@ -31,8 +31,10 @@
 en:
   department:
     name_lable: "Department Name"
-    image_lable: "Upload Image"
+    image_lable: "Select Image"
     table_heading: "Departments"
+    name: "Name"
+    image: "Image"
     table_options: "Options"
     table_cell_name: "Name"
     new_link_name: "New Department"
