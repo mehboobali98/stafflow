@@ -35,5 +35,3 @@
 yarn-debug.log*
 .yarn-integrity
 /db/schema.rb
-/Gemfile.lock
-/yarn.lock
