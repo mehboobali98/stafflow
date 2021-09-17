@@ -32,14 +32,14 @@ class DepartmentsController < ApplicationController
     end
   end
 
-  # GET /departments/1/edit
+  # GET /departments/:id/edit
   def edit
     respond_to do |format|
       format.html
     end
   end
 
-  # PATCH/PUT /departments/1
+  # PATCH/PUT /departments/:id
   def update
     is_updated = @department.update(department_params)
     respond_to do |format|
@@ -54,7 +54,7 @@ class DepartmentsController < ApplicationController
     end
   end
 
-  # DELETE /departments/1
+  # DELETE /departments/:id
   def destroy
     @department.destroy
     is_destroyed = @department.destroyed?

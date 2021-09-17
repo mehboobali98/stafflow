@@ -26,7 +26,7 @@ class DesignationsController < ApplicationController
     end
   end
 
-  # GET /designations/1/edit
+  # GET /designations/:id/edit
   def edit
     @departments = Department.all
     respond_to do |format|
@@ -34,7 +34,7 @@ class DesignationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /designations/1
+  # PATCH/PUT /designations/:id
   def update
     is_updated = @designation.update(designation_params)
     respond_to do |format|
@@ -49,7 +49,7 @@ class DesignationsController < ApplicationController
     end
   end
 
-  # DELETE /designations/1
+  # DELETE /designations/:id
   def destroy
     @designation.destroy
     is_destroyed = @designation.destroyed?
