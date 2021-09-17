@@ -1,5 +1,5 @@
 <div class="container">
-  <h1 class="mt-1"><%= t 'designation.table_heading' %></h1>
+  <h1 class="mt-1"><%= t('designation.table_heading') %></h1>
   <%= link_to t('designation.new_link_name'), new_designation_path, class: 'btn btn-outline-dark' if can?(:create, Designation) %>
   <br>
   <br>
