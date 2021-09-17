@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   as :user do
     root to: 'devise/sessions#new'
   end
+  resources :settings, only: %i[update] do
+    collection do
+      get '/', to: 'settings#settings'
+    end
+  end
   resources :events do
     collection do
       get 'display_calendar'

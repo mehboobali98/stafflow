@@ -35,6 +35,10 @@ en:
       name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
+  settings:
+    updated: "Settings were successfully updated"
+    not_updated: "Settings were not updated due to an error"
+    title: "Settings"    
   event:
     messages:
       success:
