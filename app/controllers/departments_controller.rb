@@ -3,6 +3,7 @@
 class DepartmentsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
+
   # GET /departments
   def index
     @departments = Department.all
@@ -25,10 +26,12 @@ class DepartmentsController < ApplicationController
     is_saved = @department.save
     respond_to do |format|
       format.html do
-        return redirect_to departments_path, notice: t('department.created') if is_saved
-
-        flash.now[:error] = @department.errors.full_messages
-        render :new
+        if is_saved
+          redirect_to departments_path, notice: t('department.created')
+        else
+          flash.now[:error] = @department.errors.full_messages
+          render :new
+        end
       end
     end
   end
@@ -45,18 +48,20 @@ class DepartmentsController < ApplicationController
     is_updated = @department.update(department_params)
     respond_to do |format|
       format.html do
-        return redirect_to departments_path, notice: t('department.updated') if is_updated
-
-        flash.now[:error] = @department.errors.full_messages
-        redirect_to departments_path
+        if is_updated
+          redirect_to departments_path, notice: t('department.updated')
+        else
+          flash.now[:error] = @department.errors.full_messages
+          redirect_to departments_path
+        end
       end
     end
   end
 
   # DELETE /departments/1
   def destroy
-    deleted_department = @department.destroy
-    is_destroyed = deleted_department.destroyed?
+    @department.destroy
+    is_destroyed = @department.destroyed?
     respond_to do |format|
       format.html do
         flash[:error] = @department.errors.full_messages unless is_destroyed

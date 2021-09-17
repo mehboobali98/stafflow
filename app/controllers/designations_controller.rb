@@ -3,6 +3,7 @@
 class DesignationsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
+
   # GET /designations
   def index
     @designations = Designation.all
@@ -17,10 +18,12 @@ class DesignationsController < ApplicationController
     is_saved = @designation.save
     respond_to do |format|
       format.html do
-        return redirect_to designations_path, notice: t('designation.created') if is_saved
-
-        flash.now[:error] = @designation.errors.full_messages
-        redirect_to designations_path
+        if is_saved
+          redirect_to designations_path, notice: t('designation.created')
+        else
+          flash.now[:error] = @designation.errors.full_messages
+          redirect_to designations_path
+        end
       end
     end
   end
@@ -38,18 +41,20 @@ class DesignationsController < ApplicationController
     is_updated = @designation.update(designation_params)
     respond_to do |format|
       format.html do
-        return redirect_to designations_path, notice: t('department.updated') if is_updated
-
-        flash.now[:error] = @designation.errors.full_messages
-        redirect_to designations_path
+        if is_updated
+          redirect_to designations_path, notice: t('department.updated') 
+        else
+          flash.now[:error] = @designation.errors.full_messages
+          redirect_to designations_path
+        end
       end
     end
   end
 
   # DELETE /designations/1
   def destroy
-    deleted_designation = @designation.destroy
-    is_destroyed = deleted_designation.destroyed?
+    @designation.destroy
+    is_destroyed = @designation.destroyed?
     respond_to do |format|
       format.html do
         flash[:error] = @designation.errors.full_messages unless is_destroyed
