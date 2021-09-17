@@ -88,8 +88,8 @@ class AppliedLeavesController < ApplicationController
     is_saved = @applied_leave.approve_applied_leave
     respond_to do |format|
       format.html do
-        flash[:notice] = t('applied_leave.messages.leave_approve_success') if is_saved
-        flash[:error] = t('applied_leave.messages.leave_approve_failure')
+        flash[:error] = t('applied_leave.messages.leave_approve_failure') unless is_saved
+        flash[:notice] = t('applied_leave.messages.leave_approve_success')
         redirect_to show_applied_leaves_path
       end
     end
@@ -100,9 +100,9 @@ class AppliedLeavesController < ApplicationController
     is_saved = @applied_leave.reject_applied_leave
     respond_to do |format|
       format.html do
-        flash[:notice] = t('applied_leave.messages.leave_reject_success') if is_saved
-        flash[:error] = t('applied_leave.messages.leave_reject_failure')
-        return redirect_to show_applied_leaves_path
+        flash[:error] = t('applied_leave.messages.leave_reject_failure') unless is_saved
+        flash[:notice] = t('applied_leave.messages.leave_reject_success')
+        redirect_to show_applied_leaves_path
       end
     end
   end

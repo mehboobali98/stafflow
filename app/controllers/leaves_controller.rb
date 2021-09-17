@@ -31,10 +31,13 @@ class LeavesController < ApplicationController
     is_saved = @leave.save
     respond_to do |format|
       format.html do
-        return redirect_to leaves_path, notice: t('leave.messages.success.create_success') if is_saved
-
-        flash.now[:error] = @leave.errors.full_messages
-        render :new
+        if is_saved
+          flash[:notice] = t('leave.messages.success.create_success')
+          redirect_to leaves_path
+        else
+          flash.now[:error] = @leave.errors.full_messages
+          render :new
+        end
       end
     end
   end
