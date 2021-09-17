@@ -122,6 +122,7 @@ en:
       leave_type: 'Leave types'
       add_user_leave: 'Add user leave'
       view_user_leave: 'View user leave'
+      select_filter: 'Select filter'
     links:
       approve_leaves: 'Approve leaves'
       reject_leaves: 'Reject leaves'

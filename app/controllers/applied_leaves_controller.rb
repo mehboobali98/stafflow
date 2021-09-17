@@ -68,8 +68,11 @@ class AppliedLeavesController < ApplicationController
     is_destroyed = @applied_leave.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @applied_leave.errors.full_messages unless is_destroyed
-        flash[:notice] = t('applied_leave.messages.leave_delete_success')
+        if is_destroyed
+          flash[:notice] = t('applied_leave.messages.leave_delete_success')
+        else
+          flash[:error] = @applied_leave.errors.full_messages
+        end
         redirect_to member_applied_leaves_path(@user)
       end
     end
@@ -88,8 +91,11 @@ class AppliedLeavesController < ApplicationController
     is_saved = @applied_leave.approve_applied_leave
     respond_to do |format|
       format.html do
-        flash[:error] = t('applied_leave.messages.leave_approve_failure') unless is_saved
-        flash[:notice] = t('applied_leave.messages.leave_approve_success')
+        if is_saved
+          flash[:notice] = t('applied_leave.messages.leave_approve_success')
+        else
+          flash[:error] = t('applied_leave.messages.leave_approve_failure')
+        end
         redirect_to show_applied_leaves_path
       end
     end
@@ -100,8 +106,11 @@ class AppliedLeavesController < ApplicationController
     is_saved = @applied_leave.reject_applied_leave
     respond_to do |format|
       format.html do
-        flash[:error] = t('applied_leave.messages.leave_reject_failure') unless is_saved
-        flash[:notice] = t('applied_leave.messages.leave_reject_success')
+        if is_saved
+          flash[:notice] = t('applied_leave.messages.leave_reject_success')
+        else
+          flash[:error] = t('applied_leave.messages.leave_reject_failure')
+        end
         redirect_to show_applied_leaves_path
       end
     end
@@ -151,12 +160,8 @@ class AppliedLeavesController < ApplicationController
     params.require(:filterType).permit(:filter_type)
   end
 
-  def user_params
-    params.require(:member_id)
-  end
-
   def set_user
-    @user = User.find(user_params)
+    @user = User.find(params[:member_id])
   rescue ActiveRecord::RecordNotFound => e
     flash[:error] = e.message
     redirect_to members_path

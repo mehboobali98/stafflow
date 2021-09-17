@@ -22,10 +22,6 @@ $(document).ready(function() {
   {
     let totalCount = $('#user_leave_total_count').val();
     let remainingCount = $('#user_leave_remaining_count').val();
-    if(remainingCount > totalCount)
-    {
-      return false;
-    }
-    return true;
+    (remainingCount > totalCount) ? false : true;
   }
 });

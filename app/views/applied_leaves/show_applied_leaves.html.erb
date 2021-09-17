@@ -6,7 +6,7 @@
     <%= select_tag "filter", options_for_select([
       'Pending',
       'Accepted',
-      'Rejected'].freeze), prompt: "Select filter", class: 'form-select w-25 d-inline mb-2 p-2' %>
+      'Rejected'].freeze), prompt: t('applied_leave.headings.select_filter'), class: 'form-select w-25 d-inline mb-2 p-2' %>
     <div id="submit_buttons" class="d-none">
       <button type="button" id="approve_leaves_btn" class="btn btn-success mb-2 p-2 me-2"><%= t('applied_leave.links.approve_leaves') %></button>
       <button type="button" id="reject_leaves_btn" class="btn btn-danger mb-2 p-2"><%= t('applied_leave.links.reject_leaves') %></button>

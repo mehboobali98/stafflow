@@ -1,6 +1,6 @@
 class LeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_leave_type, only: %i[show edit update destroy]
+  before_action :set_leave, only: %i[show edit update destroy]
 
   # GET /leaves
   def index
@@ -71,8 +71,11 @@ class LeavesController < ApplicationController
     is_destroyed = @leave.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @leave.errors.full_messages unless is_destroyed
-        flash[:notice] = I18n.t('leave.messages.success.delete_success')
+        if is_destroyed
+          flash[:notice] = t('leave.messages.success.delete_success')
+        else
+          flash[:error] = @leave.errors.full_messages
+        end
         redirect_to leaves_path
       end
     end
@@ -80,7 +83,7 @@ class LeavesController < ApplicationController
 
   private
 
-  def set_leave_type
+  def set_leave
     @leave = Leave.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     flash[:error] = e.message
