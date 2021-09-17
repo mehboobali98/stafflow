@@ -4,14 +4,8 @@
       <h1><%= local_assigns&.dig(:heading) %></h1>
       <%= form_for @department do |form| %>
         <div class="form-group mb-3">
-          <%= form.label t 'department.name_lable' %>
+          <%= form.label t('department.name_lable') %>
           <%= form.text_field :name, required: true, class: 'form-control' %>
-        </div>
-        <div class="input-group mb-3 row">
-          <div class="col-md-6">
-            <%= form.label t 'department.image_lable' %></br>
-            <%= form.file_field :image_url %>
-          </div>
         </div>
         <div>
           <%= form.submit class: 'card-link btn btn-dark' %>
