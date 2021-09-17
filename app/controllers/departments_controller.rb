@@ -13,7 +13,6 @@ class DepartmentsController < ApplicationController
 
   # GET /departments/new
   def new
-    @department = Department.new
     respond_to do |format|
       format.html
     end
@@ -21,7 +20,6 @@ class DepartmentsController < ApplicationController
 
   # POST /departments
   def create
-    @department = Department.new(department_params)
     is_saved = @department.save
     respond_to do |format|
       format.html do

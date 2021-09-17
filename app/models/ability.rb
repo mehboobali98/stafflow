@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require_relative('concerns/user_abilities')
-require_relative('concerns/department_abilities')
-require_relative('concerns/designation_abilities')
 require_relative('concerns/settings_abilities')
 
 class Ability

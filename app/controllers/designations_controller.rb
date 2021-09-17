@@ -13,7 +13,6 @@ class DesignationsController < ApplicationController
 
   # POST /designations
   def create
-    @designation = Designation.new(designation_params)
     is_saved = @designation.save
     respond_to do |format|
       format.html do
@@ -65,7 +64,6 @@ class DesignationsController < ApplicationController
 
   # GET /designations/new
   def new
-    @designation = Designation.new
     @departments = Department.all
     respond_to do |format|
       format.html
