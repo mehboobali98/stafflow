@@ -42,6 +42,10 @@ en:
     byteam: "by team ABC"
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
+  settings:
+    updated: "Settings were successfully updated"
+    not_updated: "Settings were not updated due to an error"
+    title: "Settings"    
   event:
     messages:
       success:
