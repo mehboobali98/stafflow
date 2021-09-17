@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+# Event helper
+module EventsHelper
+  def format_date(date)
+    date&.strftime('%d-%B-%Y    %k:%M %p')
+  end
+
+  def extract_time(date)
+    date&.strftime('%H:%M')
+  end
+
+  def extract_date(date)
+    date&.to_date
+  end
+end

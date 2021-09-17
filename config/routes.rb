@@ -9,6 +9,12 @@ Rails.application.routes.draw do
       get '/', to: 'settings#settings'
     end
   end
+  resources :events do
+    collection do
+      get 'display_calendar'
+    end
+  end
+
   resources :members, controller: 'users'
   devise_for :users, controllers: { registrations: 'users/registrations' }
 end
