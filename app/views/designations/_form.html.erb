@@ -5,13 +5,13 @@
 
       <%= form_for @designation do |form| %>
         <div class="form-group mb-3">
-          <%= form.label t 'designation.name_lable' %>
+          <%= form.label t('designation.name_lable') %>
           <%= form.text_field :name, required: true, class: 'form-control' %>
         </div>
         <div class="input-group mb-3">
           <div class="col-md-6">
-            <%= form.label t 'designation.select_department' %>
-            <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'},{class: "form-control"} %>        
+            <%= form.label t('designation.select_department') %>
+            <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name),{prompt:'select'},{class: "form-control"} %>    
           </div>
         </div>
         <div>
