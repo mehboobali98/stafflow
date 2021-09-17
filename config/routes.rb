@@ -30,10 +30,6 @@ Rails.application.routes.draw do
   end
 
   constraints subdomain: /^(?!www\Z)(\w+)/ do
-    resources :members, controller: 'users' do
-      collection do
-        get :filters, as: :filtered
-      end
-    end
+    resources :members, controller: 'users'
   end
 end

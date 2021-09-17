@@ -28,7 +28,7 @@ gem 'devise'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
-gem "will_paginate", "~> 3.1.7"
+gem "will_paginate", "3.1.7"
 
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'

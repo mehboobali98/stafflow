@@ -82,8 +82,6 @@ en:
       search_company: "Search"
       details: "Details"
       delete: "Delete"
-      apply_filters: "Apply Filters"
-      reset_filters: "Reset Filters"
     labels:
       email: "Email"
       password: "Password"

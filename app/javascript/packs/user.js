@@ -8,12 +8,31 @@ $(document).ready(function() {
   });
 });
 
-$(document).on('click', '.pagination-wrapper a', function() {
+$(document).on('click', '.pagination-wrapper a', function(event) {
+  event.preventDefault();
   $.ajax({
     type: 'GET',
     url: this.href,
     data: $('#filter_form').serialize(),
     dataType: 'script'
   });
-  return false;
 });
+
+$(document).on('click', '#reset_filter_btn', function(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'GET',
+    url: '/members',
+    dataType: 'script'
+  });
+  $('.js-filter-select').val("");
+})
+
+$(document).on('change', '.js-filter-select', function() {
+  $.ajax({
+    type: 'GET',
+    url: '/members',
+    data: $('#filter_form').serialize(),
+    dataType: 'script'
+  });
+})
