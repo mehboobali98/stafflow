@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class DepartmentsController < ApplicationController
-  before_action :load_department, only: %i[edit update destroy]
-
+  load_and_authorize_resource
   # GET /departments
   def index
-    @departments = Department.paginate(page: params[:page], per_page: PAGE_SIZE)
+    @departments = @departments.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -13,7 +12,6 @@ class DepartmentsController < ApplicationController
 
   # GET /departments/new
   def new
-    @department = Department.new
     respond_to do |format|
       format.html
     end
@@ -21,7 +19,6 @@ class DepartmentsController < ApplicationController
 
   # POST /departments
   def create
-    @department = Department.new(permitted_department_params)
     is_saved = @department.save
     respond_to do |format|
       format.html do
@@ -44,7 +41,7 @@ class DepartmentsController < ApplicationController
 
   # PATCH/PUT /departments/1
   def update
-    is_updated = @department.update(permitted_department_params)
+    is_updated = @department.update(department_params)
     respond_to do |format|
       format.html do
         if is_updated
@@ -75,15 +72,7 @@ class DepartmentsController < ApplicationController
 
   private
 
-  def permitted_department_params
+  def department_params
     params.require(:department).permit(:name)
-  end
-
-  def load_department
-    @department = Department.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html { redirect_to departments_path, alert: t('department.not_exist') }
-    end
   end
 end

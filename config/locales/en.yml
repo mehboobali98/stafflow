@@ -29,6 +29,12 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  company:
+    table_header:
+      list: "Companies List"
+      name: "Company Name"
+      subdomain: "Subdomain"
+      options: "Options"
   department:
     name_lable: "Department Name"
     image_lable: "Upload Image"
@@ -46,6 +52,7 @@ en:
     add_message: "Add Department"
     not_exist: "Department Does Not Exist"
     edit_btn_message: "Edit"
+    show_btn_message: "Show"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
   designation:
