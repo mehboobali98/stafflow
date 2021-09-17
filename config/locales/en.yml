@@ -29,12 +29,16 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
-  hello: "Hello world"
+  company:
+    table_header:
+      list: "Companies List"
+      name: "Company Name"
+      subdomain: "Subdomain"
+      options: "Options"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
-    title: "Settings"
-    
+    title: "Settings"    
   event:
     messages:
       success:
