@@ -1,19 +1,20 @@
-# frozen_string_literal: true
-
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-  load_and_authorize_resource
+  before_action :find_user, only: %i[edit update destroy show]
 
   # GET /members/new
   def new
+    @user = User.new
     respond_to do |format|
-      format.html
+      format.html { render :new }
     end
   end
 
   # POST /members
   def create
-    is_saved = @user.save if @user.date_of_birth_valid? && @user.role_id_valid?
+    @user = User.new(permit_user_params)
+    if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
+      is_saved = @user.save
+    end
     respond_to do |format|
       if is_saved
         format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
@@ -32,7 +33,9 @@ class UsersController < ApplicationController
 
   # PATCH /members/:id
   def update
-    is_updated = @user.update(user_params) if @user.date_of_birth_valid? && @user.role_id_valid?
+    if @user.validate_date_of_birth(params.dig(:user, :date_of_birth)) && @user.validate_role(params.dig(:user, :role_id))
+      is_updated = @user.update(permit_user_params)
+    end
     respond_to do |format|
       if is_updated
         format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
@@ -63,15 +66,20 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    respond_to do |format|
-      format.html
-    end
+    @users = User.all
   end
 
   private
 
-  def user_params
-    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password,
-                                 :password_confirmation, :role_id, :base_salary)
+  def permit_user_params
+    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
+  end
+
+  def find_user
+    @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    respond_to do |format|
+      format.html { redirect_to members_path, alert: I18n.t('messages.user_doesnt_exist') }
+    end
   end
 end
