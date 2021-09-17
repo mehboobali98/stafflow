@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DesignationsController < ApplicationController
-  before_action :authenticate_user!
   load_and_authorize_resource
 
   # GET /designations

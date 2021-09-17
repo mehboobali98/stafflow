@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DepartmentsController < ApplicationController
-  before_action :authenticate_user!
   load_and_authorize_resource
 
   # GET /departments
@@ -74,6 +73,6 @@ class DepartmentsController < ApplicationController
   private
 
   def department_params
-    params.require(:department).permit(:name, :image_url)
+    params.require(:department).permit(:name)
   end
 end
