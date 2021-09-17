@@ -31,5 +31,7 @@ Rails.application.routes.draw do
 
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :members, controller: 'users'
+    resources :departments
+    resources :designations
   end
 end
