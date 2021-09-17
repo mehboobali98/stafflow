@@ -1,16 +1,15 @@
 <%= javascript_pack_tag 'user' %>
-
 <div class='container'>
-  <h1><%= t('headings.all_employees') %></h1>
-  <%= link_to t('headings.create_employee'), new_member_path, class: 'btn btn-outline-dark' if can?(:create, User) %>
+  <h1><%= t('headings.all_employees') %></h1><hr>
+  <%= link_to t('headings.create_employee'), new_member_path, class: 'btn btn-outline-primary' if can?(:create, User) %>
   <br><br>
   <div class='card-header mb-3 row'>
     <%= form_tag filtered_members_path, format: :js, method: :get, remote: true, id: 'filter_form' do %>
       <%= select_tag :department_id, options_for_select({dev: 1, hr: 2}), prompt: t('forms.labels.department'), class: 'form-control w-25 d-inline m-1' %>
       <%= text_field_tag :match_users_name, '', class: 'form-control w-25 d-inline m-1', placeholder: t('forms.labels.name') %>
       <%= select_tag :role_id, options_for_select(User::ROLES), prompt: t('forms.labels.role'), class: 'form-control w-25 d-inline m-1' %>
-      <%= submit_tag t('forms.buttons.apply_filters'), remote: true, class: 'btn btn-dark d-inline' %>
-      <%= submit_tag t('forms.buttons.reset_filters'), formaction: members_path, remote: true, class: 'btn btn-dark d-inline m-1' %>
+      <%= submit_tag t('forms.buttons.apply_filters'), remote: true, class: 'btn btn-primary d-inline' %>
+      <%= submit_tag t('forms.buttons.reset_filters'), formaction: members_path, remote: true, class: 'btn btn-primary d-inline m-1' %>
     <% end %>
   </div>
   <br>
