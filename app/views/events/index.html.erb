@@ -23,9 +23,6 @@
           <td><%= link_to t('event.forms.links.show'), event, class: 'btn btn-info' if can?(:show, event) %></td>
           <td><%= link_to t('event.forms.links.edit'), edit_event_path(event), class: 'btn btn-secondary' if can?(:edit, event) %></td>
           <td><%= link_to t('event.forms.links.delete'), event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') }, class: 'btn btn-danger' if can?(:delete, event) %></td>
-          <td><%= link_to t('event.forms.links.show'), event, class: 'btn btn-info' %></td>
-          <td><%= link_to t('event.forms.links.edit'), edit_event_path(event), class: 'btn btn-secondary' %></td>
-          <td><%= link_to t('event.forms.links.delete'), event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') }, class: 'btn btn-danger' %></td>
         </tr>
       <% end %>
     </tbody>
