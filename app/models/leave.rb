@@ -7,4 +7,5 @@ class Leave < ApplicationRecord
   validates :name, :count, presence: true
   has_many :user_leaves, dependent: :nullify
   has_many :users, through: :user_leaves
+  belongs_to :company
 end

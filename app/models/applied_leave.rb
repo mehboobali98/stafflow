@@ -3,6 +3,7 @@ class AppliedLeave < ApplicationRecord
   belongs_to :user_leave
   belongs_to :user
   belongs_to :leave
+  belongs_to :company
   LEAVE_DURATION = { full_day: 1, half_day: 2 }.freeze
   validates :applied_at, :applied_till, presence: true
   validate :validate_past_leave_date
