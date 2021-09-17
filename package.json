@@ -2,19 +2,11 @@
   "name": "PMS",
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
-    "@fortawesome/fontawesome-free": "^5.15.4",
-    "@popperjs/core": "^2.10.1",
-    "@rails/actioncable": "^6.0.0",
-    "@rails/activestorage": "^6.0.0",
-    "@rails/ujs": "^6.0.0",
-=======
     "@fortawesome/fontawesome-free": "5.15.4",
     "@popperjs/core": "2.9.3",
     "@rails/actioncable": "6.0.0",
     "@rails/activestorage": "6.0.0",
     "@rails/ujs": "6.0.0",
->>>>>>> 25c25fc82487e45b9a5f9aed0a27677729b06065
     "@rails/webpacker": "5.4.2",
     "bootstrap": "5.0",
     "chart.js": "^3.5.1",
