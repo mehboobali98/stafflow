@@ -11,8 +11,8 @@ require("./settings")
 require("bootstrap")
 document.addEventListener("turbolinks:load", function() {
   $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-    $('[data-toggle="popover"]').popover()
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
   })
 })
 // Uncomment to copy all static images under ../images to the output folder and reference
