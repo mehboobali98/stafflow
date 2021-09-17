@@ -30,14 +30,12 @@ $(document).ready(function() {
   $('body').on('change','[type=checkbox]', function() {
     if ($('.js-notifications-list input:checkbox:checked').length == 0 || $('#notification_status').val() == 1 ) {
       $('#read-button').prop('disabled', true);
-      console.log('yes')
     } else {
       $('#read-button').prop('disabled', false);
     }
   });
 
 });
-
 
 $(document).on('click', '.pagination-wrapper a', function() {
   $.ajax({

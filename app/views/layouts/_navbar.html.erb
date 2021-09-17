@@ -11,7 +11,7 @@
           <% end %>
         </div>
         <input class='form-control me-2' type='search' placeholder='Search' aria-label='Search'>
-        <button class='btn btn-outline-light' type='submit'>Search</button>
+        <button class='btn btn-outline-light' type='submit'><%= t('navbar.search') %></button>
         <%= link_to 'C-', destroy_user_session_path, method: :delete, class: 'ms-3 btn btn-outline-light' %> 
       </form>
   </div>
