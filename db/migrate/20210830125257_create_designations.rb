@@ -8,5 +8,6 @@ class CreateDesignations < ActiveRecord::Migration[6.0]
       t.bigint :department_id
       t.timestamps
     end
+    add_index designations, :company_id
   end
 end
