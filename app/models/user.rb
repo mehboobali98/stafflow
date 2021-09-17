@@ -7,9 +7,9 @@ class User < ApplicationRecord
   belongs_to :company
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
-  scope :role_id, ->(role_id) { where('role_id = ?', role_id) }
-  scope :department_id, ->(department_id) { where('department_id = ?', department_id) }
-  scope :members_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
+  scope :role_id, ->(role_id) { where(role_id: role_id) }
+  scope :department_id, ->(department_id) { where(department_id: department_id) }
+  scope :match_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
 

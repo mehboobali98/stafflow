@@ -7,7 +7,7 @@
   <div class='card-header mb-3 row'>
     <%= form_tag filtered_members_path, format: :js, method: :get, remote: true, id: 'filter_form' do %>
       <%= select_tag :department_id, options_for_select({dev: 1, hr: 2}), prompt: t('forms.labels.department'), class: 'form-control w-25 d-inline m-1' %>
-      <%= text_field_tag :members_name, '', class: 'form-control w-25 d-inline m-1', placeholder: t('forms.labels.name') %>
+      <%= text_field_tag :match_name, '', class: 'form-control w-25 d-inline m-1', placeholder: t('forms.labels.name') %>
       <%= select_tag :role_id, options_for_select(User::ROLES), prompt: t('forms.labels.role'), class: 'form-control w-25 d-inline m-1' %>
       <%= submit_tag t('forms.buttons.apply_filters'), remote: true, class: 'btn btn-dark d-inline' %>
       <%= submit_tag t('forms.buttons.reset_filters'), formaction: members_path, remote: true, class: 'btn btn-dark d-inline m-1' %>

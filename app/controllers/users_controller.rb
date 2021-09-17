@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource except: %i[index filters]
   has_scope :role_id
   has_scope :department_id
-  has_scope :members_name
+  has_scope :match_name
 
   # GET /members/new
   def new
