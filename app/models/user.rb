@@ -6,10 +6,6 @@ class User < ApplicationRecord
   has_many :user_leaves, dependent: :destroy
   has_many :leaves, through: :user_leaves
   has_many :applied_leaves, through: :user_leaves
-<<<<<<< HEAD
-=======
-
->>>>>>> fea4912d0482ba38c93dd25e1251fef4d9d1533f
   belongs_to :company
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true

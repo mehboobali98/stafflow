@@ -23,17 +23,11 @@ Rails.application.routes.draw do
       patch 'reject_leave', as: 'reject'
     end
   end
-<<<<<<< HEAD
-  as :user do
-    root to: 'devise/sessions#new'
-  end
-=======
 
   as :user do
     root to: 'devise/sessions#new'
   end
 
->>>>>>> fea4912d0482ba38c93dd25e1251fef4d9d1533f
   resources :settings, only: %i[update] do
     collection do
       get '/', to: 'settings#settings'
