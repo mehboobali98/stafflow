@@ -8,7 +8,7 @@
           <%= form.text_field :name, required: true, class: 'form-control' %>
         </div>
         <div>
-          <%= form.submit class: 'card-link btn btn-dark' %>
+          <%= form.submit local_assigns[:label_to_show], class: 'card-link btn btn-dark' %>
         </div>
       <% end %>
     </div>

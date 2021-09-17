@@ -41,7 +41,7 @@ class DesignationsController < ApplicationController
     respond_to do |format|
       format.html do
         if is_updated
-          redirect_to designations_path, notice: t('department.updated') 
+          redirect_to designations_path, notice: t('designation.updated') 
         else
           flash.now[:error] = @designation.errors.full_messages
           redirect_to designations_path
