@@ -3,22 +3,6 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
-<<<<<<< HEAD
-  devise_for :users, controllers: { registrations: 'users/registrations' }
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :benefits
-  resources :members, controller: 'users' do
-    resources :payrolls, :users_benefits
-  end
-  scope :admin do
-    resources :users
-    constraints(SubdomainValidator) do
-      root to: 'home#index'
-      get '/home', to: 'home#home'
-    end
-  end
-end
-=======
   as :user do
     root to: 'devise/sessions#new'
   end
@@ -43,8 +27,11 @@ end
     end
   end
 
+  resources :benefits
+  
   constraints subdomain: /^(?!www\Z)(\w+)/ do
-    resources :members, controller: 'users'
+    resources :members, controller: 'users' do
+      resources :payrolls, :users_benefits
+    end
   end
 end
->>>>>>> 25c25fc82487e45b9a5f9aed0a27677729b06065

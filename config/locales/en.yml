@@ -29,7 +29,6 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
-<<<<<<< HEAD
   payroll:
     table:
       amount: "Amount"
@@ -110,7 +109,6 @@ en:
       options: "Options"
     button:
       users_benefit: "Benefits"
-=======
   company:
     table_header:
       list: "Companies List"
@@ -120,42 +118,41 @@ en:
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
-    title: "Settings"    
+    title: "Settings"
   event:
     messages:
       success:
-        create_success: 'Event created successfully'
-        update_success: 'Event updated successfully'
-        delete_success: 'Event deleted successfully'
+        create_success: "Event created successfully"
+        update_success: "Event updated successfully"
+        delete_success: "Event deleted successfully"
       failure:
-        delete_failure: 'Unable to delete event'
+        delete_failure: "Unable to delete event"
       error:
-        event_year: 'cannot have more than 4 digits'
-        event_date: 'cannot be in the past'
-        nil_date_input: 'date cannot be empty'
-        invalid_date: 'is invalid'
-        event_not_found: 'Event with the given id does not exist'
+        event_year: "cannot have more than 4 digits"
+        event_date: "cannot be in the past"
+        nil_date_input: "date cannot be empty"
+        invalid_date: "is invalid"
+        event_not_found: "Event with the given id does not exist"
     forms:
       confirmation:
-        deletion: 'Are you sure?'
+        deletion: "Are you sure?"
       links:
-        create: 'Create'
-        edit: 'Edit'
-        delete: 'Delete'
-        view: 'View all'
-        show: 'Show'
+        create: "Create"
+        edit: "Edit"
+        delete: "Delete"
+        view: "View all"
+        show: "Show"
       headings:
-        show: 'Featured event'
-        add_event: 'Add event'
-        edit_event: 'Edit event'
-        name: 'Name'
-        starts_at: 'Starts at'
-        event: 'Event'
-        option: 'Options'
+        show: "Featured event"
+        add_event: "Add event"
+        edit_event: "Edit event"
+        name: "Name"
+        starts_at: "Starts at"
+        event: "Event"
+        option: "Options"
       labels:
-        event_name: 'Event name'
-        event_date: 'Event date'
-        event_time: 'Event time'
+        event_name: "Event name"
+        event_date: "Event date"
+        event_time: "Event time"
       placeholders:
-        event_name: 'Enter event name'
->>>>>>> 25c25fc82487e45b9a5f9aed0a27677729b06065
+        event_name: "Enter event name"
