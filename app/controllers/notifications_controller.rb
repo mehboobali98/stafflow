@@ -1,5 +1,6 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authorize_user
   PAGE_SIZE = 2 # Temporary line
 
   # GET /notifications
@@ -17,7 +18,7 @@ class NotificationsController < ApplicationController
 
   # GET /notifications/count
   def notifications_count
-    @count = current_user.notifications.unread.length
+    @count = current_user.notifications.unread.size
     respond_to do |format|
       format.json { render json: @count }
     end
@@ -25,8 +26,15 @@ class NotificationsController < ApplicationController
 
   # POST /notifications/read
   def mark_notifications_as_read
-    current_user.notifications.where(recipient_id: current_user.id).unread.where(id: params[:ids])
-                .update_all(status: Notification::STATUS[:read])
-    redirect_to notifications_url
+    current_user.notifications.unread.where(id: params[:ids]).update_all(status: Notification::STATUS[:read])
+    respond_to do |format|
+      format.html { redirect_to notifications_url, notice: t('notifications.markedread') }
+    end
+  end
+
+  private
+
+  def authorize_user
+    authorize! :read, current_user
   end
 end

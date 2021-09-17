@@ -34,3 +34,4 @@ en:
     title: 'Notifications'
     markread: 'Mark Read'
     selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
