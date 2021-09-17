@@ -31,3 +31,5 @@
 
 en:
   appname: "EMS"
+  company:
+    label: 'Company'
