@@ -5,7 +5,7 @@ class DesignationsController < ApplicationController
 
   # GET /designations
   def index
-    @designations = Designation.all
+    @designations = Designation.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -55,8 +55,11 @@ class DesignationsController < ApplicationController
     is_destroyed = @designation.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @designation.errors.full_messages unless is_destroyed
-        flash[:notice] = t('designation.destroy')
+        if is_destroyed
+          flash[:notice] = t('designation.destroy')
+        else
+          flash[:error] = @designation.errors.full_messages
+        end
         redirect_to designations_path
       end
     end

@@ -1,60 +1,68 @@
 <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
 
-<div class='card border-dark pb-3 text-center w-75'>
-  <h2 class='card-header'><%= I18n.t('headings.signup') %></h2>
-  <div class='card-body px-5'>
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-      <div class="field mb-2">
-        <%= f.label I18n.t('forms.labels.email') %><br />
-        <%= f.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
+<div class='row h-100 overflow-auto'>
+  <div class='col-lg-6 col-md-12 d-flex align-items-center justify-content-center'>
+    <div class='w-75'>
+      <h2><%= t('headings.signup') %></h2>
+      <hr>
+      <div>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+          <div class="form-floating mb-2">
+            <%= f.email_field :email, required: true, class: 'form-control', placeholder: t('forms.labels.email') %>
+            <%= f.label t('forms.labels.email') %>
+          </div>
+
+          <div class="form-floating mb-2">
+            <%= f.password_field :password, required: true, class: 'form-control', placeholder: t('forms.labels.password') %>
+            <%= f.label t('forms.labels.password') %>
+          </div>
+
+          <div class="form-floating mb-2">
+            <%= f.password_field :password_confirmation, required: true, class: 'form-control', placeholder: t('forms.labels.confirm_password') %>
+            <%= f.label t('forms.labels.confirm_password') %>
+          </div>
+
+          <div class="form-floating mb-2">
+            <%= f.text_field :first_name, required: true, class: 'form-control', placeholder: t('forms.labels.fname') %>
+            <%= f.label t('forms.labels.fname') %>
+          </div>
+
+          <div class="form-floating mb-2">
+            <%= f.text_field :last_name, required: true, class: 'form-control', placeholder: t('forms.labels.lname') %>
+            <%= f.label t('forms.labels.lname') %>
+          </div>
+
+          <div class="form-floating mb-2">
+            <%= f.date_field :date_of_birth, required: true, class: 'form-control', placeholder: t('forms.labels.date_of_birth') %>
+            <%= f.label t('forms.labels.dob') %>
+          </div>
+
+          <%= f.fields_for :company_attributes do |form| %>
+            <div class="form-floating mb-2">
+              <%= form.text_field :name, required: true, id: "company", class: 'form-control', placeholder: 'Company' %>
+              <%= form.label t('company.label') %>
+            </div>
+            <div class="field">
+              <%= form.text_field :subdomain, required: true, readonly: true, id: "subdomain", class: 'form-control d-none' %>
+            </div>
+          <%end%>
+          <div class='card mb-2 p-2 bg-light' id='subdomain_area'>
+            <p class='mb-0 text-muted'><%= t('forms.labels.portal_message') %></p>
+            <p class='mb-0'><%= portal_domain %></p>
+          </div>
+
+          <div class="actions">
+            <%= f.submit t('forms.buttons.signup'), class: 'btn btn-primary w-100 p-3' %>
+          </div>
+          <br>
+        <% end %>
+        <%= render "devise/shared/links" %>
       </div>
+    </div>
+  </div>
 
-      <div class="field mb-2">
-        <%= f.label I18n.t('forms.labels.password') %>
-        <% if @minimum_password_length %>
-        <em>(<%= @minimum_password_length %> characters minimum)</em>
-        <% end %><br />
-        <%= f.password_field :password, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      <div class="field mb-2">
-        <%= f.label I18n.t('forms.labels.confirm_password') %><br />
-        <%= f.password_field :password_confirmation, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      <div class="field mb-2">
-        <%= f.label I18n.t('forms.labels.fname') %><br />
-        <%= f.text_field :first_name, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      <div class="field mb-2">
-        <%= f.label I18n.t('forms.labels.lname') %><br />
-        <%= f.text_field :last_name, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      <div class="field mb-2">
-        <%= f.label I18n.t('forms.labels.dob') %><br />
-        <%= f.date_field :date_of_birth, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      <%= f.fields_for :company_attributes do |form|%>
-        <div class="field mb-2">
-          <%= form.label :Company %><br />
-          <%= form.text_field :name, required: true, id: "company", class: 'form-control pl-5 pr-5' %>
-        </div>
-        <div class="field mb-2">
-          <%= form.label :Subdomain %><br />
-          <%= form.text_field :subdomain, required: true, readonly: true , id: "subdomain", class: 'form-control pl-5 pr-5' %>
-        </div>
-      <%end%>
-
-      <div class="actions">
-        <%= f.submit I18n.t('forms.buttons.signup'), class: 'btn btn-dark' %>
-      </div>
-
-    <% end %>
-    <%= render "devise/shared/links" %>
+  <div class='col-lg-6 col-md-0 bg-primary d-flex align-items-center justify-content-center'>
+    <%= image_tag 'signup.svg' %>
   </div>
 </div>
-
