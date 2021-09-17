@@ -66,7 +66,7 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    @users = User.accessible_by(current_ability).paginate(page: params[:page], per_page: 2)
+    @users = User.accessible_by(current_ability).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
       format.js { render :filters }

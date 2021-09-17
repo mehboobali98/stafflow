@@ -11,7 +11,6 @@ class User < ApplicationRecord
   scope :department_id, ->(department_id) { where(department_id: department_id) }
   scope :match_users_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
 
-  ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   validates_uniqueness_of :email, scope: :company_id
   validates_presence_of :email
   validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
