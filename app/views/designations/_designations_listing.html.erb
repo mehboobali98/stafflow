@@ -9,7 +9,7 @@
       <th class="text-center" colspan="2"><%= t('designation.table_options') %></th>
     </thead>
     <tbody>
-      <% @designations.each do |designation| %>
+      <% designations.each do |designation| %>
         <tr>
           <td><%= designation.name %></td>
           <td><%= link_to t('designation.edit_btn_message'), edit_designation_path(designation), class: 'btn btn-secondary' %></td>

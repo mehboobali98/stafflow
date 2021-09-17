@@ -9,7 +9,7 @@
       <th class="text-center" colspan="2"><%= t('department.table_options') %></th>
     </thead>
     <tbody>
-      <% @departments.each do |department| %>
+      <% departments.each do |department| %>
         <tr>
           <td><%= department.name %></td>
           <td><%= link_to t('department.edit_btn_message'), edit_department_path(department), class: 'btn btn-secondary' if can?(:update, department) %></td>
