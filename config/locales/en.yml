@@ -29,6 +29,7 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+<<<<<<< HEAD
   leave:
     messages:
       name_error: 'Leave type name can only contain letters'
@@ -144,6 +145,18 @@ en:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
+=======
+  company:
+    table_header:
+      list: "Companies List"
+      name: "Company Name"
+      subdomain: "Subdomain"
+      options: "Options"
+  settings:
+    updated: "Settings were successfully updated"
+    not_updated: "Settings were not updated due to an error"
+    title: "Settings"    
+>>>>>>> cedf3d3847a4a0d9f3c9dc05eab2d8e2d8564e5c
   event:
     messages:
       success:
