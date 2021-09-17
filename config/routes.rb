@@ -3,6 +3,9 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
+  as :user do
+    root to: 'devise/sessions#new'
+  end
   resources :settings, only: %i[update] do
     collection do
       get '/', to: 'settings#settings'
@@ -13,9 +16,20 @@ Rails.application.routes.draw do
       get 'display_calendar'
     end
   end
-  resources :departments
-  resources :designations
 
-  resources :members, controller: 'users'
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
+  resources :home do
+    collection do
+      get :display_companies
+    end
+  end
+
+  constraints subdomain: /^(?!www\Z)(\w+)/ do
+    resources :members, controller: 'users'
+    resources :departments
+    resources :designations
+  end
 end

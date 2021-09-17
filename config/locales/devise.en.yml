@@ -79,6 +79,7 @@ en:
       unlock_account: "Unlock my account"
       resend_confirmation_instructions: "Resend"
       create: "Create"
+      search_company: "Search"
       details: "Details"
       delete: "Delete"
     labels:
@@ -130,3 +131,4 @@ en:
     edit_employee: "Edit Employee"
     all_employees: "All Employees"
     employee_profile: "Employee Profile"
+    search_company: "Search Your Company" 
