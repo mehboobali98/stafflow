@@ -54,10 +54,13 @@ class LeavesController < ApplicationController
     is_updated = @leave.update(leave_params)
     respond_to do |format|
       format.html do
-        return redirect_to leaves_path, notice: t('leave.messages.success.edit_success') if is_updated
-
-        flash.now[:error] = @leave.errors.full_messages
-        render :edit
+        if is_updated
+          flash[:notice] = t('leave.messages.success.edit_success')
+          redirect_to leaves_path
+        else
+          flash.now[:error] = @leave.errors.full_messages
+          render :edit
+        end
       end
     end
   end
