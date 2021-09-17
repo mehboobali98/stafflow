@@ -6,6 +6,16 @@ Rails.application.routes.draw do
   as :user do
     root to: 'devise/sessions#new'
   end
+  resources :settings, only: %i[update] do
+    collection do
+      get '/', to: 'settings#settings'
+    end
+  end
+  resources :events do
+    collection do
+      get 'display_calendar'
+    end
+  end
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
@@ -13,7 +23,7 @@ Rails.application.routes.draw do
   }
   resources :home do
     collection do
-      post :display_companies
+      get :display_companies
     end
   end
 
