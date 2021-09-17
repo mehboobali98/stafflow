@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   belongs_to :company
   belongs_to :department
+  belongs_to :designation
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   validates_uniqueness_of :email, scope: :company_id
