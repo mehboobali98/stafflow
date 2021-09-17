@@ -29,8 +29,8 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_saved
-          return redirect_to member_applied_leaves_path,
-                             notice: t('applied_leave.messages.leave_applied_success')
+          redirect_to member_applied_leaves_path,
+                      notice: t('applied_leave.messages.leave_applied_success')
         end
 
         flash.now[:error] = @applied_leave.errors.full_messages
@@ -51,8 +51,8 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_updated
-          return redirect_to member_applied_leaves_path(@user),
-                             notice: t('applied_leave.messages.leave_update_success')
+          redirect_to member_applied_leaves_path(@user),
+                      notice: t('applied_leave.messages.leave_update_success')
         end
 
         flash.now[:error] = @leave.errors.full_messages
@@ -86,12 +86,11 @@ class AppliedLeavesController < ApplicationController
   # PATCH  /applied_leaves/:id/approve_leave
   def approve_leave
     is_saved = @applied_leave.approve_applied_leave
-    binding.pry
     respond_to do |format|
       format.html do
         flash[:notice] = t('applied_leave.messages.leave_approve_success') if is_saved
         flash[:error] = t('applied_leave.messages.leave_approve_failure')
-        return redirect_to show_applied_leaves_path
+        redirect_to show_applied_leaves_path
       end
     end
   end
