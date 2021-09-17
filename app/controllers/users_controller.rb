@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  PAGE_SIZE = 2
+  before_action :authenticate_user!
   load_and_authorize_resource except: %i[index filters]
   has_scope :role_id
   has_scope :department_id
-  has_scope :match_name
+  has_scope :match_users_name
 
   # GET /members/new
   def new
