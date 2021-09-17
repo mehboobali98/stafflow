@@ -1,17 +1,18 @@
 <%= javascript_pack_tag 'navbar', 'data-turbolinks-track': 'reload' %>
-<nav class="navbar sticky-top navbar-light bg-secondary">
-  <div class="container-fluid">
-    <h2 class="ms-3 mt-2 text-white" href="#">KDB</h2>
-    <div class='d-flex justify-content-center align-items-center'>
-        <%= link_to notifications_path do %>
-        <div class='d-inline text-white p-3'>
-        <%= image_tag 'bell.svg', class: 'notification-icon text-white' %>
-        <div class='card-header bg-danger notification-counter d-inline'>
-          <span id='notifications_count'></span>
+<nav class='navbar navbar-icon-top navbar-expand-lg navbar-dark bg-primary'>
+  <div class='container-fluid p-3'>
+    <h1 class='navbar-brand'>KDB</h1>
+      <form class='d-flex'>
+        <div>
+          <%= link_to notifications_path, class: 'nav-item text-white me-5' do %>
+            <i class='fa fa-bell fa-lg'>
+              </i><span class='counter counter-lg border border-danger p-1 ms-1 bg-danger ps-2 pe-2' id='notifications_count'></span>
+            </i>
+          <% end %>
         </div>
-        </div>
-        <% end %>
-      <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'ms-3 btn btn-danger p-2' %> 
-    </div>
+        <input class='form-control me-2' type='search' placeholder='Search' aria-label='Search'>
+        <button class='btn btn-outline-light' type='submit'>Search</button>
+        <%= link_to 'C-', destroy_user_session_path, method: :delete, class: 'ms-3 btn btn-outline-light' %> 
+      </form>
   </div>
 </nav>
