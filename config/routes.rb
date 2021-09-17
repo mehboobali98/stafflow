@@ -8,7 +8,6 @@ Rails.application.routes.draw do
     resources :user_leaves
     resources :applied_leaves, except: :show
   end
-  root to: 'home#index'
   get '/home', to: 'home#home'
   resources :leaves
 
