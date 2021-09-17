@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DepartmentsController < ApplicationController
-  before_action :load_department, only: %I[edit update destroy]
+  before_action :load_department, only: %i[edit update destroy]
 
   # GET /departments
   def index
@@ -63,8 +63,10 @@ class DepartmentsController < ApplicationController
     is_destroyed = @department.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @department.errors.full_messages unless is_destroyed
-        flash[:notice] = t('department.destroy')
+        if is_destroyed
+          flash[:notice] = t('department.destroy')
+        else
+          flash[:error] = @department.errors.full_messages
         redirect_to departments_path
       end
     end

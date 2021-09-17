@@ -56,8 +56,10 @@ class DesignationsController < ApplicationController
     is_destroyed = @designation.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @designation.errors.full_messages unless is_destroyed
-        flash[:notice] = t('designation.destroy')
+        if is_destroyed
+          flash[:notice] = t('designation.destroy')
+        else
+          flash[:error] = @designation.errors.full_messages
         redirect_to designations_path
       end
     end
