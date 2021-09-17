@@ -1,1 +1,5 @@
 <%= render partial: 'departments_listing' %>
+<%= stylesheet_link_tag 'pagination' %>
+<div class="pagination-wrapper m-3">
+  <%= will_paginate @departments, container: false %>
+</div>
