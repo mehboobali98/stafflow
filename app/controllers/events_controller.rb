@@ -73,10 +73,9 @@ class EventsController < ApplicationController
   # DELETE /events/1
   def destroy
     @event.destroy
-    is_destroyed = @event.destroyed?
     respond_to do |format|
       format.html do
-        if is_destroyed
+        if @event.destroyed?
           flash[:notice] = t('event.messages.success.delete_success')
         else
           flash[:error] = @event.errors.full_messages

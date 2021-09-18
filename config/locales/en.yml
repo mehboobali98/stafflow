@@ -116,6 +116,7 @@ en:
         delete: 'Delete'
         view: 'View all'
         show: 'Show'
+        back: 'Back'
         view_calendar: ' View calendar'
       headings:
         show: 'Featured event'
