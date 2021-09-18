@@ -1,7 +1,8 @@
-<div class="container">
+<%= render partial: 'shared/leave_navbar' %>
+<div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-4">
-      <h1><%= local_assigns&.dig(:heading) %></h1>
+    <div class="col-md-6">
+      <h1><%= local_assigns[:heading] %></h1>
       <%= form_with model: leave, local: true, html: { class: 'card p-3 bg-light' } do |form| %>
         <div class="form-group mb-3">
           <%= form.label :name, t('leave.forms.labels.name'), class: 'text-grey-darkest' %>
@@ -9,7 +10,7 @@
         </div>
         <div class="form-group mb-3">
           <%= form.label :count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :count, in: VALID_RANGE, required: true, class: 'form-control', placeholder: t('leave.forms.placeholders.count') %>
+          <%= form.number_field :count, in: VALID_LEAVE_RANGE, required: true, class: 'form-control', step: LEAVE_COUNT_SCALE, placeholder: t('leave.forms.placeholders.count') %>
         </div>
         <div class="form-group mb-3">
           <%= form.submit class: 'card-link btn btn-primary' %>

@@ -68,10 +68,9 @@ class LeavesController < ApplicationController
   # DELETE /leaves/1
   def destroy
     @leave.destroy
-    is_destroyed = @leave.destroyed?
     respond_to do |format|
       format.html do
-        if is_destroyed
+        if @leave.destroyed?
           flash[:notice] = t('leave.messages.success.delete_success')
         else
           flash[:error] = @leave.errors.full_messages
@@ -85,8 +84,8 @@ class LeavesController < ApplicationController
 
   def set_leave
     @leave = Leave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('leave.messages.record_error')
     redirect_to leaves_path
   end
 

@@ -29,10 +29,14 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  common:
+    back: "Back"
   leave:
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'
+      record_error: 'Leave with the given id does not exist'
+      duplicate_error: 'Leave with the given name already exists'
       success:
         create_success: 'Leave created succcessfully'
         edit_success: 'Leave edited succcessfully'
@@ -248,7 +252,6 @@ en:
         event_date: 'Event date'
         event_time: 'Event time'
       placeholders:
-        event_name: 'Enter event name'
         event_name: 'Enter event name'
     simple_calendar:
       invalid_date: "Date is invalid"
