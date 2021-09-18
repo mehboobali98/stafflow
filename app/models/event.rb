@@ -7,6 +7,7 @@ class Event < ApplicationRecord
   scope :events_in_a_month, ->(month) { where('extract(month from starts_at) = ?', month) }
 
   def self.get_events_in_a_month(month)
+    binding.pry
     Event.events_in_a_month(month)
   end
 

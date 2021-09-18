@@ -15,6 +15,6 @@ module EventsHelper
   end
 
   def truncate_event_name(name)
-    name.truncate(15)
+    name.truncate(TRUNCATE_LENGTH)
   end
 end
