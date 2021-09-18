@@ -3,7 +3,7 @@ $(document).ready(function() {
     let eventDate = $("#event_date").val();
     if (validateDateFormat(eventDate) && validateDateYear(eventDate)) {
       return true;
-    }else{
+    } else {
       alert("Invalid event date")
       return false;
     }
