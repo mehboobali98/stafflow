@@ -133,7 +133,4 @@ en:
       placeholders:
         event_name: 'Enter event name'
     simple_calendar:
-      previous: "<"
-      next: ">"
-      plus: "+"
       invalid_date: "Date is invalid"
