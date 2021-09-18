@@ -2,7 +2,7 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_event, only: %i[show edit update destroy]
-  before_action :set_events, only: %i[index]
+  before_action :set_events, only: %i[index display_calendar]
 
   # GET /events
   def index
@@ -21,6 +21,8 @@ class EventsController < ApplicationController
   # GET /events/new
   def new
     @event = Event.new
+    @options = params.slice(:event_date)
+    @event_date = params[:event_date]
     respond_to do |format|
       format.html
     end
@@ -88,7 +90,7 @@ class EventsController < ApplicationController
   # GET /events/display_calendar
   def display_calendar
     @start_date = event_calendar_start_date
-    @events = Event.events_in_a_month(@start_date)
+    @events = @events.events_in_a_month(@start_date)
     respond_to do |format|
       format.html
       format.js
