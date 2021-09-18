@@ -4,11 +4,9 @@
 class Event < ApplicationRecord
   validates :name, presence: true
   validate :validate_past_event_date, on: :create
-  scope :events_in_a_month, ->(month) { where('extract(month from starts_at) = ?', month) }
 
-  def self.get_events_in_a_month(month)
-    binding.pry
-    Event.events_in_a_month(month)
+  def self.events_in_a_month(date)
+    Event.where(starts_at: date.beginning_of_month..date.end_of_month)
   end
 
   def validate_event_year(event_date)
