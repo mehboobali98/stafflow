@@ -22,7 +22,10 @@ class AppliedLeavesController < ApplicationController
 
   # POST   /members/:member_id/applied_leaves
   def create
-    @applied_leave = AppliedLeave.new(applied_leave_params)
+    binding.pry
+    #@applied_leave = AppliedLeave.new(applied_leave_params)
+    @applied_leave = @user.applied_leaves.build(applied_leave_params)
+    binding.pry
     @applied_leave.user_id = @user.id
     @applied_leave.leave_id = @user.user_leaves.where(id: applied_leave_params[:user_leave_id]).pluck(:leave_id).first
     is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_count_available?
