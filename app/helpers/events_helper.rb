@@ -18,6 +18,12 @@ module EventsHelper
     date.to_date
   end
 
+  def set_event_date(date, params)
+    return params[:event_date] if params.key?(:event_date)
+
+    extract_date(date)
+  end
+
   def truncate_event_name(name)
     name.truncate(TRUNCATE_LENGTH)
   end

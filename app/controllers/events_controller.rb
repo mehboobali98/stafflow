@@ -89,7 +89,6 @@ class EventsController < ApplicationController
   def display_calendar
     @start_date = event_calendar_start_date
     @events = Event.events_in_a_month(@start_date)
-    binding.pry
     respond_to do |format|
       format.html
       format.js
