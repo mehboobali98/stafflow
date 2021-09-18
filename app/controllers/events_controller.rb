@@ -28,12 +28,10 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
-    binding.pry
     if @event.validate_event_year(event_params[:event_date])
       set_event(@event)
       is_saved = @event.save
     end
-    binding.pry
     respond_to do |format|
       format.html do
         if is_saved
