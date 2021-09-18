@@ -8,15 +8,15 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'sidebar' %>
     <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
     <div class="row body-wrapper">
-      <div class="col-sm-3 sidebar-wrapper">
+      <div class="col-sm-2 sidebar-wrapper">
         <%= render partial: "layouts/sidebar" %>
       </div>
       <div class="col-sm-9">
         <%= render partial: "shared/flash_message" %>
+        <%= render_breadcrumbs %>
         <%= yield %>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card text-center">
         <div class="card-header">
           <%= t('event.forms.headings.show') %>
@@ -11,9 +11,10 @@
         </div>
         <div class="card-footer">
           <%= link_to t('event.forms.links.edit'), edit_event_path(@event), class: 'btn btn-secondary' if can?(:edit, @event) %>
-          <%= link_to t('event.forms.links.delete'), event_path(@event), class: 'btn btn-danger',
-                  method: :delete, data: { confirm: t('event.forms.links.confirmation.deletion') } if can?(:delete, @event) %>
-          <%= link_to t('event.forms.links.view'), events_path, class: 'btn btn-outline-primary' if can?(:index, @event) %>
+          <%= link_to t('event.forms.links.delete'), event_path(@event), class: 'btn btn-danger', method: :delete, data: { confirm: t('event.forms.links.confirmation.deletion') } if can?(:delete, @event) %>
+          <%= link_to t('event.forms.links.view'), events_path, class: 'btn btn-outline-primary'  %>
+          method: :delete, data: { confirm: t('event.forms.links.confirmation.deletion') } %>
+          <%= link_to t('event.forms.links.back'), :back, class: 'btn btn-outline-primary' if can?(:index, @event) %>
         </div>
       </div>
     </div>

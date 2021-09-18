@@ -1,32 +1,5 @@
-<div class="card border-dark pb-3 text-center w-75">
-
-<h2 class="card-header"><%= I18n.t 'headings.signin' %></h2>
-
-  <div class="card-body px-5">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <div class="field mb-2">
-        <%= f.label I18n.t 'forms.labels.email', class: 'form-label' %><br />
-        <%= f.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-      
-      <div class="field mb-2">
-        <%= f.label I18n.t 'forms.labels.password' %><br />
-        <%= f.password_field :password, required: true, class: 'form-control pl-5 pr-5' %>
-      </div>
-
-      <% if devise_mapping.rememberable? %>
-        <div class="field mb-2">
-          <%= f.check_box :remember_me, class: 'form-check-input' %>
-          <%= f.label I18n.t 'forms.labels.remember_me' %>
-        </div>
-      <% end %>
-
-      <div class="actions">
-        <%= f.submit I18n.t('forms.buttons.signin'), class: 'btn btn-primary' %>
-      </div>
-    <% end %>
-
-    <%= render "devise/shared/links" %>
-  </div>
-
-</div>
+<% if !sub_domain?(request) %>
+  <%= render partial: "find_by_email" %>
+<% else %>
+  <%= render partial: 'sign_in' %>
+<% end %>

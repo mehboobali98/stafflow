@@ -1,19 +1,19 @@
 <%= javascript_pack_tag "event" %>
-<div class="container">
+<div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-4">
+    <div class="col-md-6">
       <h1><%= local_assigns[:heading] %></h1>
       <%= form_with model: @event, id: 'event_form',local: true, html: { class: 'card p-3 bg-light' } do |form| %>
         <div class="form-group mb-3">
           <%= form.label :name, t('event.forms.labels.event_name') %>
-          <%= form.text_field :name, required: true, class: 'form-control', placeholder: t('event.forms.placeholders.event_name') %>
+          <%= form.text_field :name, required: true, class: 'form-control',placeholder: t('event.forms.placeholders.event_name') %>
         </div>
-        <div class="input-group mb-3 row">
-          <div class="col-md-6">
+        <div class="d-flex flex-row justify-content-between mb-3">
+          <div class="w-50">
             <%= form.label :event_date, t('event.forms.labels.event_date') %>
-            <%= form.date_field :event_date, id: 'event_date', value: extract_date(@event.starts_at), required: true, class: "form-control" %>
+            <%= form.date_field :event_date, id: 'event_date', value: set_event_date(@event.starts_at, params), required: true, class: "form-control" %>
           </div>
-          <div class="col-md-6">
+          <div class="w-50">
             <%= form.label :event_time, t('event.forms.labels.event_time') %>
             <%= form.time_field :event_time, value: extract_time(@event.starts_at), required: true, class: "form-control" %>
           </div>

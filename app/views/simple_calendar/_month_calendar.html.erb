@@ -1,8 +1,12 @@
 <div class="simple-calendar container-fluid">
   <div class="calendar-heading d-flex flex-row justify-content-between">
-    <%= link_to t('event.simple_calendar.previous'), calendar.url_for_previous_view, class: 'btn btn-outline-dark my-2', remote: true %>
+    <%= link_to calendar.url_for_previous_view, class: 'btn btn-outline-dark my-2', remote: true do %>
+      <i class="fas fa-chevron-left"></i>
+    <% end %>
     <span class="calendar-title font-weight-bold my-2"><u><%= t('date.month_names')[@start_date.month] %> <%= @start_date.year %></u></span>
-    <%= link_to t('event.simple_calendar.next'), calendar.url_for_next_view, class: 'btn btn-outline-dark my-2', remote: true %>
+    <%= link_to calendar.url_for_next_view, class: 'btn btn-outline-dark my-2', remote: true do %>
+      <i class="fas fa-chevron-right"></i>
+    <% end %>
   </div>
   <table class="table">
     <thead>
@@ -17,7 +21,7 @@
         <tr>
           <% week.each do |day| %>
             <%= content_tag :td, class: calendar.td_classes_for(day) do %>
-              <div class="text-sm text-grey-darker"><% passed_block.call day, sorted_events.fetch(day, []) %></dive>
+              <div class="text-sm text-grey-darker"><% passed_block.call day, sorted_events.fetch(day, []) %></div>
             <% end %>
           <% end %>
         </tr>

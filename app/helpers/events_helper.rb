@@ -7,14 +7,24 @@ module EventsHelper
   end
 
   def extract_time(date)
-    date&.strftime('%H:%M')
+    return Time.now.strftime('%H:%M') if date.nil?
+
+    date.strftime('%H:%M')
   end
 
   def extract_date(date)
-    date&.to_date
+    return Date.today if date.nil?
+
+    date.to_date
+  end
+
+  def set_event_date(date, params)
+    return params[:event_date] if params.key?(:event_date)
+
+    extract_date(date)
   end
 
   def truncate_event_name(name)
-    name.truncate(15)
+    name.truncate(TRUNCATE_LENGTH)
   end
 end
