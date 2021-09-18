@@ -21,7 +21,6 @@ class EventsController < ApplicationController
   # GET /events/new
   def new
     @event = Event.new
-    @options = params.slice(:event_date)
     @event_date = params[:event_date]
     respond_to do |format|
       format.html
