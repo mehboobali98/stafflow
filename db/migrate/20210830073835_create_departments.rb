@@ -7,6 +7,6 @@ class CreateDepartments < ActiveRecord::Migration[6.0]
       t.bigint :company_id
       t.timestamps
     end
-    add_index departments, :company_id
+    add_index :departments, :company_id
   end
 end
