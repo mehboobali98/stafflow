@@ -3,7 +3,6 @@
 # Events Controller
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  skip_load_resource only: :create
   load_and_authorize_resource
 
   # GET /events
@@ -30,9 +29,8 @@ class EventsController < ApplicationController
   # POST /events
   def create
     binding.pry
-    if @event.validate_event_year(event_date)
+    if @event.validate_event_year(event_params[:event_date])
       set_event(@event)
-      binding.pry
       is_saved = @event.save
     end
     binding.pry
@@ -57,7 +55,8 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    if @event.validate_event_year(event_date)
+    binding.pry
+    if @event.validate_event_year(event_params[:event_date])
       set_event(@event)
       is_saved = @event.save
     end
@@ -108,8 +107,8 @@ class EventsController < ApplicationController
   end
 
   def set_event(event)
-    event.name = event_params[:event_name].to_s
-    event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"
+    event.name = event_params[:name]
+    event.starts_at = "#{event_params[:event_params[:event_date]]} #{event_params[:event_time]}"
   end
 
   def event_calendar_start_date
@@ -120,12 +119,13 @@ class EventsController < ApplicationController
     flash[:error] = t('event.simple_calendar.invalid_date')
   end
 
-  def event_params
-    params.require(:event).permit(:name, :event_date, :event_time)
+  def create_params
+    binding.pry
+    params.require(:event).permit(:name)
   end
 
-  def event_date
+  def event_params
     binding.pry
-    event_params[:event_date]
+    params.require(:event).permit(:name, :event_date, :event_time)
   end
 end
