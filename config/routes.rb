@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :notifications, only: %i[destroy] do
     collection do
       get '/', to: 'notifications#fetch_user_notifications'
-      post '/read', to: 'notifications#mark_notifications_as_read'
+      post '/read', to: 'notifications#mark_as_read'
       get '/count', to: 'notifications#notifications_count'
     end
   end
