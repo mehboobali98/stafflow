@@ -5,6 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :confirmable
 
   belongs_to :company
+  belongs_to :department
+  belongs_to :designation
   accepts_nested_attributes_for :company
   has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true

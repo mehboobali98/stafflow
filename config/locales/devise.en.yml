@@ -79,7 +79,7 @@ en:
       unlock_account: "Unlock my account"
       resend_confirmation_instructions: "Resend"
       create: "Create"
-      search_company: "Search"
+      search_company: "Continue"
       details: "Details"
       delete: "Delete"
     labels:
@@ -94,6 +94,11 @@ en:
       role: "Role"
       salary: "Salary"
       full_name: "Full Name"
+      portal_message: "Your portal will be live at"
+      already_registered: "Already have an Account"
+      forgot_password: "Forgot your password"
+      no_confirmation_received: "Didnt receive confirmation email?"
+      sign_in_with: "Sign In with:"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to %{email}"
