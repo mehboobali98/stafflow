@@ -4,7 +4,7 @@
     <td><%= applied_leave.user.email %></td>
     <td><%= applied_leave.leave.name %></td>
     <td><%= applied_leave.leave_duration_name_from_id.to_s.humanize %></td>
-    <td><%= applied_leave.applied_at %></td>
+    <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
     <td><%= applied_leave.state.humanize %></td>
     <td><%= link_to t('applied_leave.links.approve'), approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-success' %></td>

@@ -10,8 +10,8 @@
       <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION.transform_keys{ |key| key.to_s.humanize }), {}, class: "form-control" %>
     </div>
     <div class="form mb-4">
-      <%= form.label :applied_at, t('applied_leave.labels.leave_from'), class: "form-label" %>
-      <%= form.date_field :applied_at, required: true, class: "form-control" %>
+      <%= form.label :applied_from, t('applied_leave.labels.leave_from'), class: "form-label" %>
+      <%= form.date_field :applied_from, required: true, class: "form-control" %>
     </div>
     <div class="form mb-4">
       <%= form.label :applied_till, t('applied_leave.labels.leave_to'), class: "form-label" %>

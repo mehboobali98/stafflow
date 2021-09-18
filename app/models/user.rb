@@ -5,11 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable
   has_many :user_leaves, dependent: :destroy
   has_many :leaves, through: :user_leaves
-  has_many :applied_leaves, through: :user_leaves
+  has_many :applied_leaves
 
   belongs_to :company
-  belongs_to :department
-  belongs_to :designation
+  belongs_to :department, optional: true
+  belongs_to :designation, optional: true
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   validates_uniqueness_of :email, scope: :company_id

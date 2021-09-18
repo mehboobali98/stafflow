@@ -10,7 +10,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     company = Company.new(company_permitted_parameters)
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
     @user.role_id = User::ROLES[:account_owner]
-    is_saved = company.save
+    is_saved = company.save(validate: false)
 
     respond_to do |format|
       if is_saved

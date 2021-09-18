@@ -13,7 +13,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET    /members/:member_id/applied_leaves/new
   def new
-    @user_leaves = UserLeave.get_user_leaves(@user.id)
+    @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
@@ -22,12 +22,8 @@ class AppliedLeavesController < ApplicationController
 
   # POST   /members/:member_id/applied_leaves
   def create
-    binding.pry
-    #@applied_leave = AppliedLeave.new(applied_leave_params)
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    binding.pry
-    @applied_leave.user_id = @user.id
-    @applied_leave.leave_id = @user.user_leaves.where(id: applied_leave_params[:user_leave_id]).pluck(:leave_id).first
+    @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
     is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_count_available?
     respond_to do |format|
       format.html do
@@ -68,10 +64,9 @@ class AppliedLeavesController < ApplicationController
   # DELETE /members/:member_id/applied_leaves/:id
   def destroy
     @applied_leave.destroy
-    is_destroyed = @applied_leave.destroyed?
     respond_to do |format|
       format.html do
-        if is_destroyed
+        if @applied_leave.destroyed?
           flash[:notice] = t('applied_leave.messages.leave_delete_success')
         else
           flash[:error] = @applied_leave.errors.full_messages
@@ -91,10 +86,10 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH  /applied_leaves/:id/approve_leave
   def approve_leave
-    is_saved = @applied_leave.approve_applied_leave
+    is_approved = @applied_leave.approve_applied_leave
     respond_to do |format|
       format.html do
-        if is_saved
+        if is_approved
           flash[:notice] = t('applied_leave.messages.leave_approve_success')
         else
           flash[:error] = t('applied_leave.messages.leave_approve_failure')
@@ -106,10 +101,10 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH  /applied_leaves/:id/reject_leave
   def reject_leave
-    is_saved = @applied_leave.reject_applied_leave
+    is_rejected = @applied_leave.reject_applied_leave
     respond_to do |format|
       format.html do
-        if is_saved
+        if is_rejected
           flash[:notice] = t('applied_leave.messages.leave_reject_success')
         else
           flash[:error] = t('applied_leave.messages.leave_reject_failure')
@@ -152,7 +147,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   def applied_leave_params
-    params.require(:applied_leave).permit(:user_leave_id, :applied_at, :applied_till, :leave_duration_id)
+    params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_id)
   end
 
   def multiple_leave_params

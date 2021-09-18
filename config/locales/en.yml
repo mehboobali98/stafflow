@@ -31,6 +31,7 @@
 en:
   common:
     back: "Back"
+    user_not_found: "User with the given id does not exist"
   leave:
     messages:
       name_error: 'Leave type name can only contain letters'
@@ -65,14 +66,21 @@ en:
   user_leave:
     messages:
       success:
-        create_success: 'User leaves(s) created succcessfully'
+        create: 'User leave(s) created succcessfully'
         update: 'User leave updated succcessfully'
         delete: 'User leave deleted succcessfully'
       failure:
-        create_failure: 'User leave(s) not created'
+        create: 'User leave(s) not created'
         total_leave_count: 'must be greater than remaining leave count'
+        duplicate_error: 'User leave already exists'
+        not_found: 'User leave with the given id does not exist'
+      info:
+        no_leave_remaining: 'User has already been assigned all the leaves'
       confirmation:
         delete: 'Are you sure?'
+    placeholders:
+      total_count: 'Total count'
+      remaining_count: 'Remaining count'
     headings:
       leave_type: 'Leave type'
       leave_count: 'Leave count'

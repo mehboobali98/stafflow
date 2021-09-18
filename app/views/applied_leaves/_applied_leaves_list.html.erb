@@ -1,7 +1,7 @@
 <% applied_leaves.each do |applied_leave| %>
   <tr>
-    <td><%= applied_leave.leave&.name %></td>
-    <td><%= applied_leave.applied_at %></td>
+    <td><%= applied_leave.leave.name %></td>
+    <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
     <td><%= applied_leave.state %></td>
     <td><%= link_to t('applied_leave.links.edit'), edit_member_applied_leave_path(@user, applied_leave), class: 'btn btn-secondary' if applied_leave.pending? %></td>
