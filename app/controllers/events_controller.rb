@@ -53,7 +53,6 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    binding.pry
     if @event.validate_event_year(event_params[:event_date])
       set_event(@event)
       is_saved = @event.save
@@ -106,7 +105,7 @@ class EventsController < ApplicationController
 
   def set_event(event)
     event.name = event_params[:name]
-    event.starts_at = "#{event_params[:event_params[:event_date]]} #{event_params[:event_time]}"
+    event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"
   end
 
   def event_calendar_start_date
@@ -118,12 +117,10 @@ class EventsController < ApplicationController
   end
 
   def create_params
-    binding.pry
     params.require(:event).permit(:name)
   end
 
   def event_params
-    binding.pry
     params.require(:event).permit(:name, :event_date, :event_time)
   end
 end
