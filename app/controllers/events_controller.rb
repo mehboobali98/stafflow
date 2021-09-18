@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 # Events Controller
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: %i[show edit update destroy]
-  before_action :set_events, only: %i[index display_calendar]
+  load_and_authorize_resource
 
   # GET /events
   def index
@@ -20,7 +21,6 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    @event = Event.new
     @event_date = params[:event_date]
     respond_to do |format|
       format.html
@@ -29,9 +29,8 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
-    @event = Event.new
-    if @event.validate_event_year(event_date)
-      set_event_fields(@event)
+    if @event.validate_event_year(event_params[:event_date])
+      set_event(@event)
       is_saved = @event.save
     end
     respond_to do |format|
@@ -55,8 +54,8 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    if @event.validate_event_year(event_date)
-      set_event_fields(@event)
+    if @event.validate_event_year(event_params[:event_date])
+      set_event(@event)
       is_saved = @event.save
     end
     respond_to do |format|
@@ -105,11 +104,7 @@ class EventsController < ApplicationController
     redirect_to events_path
   end
 
-  def set_events
-    @events = Event.all
-  end
-
-  def set_event_fields(event)
+  def set_event(event)
     event.name = event_params[:name]
     event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"
   end
@@ -122,11 +117,11 @@ class EventsController < ApplicationController
     flash[:error] = t('event.simple_calendar.invalid_date')
   end
 
-  def event_params
-    params.require(:event).permit(:name, :event_date, :event_time)
+  def create_params
+    params.require(:event).permit(:name)
   end
 
-  def event_date
-    event_params[:event_date]
+  def event_params
+    params.require(:event).permit(:name, :event_date, :event_time)
   end
 end
