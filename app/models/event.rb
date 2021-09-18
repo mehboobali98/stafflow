@@ -6,7 +6,7 @@ class Event < ApplicationRecord
   validate :validate_past_event_date, on: :create
 
   def self.events_in_a_month(date)
-    where(starts_at: date.beginning_of_month..date.end_of_month)
+    where(starts_at: date.beginning_of_month..date.next_month.prev_day)
   end
 
   def validate_event_year(event_date)

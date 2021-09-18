@@ -21,6 +21,7 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
+    @event_date = params[:event_date]
     respond_to do |format|
       format.html
     end

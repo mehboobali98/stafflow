@@ -11,7 +11,7 @@
         <div class="d-flex flex-row justify-content-between mb-3">
           <div class="w-50">
             <%= form.label :event_date, t('event.forms.labels.event_date') %>
-            <%= form.date_field :event_date, id: 'event_date', value: set_event_date(@event.starts_at, params), required: true, class: "form-control" %>
+            <%= form.date_field :event_date, id: 'event_date', value: set_event_date(@event.starts_at, local_assigns[:event_date]), required: true, class: "form-control" %>
           </div>
           <div class="w-50">
             <%= form.label :event_time, t('event.forms.labels.event_time') %>
