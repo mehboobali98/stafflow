@@ -76,8 +76,11 @@ class EventsController < ApplicationController
     is_destroyed = @event.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @event.errors.full_messages unless is_destroyed
-        flash[:notice] = t('event.messages.success.delete_success')
+        if is_destroyed
+          flash[:notice] = t('event.messages.success.delete_success')
+        else
+          flash[:error] = @event.errors.full_messages
+        end
         redirect_to events_path
       end
     end
@@ -113,19 +116,15 @@ class EventsController < ApplicationController
   end
 
   def event_calendar_start_date
-    return Date.today if event_calendar_params[:start_date].nil?
+    return Date.today if params[:start_date].nil?
 
-    Date.parse(event_calendar_params[:start_date])
+    Date.parse(params[:start_date])
   rescue Date::Error
     flash[:error] = t('event.simple_calendar.invalid_date')
   end
 
   def event_params
     params.require(:event).permit(:name, :event_date, :event_time)
-  end
-
-  def event_calendar_params
-    params.permit(:start_date)
   end
 
   def event_date
