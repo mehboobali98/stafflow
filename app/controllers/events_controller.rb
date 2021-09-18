@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # Events Controller
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  load_resource except: %i[display_calendar create]
-  authorize_resource
+  skip_load_resource only: :create
+  load_and_authorize_resource
 
   # GET /events
   def index
@@ -27,11 +29,13 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
-    @event = Event.new
+    binding.pry
     if @event.validate_event_year(event_date)
-      set_event_fields(@event)
+      set_event(@event)
+      binding.pry
       is_saved = @event.save
     end
+    binding.pry
     respond_to do |format|
       format.html do
         if is_saved
@@ -54,7 +58,7 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   def update
     if @event.validate_event_year(event_date)
-      set_event_fields(@event)
+      set_event(@event)
       is_saved = @event.save
     end
     respond_to do |format|
@@ -87,7 +91,7 @@ class EventsController < ApplicationController
   # GET /events/display_calendar
   def display_calendar
     @start_date = event_calendar_start_date
-    @events = Event.events_in_a_month(@start_date)
+    @events = @events.events_in_a_month(@start_date)
     respond_to do |format|
       format.html
       format.js
@@ -103,8 +107,8 @@ class EventsController < ApplicationController
     redirect_to events_path
   end
 
-  def set_event_fields(event)
-    event.name = event_params[:name]
+  def set_event(event)
+    event.name = event_params[:event_name].to_s
     event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"
   end
 
@@ -121,6 +125,7 @@ class EventsController < ApplicationController
   end
 
   def event_date
+    binding.pry
     event_params[:event_date]
   end
 end
