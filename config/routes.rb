@@ -12,15 +12,12 @@ Rails.application.routes.draw do
       get '/', to: 'settings#settings'
     end
   end
-  resources :events do
-    collection do
-      get 'display_calendar'
-    end
-  end
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    passwords: 'users/passwords',
+    confirmations: 'users/confirmations'
   }
 
   resources :home do
@@ -31,5 +28,12 @@ Rails.application.routes.draw do
 
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :members, controller: 'users'
+    resources :departments
+    resources :designations
+    resources :events do
+      collection do
+        get 'display_calendar'
+      end
+    end
   end
 end
