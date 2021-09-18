@@ -3,9 +3,11 @@
 require_relative('concerns/user_abilities')
 require_relative('concerns/settings_abilities')
 
+# ability class
 class Ability
   include CanCan::Ability
   include UserAbilities
+  include EventAbilities
   include DepartmentAbilities
   include DesignationAbilities
   include SettingsAbilities
@@ -14,6 +16,7 @@ class Ability
     return if user.blank?
 
     define_user_abilities(user)
+    define_event_abilities(user)
     define_department_abilities(user)
     define_designation_abilities(user)
     define_setting_abilities(user)

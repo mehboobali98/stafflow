@@ -116,6 +116,8 @@ en:
         delete: 'Delete'
         view: 'View all'
         show: 'Show'
+        back: 'Back'
+        view_calendar: ' View calendar'
       headings:
         show: 'Featured event'
         add_event: 'Add event'
@@ -130,3 +132,5 @@ en:
         event_time: 'Event time'
       placeholders:
         event_name: 'Enter event name'
+    simple_calendar:
+      invalid_date: "Date is invalid"
