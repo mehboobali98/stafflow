@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource except: %i[index filters]
+  load_and_authorize_resource
   has_scope :role_id
   has_scope :department_id
   has_scope :match_users_name
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    @users = apply_scopes(User).accessible_by(current_ability).paginate(page: params[:page], per_page: PAGE_SIZE)
+    @users = apply_scopes(@users).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
       format.js
