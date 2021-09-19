@@ -17,11 +17,7 @@ class AppliedLeave < ApplicationRecord
     number_of_days = week_days_in_date_range(applied_from..applied_till)
     return number_of_days if leave_duration_name_from_id.eql?(:full_day)
 
-    number_of_days / 2 unless number_of_days.nil?
-  end
-
-  def week_days_in_date_range(date_range)
-    date_range.select { |day| (1..5).include?(day.wday) }.size
+    number_of_days / 2.0
   end
 
   def leave_count_available?
@@ -29,10 +25,6 @@ class AppliedLeave < ApplicationRecord
 
     errors.add(:leave_count, I18n.t('applied_leave.messages.error.leave_count'))
     false
-  end
-
-  def update_remaining_leave_count(leave_count)
-    user_leave.remaining_count -= leave_count
   end
 
   def approve_applied_leave
@@ -61,19 +53,9 @@ class AppliedLeave < ApplicationRecord
     validate_date_year(applied_from) && validate_date_year(applied_till)
   end
 
-  def validate_date_year(leave_date)
-    return true unless Date.parse(leave_date.to_s).year.to_s.length > 4
-
-    errors.add(:leave_date_year, I18n.t('applied_leave.messages.error.leave_date_year'))
-    false
-  rescue Date::Error => e
-    errors.add(e.message)
-    false
-  end
-
   def self.approve_multiple_applied_leaves(applied_leave_ids)
-    applied_leave_ids.each do |leave_id|
-      applied_leave = find(leave_id)
+    applied_leave_ids.each do |applied_leave_id|
+      applied_leave = find(applied_leave_id)
       applied_leave.approve_applied_leave
     rescue ActiveRecord::RecordNotFound
       nil
@@ -81,8 +63,8 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.reject_multiple_applied_leaves(applied_leave_ids)
-    applied_leave_ids.each do |leave_id|
-      applied_leave = find(leave_id)
+    applied_leave_ids.each do |applied_leave_id|
+      applied_leave = find(applied_leave_id)
       applied_leave.reject_applied_leave
     rescue ActiveRecord::RecordNotFound
       nil
@@ -104,7 +86,7 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.get_filtered_records(filter)
-    return all if filter.empty?
+    return all if filter.empty? && filter_exists?(filter)
 
     where(state: filter)
   end
@@ -124,5 +106,31 @@ class AppliedLeave < ApplicationRecord
     event :request_rejected do
       transitions to: :rejected, from: :pending
     end
+  end
+
+  private
+
+  def update_remaining_leave_count(leave_count)
+    user_leave.remaining_count -= leave_count
+  end
+
+  def week_days_in_date_range(date_range)
+    date_range.select { |day| (1..5).include?(day.wday) }.size
+  end
+
+  def filter_exists?(filter)
+    return true if filter.to_sym.in?(available_states)
+
+    false
+  end
+
+  def validate_date_year(leave_date)
+    return true unless Date.parse(leave_date.to_s).year.to_s.length > 4
+
+    errors.add(:leave_date_year, I18n.t('applied_leave.messages.error.leave_date_year'))
+    false
+  rescue Date::Error => e
+    errors.add(e.message)
+    false
   end
 end

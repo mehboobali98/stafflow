@@ -30,11 +30,14 @@ class AppliedLeavesController < ApplicationController
         if is_saved
           redirect_to member_applied_leaves_path,
                       notice: t('applied_leave.messages.leave_applied_success')
+        else
+          binding.pry
+          flash.now[:error] = @applied_leave.errors.full_messages
+          @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
+            'remaining_count > ?', 0
+          )
+          render :new
         end
-
-        flash.now[:error] = @applied_leave.errors.full_messages
-        @user_leaves = UserLeave.get_user_leaves(@user.id)
-        render :new
       end
     end
   end
@@ -55,7 +58,9 @@ class AppliedLeavesController < ApplicationController
         end
 
         flash.now[:error] = @leave.errors.full_messages
-        @user_leaves = UserLeave.get_user_leaves(current_user.id)
+        @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
+          'remaining_count > ?', 0
+        )
         render :edit
       end
     end
