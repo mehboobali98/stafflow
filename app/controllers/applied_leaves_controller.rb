@@ -3,7 +3,7 @@ class AppliedLeavesController < ApplicationController
   before_action :set_user, only: %i[index new create edit update destroy]
   before_action :set_applied_leave, only: %i[show edit update destroy approve_leave reject_leave]
 
-  # GET    /members/:member_id/applied_leaves
+  # GET /members/:member_id/applied_leaves
   def index
     @applied_leaves = @user.applied_leaves
     respond_to do |format|
@@ -11,7 +11,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET    /members/:member_id/applied_leaves/new
+  # GET /members/:member_id/applied_leaves/new
   def new
     @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
     @applied_leave = AppliedLeave.new
@@ -20,7 +20,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # POST   /members/:member_id/applied_leaves
+  # POST /members/:member_id/applied_leaves
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
@@ -39,12 +39,12 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET    /members/:member_id/applied_leaves/:id/edit
+  # GET /members/:member_id/applied_leaves/:id/edit
   def edit
     @user_leaves = UserLeave.get_user_leaves(@user.id)
   end
 
-  # PATCH  /members/:member_id/applied_leaves/:id
+  # PATCH /members/:member_id/applied_leaves/:id
   def update
     is_updated = @applied_leave.update(applied_leave_params)
     respond_to do |format|
@@ -76,7 +76,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET    /applied_leaves/show_applied_leaves
+  # GET /applied_leaves/show_applied_leaves
   def show_applied_leaves
     @applied_leaves = AppliedLeave.get_applied_leaves
     respond_to do |format|
@@ -84,7 +84,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # PATCH  /applied_leaves/:id/approve_leave
+  # PATCH /applied_leaves/:id/approve_leave
   def approve_leave
     is_approved = @applied_leave.approve_applied_leave
     respond_to do |format|
@@ -99,7 +99,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # PATCH  /applied_leaves/:id/reject_leave
+  # PATCH /applied_leaves/:id/reject_leave
   def reject_leave
     is_rejected = @applied_leave.reject_applied_leave
     respond_to do |format|
@@ -114,7 +114,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # PATCH  /applied_leaves/approve_multiple_leaves
+  # PATCH /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
     AppliedLeave.approve_multiple_applied_leaves(multiple_leave_params)
     get_filtered_records
@@ -123,7 +123,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # PATCH  /applied_leaves/reject_multiple_leaves
+  # PATCH /applied_leaves/reject_multiple_leaves
   def reject_multiple_leaves
     AppliedLeave.reject_multiple_applied_leaves(multiple_leave_params)
     get_filtered_records
@@ -132,7 +132,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET    /applied_leaves/filter_applied_leaves
+  # GET /applied_leaves/filter_applied_leaves
   def filter_applied_leaves
     get_filtered_records
     respond_to do |format|
