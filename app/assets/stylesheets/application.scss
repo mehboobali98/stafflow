@@ -22,6 +22,16 @@
     height: 100%;
   }
 }
+
+// side bar custom class for toggling. It is added when the sidebar is active
+.sidebar-toggle{
+  position: absolute;
+  height: 100%;
+  left: 240px;
+  width: calc(100% - 240px);
+  transition: all 0.5s ease;
+}
+
  // Sign in and Sign up pages styling
  
 .icon{
@@ -44,4 +54,18 @@
   width: 100%;
   color: white;
   margin-top: 1%;
+}
+
+//dashboard navbar
+.dashboard-navbar{
+  background-color: #006fc8;
+
+  .navbar-brand{
+    color: white;
+    padding-left: 20px;
+    text-shadow: 2px 2px 5px white;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-family: sans-serif;
+  }
 }

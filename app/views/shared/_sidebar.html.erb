@@ -1,0 +1,71 @@
+<div class="sidebar">
+  <div class="logo_content">
+    <div class="logo">
+      <i class="fab fa-fedora"></i>
+      <div class="logo_name">by team ABC</div>
+    </div>
+    <i class="fas fa-bars css-sidebar-toggle" id="sidebar_toggle_btn"></i>
+  </div>
+  <ul>
+    <li>
+      <a href="#">
+        <i class="fas fa-border-none"></i>
+        <span class="links_name"> Dashboard </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="far fa-user"></i>
+        <span class="links_name"> Users </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="far fa-building"></i>
+        <span class="links_name"> Departments </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="fas fa-receipt"></i>
+        <span class="links_name"> Payroll </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="fas fa-tasks"></i>
+        <span class="links_name"> Leave </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="far fa-calendar-plus"></i>
+        <span class="links_name"> Event Calendar </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="fas fa-chart-line"></i>
+        <span class="links_name"> Analytics </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="far fa-folder-open"></i>
+        <span class="links_name"> Documents </span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="fas fa-cogs"></i>
+        <span class="links_name"> Settings </span>
+      </a>
+    </li>
+    <li>
+      <%= link_to destroy_user_session_path, method: :delete do %>
+        <i class="fas fa-sign-out-alt" id="log-out"></i>
+        <span class="links_name"> Logout </span>
+      <% end %>
+    </li>
+  </ul>
+</div>

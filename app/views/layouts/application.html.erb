@@ -10,16 +10,12 @@
     <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
-    <div class="row body-wrapper">
-      <div class="col-sm-2 sidebar-wrapper">
-        <%= render partial: "layouts/sidebar" %>
-      </div>
-      <div class="col-sm-9">
-        <%= render partial: "shared/flash_message" %>
-        <%= render_breadcrumbs %>
-        <%= yield %>
-      </div>
+    <%= render partial: "shared/sidebar" %>
+    <div class="home_content" id="home_content">
+      <%= render partial: "shared/dashboard_navbar" %>
+      <%= render partial: "shared/flash_message" %>
+      <%= render_breadcrumbs %>
+      <%= yield %>
     </div>
-    <%= render partial: "layouts/footer" %>
   </body>
 </html>
