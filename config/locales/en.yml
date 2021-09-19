@@ -29,6 +29,17 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  sidebar:
+    dashboard: 'Dashboard'
+    users: 'Users'
+    departments: 'Departments'
+    payroll: 'Payroll'
+    leave: 'Leave'
+    calendar: 'Calendar'
+    analytics: 'Analytics'
+    documents: 'Documents'
+    settings: 'Settings'
+    logout: 'Logout'
   company:
     table_header:
       list: "Companies List"
