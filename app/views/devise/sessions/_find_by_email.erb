@@ -1,0 +1,17 @@
+<h3><%= t('labels.signin') %></h3>
+<%= form_for(resource, as: resource_name, url: display_companies_home_index_url, method: :get) do |form| %>
+  <div class='row mb-2 mt-4'>
+    <div class='col-4 mt-1'>
+      <%= form.label t('forms.labels.email'), class: 'form-label' %>
+    </div>
+    <div class='col-8'>
+      <%= form.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
+    </div>
+  </div>
+  <div class='actions'>
+    <%= form.submit t('forms.buttons.search_company'), class: 'btn btn-primary w-100 mt-2 mb-2' %>
+  </div>
+<% end %>
+<div class='text-center'>
+  <%= link_to t('forms.buttons.signup'), new_registration_path(resource_name), class: 'text-center mt-2' %>
+</div>
