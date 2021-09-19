@@ -3,6 +3,7 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   as :user do
     root to: 'devise/sessions#new'
   end
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmations: 'users/confirmations'
   }
+
   resources :home do
     collection do
       get :display_companies

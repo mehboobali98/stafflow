@@ -29,6 +29,10 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
   company:
     table_header:
       list: "Companies List"

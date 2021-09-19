@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative('concerns/user_abilities')
-require_relative('concerns/settings_abilities')
-
 # ability class
 class Ability
   include CanCan::Ability
