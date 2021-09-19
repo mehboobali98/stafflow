@@ -31,6 +31,9 @@ gem 'pry-rails', '~> 0.3.9'
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
 
+# chartkick
+gem "chartkick"
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

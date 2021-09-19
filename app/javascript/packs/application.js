@@ -10,6 +10,7 @@ global.$ = global.jQuery = require("jquery");
 require("./settings")
 require("bootstrap")
 import "@fortawesome/fontawesome-free/css/all"
+import "chartkick/chart.js"
 document.addEventListener("turbolinks:load", function() {
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
