@@ -40,6 +40,7 @@ en:
     documents: 'Documents'
     settings: 'Settings'
     logout: 'Logout'
+    by_team: 'by team ABC'
   company:
     table_header:
       list: "Companies List"
