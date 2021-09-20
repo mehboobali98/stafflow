@@ -1,20 +1,20 @@
 $(document).ready(function() {
   toggleCheckBoxVisibility();
   
-  $("body").on('change', '[type=checkbox]', function(e) {
+  $("body").on('change', '[type=checkbox]', function(event) {
     toggleCheckBoxVisibility();
   });
 
   $("#approve_leaves_btn").on("click", function(event) {
+    event.preventDefault();
     let appliedLeaveIds = getAppliedLeaveIds();
     sendMassUpdateRequest("PATCH", "/applied_leaves/approve_multiple_leaves", applied_leave_ids);
-    event.preventDefault();
   });
 
   $("#reject_leaves_btn").on("click", function(event) {
+    event.preventDefault();
     let appliedLeaveIds = getAppliedLeaveIds();
     sendMassUpdateRequest("PATCH", "/applied_leaves/reject_multiple_leaves", applied_leave_ids);
-    event.preventDefault();
   });
 
   function toggleCheckBoxVisibility() {
