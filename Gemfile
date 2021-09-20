@@ -21,10 +21,11 @@ gem 'jbuilder', '~> 2.7'
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'will_paginate', '=3.3.0'
 # additional gems
 gem 'cancancan'
 gem 'devise'
+gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
@@ -37,6 +38,8 @@ gem 'simple_calendar', '= 2.4.3'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
+
+gem 'breadcrumbs_on_rails', '= 4.1.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

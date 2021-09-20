@@ -9,11 +9,12 @@ require("channels")
 global.$ = global.jQuery = require("jquery"); 
 require("./settings")
 require("bootstrap")
+import "@fortawesome/fontawesome-free/css/all"
 document.addEventListener("turbolinks:load", function() {
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-        $('[data-toggle="popover"]').popover()
-    })
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
+  })
 })
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
