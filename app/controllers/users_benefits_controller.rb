@@ -83,10 +83,11 @@ class UsersBenefitsController < ApplicationController
     @user = User.find_by_id(params[:member_id])
   end
 
+  # params[user_benefit][benefit_id] : amount
   def create_users_benefit_objects
-    params[:users_benefit].each do |id, amount|
+    params[:users_benefit].each do |benefit_id, amount|
       user_benefit = UsersBenefit.new(amount: amount,
-                                      benefit_id: id,
+                                      benefit_id: benefit_id,
                                       user_id: @user.id)
       user_benefit.save!
       @notice ||= []
