@@ -36,6 +36,10 @@ en:
     markedread: 'Selected Notifications were marked as read'
   navbar: 
     search: 'Search'
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
   company:
     table_header:
       list: "Companies List"

@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmations: 'users/confirmations'
   }
+
   resources :home do
     collection do
       get :display_companies
