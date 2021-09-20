@@ -83,7 +83,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/show_applied_leaves
   def show_applied_leaves
-    @applied_leaves = AppliedLeave.get_applied_leaves
+    @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
     respond_to do |format|
       format.html
     end
@@ -97,7 +97,7 @@ class AppliedLeavesController < ApplicationController
         if is_approved
           flash[:notice] = t('applied_leave.messages.leave_approve_success')
         else
-          flash[:error] = t('applied_leave.messages.leave_approve_failure')
+          flash[:error] = @applied_leave.errors.full_messages
         end
         redirect_to show_applied_leaves_path
       end
@@ -112,7 +112,7 @@ class AppliedLeavesController < ApplicationController
         if is_rejected
           flash[:notice] = t('applied_leave.messages.leave_reject_success')
         else
-          flash[:error] = t('applied_leave.messages.leave_reject_failure')
+          flash[:error] = @applied_leave.errors.full_messages
         end
         redirect_to show_applied_leaves_path
       end
@@ -149,6 +149,7 @@ class AppliedLeavesController < ApplicationController
 
   def get_filtered_records
     @applied_leaves = AppliedLeave.get_filtered_records(filter_params[:filter_type].downcase)
+    @applied_leaves.includes(user_leave: %i[user leave])
   end
 
   def applied_leave_params
