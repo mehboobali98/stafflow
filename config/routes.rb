@@ -8,7 +8,6 @@ Rails.application.routes.draw do
     resources :user_leaves
     resources :applied_leaves, except: :show
   end
-  get '/home', to: 'home#home'
   resources :leaves
 
   resources :applied_leaves, except: %i[show index new create edit update destroy] do
@@ -40,6 +39,7 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmations: 'users/confirmations'
   }
+
   resources :home do
     collection do
       get :display_companies

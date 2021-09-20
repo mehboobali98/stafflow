@@ -113,6 +113,8 @@ en:
         past_leave_date: 'cannot be in the past'
         end_leave_date: 'cannot be lesser than the leave starting date'
         rejection_error: 'applied leave cannot be rejected'
+        not_found: 'Applied leave with the given id does not exist'
+        invalid_date: 'is invalid'
     headings:
       applicant_email: 'Applicant email'
       leave_type: 'Leave type'
@@ -158,6 +160,10 @@ en:
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
   appname: "EMS"    
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
   company:
     table_header:
       list: "Companies List"

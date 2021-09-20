@@ -22,18 +22,6 @@ class UserLeave < ApplicationRecord
     end
   end
 
-  def self.get_user_leaves(user_id)
-    joins(:leave).select('user_leaves.id, leaves.name').where(
-      'user_id = ? AND remaining_count > ?', user_id, 0
-    )
-  end
-
-  def self.get_all_user_leaves(user_id)
-    joins(:leave).select('user_leaves.id, leaves.name').where(
-      'user_id = ? ', user_id
-    )
-  end
-
   def validate_user_leave_count
     return true unless total_count < remaining_count
 

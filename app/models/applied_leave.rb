@@ -129,8 +129,8 @@ class AppliedLeave < ApplicationRecord
 
     errors.add(:leave_date_year, I18n.t('applied_leave.messages.error.leave_date_year'))
     false
-  rescue Date::Error => e
-    errors.add(e.message)
+  rescue Date::Error
+    errors.add(:leave_date, I18n.t('applied_leave.messages.error.invalid_date'))
     false
   end
 end

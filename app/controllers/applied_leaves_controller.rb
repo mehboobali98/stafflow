@@ -5,7 +5,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
-    @applied_leaves = @user.applied_leaves
+    @applied_leaves = @user.applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
     end
@@ -31,7 +31,6 @@ class AppliedLeavesController < ApplicationController
           redirect_to member_applied_leaves_path,
                       notice: t('applied_leave.messages.leave_applied_success')
         else
-          binding.pry
           flash.now[:error] = @applied_leave.errors.full_messages
           @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
             'remaining_count > ?', 0
@@ -44,7 +43,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/:id/edit
   def edit
-    @user_leaves = UserLeave.get_user_leaves(@user.id)
+    @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
   end
 
   # PATCH /members/:member_id/applied_leaves/:id
@@ -55,13 +54,14 @@ class AppliedLeavesController < ApplicationController
         if is_updated
           redirect_to member_applied_leaves_path(@user),
                       notice: t('applied_leave.messages.leave_update_success')
-        end
+        else
 
-        flash.now[:error] = @leave.errors.full_messages
-        @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
-          'remaining_count > ?', 0
-        )
-        render :edit
+          flash.now[:error] = @leave.errors.full_messages
+          @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
+            'remaining_count > ?', 0
+          )
+          render :edit
+        end
       end
     end
   end
@@ -165,15 +165,15 @@ class AppliedLeavesController < ApplicationController
 
   def set_user
     @user = User.find(params[:member_id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('common.user_not_found')
     redirect_to members_path
   end
 
   def set_applied_leave
     @applied_leave = AppliedLeave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('applied_leave.messages.error.not_found')
     redirect_to member_applied_leaves_path(@user)
   end
 end
