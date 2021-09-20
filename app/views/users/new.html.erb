@@ -14,7 +14,7 @@
           <div class='col-6'>
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.email') %><br />
-              <%= form.email_field :email, class: 'form-control',required: true %>
+              <%= form.email_field :email, class: 'form-control', required: true %>
             </div>
             
             <div class='field mb-2'>
@@ -22,7 +22,7 @@
               <% if @minimum_password_length %>
               <em>(<%= @minimum_password_length %> characters minimum)</em>
               <% end %><br />
-              <%= form.password_field :password, required: true , class: 'form-control' %>
+              <%= form.password_field :password, required: true, class: 'form-control' %>
             </div>
 
             <div class='field mb-2'>
@@ -48,17 +48,17 @@
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.role') %><br />
-              <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {},  class: 'form-control' %>
+              <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {}, class: 'form-control' %>
             </div>
 
             <div class='field mb-2'>
-              <%= form.label I18n.t('forms.labels.role') %><br />
-              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: 'Select Department' },  class: 'form-control', id: 'department_select' %>
+              <%= form.label I18n.t('forms.labels.department') %><br />
+              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
             </div>
 
             <div class='field mb-2'>
-              <%= form.label I18n.t('forms.labels.role') %><br />
-              <%= form.select :designation_id, {}, { prompt: 'Select Designation' },  class: 'form-control', id: 'designation_select' %>
+              <%= form.label I18n.t('forms.labels.designation') %><br />
+              <%= form.select :designation_id, {}, { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
             </div>
 
             <div class='field mb-2'>

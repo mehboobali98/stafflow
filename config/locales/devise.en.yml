@@ -102,6 +102,8 @@ en:
       forgot_password: "Forgot your password"
       no_confirmation_received: "Didnt receive confirmation email?"
       sign_in_with: "Sign In with:"
+      department: "Department"
+      designation: "Designation"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to %{email}"
