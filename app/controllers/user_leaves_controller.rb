@@ -20,14 +20,14 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves/new
   def new
-    @leaves = Leave.where.not(id: @user.leaves.ids)
+    @leaves = Company.leaves.where.not(id: @user.leaves.ids)
     respond_to do |format|
       format.html
     end
   end
 
-  # POST  /members/:member_id/user_leaves
-  def create
+  # POST /members/:member_id/user_leaves/mass_create
+  def mass_create
     is_saved = UserLeave.add_user_leaves(@user, user_leave_params)
     respond_to do |format|
       format.html do

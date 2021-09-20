@@ -5,7 +5,11 @@ require_relative 'initializers/subdomain_validator'
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :members, controller: 'users' do
-    resources :user_leaves
+    resources :user_leaves, except: :create do
+      collection do
+        post 'mass_create'
+      end
+    end
     resources :applied_leaves, except: :show
   end
   resources :leaves
