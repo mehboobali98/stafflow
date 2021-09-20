@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
   # GET /members/new
   def new
+    @departments = Department.all
     respond_to do |format|
       format.html
     end
@@ -21,13 +22,17 @@ class UsersController < ApplicationController
       if is_saved
         format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
       else
-        format.html { render :new }
+        format.html do
+          @departments = Department.all
+          render :new
+        end
       end
     end
   end
 
   # GET /members/:id/edit
   def edit
+    @departments = Department.all
     respond_to do |format|
       format.html
     end
@@ -40,7 +45,11 @@ class UsersController < ApplicationController
       if is_updated
         format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
       else
-        format.html { render :edit }
+        format.html do
+          flash.now[:error] = @user.errors.full_messages
+          @departments = Department.all
+          render :edit
+        end
       end
     end
   end
@@ -66,6 +75,7 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
+    @departments = Department.all
     @users = apply_scopes(@users).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
@@ -76,6 +86,14 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
+    if @user.present?
+      params[:user].delete(:base_salary) if cannot?(:update_salary, @user, current_user)
+      params[:user].delete(:designation_id) if cannot?(:update_designation, @user, current_user)
+      params[:user].delete(:role_id) if cannot?(:update_role, @user, current_user)
+      params[:user].delete(:department_id) if cannot?(:update_department, @user, current_user)
+    end
+
+    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
+                                 :department_id, :password, :password_confirmation, :role_id, :base_salary, :designation_id)
   end
 end

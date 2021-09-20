@@ -5,8 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :confirmable
 
   belongs_to :company
-  belongs_to :department
-  belongs_to :designation
+  belongs_to :department, optional: true
+  belongs_to :designation, optional: true
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   scope :role_id, ->(role_id) { where(role_id: role_id) }
@@ -19,6 +19,7 @@ class User < ApplicationRecord
   validates_presence_of :password, if: :password_required?
   validates_confirmation_of :password, if: :password_required?
   validates_length_of :password, within: PASSWORD_LENGTH, allow_blank: true
+  validates_presence_of :department_id, :designation_id, unless: -> { role_id == ROLES[:account_owner] }
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   def full_name
@@ -26,10 +27,17 @@ class User < ApplicationRecord
   end
 
   def date_of_birth_valid?
-    return true unless date_of_birth.year.to_s.length > 4
+    return true unless date_of_birth.year.to_s.length > 4 || date_of_birth > Date.today
 
-    errors.add(:base, I18n.t('messages.date_error'))
-    false
+    if date_of_birth.year.to_s.length > 4
+      errors.add(:base, I18n.t('messages.date_error'))
+      return false
+    end
+    if date_of_birth > Date.today
+      errors.add(:base, I18n.t('messages.date_error'))
+      return false
+    end
+    true
   rescue Date::Error => e
     errors.add(e.message)
     false

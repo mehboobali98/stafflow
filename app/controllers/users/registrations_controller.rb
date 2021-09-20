@@ -11,7 +11,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
     @user.role_id = User::ROLES[:account_owner]
     is_saved = company.save
-
+    company.create_setting(tax_rate: 10, theme: 'blue').save if is_saved
     respond_to do |format|
       if is_saved
         format.html { redirect_to new_user_session_url, notice: I18n.t('messages.signed_up') }

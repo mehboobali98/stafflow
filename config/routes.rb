@@ -28,7 +28,11 @@ Rails.application.routes.draw do
 
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :members, controller: 'users'
-    resources :departments
+    resources :departments do
+      member do
+        get '/designations', to: 'departments#fetch_designations'
+      end
+    end
     resources :designations
     resources :events do
       collection do
