@@ -6,7 +6,6 @@
   <table class="table table-striped table-hover">
     <thead class="table-dark">
       <th><%= t('benefit.table.name') %></th>
-      <th><%= t('benefit.table.type') %></th>
       <th><%= t('benefit.label.amount') %></th>
       <th colspan="2"><%= t('benefit.table.options') %></th>
     </tr>
@@ -16,8 +15,7 @@
       <% if benefit.status %>  
         <tr>
           <td><%= benefit.name %></td>
-          <td><%= benefit.benefit_type %></td>
-          <td><%= benefit.amount %></td>
+          <td><%= benefit.default_amount %></td>
           <td><%= link_to t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' %></td>
           <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
         </tr>

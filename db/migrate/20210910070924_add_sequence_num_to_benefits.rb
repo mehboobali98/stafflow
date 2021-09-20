@@ -2,7 +2,7 @@ class AddSequenceNumToBenefits < ActiveRecord::Migration[6.0]
   def self.up
     add_column :benefits, :sequence_num, :integer, null: false
     update_sequence_num_values
-    add_index :benefits, %i[sequence_num company_id], unique: true
+    add_index :benefits, %i[company_id sequence_num], unique: true
   end
 
   def self.down

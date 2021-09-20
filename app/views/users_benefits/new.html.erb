@@ -1,4 +1,4 @@
-<%= javascript_pack_tag 'users_benefit_new', 'data-turbolinks-track': 'reload' %>
+<%= javascript_pack_tag 'users_benefit_create', 'data-turbolinks-track': 'reload' %>
 
 <%= form_with model: [@user, @users_benefits], url: member_users_benefits_path do |users_benefit| %>
   <div class="container">
@@ -23,13 +23,13 @@
                   <tr>
                     <td>
                       <div class="custom-control custom-checkbox">
-                        <%= check_box_tag "users_benefit[sequence_num][]", benefit.sequence_num, false, data: { "id": "number_field_#{benefit.sequence_num}" } %>
+                        <%= check_box_tag '', nil, false, id: 'CheckBox',data: { "id": "number_field_#{benefit.id}" } %>
                       </div>
                     </td>
                     <td><%= benefit.name %></td>
                     <td>
                       <div class="form-group">
-                        <%= number_field_tag "number_field_#{benefit.sequence_num}" , benefit.amount , disabled: true %>
+                        <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, id: "number_field_#{benefit.id}", disabled: true %>
                       </div>
                     </td>
                   </tr>

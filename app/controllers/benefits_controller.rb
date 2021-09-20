@@ -69,10 +69,10 @@ class BenefitsController < ApplicationController
   private
 
   def permitted_benefit_params
-    params.require(:benefit).permit(:name, :benefit_type, :amount)
+    params.require(:benefit).permit(:name, :default_amount)
   end
 
   def load_benefit
-    @benefit = Benefit.find_by!(sequence_num: params[:id])
+    @benefit = Benefit.find_by(sequence_num: params[:id])
   end
 end

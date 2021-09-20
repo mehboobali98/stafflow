@@ -6,7 +6,6 @@ class UsersBenefitsController < ApplicationController
 
   # GET members/:id/users_benefits
   def index
-    @user = User.find_by_id(params['member_id'])
     @users_benefits = @user.users_benefits.includes(:benefit)
     respond_to do |format|
       format.html
@@ -29,18 +28,9 @@ class UsersBenefitsController < ApplicationController
 
   # POST members/:id/users_benefits
   def create
-    users_benefit_objects = create_users_benefit_objects(params)
-    users_benefit_objects.each do |new_users_benefit|
-      new_users_benefit.save!
-      begin
-        new_users_benefit.save!
-        flash[:notice] ||= []
-        flash[:notice] << new_users_benefit.benefit.name + ' ' + t('users_benefit.messages.success.create')
-      rescue ActiveRecord::RecordInvalid
-        flash[:errors] ||= []
-        flash[:errors] << (new_users_benefit.benefit.name + ' ' + new_users_benefit.errors.full_messages.first)
-      end
-    end
+    create_users_benefit_objects
+    flash[:notice] = @notice
+    flash[:errors] = @errors
     respond_to do |format|
       format.html { redirect_to member_users_benefits_path }
     end
@@ -48,9 +38,9 @@ class UsersBenefitsController < ApplicationController
 
   # DELETE members/:id/users_benefits/:id
   def destroy
-    is_destroyed = @users_benefit.destroy
+    @users_benefit.destroy
     respond_to do |format|
-      if is_destroyed
+      if @users_benefit.destroyed?
         flash[:notice] = t('users_benefit.messages.success.delete')
       else
         flash[:error] =  @users_benefit.errors.full_messages
@@ -61,7 +51,7 @@ class UsersBenefitsController < ApplicationController
 
   # PATCH/PUT members/:id/users_benefits/:id
   def update
-    is_updated = @users_benefit.update(permitted_users_benefit_arguments_for_update)
+    is_updated = @users_benefit.update(update_user_benefit_params)
     respond_to do |format|
       if is_updated
         format.html { redirect_to member_users_benefits_path, notice: t('users_benefit.messages.success.update') }
@@ -73,16 +63,12 @@ class UsersBenefitsController < ApplicationController
 
   private
 
-  def permitted_users_benefit_arguments_for_create
-    params.require(:users_benefit).permit(benefit_id[], amount[])
-  end
-
-  def permitted_users_benefit_arguments_for_update
+  def update_user_benefit_params
     params.require(:users_benefit).permit(:amount, :status)
   end
 
   def load_users_benefit
-    @users_benefit = UsersBenefit.find_by_sequence_num!(params[:id])
+    @users_benefit = UsersBenefit.find_by(sequence_num: params[:id])
   end
 
   def load_users_benefits
@@ -97,16 +83,17 @@ class UsersBenefitsController < ApplicationController
     @user = User.find_by_id(params[:member_id])
   end
 
-  def create_users_benefit_objects(params)
-    users_benefit_objects = []
-    params['users_benefit']['sequence_num'].each do |sequence_num|
-      benefit_object = Benefit.find_by_sequence_num!(sequence_num)
-      status = benefit_object.benefit_type == 'Monthly'
-      users_benefit_objects.append(UsersBenefit.new(amount: params["number_field_#{sequence_num}"],
-                                                    status: status,
-                                                    benefit_id: benefit_object.id,
-                                                    user_id: @user.id))
+  def create_users_benefit_objects
+    params[:users_benefit].each do |id, amount|
+      user_benefit = UsersBenefit.new(amount: amount,
+                                      benefit_id: id,
+                                      user_id: @user.id)
+      user_benefit.save!
+      @notice ||= []
+      @notice << t('users_benefit.messages.success.create', benefit_name: user_benefit.benefit.name)
+    rescue ActiveRecord::RecordInvalid
+      @errors ||= []
+      @errors << new_user_benefit.benefit.name + ' ' + new_users_benefit.errors.full_messages.first
     end
-    users_benefit_objects
   end
 end

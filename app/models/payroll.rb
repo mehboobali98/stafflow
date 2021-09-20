@@ -6,29 +6,31 @@ class Payroll < ApplicationRecord
   belongs_to :user
   belongs_to :company
 
-  def self.generate_payroll(user, users_benefits)
-    gross_salary = calculate_gross_salary(user, users_benefits)
+  def self.generate_payroll(user)
+    tax_amount           = user.base_salary * (user.company.setting.tax_rate / 100)
+    salary_after_tax     = user.base_salary - tax_amount
+    user_benefits_amount = user.users_benefits.sum(:amount)
+    gross_salary         = salary_after_tax + user_benefits_amount
+
     payroll = Payroll.new(user_id: user.id, gross_salary: gross_salary,
-                          salary_after_tax: user.base_salary * 0.9, base_salary: user.base_salary)
-    users_benefits.each do |users_benefit|
-      payroll.applied_benefits.build(users_benefit_id: users_benefit.id, amount: users_benefit.amount,
-                                     benefit_id: users_benefit.benefit_id, user_id: user.id)
+                          salary_after_tax: salary_after_tax, base_salary: user.base_salary)
+
+    user.users_benefits.each do |user_benefit|
+      payroll.applied_benefits.build(users_benefit_id: user_benefit.id,
+                                     amount: user_benefit.amount,
+                                     benefit_id: user_benefit.benefit_id,
+                                     user_id: user.id)
     end
     payroll.save
+    payroll
   end
 
-  def self.calculate_gross_salary(user, users_benefits)
-    # adding salary after tax to gross salary
-    gross_salary = user.base_salary * (1 - (user.company.setting.tax_rate / 100))
-    users_benefits.each do |benefit|
-      gross_salary += benefit.amount
-    end
-    gross_salary
-  end
+  def self.check_last_payroll_date(user)
+    date = user.payrolls.last.created_at
+    return true if DateTime.now.month == date.month && DateTime.now.year == date.year
 
-  def self.check_last_payroll_date(date)
-    return false if DateTime.now.month == date.month && DateTime.now.year == date.year
-
-    true
+    false
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 end

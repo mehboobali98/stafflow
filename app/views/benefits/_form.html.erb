@@ -7,19 +7,7 @@
       </div>
       <div class="mb-3">
         <%= benefit_object.label t('benefit.label.amount'), { class: "form-label" } %>
-        <%= benefit_object.text_field :amount, { class: "form-control", placeholder: t('benefit.label.amount') } %>
-      </div>
-      <div class="form-check form-check-inline ml-3">
-          <%= label t('benefit.label.benefit_type'), t('benefit.table.annual') %>
-          <%= benefit_object.radio_button :benefit_type, 'Annually' %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= label t('benefit.label.benefit_type'), t('benefit.table.monthly')%>
-        <%= benefit_object.radio_button :benefit_type, 'Monthly', checked: true %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= label t('benefit.label.benefit_type'), t('benefit.table.one_time') %>
-        <%= benefit_object.radio_button :benefit_type, 'One Time' %>
+        <%= benefit_object.text_field :default_amount, { class: "form-control", placeholder: t('benefit.label.amount') } %>
       </div>
       <%= benefit_object.submit t('form.button.submit'), class: "btn btn-primary" %>
     </div>

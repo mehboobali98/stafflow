@@ -4,7 +4,7 @@ class CreateAppliedBenefits < ActiveRecord::Migration[6.0]
       t.float :amount, null: false
 
       t.references :users_benefit
-      t.references :payroll
+      t.references :payroll, null: false
       t.references :user, null: false
       t.references :benefit, null: false
       t.references :company, null: false

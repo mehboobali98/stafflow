@@ -89,9 +89,9 @@ en:
   users_benefit:
     messages:
       success:
-        create: "User Benefit Created Successfully"
-        update: "User Benefit Updated Successfully"
-        delete: "User Benefit Deleted Successfully"
+        create: "%(benefit_name) User Benefit Created Successfully"
+        update: "Benefit Updated Successfully"
+        delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
     headings:

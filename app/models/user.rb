@@ -5,8 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :confirmable
 
   belongs_to :company
-  belongs_to :department
-  belongs_to :designation
+  belongs_to :department, optional: true
+  belongs_to :designation, optional: true
 
   has_many :applied_benefits
   has_many :payrolls

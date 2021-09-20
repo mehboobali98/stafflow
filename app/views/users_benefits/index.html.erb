@@ -8,7 +8,6 @@
       <th><%= t('users_benefit.table.user_name') %></th>
       <th><%= t('users_benefit.table.benefit_name') %></th>
       <th><%= t('users_benefit.table.amount') %></th>
-      <th><%= t('users_benefit.table.status') %></th>
       <th colspan="2"><%= t('users_benefit.table.options') %></th>
     </tr>
   </thead>
@@ -18,7 +17,6 @@
         <td><%= users_benefit.user.full_name%></td>
         <td><%= users_benefit.benefit.name %></td>
         <td><%= users_benefit.amount %></td>
-        <td><%= users_benefit.status ? t('users_benefit.table.active') : t('users_benefit.table.inactive') %></td>
         <td><%= link_to t('form.button.update'), member_users_benefit_path(@user, users_benefit), class: 'btn btn-secondary' %></td>
         <td><%= link_to t('form.button.delete'), member_users_benefit_path(@user, users_benefit), method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
       </tr>
