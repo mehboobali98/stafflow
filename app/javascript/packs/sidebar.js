@@ -1,8 +1,7 @@
-$(document).ready(function () {
+$(document).on('turbolinks:load', function () {
   $('#sidebar_toggle_btn').on('click', function () {
     $('.sidebar').toggleClass('active');
     if ($('.sidebar').hasClass('active')) {
-      console.log("active");
       $(".home_content").addClass("sidebar-toggle");
       $(".home_content").removeClass("home_content");
     } else {

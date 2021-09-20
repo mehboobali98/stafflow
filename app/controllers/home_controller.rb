@@ -3,7 +3,6 @@ class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[display_companies]
   layout 'landing'
 
-  def dashboard; end
   # GET /display_companies
   def display_companies
     User.unscoped do
