@@ -16,7 +16,14 @@ document.addEventListener("turbolinks:load", function() {
     $('[data-toggle="popover"]').popover();
   })
 })
+import 'select2'
+import 'select2/dist/css/select2.css'
 
+$(document).ready(function() {
+  $("#applied_leave_member_id").select2({
+    theme: "classic"
+  });
+});
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.

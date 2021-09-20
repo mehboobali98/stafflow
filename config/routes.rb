@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       post 'add_user_leave'
       get 'show_users_list'
       get 'get_user_leaves'
+      get 'get_users_list'
       patch 'approve_multiple_leaves', as: 'approve_multiple'
       patch 'reject_multiple_leaves', as: 'reject_multiple'
     end

@@ -21,14 +21,12 @@ class AppliedLeavesController < ApplicationController
   end
 
   def add_user_leave
-    @applied_leave = AppliedLeave.new(applied_leave_params)
+    @user = User.find(params[:applied_leave][:member_id])
+    @applied_leave = @user.applied_leaves.build(applied_leave_params)
+    @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
     @applied_leave.save
     @applied_leave.approve_applied_leave
-    binding.pry
-    # @applied_leave = AppliedLeave.new
-    # respond_to do |format|
-    #   format.html
-    # end
+    redirect_to show_applied_leaves_path
   end
 
   def get_user_leaves
@@ -36,11 +34,19 @@ class AppliedLeavesController < ApplicationController
     @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
     respond_to do |format|
       format.json do
-       render json: @user_leaves
+        render json: @user_leaves
       end
     end
   end
 
+  def get_users_list
+    @users = User.where("email LIKE?", "#{params[:user][:email]}%")
+    respond_to do |format|
+      format.json do
+        render json: @users
+      end
+    end
+  end
 
   def show_users_list
     @users = User.all

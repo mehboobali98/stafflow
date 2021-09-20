@@ -64,7 +64,7 @@ $(document).ready(function() {
     });
   });
 
-   $("#applied_leave_member_id").on("change", function(event) {
+  $("#applied_leave_member_id").on("change", function(event) {
     let user = {};
     user["member_id"] = this.value;
     $.ajax({
@@ -77,7 +77,6 @@ $(document).ready(function() {
       success:function(response){
         leavesSelectBox = $('#leaves_select');
         leavesSelectBox.html("");
-        alert(response);
         leaves = JSON.parse(response);
         leaves.forEach(function(leave) {
           leavesSelectBox.append(`<option value=${leave.id}> ${leave.name} </option>`)
@@ -85,4 +84,26 @@ $(document).ready(function() {
       }
     });
   });
+
+  $("body").on('keypress', '.select2-search__field', function(event) {
+    let user = {};
+    user["email"] = this.value;
+    $.ajax({
+      type: "GET",
+      url: "/applied_leaves/get_users_list",
+      dataType: 'script',
+      data: {
+        user
+      },
+      success:function(response){
+        employeesSelectBox = $('#applied_leave_member_id');
+        employeesSelectBox.html("");
+        users = JSON.parse(response);
+        users.forEach(function(user) {
+          employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`)
+        });
+      }
+    });
+  });
+
 });
