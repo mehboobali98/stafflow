@@ -31,7 +31,6 @@ class PayrollsController < ApplicationController
       format.html { redirect_to members_payroll_path }
     end
     respond_to do |format|
-      # format.html { redirect_to "/member/#{params['member_id']}/payrolls/#{payroll.sequence_num}" }
       format.html { redirect_to member_payroll_path(@user, payroll) }
     end
   end
