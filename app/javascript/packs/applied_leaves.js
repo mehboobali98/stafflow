@@ -63,4 +63,26 @@ $(document).ready(function() {
       }
     });
   });
+
+   $("#applied_leave_member_id").on("change", function(event) {
+    let user = {};
+    user["member_id"] = this.value;
+    $.ajax({
+      type: "GET",
+      url: "/applied_leaves/get_user_leaves",
+      dataType: 'script',
+      data: {
+        user
+      },
+      success:function(response){
+        leavesSelectBox = $('#leaves_select');
+        leavesSelectBox.html("");
+        alert(response);
+        leaves = JSON.parse(response);
+        leaves.forEach(function(leave) {
+          leavesSelectBox.append(`<option value=${leave.id}> ${leave.name} </option>`)
+        });
+      }
+    });
+  });
 });

@@ -14,6 +14,9 @@ Rails.application.routes.draw do
     collection do
       get 'show_applied_leaves', as: 'show'
       get 'filter_applied_leaves', as: 'filter'
+      post 'add_user_leave'
+      get 'show_users_list'
+      get 'get_user_leaves'
       patch 'approve_multiple_leaves', as: 'approve_multiple'
       patch 'reject_multiple_leaves', as: 'reject_multiple'
     end

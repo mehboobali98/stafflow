@@ -20,6 +20,32 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  def add_user_leave
+    @applied_leave = AppliedLeave.new(applied_leave_params)
+    @applied_leave.save
+    @applied_leave.approve_applied_leave
+    binding.pry
+    # @applied_leave = AppliedLeave.new
+    # respond_to do |format|
+    #   format.html
+    # end
+  end
+
+  def get_user_leaves
+    @user = User.find(params[:user][:member_id])
+    @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
+    respond_to do |format|
+      format.json do
+       render json: @user_leaves
+      end
+    end
+  end
+
+
+  def show_users_list
+    @users = User.all
+  end
+
   # POST /members/:member_id/applied_leaves
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
