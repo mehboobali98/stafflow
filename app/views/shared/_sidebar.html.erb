@@ -8,10 +8,10 @@
   </div>
   <ul>
     <li>
-      <a href="#">
+      <%= link_to dashboard_path do %>
         <i class="fas fa-border-none"></i>
         <span class="links-name"><%= t('sidebar.dashboard') %></span>
-      </a>
+      <% end %>
     </li>
     <li>
       <%= link_to members_path do %>

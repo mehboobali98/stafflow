@@ -1,1 +1,40 @@
-<%= pie_chart @current_company.users.group(:role_id).count %>
+    <!-- Main content -->
+<section class="content pt-2">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-around">
+      <!-- Department Chart -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Department Employees</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart">
+            <%= pie_chart @current_company.departments.joins(:users).group(:name).count %>
+          </div>
+        </div>
+      </div>
+      <!-- /.card-body -->
+      <!-- Department chart -->
+      <div class="card card-danger">
+        <div class="card-header">
+          <h3 class="card-title">Department employees</h3>
+        </div>
+        <div class="card-body">
+          <%= bar_chart @current_company.departments.joins(:users).group(:name).count %>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card-body -->
+      <!-- Department count -->
+      <div class="card card-danger">
+        <div class="card-header">
+          <h3 class="card-title">Department count</h3>
+        </div>
+        <div class="card-body">
+          <%= pie_chart @current_company.departments.group(:name).count %>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </div>
+  </div>
+</section>
