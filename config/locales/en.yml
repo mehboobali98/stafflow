@@ -41,6 +41,10 @@ en:
     settings: 'Settings'
     logout: 'Logout'
     by_team: 'by team ABC'
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
   company:
     table_header:
       list: "Companies List"
