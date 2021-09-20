@@ -2,25 +2,25 @@ class AppliedLeave < ApplicationRecord
   include ActiveModel::Transitions
   LEAVE_DURATION = { full_day: 1, half_day: 2 }.freeze
   validates :applied_from, :applied_till, presence: true
-  validate :validate_past_leave_date
+  validate :validate_past_leave_date, on: :create
   validate :validate_leave_dates
   belongs_to :user_leave
   belongs_to :user
   belongs_to :leave
   belongs_to :company
 
-  def leave_duration_name_from_id
+  def leave_duration_name
     LEAVE_DURATION.invert[leave_duration_id]
   end
 
   def calculate_leave_count
     number_of_days = week_days_in_date_range(applied_from..applied_till)
-    return number_of_days if leave_duration_name_from_id.eql?(:full_day)
+    return number_of_days if leave_duration_name.eql?(:full_day)
 
     number_of_days / 2.0
   end
 
-  def leave_count_available?
+  def leave_available?
     return true if calculate_leave_count < user_leave.remaining_count
 
     errors.add(:leave_count, I18n.t('applied_leave.messages.error.leave_count'))

@@ -24,7 +24,7 @@ class AppliedLeavesController < ApplicationController
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
-    is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_count_available?
+    is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_available?
     respond_to do |format|
       format.html do
         if is_saved

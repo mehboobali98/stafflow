@@ -9,10 +9,13 @@ class UserLeave < ApplicationRecord
   validate :validate_user_leave_count, on: :update
 
   def self.add_user_leaves(user, user_leave_params)
+    binding.pry
     return false if user_leave_params.values.empty?
 
     ActiveRecord::Base.transaction do
+      binding.pry
       user_leave_params.values.first.each_value do |value|
+        binding.pry
         user.user_leaves.build(value.merge(remaining_count: value[:total_count]))
         user.save!
       end

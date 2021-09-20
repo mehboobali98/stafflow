@@ -3,7 +3,7 @@
     <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, disabled: !(applied_leave.pending?) %></td>
     <td><%= applied_leave.user.email %></td>
     <td><%= applied_leave.leave.name %></td>
-    <td><%= applied_leave.leave_duration_name_from_id.to_s.humanize %></td>
+    <td><%= applied_leave.leave_duration_name.to_s.humanize %></td>
     <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
     <td><%= applied_leave.state.humanize %></td>

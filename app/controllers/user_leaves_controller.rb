@@ -20,7 +20,8 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves/new
   def new
-    @leaves = Company.leaves.where.not(id: @user.leaves.ids)
+  binding.pry
+    @leaves = @current_company.leaves.where.not(id: @user.leaves.ids)
     respond_to do |format|
       format.html
     end
@@ -82,7 +83,7 @@ class UserLeavesController < ApplicationController
   private
 
   def user_leave_update_params
-    params.require(:user_leave).permit(:member_id, :total_count, :remaining_count)
+    params.require(:user_leave).permit(:total_count, :remaining_count)
   end
 
   def user_leave_params
