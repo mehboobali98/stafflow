@@ -2,6 +2,4 @@
 	$("#modal_flash_message").html("<%= escape_javascript (render partial:'shared/flash_message', locals: { flash: flash }) %>");
 <% else %>
 	$("#modal").modal("hide");
-	$("#flash_message").html("<%= escape_javascript (render partial:'shared/flash_message', locals: { flash: flash }) %>");
-	$("#user_leaves_table").empty().html("<%= escape_javascript (render partial:'user_leaves_table', locals: { user_leaves: @user_leaves }) %>");
 <% end %>
