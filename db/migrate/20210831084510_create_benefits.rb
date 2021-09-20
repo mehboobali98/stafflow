@@ -8,9 +8,6 @@ class CreateBenefits < ActiveRecord::Migration[6.0]
 
       t.references :company, null: false
 
-      add_index :benefits, :company_id
-      add_index :benefits, :user_id
-
       t.timestamps
     end
   end

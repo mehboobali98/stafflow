@@ -1,4 +1,4 @@
-class UserBenefitsController < ApplicationController
+class UsersBenefitsController < ApplicationController
   before_action :load_users_benefit, only: %i[destroy update show]
   before_action :load_users_benefits, only: %i[new create]
   before_action :load_benefits, only: %i[new create]
@@ -7,7 +7,7 @@ class UserBenefitsController < ApplicationController
   # GET members/:id/users_benefits
   def index
     @user = User.find_by_id(params['member_id'])
-    @users_benefits = UserBenefit.includes(:user).includes(:benefit)
+    @users_benefits = @user.users_benefits.includes(:benefit)
     respond_to do |format|
       format.html
     end
@@ -29,15 +29,17 @@ class UserBenefitsController < ApplicationController
 
   # POST members/:id/users_benefits
   def create
-    # this function is to refactored, using jquery
-    users_benefit_objects = UserBenefit.initialze_users_benefits(params, @user.id)
+    users_benefit_objects = create_users_benefit_objects(params)
     users_benefit_objects.each do |new_users_benefit|
       new_users_benefit.save!
-      flash[:notice] ||= []
-      flash[:notice] << new_users_benefit.benefit.name + ' ' + t('users_benefit.messages.success.create')
-    rescue ActiveRecord::RecordInvalid
-      flash[:errors] ||= []
-      flash[:errors] << (new_users_benefit.benefit.name + ' ' + new_users_benefit.errors.full_messages.first)
+      begin
+        new_users_benefit.save!
+        flash[:notice] ||= []
+        flash[:notice] << new_users_benefit.benefit.name + ' ' + t('users_benefit.messages.success.create')
+      rescue ActiveRecord::RecordInvalid
+        flash[:errors] ||= []
+        flash[:errors] << (new_users_benefit.benefit.name + ' ' + new_users_benefit.errors.full_messages.first)
+      end
     end
     respond_to do |format|
       format.html { redirect_to member_users_benefits_path }
@@ -80,11 +82,11 @@ class UserBenefitsController < ApplicationController
   end
 
   def load_users_benefit
-    @users_benefit = UserBenefit.find_by_sequence_num!(params[:id])
+    @users_benefit = UsersBenefit.find_by_sequence_num!(params[:id])
   end
 
   def load_users_benefits
-    @users_benefits = UserBenefit.includes(:benefit).all
+    @users_benefits = UsersBenefit.includes(:benefit).all
   end
 
   def load_benefits
@@ -93,5 +95,18 @@ class UserBenefitsController < ApplicationController
 
   def load_user
     @user = User.find_by_id(params[:member_id])
+  end
+
+  def create_users_benefit_objects(params)
+    users_benefit_objects = []
+    params['users_benefit']['sequence_num'].each do |sequence_num|
+      benefit_object = Benefit.find_by_sequence_num!(sequence_num)
+      status = benefit_object.benefit_type == 'Monthly'
+      users_benefit_objects.append(UsersBenefit.new(amount: params["number_field_#{sequence_num}"],
+                                                    status: status,
+                                                    benefit_id: benefit_object.id,
+                                                    user_id: @user.id))
+    end
+    users_benefit_objects
   end
 end

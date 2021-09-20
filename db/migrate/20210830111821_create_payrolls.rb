@@ -8,9 +8,6 @@ class CreatePayrolls < ActiveRecord::Migration[6.0]
       t.references :user, null: false
       t.references :company, null: false
 
-      add_index :payrolls, :company_id
-      add_index :payrolls, :user_id
-
       t.timestamps
     end
   end
