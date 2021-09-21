@@ -1,6 +1,6 @@
 class AppliedLeave < ApplicationRecord
   include ActiveModel::Transitions
-  LEAVE_DURATION = { full_day: 1, half_day: 2 }.freeze
+  LEAVE_DURATION = HashWithIndifferentAccess.new({ full_day: 1, half_day: 2 }.freeze)
   validates :applied_from, :applied_till, presence: true
   validate :validate_past_leave_date, on: :create
   validate :validate_leave_dates
@@ -41,8 +41,8 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.approve_multiple_applied_leaves(applied_leave_ids)
-    applied_leave_ids.each do |applied_leave_id|
-      applied_leave = find(applied_leave_id)
+    applied_leaves = find(applied_leave_ids)
+    applied_leaves.each do |applied_leave|
       applied_leave.approve_applied_leave
     rescue ActiveRecord::RecordNotFound
       nil
@@ -50,8 +50,8 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.reject_multiple_applied_leaves(applied_leave_ids)
-    applied_leave_ids.each do |applied_leave_id|
-      applied_leave = find(applied_leave_id)
+    applied_leaves = find(applied_leave_ids)
+    applied_leaves.each do |applied_leave|
       applied_leave.reject_applied_leave
     rescue ActiveRecord::RecordNotFound
       nil

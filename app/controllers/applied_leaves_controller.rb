@@ -1,8 +1,10 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :get_applied_leaves, only: :show_applied_leaves
   before_action :set_user, only: %i[index new create edit update destroy]
-  before_action :set_applied_leave, only: %i[show edit update destroy approve_leave reject_leave]
+  before_action :set_applied_leave, only: %i[approve_leave reject_leave]
+  before_action :set_user_applied_leave, only: %i[show edit update]
+  before_action :get_available_leaves, only: %i[new edit]
+  before_action :get_applied_leaves, only: :show_applied_leaves
 
   # GET /members/:member_id/applied_leaves
   def index
@@ -14,8 +16,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
-    @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
-                                                                   0).select('user_leaves.id, leaves.name')
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
@@ -34,16 +34,14 @@ class AppliedLeavesController < ApplicationController
                       notice: t('applied_leave.messages.leave_applied_success')
         else
           flash[:error] = @applied_leave.errors.full_messages
-          new_member_applied_leave_path(@user)
+          redirect_to new_member_applied_leave_path(@user)
         end
       end
     end
   end
 
   # GET /members/:member_id/applied_leaves/:id/edit
-  def edit
-    @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
-  end
+  def edit; end
 
   # PATCH /members/:member_id/applied_leaves/:id
   def update
@@ -142,12 +140,17 @@ class AppliedLeavesController < ApplicationController
 
   private
 
+  def get_available_leaves
+    @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
+                                                                   0).select('user_leaves.id, leaves.name')
+  end
+
   def get_applied_leaves
     @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
   end
 
   def get_filtered_records
-    @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].downcase)
+    @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].to_s.downcase)
     @applied_leaves.includes(user_leave: %i[user leave])
   end
 
@@ -160,6 +163,13 @@ class AppliedLeavesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash[:error] = t('common.user_not_found')
     redirect_to members_path
+  end
+
+  def set_user_applied_leave
+    @applied_leave = @user.applied_leaves.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('applied_leave.messages.error.not_found')
+    redirect_to member_applied_leaves_path(@user)
   end
 
   def set_applied_leave
