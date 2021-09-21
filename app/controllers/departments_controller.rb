@@ -70,9 +70,9 @@ class DepartmentsController < ApplicationController
     end
   end
 
-  # GET /departments/:id/designations
+  # GET /departments/:id/fetch_designations
   def fetch_designations
-    @designations = Designation.where(department_id: params[:id])
+    @designations = @department.designations
     respond_to do |format|
       format.json { render json: @designations }
     end
