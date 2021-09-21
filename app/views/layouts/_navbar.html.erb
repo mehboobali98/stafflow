@@ -1,7 +1,7 @@
 <%= javascript_pack_tag 'navbar', 'data-turbolinks-track': 'reload' %>
 <nav class='navbar navbar-icon-top navbar-expand-lg navbar-dark bg-primary'>
-  <div class='container-fluid p-1'>
-    <h1 class='navbar-brand ms-3'><%= @current_company&.name %></h1>
+  <div class='container-fluid'>
+    <h1 class='navbar-brand ms-3 lead'><%= @current_company&.name %></h1>
     <form class='d-flex'>
       <div>
         <%= link_to notifications_path, class: 'nav-item text-white me-5' do %>
@@ -11,7 +11,7 @@
         <% end %>
       </div>
       <input class='form-control me-2' type='search' placeholder='Search' aria-label='Search'>
-      <button class='btn btn-outline-light' type='submit'><%= t('navbar.search') %></button>
+      <button class='btn btn-dark' type='submit'><%= t('navbar.search') %></button>
     </form>
   </div>
 </nav>
