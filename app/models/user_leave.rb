@@ -7,6 +7,7 @@ class UserLeave < ApplicationRecord
   validates :total_count, :remaining_count, presence: true
   validates :total_count, :remaining_count, numericality: { in: VALID_LEAVE_RANGE }
   validate :validate_user_leave_count, on: :update
+  before_destroy :can_destroy?, prepend: true
 
   #     options = {}
   #     leave = {
@@ -15,7 +16,6 @@ class UserLeave < ApplicationRecord
   #       .
   #       .
   #       }
-
   def self.add_user_leaves(user, options = {})
     return false if options.empty?
 
@@ -29,6 +29,13 @@ class UserLeave < ApplicationRecord
     rescue ActiveRecord::RecordInvalid
       false
     end
+  end
+
+  def can_destroy?
+    return true unless applied_leaves.where(state: 'pending').exists?
+
+    errors.add(:base, I18n.t('user_leave.messages.failure.applied_leave_exists'))
+    throw(:abort)
   end
 
   def validate_user_leave_count

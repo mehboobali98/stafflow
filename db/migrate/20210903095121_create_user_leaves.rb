@@ -3,7 +3,7 @@ class CreateUserLeaves < ActiveRecord::Migration[6.0]
     create_table :user_leaves do |t|
       t.float :total_count, null: false
       t.float :remaining_count, null: false
-      t.references :leave, null: true
+      t.references :leave
       t.references :user, null: false
       t.references :company, null: false
 

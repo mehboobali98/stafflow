@@ -10,7 +10,7 @@ class AppliedLeave < ApplicationRecord
   belongs_to :company
 
   def leave_duration_name
-    LEAVE_DURATION.invert[leave_duration_id]
+    LEAVE_DURATION.invert[leave_duration_type]
   end
 
   def leave_available?

@@ -166,7 +166,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   def applied_leave_params
-    params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_id)
+    params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_type)
   end
 
   def set_user

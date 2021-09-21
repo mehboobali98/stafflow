@@ -74,6 +74,7 @@ en:
         total_leave_count: 'must be greater than remaining leave count'
         duplicate_error: 'User leave already exists'
         not_found: 'User leave with the given id does not exist'
+        applied_leave_exists: 'User leave has many applied leaves. Cannot be deleted'
       info:
         no_leave_remaining: 'User has already been assigned all the leaves'
       confirmation:

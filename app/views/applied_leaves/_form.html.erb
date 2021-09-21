@@ -6,8 +6,8 @@
       <%= collection_select(:applied_leave, :user_leave_id, available_user_leaves, :id, :name, {}, { class: "form-control" }) %>
     </div>
     <div class="form mb-4">
-      <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %>
-      <%= form.select :leave_duration_id, options_for_select(AppliedLeave::LEAVE_DURATION.transform_keys{ |key| key.to_s.humanize }), {}, class: "form-control" %>
+      <%= form.label :leave_duration_type, t('applied_leave.labels.leave_duration') %>
+      <%= form.select :leave_duration_type, options_for_select(AppliedLeave::LEAVE_DURATION.transform_keys{ |key| key.to_s.humanize }), {}, class: "form-control" %>
     </div>
     <div class="form mb-4">
       <%= form.label :applied_from, t('applied_leave.labels.leave_from'), class: "form-label" %>
