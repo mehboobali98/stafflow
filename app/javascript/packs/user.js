@@ -42,7 +42,7 @@ $(document).on('change', '#department_select', function() {
   if (this.value === '') return;
   $.ajax({
     type: 'GET',
-    url: `/departments/${this.value}/designations`,
+    url: `/departments/${this.value}/fetch_designations`,
     dataType: 'script',
     success: function(response) {
       designationSelectBox = $('#designation_select');
@@ -54,23 +54,3 @@ $(document).on('change', '#department_select', function() {
     }
   });
 });
-
-$(function() {
-  if(window.location.pathname.indexOf('edit') >= 0) {
-    if($('#department_select').val()) {
-      $.ajax({
-        type: 'GET',
-        url: `/departments/${$('#department_select').val()}/designations`,
-        dataType: 'script',
-        success: function(response) {
-          designationSelectBox = $('#designation_select');
-          designationSelectBox.html("");
-          designations = JSON.parse(response);
-          designations.forEach(function(designation) {
-            designationSelectBox.append(`<option value=${designation.id}> ${designation.name} </option>`)
-          });
-        }
-      });
-    }
-  }
-})

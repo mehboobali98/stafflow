@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     resources :members, controller: 'users'
     resources :departments do
       member do
-        get '/designations', to: 'departments#fetch_designations'
+        get 'fetch_designations'
       end
     end
     resources :designations

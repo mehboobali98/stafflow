@@ -33,6 +33,7 @@ class UsersController < ApplicationController
   # GET /members/:id/edit
   def edit
     @departments = Department.all
+    @designations = @user.department.designations if @user.department.present?
     respond_to do |format|
       format.html
     end

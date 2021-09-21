@@ -19,31 +19,32 @@
           <%= form.label I18n.t('forms.labels.dob') %><br />
           <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
         </div>
-        <% if can?(:update_role, @user, current_user) %>
-          <div class='field mb-3'>
-            <%= form.label I18n.t('forms.labels.role') %><br />
-            <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {}, class: 'form-control' %>
-          </div>
+        <% if !@user.account_owner? %>
+          <% if can?(:update_role, @user) %>
+            <div class='field mb-3'>
+              <%= form.label I18n.t('forms.labels.role') %><br />
+              <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {}, class: 'form-control' %>
+            </div>
+          <% end %>
+          <% if can?(:update_department, @user) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.department') %><br />
+              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
+            </div>
+          <% end %>
+          <% if can?(:update_designation, @user) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.designation') %><br />
+              <%= form.select :designation_id, options_from_collection_for_select(@designations, 'id', 'name'), { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
+            </div>
+          <% end %>
+          <% if can?(:update_salary, @user) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.salary') %><br />
+              <%= form.number_field :base_salary, required: true, class: 'form-control' %>
+            </div>
+          <% end %>
         <% end %>
-        <% if can?(:update_department, @user, current_user) %>
-          <div class='field mb-2'>
-            <%= form.label I18n.t('forms.labels.department') %><br />
-            <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
-          </div>
-        <% end %>
-        <% if can?(:update_designation, @user, current_user) %>
-          <div class='field mb-2'>
-            <%= form.label I18n.t('forms.labels.designation') %><br />
-            <%= form.select :designation_id, {}, { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
-          </div>
-        <% end %>
-        <% if can?(:update_salary, @user, current_user) %>
-          <div class='field mb-2'>
-            <%= form.label I18n.t('forms.labels.salary') %><br />
-            <%= form.number_field :base_salary, required: true, class: 'form-control' %>
-          </div>
-        <% end %>
-
         <div class='actions'>
           <%= form.submit t('forms.buttons.update'), class: 'btn btn-primary w-100 mt-3' %>
         </div>
