@@ -8,6 +8,9 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
+    # UserMailer.leave_application_email(['chabdulbasit1122@gmail.com', 'bcsf17m526@pucit.edu.pk']).deliver_now
+    emails = current_company.users.where(role_id: User::ROLES[:department_head]).where(department_id: current_user.department_id).or(current_company.users.where(role_id: User::ROLES[:hr]))
+      binding.pry
     @applied_leaves = @user.applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
