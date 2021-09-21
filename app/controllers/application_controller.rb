@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :sub_domain?
   rescue_from CanCan::AccessDenied do
     respond_to do |format|
-      format.html { redirect_to members_path, alert: I18n.t('messages.unauthorized') }
+      format.html { redirect_to members_path, alert: t('messages.unauthorized') }
       format.json { render nothing: true, status: :not_found }
       format.js   { render nothing: true, status: :not_found }
     end
@@ -29,6 +29,6 @@ class ApplicationController < ActionController::Base
   private :current_company, :set_current_company
 
   def sub_domain?(request)
-    true if !request.subdomain.blank? && request.subdomain != 'www'
+    !request.subdomain.blank? && request.subdomain != 'www'
   end
 end

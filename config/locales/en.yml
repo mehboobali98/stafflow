@@ -28,9 +28,60 @@
 #
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
-
 en:
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
   company:
+    table_header:
+      list: "Companies List"
+      name: "Company Name"
+      subdomain: "Subdomain"
+      options: "Options"
+  department:
+    name_lable: "Department Name"
+    image_lable: "Upload Image"
+    table_heading: "Departments"
+    table_options: "Options"
+    table_cell_name: "Name"
+    new_link_name: "New Department"
+    already_exist: "Department Alread Exists"
+    created: "Department Created Successfully"
+    not_created: "Department Not Created"
+    updated: "Department Updated Successfully"
+    not_updated: "Department Not Updated"
+    destroy: "Department Destroyed Successfully"
+    edit_message: "Update Department"
+    add_message: "Add Department"
+    not_exist: "Department Does Not Exist"
+    edit_btn_message: "Edit"
+    show_btn_message: "Show"
+    destroy_btn_message: "Destroy"
+    sure_message: "Are You Sure?"
+  designation:
+    name_lable: "Designation Name"
+    select_department: "Select Department"
+    table_heading: "Designations"
+    table_options: "Options"
+    table_cell_one_name: "Name"
+    table_cell_two_name: "Department-ID"
+    new_link_name: "New Designation"
+    already_exist: "Designation Alread Exists"
+    created: "Designation Created Successfully"
+    not_created: "Designation Not Created"
+    updated: "Designation Updated Successfully"
+    not_updated: "Designation Not Updated"
+    destroy: "Designation Destroyed Successfully"
+    edit_message: "Update Designation"
+    add_message: "Add Designation"
+    not_exist: "Designation Does Not Exist"
+    edit_btn_message: "Edit"
+    destroy_btn_message: "Destroy"
+    sure_message: "Are You Sure?"
+  appname: "EMS"
+  company:
+    label: 'Company'
     table_header:
       list: "Companies List"
       name: "Company Name"
@@ -42,3 +93,48 @@ en:
     byteam: "by team ABC"
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
+  settings:
+    updated: "Settings were successfully updated"
+    not_updated: "Settings were not updated due to an error"
+    title: "Settings"    
+  event:
+    messages:
+      success:
+        create_success: 'Event created successfully'
+        update_success: 'Event updated successfully'
+        delete_success: 'Event deleted successfully'
+      failure:
+        delete_failure: 'Unable to delete event'
+      error:
+        event_year: 'cannot have more than 4 digits'
+        event_date: 'cannot be in the past'
+        nil_date_input: 'date cannot be empty'
+        invalid_date: 'is invalid'
+        event_not_found: 'Event with the given id does not exist'
+    forms:
+      confirmation:
+        deletion: 'Are you sure?'
+      links:
+        create: 'Create'
+        edit: 'Edit'
+        delete: 'Delete'
+        view: 'View all'
+        show: 'Show'
+        back: 'Back'
+        view_calendar: ' View calendar'
+      headings:
+        show: 'Featured event'
+        add_event: 'Add event'
+        edit_event: 'Edit event'
+        name: 'Name'
+        starts_at: 'Starts at'
+        event: 'Event'
+        option: 'Options'
+      labels:
+        event_name: 'Event name'
+        event_date: 'Event date'
+        event_time: 'Event time'
+      placeholders:
+        event_name: 'Enter event name'
+    simple_calendar:
+      invalid_date: "Date is invalid"

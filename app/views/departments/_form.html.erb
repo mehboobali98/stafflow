@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-4">
+      <h1><%= local_assigns[:heading] %></h1>
+      <%= form_for @department do |form| %>
+        <div class="form-group mb-3">
+          <%= form.label t('department.name_lable') %>
+          <%= form.text_field :name, required: true, class: 'form-control' %>
+        </div>
+        <div>
+          <%= form.submit local_assigns[:label_to_show], class: 'card-link btn btn-dark' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
