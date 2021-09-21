@@ -114,19 +114,24 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
-    AppliedLeave.approve_multiple_applied_leaves(params[:applied_leave_ids])
+    count_approved = AppliedLeave.approve_multiple_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
-      format.js
+      format.js do
+        flash[:notice] = t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
+      end
     end
   end
 
   # PATCH /applied_leaves/reject_multiple_leaves
   def reject_multiple_leaves
-    AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
+    count_rejected = AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
-      format.js { render 'approve_multiple_leaves' }
+      format.js do
+        flash[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
+        render 'approve_multiple_leaves'
+      end
     end
   end
 
@@ -139,6 +144,12 @@ class AppliedLeavesController < ApplicationController
   end
 
   private
+
+  def total_request_count
+    return params[:applied_leave_ids].size if params[:applied_leave_ids]
+
+    0
+  end
 
   def get_available_leaves
     @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',

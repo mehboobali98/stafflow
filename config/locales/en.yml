@@ -107,6 +107,8 @@ en:
       leave_update_success: 'Leave updated succcessfully'
       leave_reject_failure: 'Leave cannot be rejected as it has already been accepted or rejected'
       leave_approve_failure: 'Leave cannot be approved as it has already been approved or rejected'
+      mass_approve: 'Out of %{total} applications, %{actual} were successfully approved'
+      mass_reject: 'Out of %{total} applications, %{actual} were successfully rejected'
       error:
         leave_count: 'is greater than the remaining count of leaves. Cannot apply for leave'
         leave_date_year: 'cannot have more than 4 digits'

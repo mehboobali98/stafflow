@@ -20,7 +20,6 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves/new
   def new
-  binding.pry
     @leaves = @current_company.leaves.where.not(id: @user.leaves.ids)
     respond_to do |format|
       format.html

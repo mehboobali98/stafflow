@@ -1,1 +1,2 @@
+$("#flash_message").html("<%= escape_javascript (render partial: 'shared/flash_message', locals: { flash: flash }) %>");
 $("#applied_leaves_admin_table").empty().html("<%= escape_javascript (render partial: 'applied_leaves_admin_index', locals: { applied_leaves: @applied_leaves }) %>");

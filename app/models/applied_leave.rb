@@ -41,21 +41,25 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.approve_multiple_applied_leaves(applied_leave_ids)
+    count_approved = 0
     applied_leaves = find(applied_leave_ids)
     applied_leaves.each do |applied_leave|
-      applied_leave.approve_applied_leave
+      count_approved += 1 if applied_leave.approve_applied_leave
     rescue ActiveRecord::RecordNotFound
-      nil
+      count_approved
     end
+    count_approved
   end
 
   def self.reject_multiple_applied_leaves(applied_leave_ids)
+    count_rejected = 0
     applied_leaves = find(applied_leave_ids)
     applied_leaves.each do |applied_leave|
-      applied_leave.reject_applied_leave
+      count_rejected += 1 if applied_leave.reject_applied_leave
     rescue ActiveRecord::RecordNotFound
-      nil
+      count_rejected
     end
+    count_rejected
   end
 
   def validate_leave_year
