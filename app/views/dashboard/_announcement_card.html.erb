@@ -1,0 +1,21 @@
+<div class="card announcement-card mt-3">
+  <div class="card-header">
+    <div class="d-flex justify-content-between">
+      <div class="row" id="employee_info">
+        <div class="col-4">
+          <%= image_tag 'signup.svg', size: "70x50", alt: "Edit Entry" %>
+        </div>
+        <div class="col-8 px-3">
+          <div>Basit Ali</div>
+          <div class="fs-6"><small>Designation</small></div>
+        </div>
+      </div>
+      <div>
+        <p><%= time_ago_in_words(DateTime.now) %></p>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="card-text fs-5 fw-light text-start">Either you run the day or the the day runs you. - Jim Rohn</p>
+  </div>
+</div>

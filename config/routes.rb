@@ -35,6 +35,7 @@ Rails.application.routes.draw do
         get 'display_calendar'
       end
     end
+    resources :announcements
     get '/dashboard', action: :dashboard, controller: 'dashboard'
   end
 end
