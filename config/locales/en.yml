@@ -29,6 +29,16 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
+  company:
+    table_header:
+      list: "Companies List"
+      name: "Company Name"
+      subdomain: "Subdomain"
+      options: "Options"
   department:
     name_lable: "Department Name"
     image_lable: "Select Image"
@@ -48,6 +58,7 @@ en:
     add_message: "Add Department"
     not_exist: "Department Does Not Exist"
     edit_btn_message: "Edit"
+    show_btn_message: "Show"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
   designation:
@@ -70,12 +81,20 @@ en:
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
+  appname: "EMS"
   company:
+    label: 'Company'
     table_header:
       list: "Companies List"
       name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
+  labels:
+    signin: "Sign In"
+    ems: "EMS"
+    byteam: "by team ABC"
+    nocompanies: "No Companies Found"
+    choosecompany: "Choose your organization"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
@@ -103,6 +122,8 @@ en:
         delete: 'Delete'
         view: 'View all'
         show: 'Show'
+        back: 'Back'
+        view_calendar: ' View calendar'
       headings:
         show: 'Featured event'
         add_event: 'Add event'
@@ -117,3 +138,5 @@ en:
         event_time: 'Event time'
       placeholders:
         event_name: 'Enter event name'
+    simple_calendar:
+      invalid_date: "Date is invalid"

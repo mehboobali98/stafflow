@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class DesignationsController < ApplicationController
-  before_action :load_designation, only: %I[edit update destroy]
+  load_and_authorize_resource
 
   # GET /designations
   def index
-    @designations = Designation.all
+    @designations = @designations.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -13,7 +13,6 @@ class DesignationsController < ApplicationController
 
   # POST /designations
   def create
-    @designation = Designation.new(permitted_designation_params)
     is_saved = @designation.save
     respond_to do |format|
       format.html do
@@ -27,7 +26,7 @@ class DesignationsController < ApplicationController
     end
   end
 
-  # GET /designations/1/edit
+  # GET /designations/:id/edit
   def edit
     @departments = Department.all
     respond_to do |format|
@@ -35,13 +34,13 @@ class DesignationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /designations/1
+  # PATCH/PUT /designations/:id
   def update
-    is_updated = @designation.update(permitted_designation_params)
+    is_updated = @designation.update(designation_params)
     respond_to do |format|
       format.html do
         if is_updated
-          redirect_to designations_path, notice: t('department.updated') 
+          redirect_to designations_path, notice: t('designation.updated') 
         else
           flash.now[:error] = @designation.errors.full_messages
           redirect_to designations_path
@@ -50,14 +49,17 @@ class DesignationsController < ApplicationController
     end
   end
 
-  # DELETE /designations/1
+  # DELETE /designations/:id
   def destroy
     @designation.destroy
     is_destroyed = @designation.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @designation.errors.full_messages unless is_destroyed
-        flash[:notice] = t('designation.destroy')
+        if is_destroyed
+          flash[:notice] = t('designation.destroy')
+        else
+          flash[:error] = @designation.errors.full_messages
+        end
         redirect_to designations_path
       end
     end
@@ -65,7 +67,6 @@ class DesignationsController < ApplicationController
 
   # GET /designations/new
   def new
-    @designation = Designation.new
     @departments = Department.all
     respond_to do |format|
       format.html
@@ -74,15 +75,7 @@ class DesignationsController < ApplicationController
 
   private
 
-  def permitted_designation_params
+  def designation_params
     params.require(:designation).permit(:name, :department_id)
-  end
-
-  def load_designation
-    @designation = Designation.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html { redirect_to designations_path alert: t('designation.not_exist') }
-    end
   end
 end
