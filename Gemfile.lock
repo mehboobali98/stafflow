@@ -248,7 +248,7 @@ DEPENDENCIES
   simple_calendar (= 2.4.3)
   spring
   spring-watcher-listen (~> 2.0.0)
-  transitions
+  transitions (= 1.2.1)
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)

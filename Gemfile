@@ -28,7 +28,7 @@ gem 'devise'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
-gem "transitions", :require => ["transitions", "active_model/transitions"]
+gem "transitions", '=1.2.1', :require => ["transitions", "active_model/transitions"]
 
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
