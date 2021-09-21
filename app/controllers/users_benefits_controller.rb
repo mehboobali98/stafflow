@@ -1,8 +1,8 @@
 class UsersBenefitsController < ApplicationController
+  before_action :load_user
   before_action :load_users_benefit, only: %i[destroy update show]
   before_action :load_users_benefits, only: %i[new create]
   before_action :load_benefits, only: %i[new create]
-  before_action :load_user
 
   # GET members/:id/users_benefits
   def index
@@ -29,8 +29,11 @@ class UsersBenefitsController < ApplicationController
   # POST members/:id/users_benefits
   def create
     create_users_benefit_objects
-    flash[:notice] = @notice
-    flash[:errors] = @errors
+    if @notice.present?
+      flash[:notice] = @notice
+    else
+      flash[:errors] = @errors
+    end
     respond_to do |format|
       format.html { redirect_to member_users_benefits_path }
     end
@@ -72,29 +75,30 @@ class UsersBenefitsController < ApplicationController
   end
 
   def load_users_benefits
-    @users_benefits = UsersBenefit.includes(:benefit).all
+    @users_benefits = @user.users_benefits
   end
 
   def load_benefits
-    @benefits = Benefit.all
+    benefits_not_applied = @users_benefits.pluck('benefit_id')
+    @benefits = Benefit.where.not(id: benefits_not_applied)
   end
 
   def load_user
-    @user = User.find_by_id(params[:member_id])
+    @user = User.find_by(id: params[:member_id])
   end
 
   # params[user_benefit][benefit_id] : amount
   def create_users_benefit_objects
     params[:users_benefit].each do |benefit_id, amount|
-      user_benefit = UsersBenefit.new(amount: amount,
-                                      benefit_id: benefit_id,
-                                      user_id: @user.id)
-      user_benefit.save!
-      @notice ||= []
-      @notice << t('users_benefit.messages.success.create', benefit_name: user_benefit.benefit.name)
+      new_user_benefit = UsersBenefit.new(amount: amount,
+                                          benefit_id: benefit_id,
+                                          user_id: @user.id)
+      new_user_benefit.save!
+      @notice = []
+      @notice << t('users_benefit.messages.success.create', benefit_name: new_user_benefit.benefit.name)
     rescue ActiveRecord::RecordInvalid
-      @errors ||= []
-      @errors << new_user_benefit.benefit.name + ' ' + new_users_benefit.errors.full_messages.first
+      @errors = []
+      @errors << new_user_benefit.benefit.name + ' ' + new_user_benefit.errors.full_messages.first
     end
   end
 end

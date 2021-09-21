@@ -27,7 +27,7 @@ class PayrollsController < ApplicationController
     if payroll.persisted?
       flash[:notice] = t('payroll.messages.success.create')
     else
-      flash[:alert] = payroll_is_saved
+      flash[:alert] = payroll.errors.full_messages.first
       format.html { redirect_to members_payroll_path }
     end
     respond_to do |format|

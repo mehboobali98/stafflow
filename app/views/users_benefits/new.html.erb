@@ -15,31 +15,25 @@
           <tbody>
             <% @benefits.each_with_index do |benefit, index| %>
               <% if benefit.status %>
-                <% check = true %>
-                <% @users_benefits.each do |users_benefit| %>
-                  <% check = false if users_benefit.benefit.name == benefit.name %>
-                <% end %>
-                <% if check %>
-                  <tr>
-                    <td>
-                      <div class="custom-control custom-checkbox">
-                        <%= check_box_tag '', nil, false, id: 'CheckBox',data: { "id": "number_field_#{benefit.id}" } %>
-                      </div>
-                    </td>
-                    <td><%= benefit.name %></td>
-                    <td>
-                      <div class="form-group">
-                        <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, id: "number_field_#{benefit.id}", disabled: true %>
-                      </div>
-                    </td>
-                  </tr>
-                <% end %>
-              <% end %>  
+                <tr>
+                  <td>
+                    <div class="custom-control custom-checkbox">
+                      <%= check_box_tag '', nil, false, id: 'CheckBox',data: { "id": "number_field_#{benefit.id}" } %>
+                    </div>
+                  </td>
+                  <td><%= benefit.name %></td>
+                  <td>
+                    <div class="form-group">
+                      <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, id: "number_field_#{benefit.id}", disabled: true %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>      
             <% end %>
           </tbody>
         </table>
       </div>
     </div>
-    <%= submit_tag t('form.button.submit'), class: "btn btn-primary m-1" %>
+    <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1' %>
   </div>
 <% end %>

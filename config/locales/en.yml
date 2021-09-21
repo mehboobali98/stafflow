@@ -89,7 +89,7 @@ en:
   users_benefit:
     messages:
       success:
-        create: "%(benefit_name) User Benefit Created Successfully"
+        create: "%{benefit_name} User Benefit Created Successfully"
         update: "Benefit Updated Successfully"
         delete: "Benefit Deleted Successfully"
     validation:
