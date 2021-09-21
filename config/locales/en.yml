@@ -29,6 +29,13 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  notifications:
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
+  navbar: 
+    search: 'Search'
   forms:
     buttons:
       apply_filters: "Apply Filters"
