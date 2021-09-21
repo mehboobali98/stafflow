@@ -41,7 +41,7 @@ class UsersController < ApplicationController
 
   # PATCH /members/:id
   def update
-    is_updated = @user.update(user_params) if @user.date_of_birth_valid? && @user.role_id_valid?
+    is_updated = @user.update(update_user_params) if @user.date_of_birth_valid? && @user.role_id_valid?
     respond_to do |format|
       if is_updated
         format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
@@ -87,6 +87,12 @@ class UsersController < ApplicationController
   private
 
   def user_params
+    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
+                                 :department_id, :password, :password_confirmation,
+                                 :role_id, :base_salary, :designation_id)
+  end
+
+  def update_user_params
     params.require(:user).permit(current_ability.permitted_attributes(:update, @user))
   end
 end
