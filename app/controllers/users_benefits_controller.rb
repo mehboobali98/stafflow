@@ -2,7 +2,6 @@ class UsersBenefitsController < ApplicationController
   before_action :load_user
   before_action :load_users_benefit, only: %i[destroy update show]
   before_action :load_users_benefits, only: %i[new create]
-  before_action :load_benefits, only: %i[new create]
 
   # GET members/:id/users_benefits
   def index
@@ -14,6 +13,8 @@ class UsersBenefitsController < ApplicationController
 
   # GET members/:id/users_benefits/new
   def new
+    benefits_applied = @users_benefits.pluck('benefit_id')
+    @benefits = Benefit.where.not(id: benefits_applied)
     respond_to do |format|
       format.html
     end
@@ -28,6 +29,8 @@ class UsersBenefitsController < ApplicationController
 
   # POST members/:id/users_benefits
   def create
+    benefits_applied = @users_benefits.pluck('benefit_id')
+    @benefits = Benefit.where.not(id: benefits_applied)
     create_users_benefit_objects
     if @notice.present?
       flash[:notice] = @notice
@@ -71,16 +74,11 @@ class UsersBenefitsController < ApplicationController
   end
 
   def load_users_benefit
-    @users_benefit = UsersBenefit.find_by(sequence_num: params[:id])
+    @users_benefit = @user.users_benefits.find_by(sequence_num: params[:id])
   end
 
   def load_users_benefits
     @users_benefits = @user.users_benefits
-  end
-
-  def load_benefits
-    benefits_not_applied = @users_benefits.pluck('benefit_id')
-    @benefits = Benefit.where.not(id: benefits_not_applied)
   end
 
   def load_user
