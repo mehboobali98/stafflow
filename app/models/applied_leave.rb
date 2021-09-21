@@ -27,9 +27,6 @@ class AppliedLeave < ApplicationRecord
   rescue Transitions::InvalidTransition
     errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
     false
-  rescue ArgumentError
-    errors.add(:base, I18n.t('applied_leave.messages.error.leave_count_error'))
-    false
   end
 
   def reject_applied_leave
@@ -98,7 +95,7 @@ class AppliedLeave < ApplicationRecord
     state :rejected
 
     event :request_accepted do
-      transitions to: :accepted, from: :pending, guard: :guard_condition, on_transition: :approve_leave
+      transitions to: :accepted, from: :pending, on_transition: :approve_leave
     end
     event :request_rejected do
       transitions to: :rejected, from: :pending
@@ -115,10 +112,6 @@ class AppliedLeave < ApplicationRecord
     rescue ActiveRecord::RecordInvalid
       nil
     end
-  end
-
-  def guard_condition
-    calculate_leave_count.positive?
   end
 
   def event_failed(_event)
