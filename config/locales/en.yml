@@ -42,3 +42,5 @@ en:
     byteam: "by team ABC"
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
+  user:
+    password_autocomplete: "New Password"
