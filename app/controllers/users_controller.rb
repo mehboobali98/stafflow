@@ -87,14 +87,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    if @user.present?
-      params[:user].delete(:base_salary) if cannot?(:update_salary, @user, current_user)
-      params[:user].delete(:designation_id) if cannot?(:update_designation, @user, current_user)
-      params[:user].delete(:role_id) if cannot?(:update_role, @user, current_user)
-      params[:user].delete(:department_id) if cannot?(:update_department, @user, current_user)
-    end
-
-    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
-                                 :department_id, :password, :password_confirmation, :role_id, :base_salary, :designation_id)
+    params.require(:user).permit(current_ability.permitted_attributes(:update, @user))
   end
 end

@@ -22,6 +22,7 @@ class User < ApplicationRecord
   validates_presence_of :department_id, :designation_id, :base_salary, unless: -> { role_id == ROLES[:account_owner] }
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
+  SENSITIVE_ATTRIBUTES = %i[base_salary department_id designation_id role_id].freeze
   def full_name
     "#{first_name} #{last_name}"
   end
