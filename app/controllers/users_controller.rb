@@ -14,8 +14,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def profile;  end
-
   # POST /members
   def create
     is_saved = @user.save if @user.date_of_birth_valid? && @user.role_id_valid?
