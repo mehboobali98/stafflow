@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 
   # GET /members/new
   def new
-    @departments = Department.all
+    @departments = current_company.departments
     respond_to do |format|
       format.html
     end
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
         format.html { redirect_to members_path, notice: I18n.t('messages.added_employee') }
       else
         format.html do
-          @departments = Department.all
+          @departments = current_company.departments
           render :new
         end
       end
