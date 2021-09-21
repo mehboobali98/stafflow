@@ -138,3 +138,13 @@ en:
         event_name: 'Enter event name'
     simple_calendar:
       invalid_date: "Date is invalid"
+  user:
+    about: "About"
+    edit_profile: "Edit Profile"
+    work_link: "Work Link"
+    benefits: "Benefits"
+    leaves: "Leaves"
+    role: "User Role"
+    name: "Name"
+    date_of_birth: "Date of birth"
+    email: "Email"

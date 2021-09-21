@@ -15,56 +15,56 @@
         </h5>       
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#">About</a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#"><%= t('user.about') %></a>
           </li>
         </ul>
       </div>
     </div>
-    <div class="col-md-2 " style="margin-top:-2%; margin-left:-7%">
-      <%= link_to 'Edit Profile', edit_member_path( @user ),class:" profile-edit-btn" %> 
+    <div class="col-md-2 edit_button">
+      <%= link_to t('user.edit_profile'), edit_member_path(@user),class:" profile-edit-btn" %> 
     </div>
   </div>
   <div class="row">
     <div class="col-md-4">
       <div class="profile-work">
-        <p>WORK LINK</p>
-        <a href="">Benefits</a><br/>
-        <a href="">Leaves</a><br/>
+        <p><%= t('user.work_link') %></p>
+        <a href=""><%= t('user..benefits') %></a><br/>
+        <a href=""><%= t('user.leaves') %></a><br/>
       </div>
     </div>
-    <div class="col-md-8" style="margin-top:-5%">
+    <div class="col-md-8 user-detail">
       <div class="tab-content profile-tab" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           <div class="row">
             <div class="col-md-6">
-              <label>User Role</label>
+              <label><%= t('user.role') %></label>
             </div>
             <div class="col-md-6">
-              <p><%= User::ROLES.key( @user.id ) %></p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>Name</label>
-            </div>
-            <div class="col-md-6">
-              <p><%=@user.first_name%></p>
+              <p><%= User::ROLES.key(@user.id) %></p>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
-              <label>Email</label>
+              <label><%= t('user.name') %></label>
             </div>
             <div class="col-md-6">
-              <p><%=@user.email%></p>
+              <p><%= @user.first_name %></p>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
-              <label>Date of birth</label>
+              <label><%= t('user.email') %></label>
             </div>
             <div class="col-md-6">
-              <p><%=@user.date_of_birth%></p>
+              <p><%= @user.email %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.date_of_birth') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.date_of_birth %></p>
             </div>
           </div>
         </div>                        

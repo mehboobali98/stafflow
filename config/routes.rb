@@ -25,7 +25,6 @@ Rails.application.routes.draw do
       get :display_companies
     end
   end
-      # get 'profile', to: 'users#profile'
 
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :members, controller: 'users'
