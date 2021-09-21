@@ -1,5 +1,6 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
+  before_action :get_applied_leaves, only: :show_applied_leaves
   before_action :set_user, only: %i[index new create edit update destroy]
   before_action :set_applied_leave, only: %i[show edit update destroy approve_leave reject_leave]
 
@@ -13,7 +14,8 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
-    @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
+    @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
+                                                                   0).select('user_leaves.id, leaves.name')
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
@@ -23,7 +25,7 @@ class AppliedLeavesController < ApplicationController
   # POST /members/:member_id/applied_leaves
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
+    @applied_leave.leave_id = @applied_leave.user_leave.leave&.id
     is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_available?
     respond_to do |format|
       format.html do
@@ -31,11 +33,8 @@ class AppliedLeavesController < ApplicationController
           redirect_to member_applied_leaves_path,
                       notice: t('applied_leave.messages.leave_applied_success')
         else
-          flash.now[:error] = @applied_leave.errors.full_messages
-          @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
-            'remaining_count > ?', 0
-          )
-          render :new
+          flash[:error] = @applied_leave.errors.full_messages
+          new_member_applied_leave_path(@user)
         end
       end
     end
@@ -56,11 +55,8 @@ class AppliedLeavesController < ApplicationController
                       notice: t('applied_leave.messages.leave_update_success')
         else
 
-          flash.now[:error] = @leave.errors.full_messages
-          @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
-            'remaining_count > ?', 0
-          )
-          render :edit
+          flash[:error] = @leave.errors.full_messages
+          redirect_to edit_member_applied_leave_path(@user, @applied_leave)
         end
       end
     end
@@ -83,7 +79,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/show_applied_leaves
   def show_applied_leaves
-    @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
     respond_to do |format|
       format.html
     end
@@ -121,7 +116,7 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
-    AppliedLeave.approve_multiple_applied_leaves(multiple_leave_params)
+    AppliedLeave.approve_multiple_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
       format.js
@@ -130,10 +125,10 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /applied_leaves/reject_multiple_leaves
   def reject_multiple_leaves
-    AppliedLeave.reject_multiple_applied_leaves(multiple_leave_params)
+    AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
-      format.js
+      format.js { render 'approve_multiple_leaves' }
     end
   end
 
@@ -141,27 +136,23 @@ class AppliedLeavesController < ApplicationController
   def filter_applied_leaves
     get_filtered_records
     respond_to do |format|
-      format.js
+      format.js { render 'approve_multiple_leaves' }
     end
   end
 
   private
 
+  def get_applied_leaves
+    @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
+  end
+
   def get_filtered_records
-    @applied_leaves = AppliedLeave.get_filtered_records(filter_params[:filter_type].downcase)
+    @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].downcase)
     @applied_leaves.includes(user_leave: %i[user leave])
   end
 
   def applied_leave_params
     params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_id)
-  end
-
-  def multiple_leave_params
-    params.require(:applied_leave_ids)
-  end
-
-  def filter_params
-    params.require(:filterType).permit(:filter_type)
   end
 
   def set_user

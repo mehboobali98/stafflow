@@ -3,7 +3,7 @@
   <%= form_with scope: :applied_leave, url: determine_form_url(user, applied_leave), method: determine_form_method(applied_leave), local: true do |form| %>
     <div class="form mb-4">
       <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves'), class: "form-label" %>
-      <%= collection_select(:applied_leave, :user_leave_id, user_leaves, :id, :name, {}, { class: "form-control" }) %>
+      <%= collection_select(:applied_leave, :user_leave_id, available_user_leaves, :id, :name, {}, { class: "form-control" }) %>
     </div>
     <div class="form mb-4">
       <%= form.label :leave_duration_id, t('applied_leave.labels.leave_duration') %>

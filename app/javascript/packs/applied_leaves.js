@@ -8,13 +8,15 @@ $(document).ready(function() {
   $("#approve_leaves_btn").on("click", function(event) {
     event.preventDefault();
     let appliedLeaveIds = getAppliedLeaveIds();
-    sendMassUpdateRequest("PATCH", "/applied_leaves/approve_multiple_leaves", applied_leave_ids);
+    let currentFilter = getCurrentFilter();
+    sendMassUpdateRequest("PATCH", "/applied_leaves/approve_multiple_leaves", appliedLeaveIds, currentFilter);
   });
 
   $("#reject_leaves_btn").on("click", function(event) {
     event.preventDefault();
     let appliedLeaveIds = getAppliedLeaveIds();
-    sendMassUpdateRequest("PATCH", "/applied_leaves/reject_multiple_leaves", applied_leave_ids);
+    let currentFilter = getCurrentFilter();
+    sendMassUpdateRequest("PATCH", "/applied_leaves/reject_multiple_leaves", appliedLeaveIds, currentFilter);
   });
 
   function toggleCheckBoxVisibility() {
@@ -39,7 +41,7 @@ $(document).ready(function() {
     return countChecked;
   }
 
-  function sendMassUpdateRequest(methodType, path, data) {
+  function sendMassUpdateRequest(methodType, path, data, currentFilter) {
     $.ajax({
       type: methodType,
       url: path,
@@ -47,19 +49,24 @@ $(document).ready(function() {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },
       data: {
-        applied_leave_ids: data
+        applied_leave_ids: data,
+        filter_type: currentFilter
       }
     });
   }
 
+  function getCurrentFilter()
+  {
+    return $("#filter :selected").text();
+  }
+
   $("#filter").on("change", function(event) {
-    let filterType = {};
-    filterType["filter_type"] = this.value;
+    let currentFilter = this.value;
     $.ajax({
       type: "GET",
       url: "/applied_leaves/filter_applied_leaves",
       data: {
-        filterType
+        filter_type: currentFilter
       }
     });
   });
