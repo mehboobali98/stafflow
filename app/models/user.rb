@@ -2,13 +2,30 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+         :recoverable, :rememberable, :confirmable
 
   belongs_to :company
+  belongs_to :department, optional: true
+  belongs_to :designation, optional: true
+
+  has_many :applied_benefits
+  has_many :payrolls
+  has_many :users_benefits
+
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
-  ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
+  scope :role_id, ->(role_id) { where(role_id: role_id) }
+  scope :department_id, ->(department_id) { where(department_id: department_id) }
+  scope :match_users_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
 
+  validates_uniqueness_of :email, scope: :company_id
+  validates_presence_of :email
+  validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
+  validates_presence_of :password, if: :password_required?
+  validates_confirmation_of :password, if: :password_required?
+  validates_length_of :password, within: PASSWORD_LENGTH, allow_blank: true
+
+  ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -43,5 +60,9 @@ class User < ApplicationRecord
 
   def employee?
     role_id == ROLES[:employee]
+  end
+
+  def password_required?
+    !persisted? || password.present? || !password_confirmation.nil?
   end
 end

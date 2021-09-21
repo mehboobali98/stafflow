@@ -2,7 +2,7 @@ class AddSequenceNumToPayrolls < ActiveRecord::Migration[6.0]
   def self.up
     add_column :payrolls, :sequence_num, :integer, null: false
     update_sequence_num_values
-    add_index :payrolls, %i[sequence_num company_id], unique: true
+    add_index :payrolls, %i[company_id sequence_num], unique: true
   end
 
   def self.down

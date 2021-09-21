@@ -26,22 +26,9 @@ class BenefitsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /benefits/:id
-  def update
-    is_updated = @benefit.update(permitted_benefit_params)
-    respond_to do |format|
-      if is_updated
-        flash[:notice] = t('benefit.messages.success.update')
-      else
-        flash[:errors] = @benefit.errors.full_messages
-      end
-      format.html { redirect_to benefits_path }
-    end
-  end
-
   # POST /benefits
   def create
-    @benefit = Benefit.new(permitted_benefit_params)
+    @benefit = Benefit.new(permitted_benefit_params.merge(status: true))
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved
@@ -53,11 +40,24 @@ class BenefitsController < ApplicationController
     end
   end
 
+  # PATCH/PUT /benefits/:id
+  def update
+    is_updated = @benefit.update(permitted_benefit_params.merge(status: true))
+    respond_to do |format|
+      if is_updated
+        flash[:notice] = t('benefit.messages.success.update')
+      else
+        flash[:errors] = @benefit.errors.full_messages
+      end
+      format.html { redirect_to benefits_path }
+    end
+  end
+
   # DELETE /benefits/:id
   def destroy
-    @benefit.destroy
+    updated = @benefit.update(status: nil)
     respond_to do |format|
-      if @benefit.destroyed?
+      if updated
         flash[:notice] = t('benefit.messages.success.delete')
       else
         flash[:errors] = @benefit.errors.full_messages
@@ -69,10 +69,10 @@ class BenefitsController < ApplicationController
   private
 
   def permitted_benefit_params
-    params.require(:benefit).permit(:name, :benefit_type)
+    params.require(:benefit).permit(:name, :default_amount)
   end
 
   def load_benefit
-    @benefit = Benefit.find_by_sequence_num!(params[:id])
+    @benefit = Benefit.find_by(sequence_num: params[:id])
   end
 end

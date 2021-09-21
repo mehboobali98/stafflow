@@ -3,6 +3,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
+  layout 'signup'
 
   # POST /resource
   def create
@@ -10,6 +11,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = company.users.build(devise_parameter_sanitizer.sanitize(:sign_up))
     @user.role_id = User::ROLES[:account_owner]
     is_saved = company.save
+
     respond_to do |format|
       if is_saved
         format.html { redirect_to new_user_session_url, notice: I18n.t('messages.signed_up') }

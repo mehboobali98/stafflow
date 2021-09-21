@@ -2,22 +2,14 @@
   <div class="row">
     <div class="col-md-4">
       <div class="mb-3">
-        <%= benefit_object.label t('benefit.label.benefit_name'), { class: "form-label" } %>
-        <%= benefit_object.text_field :name, { class: "form-control", placeholder: t('form.field.benefit_name') } %>
+        <%= benefit_object.label t('benefit.label.benefit_name'), { class: 'form-label' } %>
+        <%= benefit_object.text_field :name, { class: 'form-control', placeholder: t('form.field.benefit_name') } %>
       </div>
-      <div class="form-check form-check-inline ml-3">
-          <%= label t('benefit.label.benefit_type'), t('benefit.table.annual'), value: false %>
-          <%= benefit_object.radio_button :benefit_type, 'Annually' %>
+      <div class="mb-3">
+        <%= benefit_object.label t('benefit.label.amount'), { class: 'form-label' } %>
+        <%= benefit_object.text_field :default_amount, { class: 'form-control', placeholder: t('benefit.label.amount') } %>
       </div>
-      <div class="form-check form-check-inline">
-        <%= label t('benefit.label.benefit_type'), t('benefit.table.monthly'), value: false %>
-        <%= benefit_object.radio_button :benefit_type, 'Monthly', checked: true %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= label t('benefit.label.benefit_type'), t('benefit.table.one_time'), value: false %>
-        <%= benefit_object.radio_button :benefit_type, 'One Time' %>
-      </div>
-      <%= benefit_object.submit t('form.button.submit'), class: "btn btn-primary" %>
+      <%= benefit_object.submit t('form.button.submit'), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

@@ -12,12 +12,14 @@
   </thead>
   <tbody>
     <% @benefits.each do |benefit| %>
-      <tr>
-        <td><%= benefit.name %></td>
-        <td><%= benefit.benefit_type %></td>
-        <td><%= link_to t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' if can?(:update, benefit)  %></td>
-        <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' if can?(:destroy, benefit) %></td>
-      </tr>
+      <% if benefit.status %>  
+        <tr>
+          <td><%= benefit.name %></td>
+          <td><%= benefit.default_amount %></td>
+          <td><%= link_to t('form.button.update'), benefit_path(benefit), class: 'btn btn-secondary' if can?(:update, benefit) %></td>
+          <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' if can?(:destroy, benefit) %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

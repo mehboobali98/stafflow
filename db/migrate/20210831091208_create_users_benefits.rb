@@ -1,8 +1,8 @@
-class CreateUserBenefits < ActiveRecord::Migration[6.0]
+class CreateUsersBenefits < ActiveRecord::Migration[6.0]
   def change
-    create_table :user_benefits do |t|
-      t.integer :amount
-      t.boolean :status
+    create_table :users_benefits do |t|
+      t.float :amount, null: false
+
       t.references :benefit, null: false
       t.references :user, null: false
       t.references :company, null: false
