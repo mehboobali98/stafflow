@@ -85,7 +85,7 @@ $(document).ready(function() {
     });
   });
 
-  $("body").on('keypress', '.select2-search__field', function(event) {
+  $("body").on('keyup', '.select2-search__field', function(event) {
     let user = {};
     user["email"] = this.value;
     $.ajax({
