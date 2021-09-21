@@ -2,7 +2,6 @@ class NotificationsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_user
   load_and_authorize_resource
-  PAGE_SIZE = 2 # Temporary line
 
   # GET /notifications
   def index
@@ -12,7 +11,7 @@ class NotificationsController < ApplicationController
                                        .paginate(page: params[:page], per_page: PAGE_SIZE)
       end
       format.html do
-        @notifications = current_user.notifications.unread.paginate(page: params[:page], per_page: PAGE_SIZE)
+        @notifications = @notifications.unread.paginate(page: params[:page], per_page: PAGE_SIZE)
       end
     end
   end
