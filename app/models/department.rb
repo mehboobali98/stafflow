@@ -4,7 +4,6 @@ class Department < ApplicationRecord
   belongs_to :company
   has_many :designations, dependent: :destroy
   has_many :users, dependent: :restrict_with_error
-  belongs_to :company
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id
 
