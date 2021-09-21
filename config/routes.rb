@@ -4,11 +4,10 @@ require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :notifications, only: %i[destroy] do
+  resources :notifications, only: %i[index] do
     collection do
-      get '/', to: 'notifications#fetch_user_notifications'
-      post '/read', to: 'notifications#mark_as_read'
-      get '/count', to: 'notifications#notifications_count'
+      post 'mark_as_read'
+      get 'count'
     end
   end
   as :user do

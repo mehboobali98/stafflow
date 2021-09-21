@@ -9,7 +9,7 @@ $(document).ready(function() {
     $.ajax({
       type: 'POST',
       data: { authenticity_token: $('[name="csrf-token"]')[0].content, ids: idsOfObjectsToMarkRead },
-      url: 'notifications/read'
+      url: 'notifications/mark_as_read'
     })
   });
 
