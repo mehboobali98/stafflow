@@ -8,9 +8,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
-    # UserMailer.leave_application_email(['chabdulbasit1122@gmail.com', 'bcsf17m526@pucit.edu.pk']).deliver_now
-    emails = current_company.users.where(role_id: User::ROLES[:department_head]).where(department_id: current_user.department_id).or(current_company.users.where(role_id: User::ROLES[:hr]))
-      binding.pry
     @applied_leaves = @user.applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
@@ -191,5 +188,13 @@ class AppliedLeavesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash[:error] = t('applied_leave.messages.error.not_found')
     redirect_to member_applied_leaves_path(@user)
+  end
+
+  def send_application_email
+    emails = current_company.users.where(role_id: User::ROLES[:department_head])
+                            .where(department_id: current_user.department_id)
+                            .or(current_company.users.where(role_id: User::ROLES[:hr]))
+                            .where.not(id: current_user.id).pluck(:email)
+    UserMailer.leave_application_email(emails).deliver_now
   end
 end
