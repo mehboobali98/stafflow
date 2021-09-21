@@ -1,9 +1,7 @@
 <div class='card pb-3 text-center w-75'>
   <h1 class='card-header'><%= I18n.t('headings.edit_employee') %></h1>
   <div class='card-body px-5'>
-
     <%= form_with model: @user, url: member_path do |form| %>
-
       <div class='field mb-3'>
         <%= form.label "Change Image" %><br />
         <%= form.file_field :image, class: 'form-control' %>
