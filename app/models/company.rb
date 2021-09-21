@@ -7,6 +7,7 @@ class Company < ApplicationRecord
   has_many :users, dependent: :destroy
   has_many :departments, dependent: :destroy
   has_many :designations, dependent: :destroy
+  has_many :events, dependent: :destroy
   set_not_multitenant
 
   def self.current_company_id=(company_id)

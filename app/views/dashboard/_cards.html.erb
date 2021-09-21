@@ -3,10 +3,14 @@
     <div class="col-xl-3">
       <div class="card">
         <div class="card-header">
-          <h3 class="text-center">Upcoming Events</h3>
+          <h3 class="text-center">Total Events</h3>
         </div>
         <div class="card-body">
-          <p class="text-center text-info"><%= Event.where('starts_at > ?', DateTime.now).size %></p>
+          <p class="text-center text-info"><%= @current_company.events.size %></p>
+        </div>
+        <div class="card-footer text-center">
+          <span class="text-black">Upcoming events: </span>
+          <span class="text-danger"><%= @current_company.events.where('starts_at > ?', DateTime.now).size %></span>
         </div>
       </div>
     </div>
@@ -16,7 +20,7 @@
           <h3 class="text-center">Total Employees</h3>
         </div>
         <div class="card-body">
-          <p class="text-center text-secondary"><%= User.all.size %></p>
+          <p class="text-center text-secondary"><%= @current_company.users.all.size %></p>
         </div>
       </div>
     </div>
@@ -26,7 +30,7 @@
           <h3 class="text-center">Total Departments</h3>
         </div>
         <div class="card-body">
-          <p class="text-center text-primary"><%= Department.all.size %></p>
+          <p class="text-center text-primary"><%= @current_company.departments.all.size %></p>
         </div>
       </div>
     </div>

@@ -2,11 +2,11 @@ $(document).on('turbolinks:load', function () {
   $('#sidebar_toggle_btn').on('click', function () {
     $('.sidebar').toggleClass('active');
     if ($('.sidebar').hasClass('active')) {
-      $(".home_content").addClass("sidebar-toggle");
-      $(".home_content").removeClass("home_content");
+      $(".home-content").addClass("sidebar-toggle");
+      $(".home-content").removeClass("home-content");
     } else {
-      $(".sidebar-toggle").addClass("home_content");
-      $(".home_content").removeClass("sidebar-toggle");
+      $(".sidebar-toggle").addClass("home-content");
+      $(".home-content").removeClass("sidebar-toggle");
     }
   });
 });

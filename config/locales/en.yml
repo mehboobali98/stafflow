@@ -41,6 +41,9 @@ en:
     settings: 'Settings'
     logout: 'Logout'
     by_team: 'by team ABC'
+  cards:
+    total_events: 'Total events'
+    upcoming_events: 'Upcoming events'
   forms:
     buttons:
       apply_filters: "Apply Filters"
