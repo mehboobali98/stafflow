@@ -1,0 +1,82 @@
+<%= stylesheet_link_tag 'profile' %>
+<div class="emp-profile">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile-img pt-4">
+        <div class="file btn btn-lg btn-primary">
+          <%= image_tag current_user.image.url(:medium) %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="profile-head">
+        <h5><%= current_user.first_name %>
+            <%= current_user.last_name %> 
+        </h5>       
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-2 " style="margin-top:-2%; margin-left:-7%">
+      <%= link_to 'Edit Profile', edit_member_path(current_user),class:" profile-edit-btn" %> 
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile-work">
+        <p>WORK LINK</p>
+        <a href="">Benefits</a><br/>
+        <a href="">Leaves</a><br/>
+      </div>
+    </div>
+    <div class="col-md-8" style="margin-top:-5%">
+      <div class="tab-content profile-tab" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+          <div class="col-md-6">
+            <label>User Id</label>
+          </div>
+          <div class="col-md-6">
+            <p><%=current_user.id%></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Name</label>
+          </div>
+          <div class="col-md-6">
+            <p><%=current_user.first_name%></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Email</label>
+          </div>
+          <div class="col-md-6">
+            <p><%=current_user.email%></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Date of birth</label>
+          </div>
+          <div class="col-md-6">
+            <p><%=current_user.date_of_birth%></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Salery</label>
+          </div>
+          <div class="col-md-6">
+            <p><%=current_user.base_salary%></p>
+          </div>
+        </div>
+        </div>                        
+      </div>
+    </div>
+  </div>
+</div>

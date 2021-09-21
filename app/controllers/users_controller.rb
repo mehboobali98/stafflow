@@ -14,6 +14,8 @@ class UsersController < ApplicationController
     end
   end
 
+  def profile;  end
+
   # POST /members
   def create
     is_saved = @user.save if @user.date_of_birth_valid? && @user.role_id_valid?
@@ -76,6 +78,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :salary)
+    params.require(:user).permit(:image, :first_name, :email, :last_name, :date_of_birth, :department_id, :password, :password_confirmation, :role_id, :base_salary)
   end
 end

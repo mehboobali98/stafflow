@@ -3,6 +3,12 @@
   <div class='card-body px-5'>
 
     <%= form_with model: @user, url: member_path do |form| %>
+
+      <div class='field mb-3'>
+        <%= form.label "Change Image" %><br />
+        <%= form.file_field :image, class: 'form-control' %>
+      </div>
+
       <div class='field mb-3'>
         <%= form.label I18n.t('forms.labels.email') %><br />
         <%= form.email_field :email, required: true, class: 'form-control' %>
