@@ -1,7 +1,5 @@
 module UserAbilities
   def define_user_abilities(user)
-    return if user.blank?
-
     if user.account_owner?
       can :manage, User, company_id: user.company_id
       cannot :destroy, User, id: user.id, company_id: user.company_id

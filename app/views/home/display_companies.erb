@@ -1,21 +1,17 @@
-<div class="container">
-  <h1><%= t('company.table_header.list') %></h1>
-  <br>
-  <table class="table table-striped table-hover">
-    <thead class="table-dark">
-      <th><%= t('company.table_header.name') %></th>
-      <th><%= t('company.table_header.subdomain') %></th>
-      <th class="text-center"><%= t('company.table_header.options') %></th>
-    </tr>
-    </thead>
-    <tbody>
-      <%= @companies.each do |company| %>
-      <tr>
-        <td><%= company.name %></td>
-        <td><%= company.subdomain %></td>
-        <td><%= link_to "login", new_user_session_url(subdomain: company.subdomain), class: 'btn btn-primary m-1' %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<h3><%= t('labels.signin') %></h3>
+<h5 class='text-muted mt-2 mb-4'><%= t('labels.choosecompany') %></h5>
+<% @companies.each do |company| %>
+  <%= link_to new_user_session_url(subdomain: company.subdomain, email: params.dig(:user, :email)), class: 'text-decoration-none text-dark' do %>
+    <div class='p-3 mt-3 company-show'>
+      <%= image_tag("building.svg", class: 'icon') %>
+      <div class='border-start border-dark d-inline pt-3 pb-3 ms-2'></div>
+      <h4 class='d-inline ms-3'><%= company.name %></h4>
+    </div>
+  <% end %>
+<% end %>
+<% if @companies.empty? %>
+  <h1 class='text-center text-muted'><%= t('labels.nocompanies') %></h1>
+  <div class='d-flex justify-content-around'>
+    <%= image_tag("nodata.svg", class: 'illustration') %>
+  </div>
+<% end %>

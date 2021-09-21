@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: %i[index]
+  before_action :authenticate_user!
   load_and_authorize_resource
+  has_scope :role_id
+  has_scope :department_id
+  has_scope :match_users_name
 
   # GET /members/new
   def new
@@ -63,8 +66,10 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
+    @users = apply_scopes(@users).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
+      format.js
     end
   end
 
