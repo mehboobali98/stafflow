@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class BenefitsController < ApplicationController
-  before_action :load_benefit, only: %i[destroy update show]
-
+  load_and_authorize_resource
   # GET /benefits
   def index
-    @benefits = Benefit.all
     respond_to do |format|
       format.html
     end
@@ -70,9 +68,5 @@ class BenefitsController < ApplicationController
 
   def permitted_benefit_params
     params.require(:benefit).permit(:name, :default_amount)
-  end
-
-  def load_benefit
-    @benefit = Benefit.find_by(sequence_num: params[:id])
   end
 end

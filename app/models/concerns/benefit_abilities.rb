@@ -6,7 +6,6 @@ module BenefitAbilities
       can :read, Benefit, company_id: user.company_id
     else
       can :manage, Benefit, company_id: user.company_id
-      cannot :destroy, Benefit, company_id: user.company_id
     end
   end
 end

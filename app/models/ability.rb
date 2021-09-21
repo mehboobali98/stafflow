@@ -12,17 +12,17 @@ class Ability
   include DesignationAbilities
   include SettingsAbilities
   include BenefitAbilities
-  include UserBenefitAbilities
+  include UsersBenefitAbilities
 
   def initialize(user)
     return if user.blank?
 
     define_user_abilities(user)
-    define_benefit_abilities(user)
-    define_user_benefit_abilities(user)
     define_event_abilities(user)
     define_department_abilities(user)
     define_designation_abilities(user)
     define_setting_abilities(user)
+    define_benefit_abilities(user)
+    define_users_benefit_abilities(user)
   end
 end
