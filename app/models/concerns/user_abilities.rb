@@ -6,15 +6,15 @@ module UserAbilities
     elsif user.hr?
       can :manage, User, company_id: user.company_id
       cannot %i[update destroy create], User, role_id: User::ROLES[:account_owner], company_id: user.company_id
-      cannot %i[update_salary update_designation update_department update_role], User, id: user.id
+      cannot %i[update_salary update_designation update_department update_role], User, id: user.id, company_id: user.company_id
     elsif user.department_head?
       can :read, User, company_id: user.company_id
       can :update, User, department_id: user.department_id, company_id: user.company_id
-      cannot %i[update_salary update_designation update_department update_role], User, id: user.id
+      cannot %i[update_salary update_designation update_department update_role], User, id: user.id, company_id: user.company_id
     elsif user.employee?
       can :read, User, company_id: user.company_id
       can :update, User, id: user.id, company_id: user.company_id
-      cannot %i[update_salary update_designation update_department update_role], User
+      cannot %i[update_salary update_designation update_department update_role], User, company_id: user.company_id
     end
   end
 end

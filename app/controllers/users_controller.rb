@@ -32,7 +32,7 @@ class UsersController < ApplicationController
 
   # GET /members/:id/edit
   def edit
-    @departments = Department.all
+    @departments = current_company.departments
     @designations = @user.department.designations if @user.department.present?
     respond_to do |format|
       format.html
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
       else
         format.html do
           flash.now[:error] = @user.errors.full_messages
-          @departments = Department.all
+          @departments = current_company.departments
           render :edit
         end
       end
@@ -76,7 +76,7 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    @departments = Department.all
+    @departments = current_company.departments
     @users = apply_scopes(@users).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
