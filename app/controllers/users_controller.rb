@@ -17,7 +17,6 @@ class UsersController < ApplicationController
 
   # POST /members
   def create
-    binding.pry
     is_saved = @user.save if @user.date_of_birth_valid? && @user.role_id_valid?
     respond_to do |format|
       if is_saved
