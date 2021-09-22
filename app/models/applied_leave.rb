@@ -8,6 +8,14 @@ class AppliedLeave < ApplicationRecord
   belongs_to :user
   belongs_to :leave
   belongs_to :company
+  before_destroy :can_destroy_leave?, prepend: true
+
+  def can_destroy_leave?
+    return true if pending?
+
+    errors.add(:base, I18n.t('applied_leave.messages.error.delete_error'))
+    throw(:abort)
+  end
 
   def leave_duration_name
     LEAVE_DURATION.invert[leave_duration_type]
@@ -15,7 +23,6 @@ class AppliedLeave < ApplicationRecord
 
   def set_leave
     self.leave_id = user_leave.leave.id
-  rescue 
   end
 
   def leave_available?

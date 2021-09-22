@@ -18,8 +18,8 @@ Rails.application.routes.draw do
     collection do
       get 'all_applied_leaves', as: 'all'
       get 'filter_applied_leaves', as: 'filter'
-      patch 'approve_multiple_leaves', as: 'approve_multiple'
-      patch 'reject_multiple_leaves', as: 'reject_multiple'
+      patch 'approve_leaves', as: 'approve'
+      patch 'reject_leaves', as: 'reject'
     end
     member do
       patch 'approve_leave', as: 'approve'

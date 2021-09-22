@@ -9,7 +9,7 @@ $(document).ready(function() {
     event.preventDefault();
     let appliedLeaveIds = getAppliedLeaveIds();
     let currentFilter = getCurrentFilter();
-    sendMassUpdateRequest("PATCH", "/applied_leaves/approve_multiple_leaves", appliedLeaveIds, currentFilter);
+    sendMassUpdateRequest("PATCH", "/applied_leaves/approve_leaves", appliedLeaveIds, currentFilter);
   });
 
   $("#reject_leaves_btn").on("click", function(event) {
