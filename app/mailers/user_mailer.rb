@@ -9,6 +9,12 @@ class UserMailer < ApplicationMailer
 
   def approve_leave_information(user, emails)
     @user = user
-    mail to: user.email, subject: 'Approve Leave Information', cc: emails
+    mail(to: user.email, subject: 'Approve Leave Information', cc: emails)
+  end
+
+  def leave_rejection_email(emails, user, leave)
+    @user = user
+    @leave = leave
+    mail(to: user.email, subject: 'Leave Rejection', cc: emails)
   end
 end
