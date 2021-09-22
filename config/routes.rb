@@ -5,9 +5,22 @@ require_relative 'initializers/subdomain_validator'
 Rails.application.routes.draw do
   root to: 'home#index'
 
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :notifications, only: %i[index] do
+    collection do
+      post 'mark_as_read'
+      get 'count'
+    end
+  end
+
   resources :settings, only: %i[update] do
     collection do
       get '/', to: 'settings#settings'
+    end
+  end
+  resources :events do
+    collection do
+      get 'display_calendar'
     end
   end
 
@@ -23,7 +36,6 @@ Rails.application.routes.draw do
       get :display_companies
     end
   end
-
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :members, controller: 'users'
     resources :departments
