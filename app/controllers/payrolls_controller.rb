@@ -4,7 +4,7 @@ class PayrollsController < ApplicationController
   before_action :load_user
   before_action :load_payroll, only: :show
   before_action :load_payrolls, only: %i[index create]
-
+  before_action :payroll_validation, only: :create
   # GET members/:id/payrolls
   def index
     respond_to do |format|
@@ -22,7 +22,6 @@ class PayrollsController < ApplicationController
 
   # POST members/:id/payrolls
   def create
-    payroll_validation
     payroll = Payroll.generate_payroll(@user)
     respond_to do |format|
       if payroll
@@ -52,7 +51,7 @@ class PayrollsController < ApplicationController
   def payroll_validation
     if Payroll.payroll_already_generated?(@user)
       flash[:alert] = t('payroll.messages.failure.created_already')
-      redirect_to member_payrolls_path and return false
+      redirect_to member_payrolls_path
     end
   end
 end
