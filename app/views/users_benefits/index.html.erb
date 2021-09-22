@@ -17,7 +17,7 @@
         <td><%= users_benefit.user.full_name%></td>
         <td><%= users_benefit.benefit.name %></td>
         <td><%= users_benefit.amount %></td>
-        <td><%= link_to t('form.button.update'), member_users_benefit_path(@user, users_benefit), class: 'btn btn-secondary' %></td>
+        <td><%= link_to t('form.button.update'), edit_member_users_benefit_path(@user, users_benefit), class: 'btn btn-secondary' %></td>
         <td><%= link_to t('form.button.delete'), member_users_benefit_path(@user, users_benefit), method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' %></td>
       </tr>
     <% end %>

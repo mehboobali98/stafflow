@@ -8,9 +8,8 @@ class User < ApplicationRecord
   belongs_to :department, optional: true
   belongs_to :designation, optional: true
 
-  has_many :applied_benefits
-  has_many :payrolls
-  has_many :users_benefits
+  has_many :payrolls, dependent: :destroy
+  has_many :users_benefits, dependent: :destroy
 
   accepts_nested_attributes_for :company
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true

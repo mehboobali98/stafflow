@@ -6,9 +6,9 @@ class Company < ApplicationRecord
   has_one :setting, dependent: :destroy
   has_many :users, dependent: :destroy
   has_many :benefits, dependent: :destroy
-  has_many :users_benefits, dependent: :destroy
+  has_many :users_benefits
   has_many :payrolls, dependent: :destroy
-  has_many :applied_benefits, dependent: :destroy
+  has_many :applied_benefits
   has_many :departments, dependent: :destroy
   has_many :designations, dependent: :destroy
 
