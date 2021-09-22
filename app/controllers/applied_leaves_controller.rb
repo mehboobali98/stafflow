@@ -104,7 +104,6 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_rejected
-          # send_rejection_email(@applied_leave.user, @applied_leave)
           flash[:notice] = t('applied_leave.messages.leave_reject_success')
         else
           flash[:error] = @applied_leave.errors.full_messages
