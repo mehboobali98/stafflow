@@ -30,7 +30,7 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_saved
-          send_application_email(@user, @applied_leave)
+          @applied_leave.send_email
           redirect_to member_applied_leaves_path,
                       notice: t('applied_leave.messages.leave_applied_success')
         else
@@ -104,7 +104,7 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_rejected
-          send_rejection_email(@applied_leave.user, @applied_leave)
+          # send_rejection_email(@applied_leave.user, @applied_leave)
           flash[:notice] = t('applied_leave.messages.leave_reject_success')
         else
           flash[:error] = @applied_leave.errors.full_messages
@@ -128,10 +128,7 @@ class AppliedLeavesController < ApplicationController
   # PATCH /applied_leaves/reject_multiple_leaves
   def reject_multiple_leaves
     count_rejected = AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
-    current_company.applied_leaves.where(id: params[:applied_leave_ids]).each do |leave|
-      send_rejection_email(record.user, leave)
-    end
-
+    get_filtered_records
     respond_to do |format|
       format.js do
         flash[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
@@ -193,22 +190,5 @@ class AppliedLeavesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash[:error] = t('applied_leave.messages.error.not_found')
     redirect_to member_applied_leaves_path(@user)
-  end
-
-  def send_application_email(user, leave)
-    cc_emails = get_cc_emails
-    UserMailer.delay.leave_application_email(cc_emails, user, leave)
-  end
-
-  def send_rejection_email(user, leave)
-    cc_emails = get_cc_emails
-    UserMailer.delay.leave_rejection_email(cc_emails, user, leave)
-  end
-
-  def get_cc_emails
-    current_company.users.where(role_id: User::ROLES[:department_head])
-                   .where(department_id: current_user.department_id)
-                   .or(current_company.users.where(role_id: User::ROLES[:hr]))
-                   .where.not(id: current_user.id).pluck(:email)
   end
 end

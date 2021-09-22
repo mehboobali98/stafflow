@@ -94,23 +94,25 @@ class AppliedLeave < ApplicationRecord
     state :accepted
     state :rejected
 
-    event :request_accepted, success: :send_mails do
+    event :request_accepted, success: :send_email do
       transitions to: :accepted, from: :pending, on_transition: :approve_leave
     end
-    event :request_rejected do
+    event :request_rejected, success: :send_email do
       transitions to: :rejected, from: :pending
     end
   end
 
-  private
-
-  def send_mails
+  def send_email
     emails = user.company.users.where(role_id: User::ROLES[:department_head])
                  .where(department_id: user.department_id)
                  .or(user.company.users.where(role_id: User::ROLES[:hr]))
                  .where.not(id: user.id).pluck(:email)
-    UserMailer.delay.approve_leave_information(user, applied_from, applied_till, emails)
+    UserMailer.delay.approve_leave_information(user, applied_from, applied_till, emails) if state == 'accepted'
+    UserMailer.delay.leave_rejection_email(emails, user, self) if state == 'rejected'
+    UserMailer.delay.leave_application_email(emails, user, self) if state == 'pending'
   end
+
+  private
 
   def approve_leave
     ActiveRecord::Base.transaction do
