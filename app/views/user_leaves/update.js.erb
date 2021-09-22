@@ -1,5 +1,3 @@
 <% if @user_leave.errors.present? %>
-	$("#modal_flash_message").html("<%= escape_javascript (render partial:'shared/flash_message', locals: { flash: flash }) %>");
-<% else %>
-	$("#modal").modal("hide");
+	$("#modal_flash_message").html("<%= escape_javascript (render partial: 'shared/flash_message', locals: { flash: flash }) %>");
 <% end %>

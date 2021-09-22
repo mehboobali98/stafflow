@@ -10,9 +10,9 @@
           <th><%= t('user_leave.headings.leave_count') %></th>
         </tr>
       </thead>
-      <% if @leaves.present? %>
+      <% if @available_leaves.present? %>
         <tbody>
-          <% @leaves.each do |leave| %>
+          <% @available_leaves.each do |leave| %>
             <tr>
               <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, class: 'js-available-user-leave',data: { "selected-leave-count": ".js-leave-count-#{leave.id}" } %></td>
               <td><%= leave.name %></td>
