@@ -35,7 +35,14 @@ Rails.application.routes.draw do
         get 'display_calendar'
       end
     end
-    resources :announcements
     get '/dashboard', action: :dashboard, controller: 'dashboard'
+    get '/analytics', action: :analytics, controller: 'dashboard'
+    resources :dashboard, only: [] do
+      collection do
+        get 'total_events'
+        get 'employees_per_department'
+        get 'employees_per_city'
+      end
+    end
   end
 end

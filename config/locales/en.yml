@@ -44,6 +44,11 @@ en:
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
+    alt_dp: 'Profile picture'
+  chartkick:
+    loading: 'Loading...'
+    employee_per_dept: 'Employees per department'
+    employee_per_city: 'Employees per city'
   forms:
     buttons:
       apply_filters: "Apply Filters"

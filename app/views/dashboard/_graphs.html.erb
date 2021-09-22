@@ -1,20 +1,15 @@
-<div class="row">
+<div class="row mt-5">
   <div class="col-xl-6">
-    <div class="card card-primary">
-      <div class="card-header employee-dept-graph">
-        <h3 class="card-title text-center">Department Employees</h3>
-      </div>
+    <div class="card">
       <div class="card-body">
-        <%= column_chart @current_company.departments.joins(:users).group(:name).count, colors: [["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8"]] %>
+        <%= column_chart employees_per_department_dashboard_index_path, title: t('chartkick.employee_per_dept'), loading: t('chartkick.loading') %>
       </div>
     </div>
   </div>
   <div class="col-xl-6">
-    <div class="card card-danger">
-      <div class="card-header">
-        <h3 class="card-title">Department employees</h3>
-      </div>
+    <div class="card">
       <div class="card-body">
+        <%= bar_chart employees_per_city_dashboard_index_path, title: t('chartkick.employee_per_city'), loading: t('chartkick.loading') %>
       </div>
     </div>
   </div>
