@@ -106,6 +106,13 @@ en:
       options: "Options"
     button:
       users_benefit: "Benefits"
+  notifications:
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
+  navbar: 
+    search: 'Search'
   forms:
     buttons:
       apply_filters: "Apply Filters"
@@ -174,6 +181,8 @@ en:
     byteam: "by team ABC"
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
+  user:
+    password_autocomplete: "New Password"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
