@@ -9,6 +9,7 @@ class User < ApplicationRecord
   belongs_to :department, optional: true
   belongs_to :designation, optional: true
   accepts_nested_attributes_for :company
+  has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   scope :role_id, ->(role_id) { where(role_id: role_id) }
   scope :department_id, ->(department_id) { where(department_id: department_id) }
