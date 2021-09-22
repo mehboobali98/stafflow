@@ -1,9 +1,0 @@
-<div class="row mt-5">
-  <div class="col-xl-6">
-    <div class="card">
-      <div class="card-body">
-        <%= column_chart @current_company.users.joins(:department).group(:gender, :name).count, stacked: true, title: 'Employees per department', height: "450px" %>
-      </div>
-    </div>
-  </div>
-</div>

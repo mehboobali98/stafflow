@@ -36,12 +36,19 @@ Rails.application.routes.draw do
       end
     end
     get '/dashboard', action: :dashboard, controller: 'dashboard'
-    get '/analytics', action: :analytics, controller: 'dashboard'
+    get '/analytics', action: :analytics, controller: 'analytics'
     resources :dashboard, only: [] do
       collection do
         get 'total_events'
         get 'employees_per_department'
         get 'employees_per_city'
+      end
+    end
+
+    resources :analytics, only: [] do
+      collection do
+        get 'employee_gender_distribution'
+        get 'monthly_payroll'
       end
     end
   end

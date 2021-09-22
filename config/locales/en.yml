@@ -49,6 +49,11 @@ en:
     loading: 'Loading...'
     employee_per_dept: 'Employees per department'
     employee_per_city: 'Employees per city'
+    employee_gender_dist: 'Employee gender distribution'
+    monthly_payroll: 'Monthly payroll'
+    payroll_x_axis_title: 'Months'
+    payroll_y_axis_title: 'Amount'
+    amount_prefix: 'Rs '
   forms:
     buttons:
       apply_filters: "Apply Filters"
