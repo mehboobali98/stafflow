@@ -27,6 +27,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :notifications, only: %i[index] do
+    collection do
+      post 'mark_as_read'
+      get 'count'
+    end
+  end
+
   as :user do
     root to: 'devise/sessions#new'
   end
@@ -49,7 +56,6 @@ Rails.application.routes.draw do
       get :display_companies
     end
   end
-
   constraints subdomain: /^(?!www\Z)(\w+)/ do
     resources :members, controller: 'users'
     resources :departments

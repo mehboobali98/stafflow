@@ -1,0 +1,11 @@
+<div class='please-scroll'>
+  <div class='list-group js-notifications-list'>
+    <% notifications.each do |notification| %>
+      <label class="list-group-item">
+        <input class="form-check-input me-2" type="checkbox" value="" id= <%= notification.id %>>
+        <%= notification.body %>
+      </label>
+    <% end %>
+  </div>
+</div>
+<%= render partial: 'shared/pagination', locals: { resource: notifications } %>
