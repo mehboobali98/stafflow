@@ -105,11 +105,11 @@ class AppliedLeave < ApplicationRecord
   private
 
   def send_mails
-    emails = user.company.users.where(role_id: User::ROLES[:department_head])
-                 .where(department_id: user.department_id)
-                 .or(user.company.users.where(role_id: User::ROLES[:hr]))
-                 .where.not(id: user.id).pluck(:email)
-    UserMailer.delay.approve_leave_information(user, applied_from, applied_till, emails)
+    cc_emails = user.company.users.where(role_id: User::ROLES[:department_head])
+                    .where(department_id: user.department_id)
+                    .or(user.company.users.where(role_id: User::ROLES[:hr]))
+                    .where.not(id: user.id).pluck(:email)
+    UserMailer.delay.approve_leave_information(user, applied_from, applied_till, cc_emails)
   end
 
   def approve_leave
