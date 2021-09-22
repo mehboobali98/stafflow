@@ -30,6 +30,11 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_saved
+          emails = current_company.users.where(role_id: User::ROLES[:department_head])
+                                  .where(department_id: current_user.department_id)
+                                  .or(current_company.users.where(role_id: User::ROLES[:hr]))
+                                  .where.not(id: current_user.id).pluck(:email)
+          send_application_email(emails, @user, @applied_leave)
           redirect_to member_applied_leaves_path,
                       notice: t('applied_leave.messages.leave_applied_success')
         else
@@ -190,11 +195,7 @@ class AppliedLeavesController < ApplicationController
     redirect_to member_applied_leaves_path(@user)
   end
 
-  def send_application_email
-    emails = current_company.users.where(role_id: User::ROLES[:department_head])
-                            .where(department_id: current_user.department_id)
-                            .or(current_company.users.where(role_id: User::ROLES[:hr]))
-                            .where.not(id: current_user.id).pluck(:email)
-    UserMailer.leave_application_email(emails).deliver_now
+  def send_application_email(emails, user, leave)
+    UserMailer.leave_application_email(emails, user, leave).deliver_now
   end
 end
