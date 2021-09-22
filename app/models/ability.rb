@@ -14,6 +14,7 @@ class Ability
   include SettingsAbilities
   include BenefitAbilities
   include UsersBenefitAbilities
+  include PayrollAbilities
 
   def initialize(user)
     return if user.blank?
@@ -26,5 +27,6 @@ class Ability
     define_setting_abilities(user)
     define_benefit_abilities(user)
     define_users_benefit_abilities(user)
+    define_payroll_abilities(user)
   end
 end

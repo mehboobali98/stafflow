@@ -1,13 +1,13 @@
 <div class="container">
   <h1><%= t('benefit.headings.benefit') %></h1>
-  <%= link_to t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-dark' if can?(:create,  @benefits.first) %>
+  <%= link_to t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-dark' if can?(:create,  Benefit) %>
   <br>
   <br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
       <th><%= t('benefit.table.name') %></th>
       <th><%= t('benefit.table.amount') %></th>
-      <th colspan="2"><%= t('benefit.table.options') if can?(:edit, @benefits.first) %></th>
+      <th colspan="2"><%= t('benefit.table.options') if can?(:edit, Benefit) %></th>
     </tr>
   </thead>
   <tbody>

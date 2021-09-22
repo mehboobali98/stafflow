@@ -1,11 +1,9 @@
 class UsersBenefitsController < ApplicationController
-  before_action :load_user
-  before_action :load_users_benefit, only: %i[destroy edit update]
-  before_action :load_users_benefits, only: %i[new mass_create]
+  load_and_authorize_resource
 
   # GET members/:id/users_benefits
   def index
-    @users_benefits = @user.users_benefits.includes(:benefit)
+    @users_benefits = @users_benefits.includes(:benefit)
     respond_to do |format|
       format.html
     end
@@ -66,22 +64,6 @@ class UsersBenefitsController < ApplicationController
   end
 
   private
-
-  def update_user_benefit_params
-    params.require(:users_benefit).permit(:amount)
-  end
-
-  def load_users_benefit
-    @users_benefit = @user.users_benefits.find_by(sequence_num: params[:id])
-  end
-
-  def load_users_benefits
-    @users_benefits = @user.users_benefits
-  end
-
-  def load_user
-    @user = User.find_by(id: params[:member_id])
-  end
 
   # params[users_benefit][benefit_id] : amount
   # e.g params['users_benefit'][2] = 200

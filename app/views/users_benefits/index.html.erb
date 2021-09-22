@@ -1,6 +1,6 @@
 <div class="container">
   <h1><%= t('users_benefit.headings.users_benefits') %></h1>
-  <%= link_to t('users_benefit.table.new_users_benefit'), new_member_users_benefit_path, class: 'btn btn-outline-dark' if can?(:create, @users_benefit.first) %>
+  <%= link_to t('users_benefit.table.new_users_benefit'), new_member_users_benefit_path, class: 'btn btn-outline-dark' if can?(:create, UserBenefit) %>
   <br>
   <br>
   <table class="table table-striped table-hover">
@@ -8,7 +8,7 @@
       <th><%= t('users_benefit.table.user_name') %></th>
       <th><%= t('users_benefit.table.benefit_name') %></th>
       <th><%= t('users_benefit.table.amount') %></th>
-      <th colspan="2"><%= t('users_benefit.table.options') %></th>
+      <th colspan="2"><%= t('users_benefit.table.options') if can?(:update, UserBenefit) %></th>
     </tr>
   </thead>
   <tbody>
