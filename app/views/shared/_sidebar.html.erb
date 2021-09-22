@@ -44,10 +44,10 @@
       <% end %>
     </li>
     <li>
-      <a href="#">
+      <%= link_to analytics_path do %>
         <i class="fas fa-chart-line"></i>
         <span class="links-name"><%= t('sidebar.analytics') %></span>
-      </a>
+      <% end %>
     </li>
     <li>
       <a href="#">
@@ -56,10 +56,10 @@
       </a>
     </li>
     <li>
-      <a href="#">
+      <%= link_to settings_path do %>
         <i class="fas fa-cogs"></i>
         <span class="links-name"><%= t('sidebar.settings') %></span>
-      </a>
+      <% end %>
     </li>
     <li>
       <%= link_to destroy_user_session_path, method: :delete do %>
