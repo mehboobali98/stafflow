@@ -5,7 +5,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits
   def index
-    @benefits = Benefit.all
+    @benefits = Benefit.all.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
