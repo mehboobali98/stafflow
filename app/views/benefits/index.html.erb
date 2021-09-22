@@ -23,7 +23,5 @@
     <% end %>
   </tbody>
 </table>
+<%= render partial: 'shared/pagination', locals: { resource: @benefits } %>
 </div> 
-<div class="pagination-wrapper m-3">
-  <%= will_paginate @benefits, container: false %>
-</div>

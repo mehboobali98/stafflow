@@ -1,3 +1,5 @@
+<%= stylesheet_link_tag 'pagination' %>
+
 <div class="container">
   <h1><%= t('payroll.headings.payroll') %></h1>
   <br>
@@ -23,4 +25,5 @@
       </tbody>
     <% end %>
   </table> 
+  <%= render partial: 'shared/pagination', locals: { resource: @payrolls } %>
 </div> 
