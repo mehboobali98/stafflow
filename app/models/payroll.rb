@@ -7,30 +7,35 @@ class Payroll < ApplicationRecord
   belongs_to :company
 
   def self.generate_payroll(user)
-    tax_amount           = user.base_salary * (user.company.setting.tax_rate / 100)
-    salary_after_tax     = user.base_salary - tax_amount
-    user_benefits_amount = user.users_benefits.sum(:amount)
-    gross_salary         = salary_after_tax + user_benefits_amount
+    ActiveRecord::Base.transaction do
+      tax_amount           = user.base_salary * (user.company.setting.tax_rate / 100)
+      salary_after_tax     = user.base_salary - tax_amount
+      user_benefits_amount = user.users_benefits.sum(:amount)
+      gross_salary         = salary_after_tax + user_benefits_amount
 
-    payroll = Payroll.new(user_id: user.id, gross_salary: gross_salary,
-                          salary_after_tax: salary_after_tax, base_salary: user.base_salary)
+      payroll = user.payrolls.new(user_id: user.id, gross_salary: gross_salary,
+                                  salary_after_tax: salary_after_tax,
+                                  base_salary: user.base_salary)
 
-    user.users_benefits.each do |user_benefit|
-      payroll.applied_benefits.build(users_benefit_id: user_benefit.id,
-                                     amount: user_benefit.amount,
-                                     benefit_id: user_benefit.benefit_id,
-                                     user_id: user.id)
+      user.users_benefits.each do |user_benefit|
+        payroll.applied_benefits.build(users_benefit_id: user_benefit.id,
+                                       amount: user_benefit.amount,
+                                       benefit_id: user_benefit.benefit_id)
+      end
+      payroll.save!
+      return payroll
     end
-    payroll.save
+  rescue ActiveRecord::RecordInvalid
     payroll
   end
 
-  def self.check_last_payroll_date(user)
-    date = user.payrolls.last.created_at
+  def self.payroll_already_generated?(user)
+    payrolls = user.payrolls.last
+    return false unless payrolls.present?
+
+    date = payrolls.created_at
     return true if DateTime.now.month == date.month && DateTime.now.year == date.year
 
-    false
-  rescue ActiveRecord::RecordInvalid
     false
   end
 end

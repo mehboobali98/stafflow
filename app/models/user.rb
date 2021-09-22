@@ -5,14 +5,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :confirmable
 
   belongs_to :company
-  belongs_to :department, optional: true
-  belongs_to :designation, optional: true
+  belongs_to :department
+  belongs_to :designation
 
-  has_many :applied_benefits
-  has_many :payrolls
-  has_many :users_benefits
+  has_many :payrolls, dependent: :destroy
+  has_many :users_benefits, dependent: :destroy
 
   accepts_nested_attributes_for :company
+  has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   scope :role_id, ->(role_id) { where(role_id: role_id) }
   scope :department_id, ->(department_id) { where(department_id: department_id) }

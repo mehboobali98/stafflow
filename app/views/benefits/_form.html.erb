@@ -1,15 +1,15 @@
-<%= form_for @benefit do |benefit_object| %>
+<%= form_for @benefit do |form| %>
   <div class="row">
     <div class="col-md-4">
       <div class="mb-3">
-        <%= benefit_object.label t('benefit.label.benefit_name'), { class: 'form-label' } %>
-        <%= benefit_object.text_field :name, { class: 'form-control', placeholder: t('form.field.benefit_name') } %>
+        <%= form.label t('benefit.label.benefit_name'), { class: 'form-label' } %>
+        <%= form.text_field :name, { class: 'form-control', required: true, placeholder: t('form.field.benefit_name') } %>
       </div>
       <div class="mb-3">
-        <%= benefit_object.label t('benefit.label.amount'), { class: 'form-label' } %>
-        <%= benefit_object.text_field :default_amount, { class: 'form-control', placeholder: t('benefit.label.amount') } %>
+        <%= form.label t('benefit.label.amount'), { class: 'form-label' } %>
+        <%= form.number_field :default_amount, { class: 'form-control', required: true, placeholder: t('benefit.label.amount') } %>
       </div>
-      <%= benefit_object.submit t('form.button.submit'), class: 'btn btn-primary' %>
+      <%= form.submit t('form.button.submit'), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

@@ -17,8 +17,8 @@ class BenefitsController < ApplicationController
     end
   end
 
-  # GET /benefits/:id
-  def show
+  # GET /benefits/:id/edit
+  def edit
     respond_to do |format|
       format.html
     end
@@ -26,7 +26,7 @@ class BenefitsController < ApplicationController
 
   # POST /benefits
   def create
-    @benefit = Benefit.new(permitted_benefit_params.merge(status: true))
+    @benefit = Benefit.new(permitted_benefit_params)
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved
@@ -40,7 +40,7 @@ class BenefitsController < ApplicationController
 
   # PATCH/PUT /benefits/:id
   def update
-    is_updated = @benefit.update(permitted_benefit_params.merge(status: true))
+    is_updated = @benefit.update(permitted_benefit_params)
     respond_to do |format|
       if is_updated
         flash[:notice] = t('benefit.messages.success.update')
@@ -53,9 +53,9 @@ class BenefitsController < ApplicationController
 
   # DELETE /benefits/:id
   def destroy
-    updated = @benefit.update(status: nil)
+    @benefit.destroy
     respond_to do |format|
-      if updated
+      if @benefit.destroyed?
         flash[:notice] = t('benefit.messages.success.delete')
       else
         flash[:errors] = @benefit.errors.full_messages
