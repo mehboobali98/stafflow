@@ -35,6 +35,8 @@ gem 'simple_calendar', '= 2.4.3'
 # chartkick
 gem "chartkick"
 
+# faker gem to seed database
+gem "faker"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
