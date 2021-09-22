@@ -16,7 +16,7 @@ $(document).ready(function() {
     event.preventDefault();
     let appliedLeaveIds = getAppliedLeaveIds();
     let currentFilter = getCurrentFilter();
-    sendMassUpdateRequest("PATCH", "/applied_leaves/reject_multiple_leaves", appliedLeaveIds, currentFilter);
+    sendMassUpdateRequest("PATCH", "/applied_leaves/reject_leaves", appliedLeaveIds, currentFilter);
   });
 
   function toggleCheckBoxVisibility() {

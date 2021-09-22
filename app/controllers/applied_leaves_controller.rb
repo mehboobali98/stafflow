@@ -120,9 +120,8 @@ class AppliedLeavesController < ApplicationController
   # PATCH /applied_leaves/approve_leaves
   def approve_leaves
     # change to approve_leaves
-    count_approved = AppliedLeave.approve_multiple_applied_leaves(params[:applied_leave_ids])
+    count_approved = AppliedLeave.approve_multiples_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
-    binding.pry
     respond_to do |format|
       format.js do
         flash[:notice] = t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
@@ -130,8 +129,8 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # PATCH /applied_leaves/reject_multiple_leaves
-  def reject_multiple_leaves
+  # PATCH /applied_leaves/reject_leaves
+  def reject_leaves
     count_rejected = AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|

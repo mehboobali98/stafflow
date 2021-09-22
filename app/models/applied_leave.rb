@@ -90,7 +90,7 @@ class AppliedLeave < ApplicationRecord
   end
 
   def self.get_filtered_records(filter)
-    return all if filter.empty? && filter_not_exists?(filter)
+    return all if filter.empty? || filter_not_exists?(filter)
 
     where(state: filter)
   end
