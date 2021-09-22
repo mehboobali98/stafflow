@@ -89,6 +89,11 @@ class AppliedLeavesController < ApplicationController
       format.html do
         if is_approved
           flash[:notice] = t('applied_leave.messages.leave_approve_success')
+          UserMailer.delay(run_at: 2.seconds.from_now).approve_leave_information(current_user)
+          users = current_company.users.where(role_id: User::ROLES[:department_head]).where(department_id: current_user.department_id).or(current_company.users.where(role_id: User::ROLES[:hr]))
+          users.each do |user|
+            UserMailer.delay(run_at: 2.seconds.from_now).approve_leave_information(user)
+          end
         else
           flash[:error] = @applied_leave.errors.full_messages
         end
