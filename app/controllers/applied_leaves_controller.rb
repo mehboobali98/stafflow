@@ -76,7 +76,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET /applied_leaves/show_applied_leaves
-  def show_applied_leaves
+  def show_applied_leaves #all or system applied leaves
     respond_to do |format|
       format.html
     end
@@ -114,6 +114,7 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /applied_leaves/approve_multiple_leaves
   def approve_multiple_leaves
+    # change to approve_leaves
     count_approved = AppliedLeave.approve_multiple_applied_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
@@ -151,7 +152,7 @@ class AppliedLeavesController < ApplicationController
     0
   end
 
-  def get_available_leaves
+  def get_available_leaves # move to user.rb
     @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
                                                                    0).select('user_leaves.id, leaves.name')
   end

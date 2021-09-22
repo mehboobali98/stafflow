@@ -13,9 +13,15 @@ class AppliedLeave < ApplicationRecord
     LEAVE_DURATION.invert[leave_duration_type]
   end
 
+  def set_leave
+    self.leave_id = user_leave.leave.id
+  rescue 
+  end
+
   def leave_available?
     leave_count = calculate_leave_count
-    return true if leave_count.positive? && leave_count < user_leave.remaining_count
+    binding.pry
+    return true if leave_count.positive? && user_leave.count_available?(leave_count)
 
     errors.add(:leave_count, I18n.t('applied_leave.messages.error.leave_count'))
     false

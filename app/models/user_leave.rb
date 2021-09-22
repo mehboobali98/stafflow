@@ -44,4 +44,10 @@ class UserLeave < ApplicationRecord
     errors.add(:total_leave_count, I18n.t('user_leave.messages.failure.total_leave_count'))
     false
   end
+
+  def count_available?(leave_count)
+    return true if leave_count < remaining_count
+
+    false
+  end
 end
