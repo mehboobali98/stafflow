@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   end
   resources :leaves
 
-  resources :applied_leaves, except: %i[show index new create edit update destroy] do
+  resources :applied_leaves, only: [] do
     collection do
       get 'all_applied_leaves', as: 'all'
       get 'filter_applied_leaves', as: 'filter'

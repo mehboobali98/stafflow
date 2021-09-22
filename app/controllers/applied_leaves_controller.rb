@@ -81,7 +81,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET /applied_leaves/all_applied_leaves
-  def all_applied_leaves #all or system applied leaves
+  def all_applied_leaves
     respond_to do |format|
       format.html
     end
