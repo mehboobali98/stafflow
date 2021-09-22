@@ -14,7 +14,7 @@
       <% @leaves.each do |leave| %>
         <tr>
           <td><%= leave.name %></td>
-          <td><%= leave.count %></td>
+          <td><%= leave.default_count %></td>
           <td><%= link_to t('leave.forms.links.show'), leave, class: 'btn btn-info' %></td>
           <td><%= link_to t('leave.forms.links.edit'), edit_leave_path(leave), class: 'btn btn-secondary' %></td>
           <td><%= link_to t('leave.forms.links.delete'), leave, method: :delete, data: { confirm: t('leave.messages.delete_confirm') }, class: 'btn btn-danger' %></td>

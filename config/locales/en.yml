@@ -159,6 +159,11 @@ en:
       leave_duration: 'Leave duration'
       leave_from: 'Leave from'
       leave_to: 'Leave to'
+      pending: 'Pending'
+      accepted: 'Accepted'
+      rejected: 'Rejected'
+      full_day: 'Full day'
+      half_day: 'Half day'
     placeholders:
       leave_filter: 'Select leave filter'
   settings:

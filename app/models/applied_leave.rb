@@ -1,6 +1,6 @@
 class AppliedLeave < ApplicationRecord
   include ActiveModel::Transitions
-  LEAVE_DURATION = HashWithIndifferentAccess.new({ full_day: 1, half_day: 2 }.freeze)
+  LEAVE_DURATION = HashWithIndifferentAccess.new({ full_day: 1, half_day: 2 }).freeze
   validates :applied_from, :applied_till, presence: true
   validate :validate_past_leave_date, on: :create
   validate :validate_leave_dates
@@ -23,6 +23,8 @@ class AppliedLeave < ApplicationRecord
 
   def set_leave
     self.leave_id = user_leave.leave.id
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 
   def leave_available?
@@ -33,23 +35,7 @@ class AppliedLeave < ApplicationRecord
     false
   end
 
-  def approve_applied_leave
-    request_accepted! # change state
-    true
-  rescue Transitions::InvalidTransition
-    errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
-    false
-  end
-
-  def reject_applied_leave
-    request_rejected! # change state
-    true
-  rescue Transitions::InvalidTransition
-    errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
-    false
-  end
-
-  def self.approve_multiple_applied_leaves(applied_leave_ids)
+  def self.approve_mass_leaves(applied_leave_ids)
     count_approved = 0
     applied_leaves = find(applied_leave_ids)
     applied_leaves.each do |applied_leave|
@@ -60,7 +46,7 @@ class AppliedLeave < ApplicationRecord
     count_approved
   end
 
-  def self.reject_multiple_applied_leaves(applied_leave_ids)
+  def self.reject_mass_leaves(applied_leave_ids)
     count_rejected = 0
     applied_leaves = find(applied_leave_ids)
     applied_leaves.each do |applied_leave|
@@ -69,6 +55,28 @@ class AppliedLeave < ApplicationRecord
       count_rejected
     end
     count_rejected
+  end
+
+  def approve_applied_leave
+    ActiveRecord::Base.transaction do
+      request_accepted! # change state
+      true
+    rescue Transitions::InvalidTransition
+      errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+      false
+    rescue ActiveRecord::RecordInvalid
+      false
+    end
+  end
+
+  def reject_applied_leave
+    request_rejected! # change state
+    true
+  rescue Transitions::InvalidTransition
+    errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+    false
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 
   def validate_leave_year
@@ -101,7 +109,7 @@ class AppliedLeave < ApplicationRecord
     false # exists
   end
 
-  state_machine do
+  state_machine initial: :pending do
     state :pending # first one is initial state
     state :accepted
     state :rejected
@@ -117,28 +125,20 @@ class AppliedLeave < ApplicationRecord
   private
 
   def approve_leave
-    ActiveRecord::Base.transaction do
-      update_remaining_leave_count(calculate_leave_count)
-      save!
-      user_leave.save!
-    rescue ActiveRecord::RecordInvalid
-      nil
-    end
-  end
-
-  def event_failed(_event)
-    raise ArgumentError
+    update_leave_count(calculate_leave_count)
+    save!
+    user_leave.save!
   end
 
   def calculate_leave_count
     number_of_days = week_days_in_date_range(applied_from..applied_till)
     return number_of_days if leave_duration_name.eql?(:full_day)
 
-    number_of_days / 2.0
+    number_of_days / 2.0 # dividing for half-day
   end
 
-  def update_remaining_leave_count(leave_count)
-    user_leave.remaining_count -= leave_count
+  def update_leave_count(leave_count)
+    user_leave&.remaining_count -= leave_count
   end
 
   def week_days_in_date_range(date_range)

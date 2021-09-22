@@ -25,8 +25,9 @@ class AppliedLeavesController < ApplicationController
   # POST /members/:member_id/applied_leaves
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.leave_id = @applied_leave.user_leave.leave&.id
-    is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_available?
+    if @applied_leave.validate_leave_year && (@applied_leave.set_leave && @applied_leave.leave_available?)
+      is_saved = @applied_leave.save
+    end
     respond_to do |format|
       format.html do
         if is_saved
@@ -66,7 +67,6 @@ class AppliedLeavesController < ApplicationController
 
   # DELETE /members/:member_id/applied_leaves/:id
   def destroy
-    binding.pry
     @applied_leave.destroy
     respond_to do |format|
       format.html do
@@ -119,23 +119,23 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /applied_leaves/approve_leaves
   def approve_leaves
-    # change to approve_leaves
-    count_approved = AppliedLeave.approve_multiples_applied_leaves(params[:applied_leave_ids])
+    count_approved = AppliedLeave.approve_mass_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
       format.js do
-        flash[:notice] = t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
+        flash.now[:notice] =
+          t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
       end
     end
   end
 
   # PATCH /applied_leaves/reject_leaves
   def reject_leaves
-    count_rejected = AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
+    count_rejected = AppliedLeave.reject_mass_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
       format.js do
-        flash[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
+        flash.now[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
         render 'approve_leaves'
       end
     end
@@ -157,9 +157,8 @@ class AppliedLeavesController < ApplicationController
     0
   end
 
-  def set_available_leaves # move to user.rb
-    @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
-                                                                   0).select('user_leaves.id, leaves.name')
+  def set_available_leaves
+    @available_user_leaves = @user.get_available_leaves
   end
 
   def set_applied_leaves

@@ -90,6 +90,6 @@ class LeavesController < ApplicationController
   end
 
   def leave_params
-    params.require(:leave).permit(:name, :count)
+    params.require(:leave).permit(:name, :default_count)
   end
 end

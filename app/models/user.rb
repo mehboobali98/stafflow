@@ -28,6 +28,11 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def get_available_leaves
+    user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
+                                    0).select('user_leaves.id, leaves.name')
+  end
+
   def date_of_birth_valid?
     return true unless date_of_birth.year.to_s.length > 4
 
