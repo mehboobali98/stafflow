@@ -40,12 +40,13 @@ $(document).on('change input', '.js-filter-select', function() {
 
 $(document).on('change', '#department_select', function() {
   if (this.value === '') return;
+  url = `/departments/${this.value}/fetch_designations`
+  designationSelectBox = $('#designation_select');
   $.ajax({
     type: 'GET',
-    url: `/departments/${this.value}/fetch_designations`,
+    url: url,
     dataType: 'script',
     success: function(response) {
-      designationSelectBox = $('#designation_select');
       designationSelectBox.html("");
       designations = JSON.parse(response);
       designations.forEach(function(designation) {

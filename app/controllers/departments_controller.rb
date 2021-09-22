@@ -74,7 +74,7 @@ class DepartmentsController < ApplicationController
   def fetch_designations
     @designations = @department.designations
     respond_to do |format|
-      format.json { render json: @designations }
+      format.json { render json: @designations.select(:id, :name) }
     end
   end
 

@@ -10,6 +10,7 @@ module UserAbilities
     elsif user.department_head?
       can :read, User, company_id: user.company_id
       can :update, User, department_id: user.department_id, company_id: user.company_id
+      cannot :update, User, :role_id, company_id: user.company_id
       cannot :update, User, User::SENSITIVE_ATTRIBUTES, id: user.id, company_id: user.company_id
     elsif user.employee?
       can :read, User, company_id: user.company_id
