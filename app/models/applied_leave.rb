@@ -20,7 +20,6 @@ class AppliedLeave < ApplicationRecord
 
   def leave_available?
     leave_count = calculate_leave_count
-    binding.pry
     return true if leave_count.positive? && user_leave.count_available?(leave_count)
 
     errors.add(:leave_count, I18n.t('applied_leave.messages.error.leave_count'))

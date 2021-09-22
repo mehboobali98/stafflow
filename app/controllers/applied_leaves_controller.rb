@@ -4,7 +4,7 @@ class AppliedLeavesController < ApplicationController
   before_action :set_applied_leave, only: %i[approve_leave reject_leave]
   before_action :set_user_applied_leave, only: %i[show edit update]
   before_action :get_available_leaves, only: %i[new edit]
-  before_action :get_applied_leaves, only: :show_applied_leaves
+  before_action :get_applied_leaves, only: :all_applied_leaves
 
   # GET /members/:member_id/applied_leaves
   def index
@@ -41,7 +41,11 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET /members/:member_id/applied_leaves/:id/edit
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.html
+    end
+  end
 
   # PATCH /members/:member_id/applied_leaves/:id
   def update
@@ -75,8 +79,8 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET /applied_leaves/show_applied_leaves
-  def show_applied_leaves #all or system applied leaves
+  # GET /applied_leaves/all_applied_leaves
+  def all_applied_leaves #all or system applied leaves
     respond_to do |format|
       format.html
     end
@@ -92,7 +96,7 @@ class AppliedLeavesController < ApplicationController
         else
           flash[:error] = @applied_leave.errors.full_messages
         end
-        redirect_to show_applied_leaves_path
+        redirect_to all_applied_leaves_path
       end
     end
   end
@@ -107,7 +111,7 @@ class AppliedLeavesController < ApplicationController
         else
           flash[:error] = @applied_leave.errors.full_messages
         end
-        redirect_to show_applied_leaves_path
+        redirect_to all_applied_leaves_path
       end
     end
   end

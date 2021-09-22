@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   resources :applied_leaves, except: %i[show index new create edit update destroy] do
     collection do
-      get 'show_applied_leaves', as: 'show'
+      get 'all_applied_leaves', as: 'all'
       get 'filter_applied_leaves', as: 'filter'
       patch 'approve_multiple_leaves', as: 'approve_multiple'
       patch 'reject_multiple_leaves', as: 'reject_multiple'
