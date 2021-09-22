@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 class PayrollsController < ApplicationController
-  before_action :load_user
-  before_action :load_payroll, only: :show
-  before_action :load_payrolls, only: %i[index create]
-  before_action :load_users_benefits_and_include_benefits, only: :create
+  load_and_authorize_resource
 
   # GET members/:id/payrolls
   def index
@@ -36,22 +33,6 @@ class PayrollsController < ApplicationController
   end
 
   protected
-
-  def load_user
-    @user = User.find_by(id: params[:member_id])
-  end
-
-  def load_payrolls
-    @payrolls = @user.payrolls
-  end
-
-  def load_payroll
-    @payroll = Payroll.find_by(sequence_num: params[:id])
-  end
-
-  def load_users_benefits_and_include_benefits
-    @users_benefits = @user.users_benefits.includes(:benefit)
-  end
 
   def check_payroll_creation
     if Payroll.check_last_payroll_date(@user)
