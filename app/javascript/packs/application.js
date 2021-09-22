@@ -17,6 +17,18 @@ document.addEventListener("turbolinks:load", function() {
     $('[data-toggle="popover"]').popover();
   })
 })
+$(document).ready(function(){
+  $("#search_btn").on("click", function(){
+    let search_key = document.getElementById("search_box").value;
+    $.ajax({
+      type: "GET",
+      url: "/search/get_search_data",
+      data: {
+       search_data : search_key
+      }
+    })
+  })
+})
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.

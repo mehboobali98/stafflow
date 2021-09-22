@@ -18,6 +18,12 @@ Rails.application.routes.draw do
       get '/', to: 'settings#settings'
     end
   end
+
+  resources :search do
+    collection do
+      get "get_search_data"
+    end
+  end
   resources :events do
     collection do
       get 'display_calendar'
