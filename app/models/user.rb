@@ -70,11 +70,13 @@ class User < ApplicationRecord
   end
 
   def validate_department_designation_relation
-    if designation.present? && department.present?
-      if designation.department_id != department.id
-        errors.add(:base, I18n.t('designation.department_error'))
-        return false
-      end
+    if designation.nil? && department.nil?
+      errors.add(:base, I18n.t('designation.notfound'))
+      return false
+    end
+    if designation.department_id != department.id
+      errors.add(:base, I18n.t('designation.department_error'))
+      return false
     end
     true
   end

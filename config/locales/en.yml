@@ -79,6 +79,7 @@ en:
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
+    notfound: "The department or designation doesnt exist" 
     department_error: "This designation doesn't exist in the selected department"
   appname: "EMS"
   company:
