@@ -72,7 +72,7 @@ class DepartmentsController < ApplicationController
 
   private
 
-  def permitted_department_params
+  def department_params
     params.require(:department).permit(:name, :avatar)
   end
 end

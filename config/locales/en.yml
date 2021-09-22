@@ -41,11 +41,11 @@ en:
       options: "Options"
   department:
     name_lable: "Department Name"
-    image_lable: "Select Image"
+    select_image_lable: "Select Image"
     table_heading: "Departments"
     name: "Name"
     image: "Image"
-    table_options: "Options"
+    options: "Options"
     table_cell_name: "Name"
     new_link_name: "New Department"
     already_exist: "Department Alread Exists"
