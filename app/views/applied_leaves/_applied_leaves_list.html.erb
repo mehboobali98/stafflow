@@ -8,7 +8,7 @@
     <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
     <td><%= t("applied_leave.links.#{applied_leave.state}") %></td>
-    <td><%= link_to t('applied_leave.links.approve'), approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-success' %></td>
-    <td><%= link_to t('applied_leave.links.reject'), reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' %></td>
+    <td><%= link_to t('applied_leave.links.approve'), approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-success' if can?(:approve_leave, applied_leave) %></td>
+    <td><%= link_to t('applied_leave.links.reject'), reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' if can?(:reject_leave, applied_leave) %></td>
   </tr>
 <% end %>
