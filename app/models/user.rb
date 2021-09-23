@@ -3,10 +3,16 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :confirmable
+  has_many :user_leaves, dependent: :destroy
+  has_many :leaves, through: :user_leaves
+  has_many :applied_leaves
 
   belongs_to :company
-  belongs_to :department
-  belongs_to :designation
+  belongs_to :department, optional: true
+  belongs_to :designation, optional: true
+
+  has_many :payrolls, dependent: :destroy
+  has_many :users_benefits, dependent: :destroy
   accepts_nested_attributes_for :company
   has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
@@ -24,6 +30,11 @@ class User < ApplicationRecord
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def get_available_leaves
+    user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
+                                    0).select('user_leaves.id, leaves.name')
   end
 
   def date_of_birth_valid?
