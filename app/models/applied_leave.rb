@@ -9,6 +9,7 @@ class AppliedLeave < ApplicationRecord
   belongs_to :leave
   belongs_to :company
   before_destroy :can_delete_leave?, prepend: true
+  after_create :send_email
 
   def can_delete_leave?
     return true if pending?
@@ -122,17 +123,21 @@ class AppliedLeave < ApplicationRecord
     end
   end
 
+  private
+
   def send_email
-    emails = user.company.users.where(role_id: User::ROLES[:department_head])
-                 .where(department_id: user.department_id)
-                 .or(user.company.users.where(role_id: User::ROLES[:hr]))
-                 .where.not(id: user.id).pluck(:email)
+    emails = get_admins.pluck(:email)
     UserMailer.delay.approve_leave_information(user, applied_from, applied_till, emails) if state == 'accepted'
     UserMailer.delay.leave_rejection_email(emails, user, self) if state == 'rejected'
     UserMailer.delay.leave_application_email(emails, user, self) if state == 'pending'
   end
 
-  private
+  def get_admins
+    company.users.where(role_id: User::ROLES[:department_head])
+           .where(department_id: user.department_id)
+           .or(user.company.users.where(role_id: [User::ROLES[:hr], User::ROLES[:account_owner]]))
+           .where.not(id: user.id)
+  end
 
   def approve_leave
     update_leave_count(calculate_leave_count)

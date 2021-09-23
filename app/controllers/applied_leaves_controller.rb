@@ -31,7 +31,6 @@ class AppliedLeavesController < ApplicationController
     respond_to do |format|
       format.html do
         if is_saved
-          @applied_leave.send_email
           redirect_to member_applied_leaves_path,
                       notice: t('applied_leave.messages.leave_applied_success')
         else
