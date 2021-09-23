@@ -4,10 +4,9 @@
     <h1 class='navbar-brand ms-3 lead'><%= @current_company&.name %></h1>
     <form class='d-flex'>
       <div>
-        <%= link_to notifications_path, class: 'nav-item text-white me-5' do %>
-          <i class='fa fa-bell fa-lg'>
-            </i><span class='counter counter-lg border border-danger p-1 ms-1 bg-danger ps-2 pe-2' id='notifications_count'></span>
-          </i>
+        <%= link_to notifications_path, class: 'notification' do %>
+          <i class='fa fa-bell fa-lg'></i>
+          <span id='notifications_count' class="badge">0</span>
         <% end %>
       </div>
       <input class='form-control me-2' type='search' placeholder='Search' aria-label='Search'>
