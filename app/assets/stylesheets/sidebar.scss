@@ -8,7 +8,7 @@ body {
   width: 100%;
 }
 
-.sidebar{
+.sidebar {
   position: fixed;
   height: 100%;
   width: 75px;
@@ -18,7 +18,7 @@ body {
   padding: 6px 14px;
   transition: all 0.5s ease;
 
-    .logo-content .logo{
+    .logo-content .logo {
       color: $text_color;
       display: flex;
       height: 50px;
@@ -27,18 +27,18 @@ body {
       opacity: 0;
       pointer-events: none;
 
-      i{
+      i {
         font-size: 28px;
         margin-right: 5px;
       }
 
-      .logo-name{
+      .logo-name {
         font-size: 20px;
         font-weight: 400;
       }
     }
 
-    .css-sidebar-toggle{
+    .css-sidebar-toggle {
       position: absolute;
       color: $text_color;
       left: 40%;
@@ -52,23 +52,23 @@ body {
       transition: all 0.5 ease;
     }
 
-    .links-name{
+    .links-name {
       opacity: 0;
       pointer-events: none;
     }
 
-    ul{
+    ul {
       margin-top: 20px;
       padding-left: 0px;
 
-      li{
+      li {
         position: relative;
         height: 50px;
         width: 100%;
         list-style: none;
         line-height: 50px;
 
-        a{
+        a {
           color: $text_color;
           display: flex;
           align-items: center;
@@ -86,37 +86,37 @@ body {
           }
         }
 
-        a:hover{
+        a:hover {
           color: $background_color;
           background: $hover_background_color;
         }
       }
     }
-    .logout-option{
+    .logout-option {
       position: relative;
       bottom: 0;
     }
 }
 
-.sidebar.active{
+.sidebar.active {
   width: 240px;
 
-  .logo-content .logo{
+  .logo-content .logo {
     opacity: 1;
     pointer-events: none;
   }
 
-  .css-sidebar-toggle{
+  .css-sidebar-toggle {
     left: 80%;
   }
 
-  .links-name{
+  .links-name {
     opacity: 1;
     pointer-events: auto;
   }
 }
 
-.home-content{
+.home-content {
   position: absolute;
   height: 100%;
   left: 75px;
