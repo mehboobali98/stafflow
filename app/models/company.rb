@@ -23,6 +23,6 @@ class Company < ApplicationRecord
   end
 
   def build_company_settings
-    build_settting(tax_rate: DEFAULT_TAX_RATE)
+    build_setting(tax_rate: DEFAULT_TAX_RATE)
   end
 end
