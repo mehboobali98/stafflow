@@ -8,9 +8,9 @@ class AppliedLeave < ApplicationRecord
   belongs_to :user
   belongs_to :leave
   belongs_to :company
-  before_destroy :can_destroy_leave?, prepend: true
+  before_destroy :can_delete_leave?, prepend: true
 
-  def can_destroy_leave?
+  def can_delete_leave?
     return true if pending?
 
     errors.add(:base, I18n.t('applied_leave.messages.error.delete_error'))

@@ -7,7 +7,7 @@ class UserLeave < ApplicationRecord
   validates :total_count, :remaining_count, presence: true
   validates :total_count, :remaining_count, numericality: { in: VALID_LEAVE_RANGE }
   before_update :set_remaining_leave_count
-  before_destroy :can_destroy?, prepend: true
+  before_destroy :check_pending_leaves?, prepend: true
 
   #     user_leave_values = {}
   #     leave = {
@@ -21,7 +21,6 @@ class UserLeave < ApplicationRecord
 
     ActiveRecord::Base.transaction do
       user_leave_values[:leave].each_value do |leave_values|
-        binding.pry
         user.user_leaves.build(leave_values.merge(remaining_count: leave_values[:total_count]))
         user.save!
       end
@@ -31,7 +30,7 @@ class UserLeave < ApplicationRecord
     end
   end
 
-  def can_destroy?
+  def check_pending_leaves?
     return true unless applied_leaves.where(state: 'pending').exists?
 
     errors.add(:base, I18n.t('user_leave.messages.failure.applied_leave_exists'))

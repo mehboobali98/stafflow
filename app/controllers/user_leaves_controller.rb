@@ -55,7 +55,7 @@ class UserLeavesController < ApplicationController
     respond_to do |format|
       format.js do
         if is_updated
-          flash[:notice] = t('user_leave.messages.success.update')
+          flash.now[:notice] = t('user_leave.messages.success.update')
           render js: "window.location = '#{member_user_leaves_path(@user)}'"
         else
           flash.now[:error] = @user_leave.errors.full_messages

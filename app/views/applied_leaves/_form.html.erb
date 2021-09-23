@@ -1,7 +1,6 @@
 <div class="container py-4">
   <h1><%= t('applied_leave.headings.new_leave_application') %></h1>
   <%= form_with **applied_leave_form_values(user, applied_leave) do |form| %>
-    <input type="hidden" id="selected_leave_id" name="selected-leave-id">
     <div class="form mb-4">
       <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves'), class: "form-label" %>
       <%= collection_select(:applied_leave, :user_leave_id, available_user_leaves, :id, :name, {}, { class: "form-control" }) %>
