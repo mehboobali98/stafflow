@@ -23,8 +23,58 @@
     height: 100%;
   }
 }
+
+// side bar custom class for toggling. It is added when the sidebar is active
+.sidebar-toggle {
+  position: absolute;
+  height: 100%;
+  left: 240px;
+  width: calc(100% - 240px);
+  transition: all 0.5s ease;
+}
+
+.notification-scrollable-container {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+// Navbar
+.notification-icon {
+  height: 2em;
+}
+
+.notification-counter {
+  height: 0.2em;
+  width: 0.2em;
+}
+
+.counter .counter-lg {
+  top: -24px !important;
+}
+
  // Sign in and Sign up pages styling
  
+
+.notification {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+  margin-right: 14px;
+  margin-top: 7px;
+  .badge {
+    position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  }
+}
+
 .icon{
   width: 3em;
 }
@@ -45,4 +95,17 @@
   width: 100%;
   color: white;
   margin-top: 1%;
-}
+} // end
+
+//dashboard navbar: start
+.dashboard-navbar {
+  background-color: #006fc8;
+  .navbar-brand {
+    color: white;
+    padding-left: 20px;
+    text-shadow: 2px 2px 5px white;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-family: sans-serif;
+  }
+} // end

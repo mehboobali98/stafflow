@@ -31,10 +31,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = true
 
-  config.action_mailer.perform_caching = false
 
   # set tld length to 0
   config.action_dispatch.tld_length = 0
@@ -56,8 +53,6 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 
@@ -65,18 +60,10 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { host: 'localhost:3000'}
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    user_name: 'testaccoun1717@gmail.com',
-    password: 'testaccount17',
-    domain: 'localhost:3000',
-    address: 'smtp.gmail.com',
-    port: '587',
-    authentication: :plain
-    # enable_starttls_auto: true
-  }
+  config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025 }
+  config.action_mailer.raise_delivery_errors = false
+  config.consider_all_requests_local = true
   config.active_storage.service = :local
 end

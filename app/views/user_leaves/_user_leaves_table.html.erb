@@ -3,8 +3,8 @@
     <td><%= user_leave.leave.name %></td>
     <td><%= user_leave.total_count %></td>
     <td><%= user_leave.remaining_count %></td>
-    <td><%= link_to t('user_leave.headings.show'), member_user_leave_path(@user, user_leave), class: "btn btn-info" %></td>
-    <td><%= link_to t('user_leave.headings.edit'), edit_member_user_leave_path(@user, user_leave), class: "btn btn-secondary", remote: true %></td>
-    <td><%= link_to t('user_leave.headings.delete'), member_user_leave_path(@user, user_leave), method: :delete, data: { confirm: t('user_leave.messages.confirmation.delete') }, class: 'btn btn-danger' %></td>
+    <td><%= link_to t('user_leave.headings.show'), member_user_leave_path(@user, user_leave), class: "btn btn-info" if can?(:show, user_leave) %></td>
+    <td><%= link_to t('user_leave.headings.edit'), edit_member_user_leave_path(@user, user_leave), class: "btn btn-secondary", remote: true if can?(:edit, user_leave) %></td>
+    <td><%= link_to t('user_leave.headings.delete'), member_user_leave_path(@user, user_leave), method: :delete, data: { confirm: t('user_leave.messages.confirmation.delete') }, class: 'btn btn-danger' if can?(:destroy, user_leave) %></td>
   </tr>
 <% end %>

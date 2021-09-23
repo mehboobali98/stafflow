@@ -1,4 +1,3 @@
-<%= render partial: 'shared/leave_navbar' %>
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -9,8 +8,8 @@
           <%= form.text_field :name, required: true, class: 'form-control', placeholder: t('leave.forms.placeholders.name') %>
         </div>
         <div class="form-group mb-3">
-          <%= form.label :count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :count, in: VALID_LEAVE_RANGE, required: true, class: 'form-control', step: LEAVE_COUNT_SCALE, placeholder: t('leave.forms.placeholders.count') %>
+          <%= form.label :default_count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
+          <%= form.number_field :default_count, in: VALID_LEAVE_RANGE, required: true, class: 'form-control', step: LEAVE_COUNT_SCALE, placeholder: t('leave.forms.placeholders.count') %>
         </div>
         <div class="form-group mb-3">
           <%= form.submit class: 'card-link btn btn-primary' %>

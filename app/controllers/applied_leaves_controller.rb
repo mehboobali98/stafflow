@@ -1,14 +1,15 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[index new create edit update destroy]
-  before_action :set_applied_leave, only: %i[approve_leave reject_leave]
-  before_action :set_user_applied_leave, only: %i[show edit update]
-  before_action :get_available_leaves, only: %i[new edit]
-  before_action :get_applied_leaves, only: :show_applied_leaves
+  load_and_authorize_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
+  load_and_authorize_resource :applied_leave, through: :user, only: %i[index edit update destroy]
+  load_resource :applied_leave, only: %i[approve_leave reject_leave]
+  load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
+  before_action :set_available_leaves, only: %i[new edit]
+  authorize_resource
 
   # GET /members/:member_id/applied_leaves
   def index
-    @applied_leaves = @user.applied_leaves.includes(:leave)
+    @applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
     end
@@ -25,8 +26,9 @@ class AppliedLeavesController < ApplicationController
   # POST /members/:member_id/applied_leaves
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.leave_id = @applied_leave.user_leave.leave&.id
-    is_saved = @applied_leave.save if @applied_leave.validate_leave_year && @applied_leave.leave_available?
+    if @applied_leave.validate_leave_year && (@applied_leave.set_leave && @applied_leave.leave_available?)
+      is_saved = @applied_leave.save
+    end
     respond_to do |format|
       format.html do
         if is_saved
@@ -41,7 +43,11 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET /members/:member_id/applied_leaves/:id/edit
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.html
+    end
+  end
 
   # PATCH /members/:member_id/applied_leaves/:id
   def update
@@ -75,8 +81,9 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET /applied_leaves/show_applied_leaves
-  def show_applied_leaves
+  # GET /applied_leaves/all_applied_leaves
+  def all_applied_leaves
+    @applied_leaves.includes(user_leave: %i[user leave])
     respond_to do |format|
       format.html
     end
@@ -92,7 +99,7 @@ class AppliedLeavesController < ApplicationController
         else
           flash[:error] = @applied_leave.errors.full_messages
         end
-        redirect_to show_applied_leaves_path
+        redirect_to all_applied_leaves_path
       end
     end
   end
@@ -107,30 +114,31 @@ class AppliedLeavesController < ApplicationController
         else
           flash[:error] = @applied_leave.errors.full_messages
         end
-        redirect_to show_applied_leaves_path
+        redirect_to all_applied_leaves_path
       end
     end
   end
 
-  # PATCH /applied_leaves/approve_multiple_leaves
-  def approve_multiple_leaves
-    count_approved = AppliedLeave.approve_multiple_applied_leaves(params[:applied_leave_ids])
+  # PATCH /applied_leaves/approve_leaves
+  def approve_leaves
+    count_approved = AppliedLeave.approve_mass_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
       format.js do
-        flash[:notice] = t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
+        flash.now[:notice] =
+          t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
       end
     end
   end
 
-  # PATCH /applied_leaves/reject_multiple_leaves
-  def reject_multiple_leaves
-    count_rejected = AppliedLeave.reject_multiple_applied_leaves(params[:applied_leave_ids])
+  # PATCH /applied_leaves/reject_leaves
+  def reject_leaves
+    count_rejected = AppliedLeave.reject_mass_leaves(params[:applied_leave_ids])
     get_filtered_records
     respond_to do |format|
       format.js do
-        flash[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
-        render 'approve_multiple_leaves'
+        flash.now[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
+        render 'approve_leaves'
       end
     end
   end
@@ -139,7 +147,7 @@ class AppliedLeavesController < ApplicationController
   def filter_applied_leaves
     get_filtered_records
     respond_to do |format|
-      format.js { render 'approve_multiple_leaves' }
+      format.js { render 'approve_leaves' }
     end
   end
 
@@ -151,13 +159,8 @@ class AppliedLeavesController < ApplicationController
     0
   end
 
-  def get_available_leaves
-    @available_user_leaves = @user.user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
-                                                                   0).select('user_leaves.id, leaves.name')
-  end
-
-  def get_applied_leaves
-    @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
+  def set_available_leaves
+    @available_user_leaves = @user.get_available_leaves
   end
 
   def get_filtered_records
@@ -167,26 +170,5 @@ class AppliedLeavesController < ApplicationController
 
   def applied_leave_params
     params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_type)
-  end
-
-  def set_user
-    @user = User.find(params[:member_id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('common.user_not_found')
-    redirect_to members_path
-  end
-
-  def set_user_applied_leave
-    @applied_leave = @user.applied_leaves.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('applied_leave.messages.error.not_found')
-    redirect_to member_applied_leaves_path(@user)
-  end
-
-  def set_applied_leave
-    @applied_leave = AppliedLeave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('applied_leave.messages.error.not_found')
-    redirect_to member_applied_leaves_path(@user)
   end
 end

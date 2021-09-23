@@ -1,24 +1,31 @@
-<h2><% I18n.t 'headings.change_password'%></h2>
-
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+<h3 class='mb-4'><%= t('headings.change_password') %></h3>
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |form| %>
   <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
+  <%= form.hidden_field :reset_password_token %>
 
-  <div class="field">
-    <%= f.label  I18n.t 'forms.labels.password' %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-    <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
+  <div class="row mb-3">
+    <div class="col-3 mt-2">
+      <%= form.label t('forms.labels.password') %><br />
+      <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em><br />
+      <% end %>
+    </div>
+    <div class='col-9'>
+      <%= form.password_field :password, autofocus: true, class: 'form-control pl-5 pr-5', required: true%>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label  I18n.t 'forms.labels.confirm_password' %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  <div class="row mb-3">
+    <div class="col-3 mt-2">
+      <%= form.label t('forms.labels.confirm_password') %><br />
+    </div>
+    <div class='col-9'>
+      <%= form.password_field :password_confirmation, class: 'form-control pl-5 pr-5', required: true %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= f.submit I18n.t 'forms.buttons.change_password' %>
+  <div class="actions mb-2 mt-4">
+    <%= form.submit t('forms.buttons.change_password'), class:'btn btn-primary w-100' %>
   </div>
 <% end %>
 
