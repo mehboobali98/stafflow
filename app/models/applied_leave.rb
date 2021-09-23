@@ -9,6 +9,7 @@ class AppliedLeave < ApplicationRecord
   belongs_to :leave
   belongs_to :company
   before_destroy :can_delete_leave?, prepend: true
+  after_create :send_email
   after_create :create_request_notification
 
   def can_delete_leave?
@@ -115,15 +116,22 @@ class AppliedLeave < ApplicationRecord
     state :accepted
     state :rejected
 
-    event :request_accepted, success: :create_approval_notification do
+    event :request_accepted, success: %i[create_approval_notification send_email] do
       transitions to: :accepted, from: :pending, on_transition: :approve_leave
     end
-    event :request_rejected, success: :create_rejection_notification do
+    event :request_rejected, success: %i[create_rejection_notification send_email] do
       transitions to: :rejected, from: :pending
     end
   end
 
   private
+
+  def send_email
+    emails = get_admins.pluck(:email)
+    LeaveMailer.delay.approve_leave_information(user, applied_from, applied_till, emails) if state == 'accepted'
+    LeaveMailer.delay.rejection_email(emails, user, self) if state == 'rejected'
+    LeaveMailer.delay.request_email(emails, user, self) if state == 'pending'
+  end
 
   def create_approval_notification
     body = I18n.t('notifications.leave_approve_self', from: applied_from, to: applied_till)
