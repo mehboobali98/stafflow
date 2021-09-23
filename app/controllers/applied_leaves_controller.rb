@@ -1,12 +1,11 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
   load_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
-  load_and_authorize_resource :applied_leave, through: :user, only: %i[index create]
-  load_and_authorize_resource :user_leave, through: :user, find_by: :get_available_leaves
-  before_action :set_applied_leave, only: %i[approve_leave reject_leave]
-  before_action :set_user_applied_leave, only: %i[edit update destroy]
+  load_resource :applied_leave, through: :user, only: %i[index edit update destroy]
+  load_resource :applied_leave, only: %i[approve_leave reject_leave]
+  load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
-  before_action :set_applied_leaves, only: :all_applied_leaves
+  authorize_resource
 
   # GET /members/:member_id/applied_leaves
   def index
@@ -84,6 +83,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
+    @applied_leaves.includes(user_leave: %i[user leave])
     respond_to do |format|
       format.html
     end
@@ -163,10 +163,6 @@ class AppliedLeavesController < ApplicationController
     @available_user_leaves = @user.get_available_leaves
   end
 
-  def set_applied_leaves
-    @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
-  end
-
   def get_filtered_records
     @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].to_s.downcase)
     @applied_leaves.includes(user_leave: %i[user leave])
@@ -174,19 +170,5 @@ class AppliedLeavesController < ApplicationController
 
   def applied_leave_params
     params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_type)
-  end
-
-  def set_user_applied_leave
-    @applied_leave = @user.applied_leaves.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('applied_leave.messages.error.not_found')
-    redirect_to member_applied_leaves_path(@user)
-  end
-
-  def set_applied_leave
-    @applied_leave = AppliedLeave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('applied_leave.messages.error.not_found')
-    redirect_to member_applied_leaves_path(@user)
   end
 end
