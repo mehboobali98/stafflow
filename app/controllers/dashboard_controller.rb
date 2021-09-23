@@ -28,7 +28,7 @@ class DashboardController < ApplicationController
   # GET  /dashboard/employees_per_city
   def employees_per_city
     respond_to do |format|
-      format.json { render json: @current_company.users.joins(:department).group(:city).count }
+      format.json { render json: @current_company.users.joins(:department).group(:city).size }
     end
   end
 
