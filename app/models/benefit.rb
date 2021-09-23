@@ -7,4 +7,5 @@ class Benefit < ApplicationRecord
   belongs_to :company
   validates :name, uniqueness: true
   validates :name, presence: { message: I18n.t('benefit.validation.presence') }
+  validates :name, format: { with: /\A[a-z A-Z]+\z/, message: I18n.t('benefit.validation.benefit_name') }
 end
