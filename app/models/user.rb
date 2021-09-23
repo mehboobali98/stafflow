@@ -13,8 +13,9 @@ class User < ApplicationRecord
   scope :department_id, ->(department_id) { where(department_id: department_id) }
   scope :match_users_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
   has_attached_file :image, styles: { medium: "300x300>", thumb: "100x100>" }
+  validates_attachment_file_name :image, matches: [/png\z/, /jpe?g\z/]
+  validates_with AttachmentSizeValidator, attributes: :image, less_than: 3.megabytes
 
-  validates_attachment_content_type :image, content_type: /\Aimage\/.*\z/
   validates_uniqueness_of :email, scope: :company_id
   validates_presence_of :email
   validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
@@ -25,6 +26,10 @@ class User < ApplicationRecord
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def role_name
+    User::ROLES.key(role_id)
   end
 
   def date_of_birth_valid?

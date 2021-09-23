@@ -11,8 +11,7 @@
       <% end %>
     </div>
     <div class='col-9'>
-      <%= form.password_field :password, autofocus: true, autocomplete: "new-password",
-      class: 'form-control pl-5 pr-5' %>
+      <%= form.password_field :password, autofocus: true, class: 'form-control pl-5 pr-5', required: true%>
     </div>
   </div>
 
@@ -21,7 +20,7 @@
       <%= form.label t('forms.labels.confirm_password') %><br />
     </div>
     <div class='col-9'>
-      <%= form.password_field :password_confirmation, autocomplete: "new-password", class: 'form-control pl-5 pr-5' %>
+      <%= form.password_field :password_confirmation, class: 'form-control pl-5 pr-5', required: true %>
     </div>
   </div>
 
