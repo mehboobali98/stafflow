@@ -12,7 +12,13 @@
     <tbody>
       <% departments.each do |department| %>
         <tr>
-          <td class="w-25"><%= image_tag department.avatar.url(:medium) %></td>
+          <td class="w-25">
+            <% if department.avatar.present? %>
+              <%= image_tag department.avatar.url(:medium) %>
+            <% else %>
+              <%= image_tag 'department', class:'w-25' %>
+            <% end %>
+          </td>
           <td><%= department.name %></td>
           <td><%= link_to t('department.edit_btn_message'), edit_department_path(department), class: 'btn btn-secondary' if can?(:update, department) %></td>
           <td><%= link_to t('department.destroy_btn_message'), department, method: :delete, data: { confirm: t('department.sure_message') }, class: 'btn btn-danger' if can?(:destroy, department) %></td>
