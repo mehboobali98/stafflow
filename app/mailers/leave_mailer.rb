@@ -1,7 +1,7 @@
-class UserMailer < ApplicationMailer
+class LeaveMailer < ApplicationMailer
   default from: 'EMS@EMS.com'
 
-  def leave_application_email(emails, user, applied_leave)
+  def request_email(emails, user, applied_leave)
     @user = user
     @applied_leave = applied_leave
     mail(to: emails, subject: 'Application for email')
@@ -14,7 +14,7 @@ class UserMailer < ApplicationMailer
     mail to: user.email, subject: 'Approve Leave Information', cc: emails
   end
 
-  def leave_rejection_email(emails, user, applied_leave)
+  def rejection_email(emails, user, applied_leave)
     @user = user
     @applied_leave = applied_leave
     mail(to: user.email, subject: 'Leave Rejection', cc: emails)
