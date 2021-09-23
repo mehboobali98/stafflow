@@ -22,7 +22,7 @@
           <% if can?(:update, @user, :role_id) %>
             <div class='field mb-3'>
               <%= form.label I18n.t('forms.labels.role') %><br />
-              <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {}, class: 'form-control' %>
+              <%= form.select :role_id, options_for_select(user_roles_except_admin), {}, class: 'form-control' %>
             </div>
           <% end %>
           <% if can?(:update, @user, :department_id) %>

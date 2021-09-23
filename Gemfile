@@ -24,6 +24,7 @@ gem 'jbuilder', '~> 2.7'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'paperclip', '=6.0.0'
 gem 'will_paginate', '=3.3.0'
+gem 'paperclip', '=6.0.0'
 # additional gems
 gem 'cancancan'
 gem 'devise'
