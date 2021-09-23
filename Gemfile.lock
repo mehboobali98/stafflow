@@ -246,7 +246,7 @@ DEPENDENCIES
   byebug
   cancancan
   capybara (>= 2.15)
-  delayed_job_active_record
+  delayed_job_active_record (= 4.1.6)
   devise
   has_scope (= 0.8.0)
   jbuilder (~> 2.7)

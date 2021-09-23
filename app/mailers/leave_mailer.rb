@@ -1,6 +1,4 @@
 class LeaveMailer < ApplicationMailer
-  default from: 'EMS@EMS.com'
-
   def request_email(emails, user, applied_leave)
     @user = user
     @applied_leave = applied_leave
