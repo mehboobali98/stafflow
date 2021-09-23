@@ -370,3 +370,9 @@ en:
         event_name: 'Enter event name'
     simple_calendar:
       invalid_date: "Date is invalid"
+  notifications:
+    leave_approve: "A leave applied by %{full_name} was rejected"
+    leave_reject: "A leave applied by %{full_name} was rejected"
+    new_leave: "A leave has been applied by %{full_name}"
+    leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
+    leave_approve_self: "Your request for a leave from %{from} to %{to} has been accepted" 
