@@ -127,19 +127,19 @@ class AppliedLeave < ApplicationRecord
 
   def create_approval_notification
     body = I18n.t('notifications.leave_approve_self', from: applied_from, to: applied_till)
-    Notification.new(recipient_id: user.id, body: body).save
+    Notification.create(recipient_id: user.id, body: body)
   end
 
   def create_rejection_notification
     body = I18n.t('notifications.leave_reject_self', from: applied_from, to: applied_till)
-    Notification.new(recipient_id: user.id, body: body).save
+    Notification.create(recipient_id: user.id, body: body)
   end
 
   def create_request_notification
     body = I18n.t('notifications.new_leave', full_name: user.full_name)
     admin_ids = get_admins.pluck(:id)
     admin_ids.each do |id|
-      Notification.new(recipient_id: id, body: body).save
+      Notification.create(recipient_id: id, body: body)
     end
   end
 
