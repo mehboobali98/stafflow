@@ -16,7 +16,7 @@
           <td><%= leave.default_count %></td>
           <td><%= link_to t('leave.forms.links.show'), leave, class: 'btn btn-info' if can?(:show, leave) %></td>
           <td><%= link_to t('leave.forms.links.edit'), edit_leave_path(leave), class: 'btn btn-secondary' if can?(:edit, leave) %></td>
-          <td><%= link_to t('leave.forms.links.delete'), leave, method: :delete, data: { confirm: t('leave.messages.delete_confirm') }, class: 'btn btn-danger' if can?(:delete, leave) %></td>
+          <td><%= link_to t('leave.forms.links.delete'), leave, method: :delete, data: { confirm: t('leave.messages.delete_confirm') }, class: 'btn btn-danger' if can?(:destroy, leave) %></td>
         </tr>
       <% end %>
     </tbody>
