@@ -2,14 +2,10 @@
 
 class DashboardController < ApplicationController
   before_action :authenticate_user!
+  before_action :fetch_data, only: :dashboard
 
   # GET /dashboard
   def dashboard
-    @events_count = @current_company.events.size
-    @upcoming_events_count = @current_company.events.where('starts_at > ?', DateTime.now).size
-    @users_count = @current_company.users.all.size
-    @departments_count = @current_company.departments.all.size
-
     respond_to do |format|
       format.html
     end
@@ -34,5 +30,14 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.json { render json: @current_company.users.joins(:department).group(:city).count }
     end
+  end
+
+  private
+
+  def fetch_data
+    @events_count = @current_company.events.size
+    @upcoming_events_count = @current_company.events.where('starts_at > ?', DateTime.now).size
+    @users_count = @current_company.users.all.size
+    @departments_count = @current_company.departments.all.size
   end
 end
