@@ -9,7 +9,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
-    binding.pry
     @applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
@@ -18,7 +17,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
-    binding.pry
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
@@ -27,7 +25,6 @@ class AppliedLeavesController < ApplicationController
 
   # POST /members/:member_id/applied_leaves
   def create
-    binding.pry
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     if @applied_leave.validate_leave_year && (@applied_leave.set_leave && @applied_leave.leave_available?)
       is_saved = @applied_leave.save
