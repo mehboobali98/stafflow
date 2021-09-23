@@ -316,9 +316,11 @@ en:
 
   department:
     name_lable: "Department Name"
-    image_lable: "Upload Image"
+    select_image_lable: "Select Image"
     table_heading: "Departments"
-    table_options: "Options"
+    name: "Name"
+    image: "Image"
+    options: "Options"
     table_cell_name: "Name"
     new_link_name: "New Department"
     already_exist: "Department Alread Exists"
