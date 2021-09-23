@@ -109,7 +109,7 @@ class AppliedLeave < ApplicationRecord
                     .where(department_id: user.department_id)
                     .or(user.company.users.where(role_id: User::ROLES[:hr]))
                     .where.not(id: user.id).pluck(:email)
-    UserMailer.delay.approve_leave_information(user, applied_from, applied_till, cc_emails)
+    UserMailer.delay.send_approval_email(user, cc_emails, self)
   end
 
   def approve_leave

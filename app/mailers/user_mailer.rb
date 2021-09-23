@@ -1,10 +1,9 @@
 class UserMailer < ApplicationMailer
   default from: 'testaccoun1717@gmail.com'
 
-  def approve_leave_information(user, applied_from, applied_till, cc_emails)
+  def send_approval_email(user, cc_emails, applied_leave)
     @user = user
-    @applied_from = applied_from
-    @applied_till = applied_till
+    @applied_leave = applied_leave
     mail to: user.email, subject: 'Approve Leave Information', cc: cc_emails
   end
 end
