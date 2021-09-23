@@ -30,10 +30,10 @@ class Payroll < ApplicationRecord
   end
 
   def self.payroll_already_generated?(user)
-    payrolls = user.payrolls.order(:created_at)
+    payrolls = user.payrolls.last
     return false unless payrolls.present?
 
-    date = payrolls.last.created_at
+    date = payrolls.created_at
     return true if DateTime.now.month == date.month && DateTime.now.year == date.year
 
     false

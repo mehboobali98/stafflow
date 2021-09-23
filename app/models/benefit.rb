@@ -8,14 +8,6 @@ class Benefit < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, presence: { message: I18n.t('benefit.validation.presence') }
   validates :default_amount, presence: { message: I18n.t('users_benefit.validation.presence.') },
-                             numericality: { only_float: true, other_that: %(0),
+                             numericality: { only_float: true, other_than: 0,
                                              message: I18n.t('benefit.validation.zero_check') }
-  # before_save :default_amount_zero?
-
-  def default_amount_zero?
-    return unless default_amount.zero?
-
-    errors.add(:base, I18n.t('benefit.validation.zero_check'))
-    throw :abort
-  end
 end

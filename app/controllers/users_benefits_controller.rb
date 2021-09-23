@@ -1,6 +1,7 @@
 class UsersBenefitsController < ApplicationController
   load_and_authorize_resource :user, id_param: :member_id
   load_and_authorize_resource through: :user, find_by: :sequence_num
+  add_breadcrumb I18n.t('users_benefit.breadcrumbs.home'), :member_users_benefits_path
 
   # GET members/:id/users_benefits
   def index
@@ -12,7 +13,7 @@ class UsersBenefitsController < ApplicationController
 
   # GET members/:id/users_benefits/available_benefits
   def available_benefits
-    add_breadcrumb t('users_benefit.breadcrumbs.new'), :new_member_users_benefit_path
+    add_breadcrumb t('users_benefit.breadcrumbs.new'), :available_benefits_member_users_benefits_path
     benefit_ids = @users_benefits.pluck('benefit_id')
     @available_benefits = Benefit.where.not(id: benefit_ids)
     respond_to do |format|

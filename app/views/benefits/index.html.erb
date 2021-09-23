@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag 'pagination' %>
 <div class="container">
   <h1><%= t('benefit.headings.benefit') %></h1>
   <%= link_to t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-dark' if can?(:create,  Benefit) %>

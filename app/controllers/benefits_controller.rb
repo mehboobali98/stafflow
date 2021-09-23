@@ -2,6 +2,8 @@
 
 class BenefitsController < ApplicationController
   load_and_authorize_resource find_by: :sequence_num
+  add_breadcrumb I18n.t('benefit.breadcrumbs.home'), :benefits_path
+
   # GET /benefits
   def index
     add_breadcrumb I18n.t('benefit.breadcrumbs.home'), :benefits_path

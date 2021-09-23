@@ -12,7 +12,7 @@
               <th><%= t('users_benefit.table.amount') %></th>
             </tr>
           </thead>
-          <% if @available_benefits %>
+          <% if @available_benefits.present? %>
             <tbody>
               <% @available_benefits.each do |benefit| %>
                 <tr>
@@ -30,12 +30,12 @@
                 </tr>      
               <% end %>
             </tbody>
-          <% else %>
-            <p class="text-danger"><%= t('user_leave.messages.info.no_leave_remaining') %></p>
-          <% end %>
-        </table>
+            </table>
+            <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1' %>
+            <% else %>
+              <p class='text-danger'><%= t('users_benefit.validation.all_benefits_alloted') %></p>
+            <% end %>
       </div>
     </div>
-    <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1' %>
   </div>
 <% end %>

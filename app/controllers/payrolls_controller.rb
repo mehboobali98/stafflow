@@ -38,9 +38,9 @@ class PayrollsController < ApplicationController
   end
 
   def payroll_validation
-    if Payroll.payroll_already_generated?(@user)
-      flash[:alert] = t('payroll.messages.failure.created_already')
-      redirect_to member_payrolls_path
-    end
+    return unless Payroll.payroll_already_generated?(@user)
+
+    flash[:alert] = t('payroll.messages.failure.created_already')
+    redirect_to member_payrolls_path
   end
 end
