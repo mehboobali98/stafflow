@@ -10,12 +10,17 @@
     <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
     <div class="row body-wrapper">
       <div class="col-sm-2 sidebar-wrapper">
         <%= render partial: "layouts/sidebar" %>
       </div>
       <div class="col-sm-9">
-        <%= render partial: "shared/flash_message" %>
+        <div id="flash_message">
+          <%= render partial: "shared/flash_message" %>
+        </div>
+      <div class="col-sm-10">
+        <%= render partial: 'layouts/navbar' %>
         <%= render_breadcrumbs %>
         <%= yield %>
       </div>
