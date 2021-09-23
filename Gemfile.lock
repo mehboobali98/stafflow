@@ -244,9 +244,9 @@ DEPENDENCIES
   byebug
   cancancan
   capybara (>= 2.15)
-  chartkick
+  chartkick (= 4.0.5)
   devise
-  faker
+  faker (= 2.19.0)
   has_scope (= 0.8.0)
   jbuilder (~> 2.7)
   listen (~> 3.2)
