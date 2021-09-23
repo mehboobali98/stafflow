@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/alisyed/sequenceid.git
+  revision: 4cf0c34e7e5aec156f15de4f37bf9a7d359f1e7f
+  branch: feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method
+  specs:
+    sequenceid (0.0.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -75,7 +82,9 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    chartkick (4.0.5)
     childprocess (3.0.0)
+    climate_control (0.2.0)
     coderay (1.1.3)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
@@ -86,6 +95,8 @@ GEM
       responders
       warden (~> 1.2.3)
     erubi (1.10.0)
+    faker (2.19.0)
+      i18n (>= 1.6, < 2)
     ffi (1.15.4)
     globalid (0.5.2)
       activesupport (>= 5.0)
@@ -106,6 +117,12 @@ GEM
       mini_mime (>= 0.1.1)
     marcel (1.0.1)
     method_source (1.0.0)
+    mime-types (3.3.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2021.0901)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.1.1)
     mini_portile2 (2.6.1)
     minitest (5.14.4)
@@ -116,6 +133,12 @@ GEM
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    paperclip (6.0.0)
+      activemodel (>= 4.2.0)
+      activesupport (>= 4.2.0)
+      mime-types
+      mimemagic (~> 0.3.0)
+      terrapin (~> 0.6.0)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -192,9 +215,12 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    terrapin (0.6.0)
+      climate_control (>= 0.0.3, < 1.0)
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    transitions (1.2.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -233,20 +259,25 @@ DEPENDENCIES
   byebug
   cancancan
   capybara (>= 2.15)
+  chartkick (= 4.0.5)
   devise
+  faker (= 2.19.0)
   has_scope (= 0.8.0)
   jbuilder (~> 2.7)
   listen (~> 3.2)
   mysql2 (>= 0.4.4)
+  paperclip (= 6.0.0)
   pry (~> 0.14.1)
   pry-rails (~> 0.3.9)
   puma (~> 4.1)
   rails (~> 6.0.4, >= 6.0.4.1)
   sass-rails (>= 6)
   selenium-webdriver
+  sequenceid (= 0.0.7)!
   simple_calendar (= 2.4.3)
   spring
   spring-watcher-listen (~> 2.0.0)
+  transitions (= 1.2.1)
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)

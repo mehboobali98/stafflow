@@ -3,11 +3,18 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :confirmable
+  has_many :user_leaves, dependent: :destroy
+  has_many :leaves, through: :user_leaves
+  has_many :applied_leaves
 
   belongs_to :company
   belongs_to :department, optional: true
   belongs_to :designation, optional: true
+
+  has_many :payrolls, dependent: :destroy
+  has_many :users_benefits, dependent: :destroy
   accepts_nested_attributes_for :company
+  has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   scope :role_id, ->(role_id) { where(role_id: role_id) }
   scope :department_id, ->(department_id) { where(department_id: department_id) }
@@ -37,6 +44,11 @@ class User < ApplicationRecord
   rescue Date::Error, NoMethodError
     errors.add(:base, I18n.t('messages.date_error'))
     false
+  end
+
+  def get_available_leaves
+    user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
+                                    0).select('user_leaves.id, leaves.name')
   end
 
   def role_id_valid?(role_id)
