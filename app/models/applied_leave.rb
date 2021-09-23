@@ -114,7 +114,7 @@ class AppliedLeave < ApplicationRecord
     state :accepted
     state :rejected
 
-    event :request_accepted do
+    event :request_accepted, success: %i[generate_notification testMethod] do
       transitions to: :accepted, from: :pending, on_transition: :approve_leave
     end
     event :request_rejected do
@@ -123,6 +123,14 @@ class AppliedLeave < ApplicationRecord
   end
 
   private
+
+  def generate_notification
+    binding.pry
+  end
+
+  def testMethod
+    binding.pry
+  end
 
   def approve_leave
     update_leave_count(calculate_leave_count)
