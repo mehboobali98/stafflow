@@ -38,7 +38,6 @@
 }
 
 // Navbar
-
 .notification-icon {
   height: 2em;
 }
@@ -74,13 +73,12 @@
   width: 100%;
   color: white;
   margin-top: 1%;
-}
+} // end
 
-//dashboard navbar
+//dashboard navbar: start
 .dashboard-navbar {
   background-color: #006fc8;
-
-  .navbar-brand{
+  .navbar-brand {
     color: white;
     padding-left: 20px;
     text-shadow: 2px 2px 5px white;
@@ -88,4 +86,4 @@
     font-size: 1.5em;
     font-family: sans-serif;
   }
-}
+} // end
