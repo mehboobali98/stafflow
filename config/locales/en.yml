@@ -44,6 +44,8 @@ en:
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
+    total_employees: 'Total employees'
+    total_departments: 'Total departments'
     alt_dp: 'Profile picture'
   chartkick:
     loading: 'Loading...'
