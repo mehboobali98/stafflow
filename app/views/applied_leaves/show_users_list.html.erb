@@ -3,7 +3,7 @@
   <h1><%= "Add use leave" %></h1>
   <%= form_with scope: :applied_leave, url: :add_user_leave_applied_leaves, method: :post  do |form| %>
     <div class="form mb-4">
-    <%= form.select :member_id, {}, prompt: t('applied_leave.messages.select_employees'), class: 'js-select-field form-control',id: 'employee_select' %> 
+    <%= form.select :member_id, {}, prompt: t('applied_leave.messages.select_employees'), class: 'js-select-field form-control',id: 'employee_select', data: { select2_classes: 'form-control' } %> 
     </div>
 
    <%= form.select :user_leave_id, {}, { prompt: 'Select Leave type' },  class: 'form-control', id: 'leaves_select' %>

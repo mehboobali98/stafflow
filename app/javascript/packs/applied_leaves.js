@@ -64,7 +64,7 @@ $(document).ready(function() {
     });
   });
 
-  $("#applied_leave_member_id").on("change", function(event) {
+  $("body").on('select2:select', '#applied_leave_member_id', function(event) {
     let user = {};
     user["member_id"] = this.value;
     $.ajax({
@@ -98,10 +98,9 @@ $(document).ready(function() {
       success:function(response){
         //debugger;
         employeesSelectBox = $('#applied_leave_member_id');
-        employeesSelectBox.html("");
         users = JSON.parse(response);
         users.forEach(function(user) {
-          //debugger;
+          debugger;
           employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`)
         });
         //debugger;

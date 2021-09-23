@@ -21,7 +21,8 @@ import 'select2/dist/css/select2.css'
 
 $(document).ready(function() {
   $("#applied_leave_member_id").select2({
-    theme: "classic"
+    theme: "classic",
+    dropdownCssClass: 'select2-small-dropdown-container'
   });
 });
 // Uncomment to copy all static images under ../images to the output folder and reference
