@@ -38,7 +38,6 @@ gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", b
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
 
-
 gem 'searchkick'
 gem 'chartkick', '= 4.0.5'
 

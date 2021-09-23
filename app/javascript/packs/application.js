@@ -19,19 +19,3 @@ document.addEventListener("turbolinks:load", function() {
     $('[data-toggle="popover"]').popover();
   })
 })
-$(document).ready(function(){
-  $("#search_btn").on("click", function(event){
-    event.preventDefault();
-    // $("#search_form").preventDefault;
-    let search_key = document.getElementById("search_box").value;
-    sendMassUpdateRequest("GET", "/search/search_data", search_key);
-
-    // $.ajax({
-    //   type: "GET",
-    //   url: "/search/search_data",
-    //   data: {
-    //    search_data : search_key
-    //   }
-    // })
-  })
-})
