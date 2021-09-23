@@ -3,11 +3,11 @@
     <h3 class="text-center"><%= t('cards.total_events') %></h3>
   </div>
   <div class="card-body">
-    <p class="text-center text-info fs-1"><%= @current_company.events.size %></p>
+    <p class="text-center text-info fs-1"><%= events_count %></p>
   </div>
   <div class="card-footer text-center">
     <span class="text-black"><%= t('cards.upcoming_events') %>: </span>
-    <span class="text-danger"><%= @current_company.events.where('starts_at > ?', DateTime.now).size %></span>
+    <span class="text-danger"><%= upcoming_events_count %></span>
   </div>
 </div>
 <div class="card mt-2">
@@ -15,7 +15,7 @@
     <h3 class="text-center"><%= t('cards.total_employees') %></h3>
   </div>
   <div class="card-body">
-    <p class="text-center text-secondary"><%= @current_company.users.all.size %></p>
+    <p class="text-center text-secondary"><%= users_count %></p>
   </div>
 </div>
 <div class="card mt-2">
@@ -23,6 +23,6 @@
     <h3 class="text-center"><%= t('cards.total_departments') %></h3>
   </div>
   <div class="card-body">
-    <p class="text-center text-primary"><%= @current_company.departments.all.size %></p>
+    <p class="text-center text-primary"><%= departments_count %></p>
   </div>
 </div>

@@ -71,8 +71,7 @@ Rails.application.routes.draw do
         get 'display_calendar'
       end
     end
-    get '/dashboard', action: :dashboard, controller: 'dashboard'
-    get '/analytics', action: :analytics, controller: 'analytics'
+
     resources :dashboard, only: [] do
       collection do
         get 'total_events'
@@ -87,5 +86,8 @@ Rails.application.routes.draw do
         get 'monthly_payroll'
       end
     end
+
+    get '/dashboard', action: :dashboard, controller: 'dashboard'
+    get '/analytics', action: :analytics, controller: 'analytics'
   end
 end

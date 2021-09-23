@@ -50,6 +50,9 @@ en:
     alt_dp: 'Profile picture'
     announcement_placeholder: 'Create your announcements..'
     post: 'Post'
+    name: 'Basit Ali'
+    designation: 'SWE'
+    quote: 'Either you run the day or the the day runs you. - Jim Rohn'
   chartkick:
     loading: 'Loading...'
     employee_per_dept: 'Employees per department'
