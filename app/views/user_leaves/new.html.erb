@@ -18,7 +18,7 @@
               <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count, disabled: true, class: "js-leave-count-#{leave.id}" %></td>
             </tr>
           <% end %>
-          <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' %>
+          <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' if can?(:create, UserLeave) %>
         </tbody>
       <% else %>
         <p class="text-danger"><%= t('user_leave.messages.info.no_leave_remaining') %></p>

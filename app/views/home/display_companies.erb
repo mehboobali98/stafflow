@@ -1,7 +1,7 @@
 <h3><%= t('labels.signin') %></h3>
 <h5 class='text-muted mt-2 mb-4'><%= t('labels.choosecompany') %></h5>
 <% @companies.each do |company| %>
-  <%= link_to new_user_session_url(subdomain: company.subdomain, email: params.dig(:user, :email)), class: 'text-decoration-none text-dark' do %>
+  <%= link_to new_user_session_url(subdomain: company.subdomain, email: params.dig(:user, :email)), class: 'text-decoration-none text-primary' do %>
     <div class='p-3 mt-3 company-show'>
       <%= image_tag("building.svg", class: 'icon') %>
       <div class='border-start border-dark d-inline pt-3 pb-3 ms-2'></div>

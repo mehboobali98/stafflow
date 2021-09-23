@@ -2,10 +2,11 @@
 
 class BenefitsController < ApplicationController
   before_action :load_benefit, only: %i[destroy edit update]
+  add_breadcrumb I18n.t('benefit.breadcrumbs.home'), :benefits_path
 
   # GET /benefits
   def index
-    @benefits = Benefit.all
+    @benefits = Benefit.all.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -13,6 +14,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/new
   def new
+    add_breadcrumb t('benefit.breadcrumbs.new'), :new_benefit_path
     @benefit = Benefit.new
     respond_to do |format|
       format.html
@@ -21,6 +23,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/:id/edit
   def edit
+    add_breadcrumb t('benefit.breadcrumbs.edit'), :edit_benefit_path
     respond_to do |format|
       format.html
     end

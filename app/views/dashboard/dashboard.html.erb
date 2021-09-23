@@ -4,14 +4,14 @@
     <div class="col-xl-8">
       <%= render partial: 'form' %>
       <div id="announcement" class="mt-3">
-      	<%= render partial: 'announcement_card' %>
-      	<%= render partial: 'announcement_card' %>
-      	<%= render partial: 'announcement_card' %>
-      	<%= render partial: 'announcement_card' %>
+        <%= render partial: 'announcement_card' %>
+        <%= render partial: 'announcement_card' %>
+        <%= render partial: 'announcement_card' %>
+        <%= render partial: 'announcement_card' %>
       </div>
     </div>
     <div class="col-xl-4">
-      <%= render partial: 'cards' %>
+      <%= render partial: 'dashboard_cards', locals: { events_count: @events_count, upcoming_events_count: @upcoming_events_count, users_count: @users_count, departments_count: @departments_count } %>
     </div>
   </div>
 </div>
