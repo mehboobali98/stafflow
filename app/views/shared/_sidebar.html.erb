@@ -32,10 +32,10 @@
       </a>
     </li>
     <li>
-      <a href="#">
+      <%= link_to leaves_path do %>
         <i class="fas fa-tasks"></i>
         <span class="links-name"><%= t('sidebar.leave') %></span>
-      </a>
+      <% end %>
     </li>
     <li>
       <%= link_to display_calendar_events_path do %>
