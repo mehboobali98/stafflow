@@ -16,3 +16,8 @@ document.addEventListener("turbolinks:load", function() {
     $('[data-toggle="popover"]').popover();
   })
 })
+$(document).ready(function(){
+  function home(){
+    alert("here")
+  }
+})

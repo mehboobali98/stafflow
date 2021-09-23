@@ -1,8 +1,7 @@
-import AOS from 'aos';
-window.addEventListener('load', () => {
+$(document).ready(function(){
   AOS.init({
     duration: 1500,
     easing: "ease-in-out",
     once: true,
   });
-});
+})

@@ -1,6 +1,7 @@
 <%= stylesheet_link_tag 'landing_page' %>
 <%= javascript_pack_tag 'landing_page', 'data-turbolinks-track': 'reload' %>
-
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <header id="header" class="fixed-top header-scrolled">
   <div class="container d-flex align-items-center">
     <h1 class="logo me-auto"><a><%= t('landing_page.header_name') %></a></h1>
@@ -8,7 +9,7 @@
       <ul>
         <li><a class="nav-link" href="#hero"><%= t('landing_page.nav_items.home') %></a></li>
         <li><a class="nav-link" href="#team"><%= t('landing_page.nav_items.team') %></a></li>
-        <li><a class="nav-link" href="#services"><%= t('landing_page.nav_items.services') %></a></li>
+        <li><a class="nav-link" href="#service"><%= t('landing_page.nav_items.services') %></a></li>
         <li><a class="nav-link" href="#about"><%= t('landing_page.nav_items.about') %></a></li>
         <li><%= link_to t('forms.buttons.signin'), new_user_session_url, class: 'm-2 sign-in-up' %></li>
         <li><%= link_to t('forms.buttons.signup'), new_user_registration_url, class: 'm-2 sign-in-up' %></li>
@@ -31,7 +32,7 @@
   </div>
 </section>
 
-<section id="team" class="team section-bg">
+<section id="team" class="team_section section-bg">
   <div class="container" data-aos="fade-up">
     <div class="section-title">
       <h2><%= t('landing_page.team.heading') %></h2>
@@ -90,7 +91,7 @@
   </div>
 </section> 
 
-<section id="services" class="services section-bg">
+<section id="service" class="service_section section-bg">
   <div class="container">
     <div class="section-title">
       <h2><%= t('landing_page.services.header_message') %></h2>
@@ -129,7 +130,7 @@
   </div>
 </section>
 
-<section id="about" class="about">
+<section id="about" class="about_section">
   <div class="container">
     <div class="section-title">
       <h2><%= t('landing_page.about.header_message') %></h2>

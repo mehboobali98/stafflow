@@ -53,7 +53,7 @@ section {
     }
   }
 }
-.team {
+.team_section {
   .member {
     position: relative;
     box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
@@ -93,7 +93,7 @@ section {
 .member:hover {
   transform: translateY(-10px);
 }
-.services{
+.service_section {
   .icon-box {
     box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
     padding: 50px 30px;
@@ -129,7 +129,7 @@ section {
     color: #47b2e4;
   }
 }
-.about {
+.about_section {
   .content{
     h3 {
       font-weight: 600;
@@ -189,7 +189,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 997;
   padding: 15px 0;
   position: fixed;
-  background: #header_image_background_color;
+  background: #00BFFF;
   .logo {
     font-size: 30px;
     margin: 0;

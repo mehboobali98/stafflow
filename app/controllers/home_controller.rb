@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
   before_action :authenticate_user!
   skip_before_action :authenticate_user!, only: %i[display_companies index]
-  layout 'signup'
+  layout 'landing', only: :display_companies
+  layout 'signup', only: :index
 
   # GET /display_companies
   def display_companies
