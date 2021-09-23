@@ -7,7 +7,7 @@ class Leave < ApplicationRecord
 
   validates :name,
             uniqueness: { scope: :company_id, case_sensitive: false, message: I18n.t('leave.messages.duplicate_error') }
-  validates :count, numericality: { in: VALID_LEAVE_RANGE }
+  validates :default_count, numericality: { in: VALID_LEAVE_RANGE }
   validates :name, :default_count, presence: true
   has_many :user_leaves, dependent: :restrict_with_error
   has_many :users, through: :user_leaves

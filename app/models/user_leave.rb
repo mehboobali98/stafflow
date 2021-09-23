@@ -21,6 +21,7 @@ class UserLeave < ApplicationRecord
 
     ActiveRecord::Base.transaction do
       user_leave_values[:leave].each_value do |leave_values|
+        binding.pry
         user.user_leaves.build(leave_values.merge(remaining_count: leave_values[:total_count]))
         user.save!
       end

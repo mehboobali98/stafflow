@@ -1,5 +1,4 @@
 <%= javascript_pack_tag "user_leaves" %>
-<%= render partial: 'shared/leave_navbar' %>
 <div class="container mt-2">
   <%= form_tag mass_create_member_user_leaves_path(@user), method: :post do %>
     <table class="table table-striped table-hover">
@@ -16,7 +15,7 @@
             <tr>
               <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, class: 'js-available-user-leave',data: { "selected-leave-count": ".js-leave-count-#{leave.id}" } %></td>
               <td><%= leave.name %></td>
-              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.count, disabled: true, class: "js-leave-count-#{leave.id}" %></td>
+              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count, disabled: true, class: "js-leave-count-#{leave.id}" %></td>
             </tr>
           <% end %>
           <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' %>
