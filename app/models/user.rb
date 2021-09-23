@@ -28,8 +28,8 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def date_of_birth_valid?
-    if date_of_birth > Date.today
+  def date_of_birth_valid?(date_of_birth)
+    if Date.parse(date_of_birth) > Date.today
       errors.add(:base, I18n.t('messages.date_error'))
       return false
     end
@@ -39,10 +39,11 @@ class User < ApplicationRecord
     false
   end
 
-  def role_id_valid?
-    return true unless role_id == ROLES[:account_owner]
+  def role_id_valid?(role_id)
+    return true unless role_id.to_i == ROLES[:account_owner]
 
     errors.add(:base, I18n.t('messages.cannot_be_account_owner'))
+    false
   end
 
   def account_owner?
