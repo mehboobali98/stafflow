@@ -15,8 +15,8 @@
         <% @payrolls.each do |payroll| %>
           <tr>
             <td><%= link_to payroll.sequence_num, member_payroll_path(id: payroll.sequence_num) %></td>
-            <td><%= payroll.gross_salary %></td>
-            <td><%= payroll.created_at.month %></td>
+            <td><%= number_to_currency(payroll.gross_salary, unit: t('currency.rupees')) %></td>
+            <td><%= t('date.month_names')[payroll.created_at.month] %></td>
             <td><%= payroll.created_at.year %></td>
           </tr>
         <% end %>

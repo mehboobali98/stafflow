@@ -14,7 +14,7 @@
     <% @benefits.each do |benefit| %>
       <tr>
         <td><%= benefit.name %></td>
-        <td><%= benefit.default_amount %></td>
+        <td><%= number_to_currency(benefit.default_amount, unit: t('currency.rupees')) %></td>
         <td><%= link_to t('form.button.update'), edit_benefit_path(benefit), class: 'btn btn-secondary' if can?(:update, benefit) %></td>
         <td><%= link_to t('form.button.delete'), benefit, method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' if can?(:destroy, benefit) %></td>
       </tr>

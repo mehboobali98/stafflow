@@ -16,9 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_company
-    if sub_domain?(request)
-      Company.current_company_id = current_company.id
-    end
+    Company.current_company_id = current_company.id if sub_domain?(request)
     yield
   rescue ActiveRecord::RecordNotFound
     redirect_to '/?NoRecordFound'

@@ -12,23 +12,27 @@
               <th><%= t('users_benefit.table.amount') %></th>
             </tr>
           </thead>
-          <tbody>
-            <% @available_benefits.each do |benefit| %>
-              <tr>
-                <td>
-                  <div class="custom-control custom-checkbox">
-                    <%= check_box_tag '', nil, false, class: 'new_user_benefit', data: { "new_user_benefit_amount": "number_field_#{benefit.id}" } %>
-                  </div>
-                </td>
-                <td><%= benefit.name %></td>
-                <td>
-                  <div class="form-group">
-                    <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, id: "number_field_#{benefit.id}", disabled: true %>
-                  </div>
-                </td>
-              </tr>      
-            <% end %>
-          </tbody>
+          <% if @available_benefits %>
+            <tbody>
+              <% @available_benefits.each do |benefit| %>
+                <tr>
+                  <td>
+                    <div class="custom-control custom-checkbox">
+                      <%= check_box_tag '', nil, false, class: 'new_user_benefit', data: { "new_user_benefit_amount": "number_field_#{benefit.id}" } %>
+                    </div>
+                  </td>
+                  <td><%= benefit.name %></td>
+                  <td>
+                    <div class="form-group">
+                      <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, id: "number_field_#{benefit.id}", disabled: true %>
+                    </div>
+                  </td>
+                </tr>      
+              <% end %>
+            </tbody>
+          <% else %>
+            <p class="text-danger"><%= t('user_leave.messages.info.no_leave_remaining') %></p>
+          <% end %>
         </table>
       </div>
     </div>

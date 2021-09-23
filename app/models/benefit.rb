@@ -7,4 +7,13 @@ class Benefit < ApplicationRecord
   belongs_to :company
   validates :name, uniqueness: true
   validates :name, presence: { message: I18n.t('benefit.validation.presence') }
+  validates :default_amount, presence: { message: I18n.t('users_benefit.validation.presence.') }, numericality: true
+  before_save :default_amount_zero?
+
+  def default_amount_zero?
+    return unless default_amount.zero?
+
+    errors.add(:base, I18n.t('benefit.validation.zero_check'))
+    throw :abort
+  end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BenefitsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource find_by: :sequence_num
   # GET /benefits
   def index
     respond_to do |format|
@@ -11,7 +11,6 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/new
   def new
-    @benefit = Benefit.new
     respond_to do |format|
       format.html
     end
@@ -26,7 +25,7 @@ class BenefitsController < ApplicationController
 
   # POST /benefits
   def create
-    @benefit = Benefit.new(permitted_benefit_params)
+    @benefit = Benefit.new(benefit_params)
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved
@@ -66,7 +65,7 @@ class BenefitsController < ApplicationController
 
   private
 
-  def permitted_benefit_params
+  def benefit_params
     params.require(:benefit).permit(:name, :default_amount)
   end
 end
