@@ -96,12 +96,17 @@ $(document).ready(function() {
         user
       },
       success:function(response){
+        //debugger;
         employeesSelectBox = $('#applied_leave_member_id');
         employeesSelectBox.html("");
         users = JSON.parse(response);
         users.forEach(function(user) {
+          //debugger;
           employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`)
         });
+        //debugger;
+        //$('.select2-search__field').select2("val", null);
+        // return false;
       }
     });
   });
