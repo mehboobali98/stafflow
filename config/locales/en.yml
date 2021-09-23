@@ -207,6 +207,7 @@ en:
     validation:
       presence: "This field cannot be left empty"
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+      benefit_name: "Benefit name can only contain letters"
     headings:
       benefit: "Benefits"
     label:
