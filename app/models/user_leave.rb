@@ -6,23 +6,22 @@ class UserLeave < ApplicationRecord
   validates_uniqueness_of :user_id, scope: :leave_id, message: I18n.t('user_leave.messages.duplicate_error')
   validates :total_count, :remaining_count, presence: true
   validates :total_count, :remaining_count, numericality: { in: VALID_LEAVE_RANGE }
-  validate :validate_user_leave_count, on: :update
-  before_destroy :can_destroy?, prepend: true
+  before_update :set_remaining_leave_count
+  before_destroy :check_pending_leaves?, prepend: true
 
-  #     options = {}
+  #     user_leave_values = {}
   #     leave = {
   #         6: {"leave_id" => 6, "total_count" => 30.0},
   #         7: {"leave_id" => 7, "total_count" => 40.0}
-  #       .
-  #       .
+  #          .
+  #          .
   #       }
-  def self.add_user_leaves(user, options = {})
-    return false if options.empty?
+  def self.create_user_leaves(user, user_leave_values = {})
+    return false if user_leave_values.blank?
 
     ActiveRecord::Base.transaction do
-      # options[:leave].each_value
-      options.values.first.each_value do |value|
-        user.user_leaves.build(value.merge(remaining_count: value[:total_count]))
+      user_leave_values[:leave].each_value do |leave_values|
+        user.user_leaves.build(leave_values.merge(remaining_count: leave_values[:total_count]))
         user.save!
       end
       true
@@ -31,17 +30,22 @@ class UserLeave < ApplicationRecord
     end
   end
 
-  def can_destroy?
+  def check_pending_leaves?
     return true unless applied_leaves.where(state: 'pending').exists?
 
     errors.add(:base, I18n.t('user_leave.messages.failure.applied_leave_exists'))
     throw(:abort)
   end
 
-  def validate_user_leave_count
-    return true unless total_count < remaining_count
+  def count_available?(leave_count)
+    return true if leave_count < remaining_count
 
-    errors.add(:total_leave_count, I18n.t('user_leave.messages.failure.total_leave_count'))
     false
+  end
+
+  def set_remaining_leave_count
+    applied_leave_count = total_count_was - remaining_count
+    self.remaining_count = total_count - applied_leave_count
+    self.remaining_count = 0 if remaining_count.negative?
   end
 end

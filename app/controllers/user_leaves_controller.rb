@@ -20,7 +20,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves/new
   def new
-    @leaves = @current_company.leaves.where.not(id: @user.leaves.ids)
+    @available_leaves = @current_company.leaves.where.not(id: @user.leaves.ids)
     respond_to do |format|
       format.html
     end
@@ -28,7 +28,7 @@ class UserLeavesController < ApplicationController
 
   # POST /members/:member_id/user_leaves/mass_create
   def mass_create
-    is_saved = UserLeave.add_user_leaves(@user, user_leave_params)
+    is_saved = UserLeave.create_user_leaves(@user, user_leave_params.to_unsafe_h)
     respond_to do |format|
       format.html do
         if is_saved
@@ -55,7 +55,7 @@ class UserLeavesController < ApplicationController
     respond_to do |format|
       format.js do
         if is_updated
-          flash[:notice] = t('user_leave.messages.success.update')
+          flash.now[:notice] = t('user_leave.messages.success.update')
           render js: "window.location = '#{member_user_leaves_path(@user)}'"
         else
           flash.now[:error] = @user_leave.errors.full_messages
@@ -82,7 +82,7 @@ class UserLeavesController < ApplicationController
   private
 
   def user_leave_update_params
-    params.require(:user_leave).permit(:total_count, :remaining_count)
+    params.require(:user_leave).permit(:total_count)
   end
 
   def user_leave_params

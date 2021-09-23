@@ -120,6 +120,7 @@ en:
         invalid_date: 'is invalid'
         approve_error: 'Leave has already been accepted or rejected'
         leave_count_error: 'The number of leave days must be greater than 0'
+        delete_error: 'Cannot delete as it has been already approve or rejected'
     headings:
       applicant_email: 'Applicant email'
       leave_type: 'Leave type'
@@ -158,6 +159,11 @@ en:
       leave_duration: 'Leave duration'
       leave_from: 'Leave from'
       leave_to: 'Leave to'
+      pending: 'Pending'
+      accepted: 'Accepted'
+      rejected: 'Rejected'
+      full_day: 'Full day'
+      half_day: 'Half day'
     placeholders:
       leave_filter: 'Select leave filter'
   settings:
@@ -165,6 +171,90 @@ en:
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
   appname: "EMS"    
+  payroll:
+    table:
+      amount: "Amount"
+      salary_item: "Salary Item"
+      base_salary: "Base Salary"
+      salary_after_tax: "Salary After Tax"
+      gross_salary: "Gross Salary"
+      options: "Options"
+      month: "Month"
+      year: "Year"
+      salary_slip: "Salary Slip"
+    headings:
+      payroll: "Payrolls"
+    button:
+      generate_payroll: "Generate Payroll"
+      save_payroll: "Save Payroll"
+      payroll: "Payroll"
+    messages:
+      success:
+        create: "Payroll Generated Successfully"
+      failure:
+        created_already: "Payroll for this month has been generated already"
+      payroll_generation: "Are you sure you want to generate new payroll?"
+
+  benefit:
+    table:
+      name: "Name"
+      type: "Type"
+    messages:
+      success:
+        create: "Benefit Created Successfully"
+        update: "Benefit Updated Successfully"
+        delete: "Benefit Deleted Successfully"
+    validation:
+      presence: "This field cannot be left empty"
+      benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+    headings:
+      benefit: "Benefits"
+    label:
+      benefit_name: "Benefit Name"
+      benefit_type: "Benefit Type"
+      amount: "Default Amount"
+  form:
+    message:
+      confirmation: "Are you sure?"
+    button:
+      submit: "Submit"
+      create_benefit: "Create Benefit"
+      update: "Update"
+      delete: "Delete"
+    field:
+      benefit_type: "Benefit Type"
+      benefit_name: "Benefit Name"
+
+  users_benefit:
+    benefit_amount: "Benefit Amount"
+    messages:
+      success:
+        create: "%{benefit_name} User Benefit Created Successfully"
+        update: "Benefit Updated Successfully"
+        delete: "Benefit Deleted Successfully"
+    validation:
+      presence: "This field cannot be left empty"
+    headings:
+      users_benefits: "User Benefits"
+    table:
+      benefit_amount: "Benefit Amount"
+      active: "Active"
+      inactive: "Inactive"
+      new_users_benefit: "New User Benefit"
+      user_name: "User Name"
+      benefit_name: "Benefit name"
+      amount: "Amount"
+      select: "Select"
+      options: "Options"
+    button:
+      users_benefit: "Benefits"
+  notifications:
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
+  navbar: 
+    search: 'Search'
   forms:
     buttons:
       apply_filters: "Apply Filters"
@@ -175,6 +265,7 @@ en:
       name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
+
   department:
     name_lable: "Department Name"
     image_lable: "Upload Image"
@@ -195,6 +286,7 @@ en:
     show_btn_message: "Show"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
+
   designation:
     name_lable: "Designation Name"
     select_department: "Select Department"
@@ -215,7 +307,9 @@ en:
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
+  
   appname: "EMS"
+
   company:
     label: 'Company'
     table_header:
@@ -229,10 +323,12 @@ en:
     byteam: "by team ABC"
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
+  user:
+    password_autocomplete: "New Password"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
-    title: "Settings"    
+    title: "Settings"
   event:
     messages:
       success:

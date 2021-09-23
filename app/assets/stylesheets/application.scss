@@ -23,6 +23,26 @@
     height: 100%;
   }
 }
+
+.notification-scrollable-container {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+// Navbar
+
+.notification-icon {
+  height: 2em;
+}
+
+.notification-counter {
+  height: 0.2em;
+  width: 0.2em;
+}
+
+.counter .counter-lg {
+  top: -24px !important;
+}
  // Sign in and Sign up pages styling
  
 .icon{
