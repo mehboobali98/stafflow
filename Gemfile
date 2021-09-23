@@ -36,6 +36,12 @@ gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", b
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
 
+# chartkick
+gem 'chartkick', '= 4.0.5'
+
+# faker gem to seed database
+gem 'faker', '= 2.19.0'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

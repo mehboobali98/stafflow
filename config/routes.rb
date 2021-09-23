@@ -69,5 +69,23 @@ Rails.application.routes.draw do
         get 'display_calendar'
       end
     end
+
+    resources :dashboard, only: [] do
+      collection do
+        get 'total_events'
+        get 'employees_per_department'
+        get 'employees_per_city'
+      end
+    end
+
+    resources :analytics, only: [] do
+      collection do
+        get 'employee_gender_distribution'
+        get 'monthly_payroll'
+      end
+    end
+
+    get '/dashboard', action: :dashboard, controller: 'dashboard'
+    get '/analytics', action: :analytics, controller: 'analytics'
   end
 end

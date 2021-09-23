@@ -1,0 +1,16 @@
+<div class="row mt-5">
+  <div class="col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <%= column_chart employees_per_department_dashboard_index_path, title: t('chartkick.employee_per_dept'), loading: t('chartkick.loading') %>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <%= bar_chart employees_per_city_dashboard_index_path, title: t('chartkick.employee_per_city'), loading: t('chartkick.loading') %>
+      </div>
+    </div>
+  </div>
+</div>

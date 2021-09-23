@@ -3,6 +3,12 @@
 class ApplicationController < ActionController::Base
   around_action :set_current_company
   helper_method :sub_domain?
+  layout :layout_by_resource
+
+  def layout_by_resource
+    user_signed_in? ? 'application' : 'landing'
+  end
+
   rescue_from CanCan::AccessDenied do
     respond_to do |format|
       format.html { redirect_to members_path, alert: t('messages.unauthorized') }
@@ -16,9 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_company
-    if sub_domain?(request)
-      Company.current_company_id = current_company.id
-    end
+    Company.current_company_id = current_company.id if sub_domain?(request)
     yield
   rescue ActiveRecord::RecordNotFound
     redirect_to '/?NoRecordFound'
