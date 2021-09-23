@@ -3,6 +3,8 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
+  root to: 'home#index'
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :members, controller: 'users' do
     resources :user_leaves, except: :create do
@@ -32,10 +34,6 @@ Rails.application.routes.draw do
       post 'mark_as_read'
       get 'count'
     end
-  end
-
-  as :user do
-    root to: 'devise/sessions#new'
   end
 
   resources :settings, only: %i[update] do
@@ -71,5 +69,23 @@ Rails.application.routes.draw do
         get 'display_calendar'
       end
     end
+
+    resources :dashboard, only: [] do
+      collection do
+        get 'total_events'
+        get 'employees_per_department'
+        get 'employees_per_city'
+      end
+    end
+
+    resources :analytics, only: [] do
+      collection do
+        get 'employee_gender_distribution'
+        get 'monthly_payroll'
+      end
+    end
+
+    get '/dashboard', action: :dashboard, controller: 'dashboard'
+    get '/analytics', action: :analytics, controller: 'analytics'
   end
 end
