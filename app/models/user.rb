@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  searchkick word_start: [:first_name], inheritance: true, searchable: [:first_name], index_name: -> { [User::Tenant.current, model_name.plural, Rails.env].join('_') }
+  searchkick word_start: [:first_name], inheritance: true, searchable: [:first_name]
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
