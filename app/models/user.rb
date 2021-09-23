@@ -19,6 +19,9 @@ class User < ApplicationRecord
   scope :role_id, ->(role_id) { where(role_id: role_id) }
   scope :department_id, ->(department_id) { where(department_id: department_id) }
   scope :match_users_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
+  has_attached_file :image, styles: { medium: "300x300>", thumb: "100x100>" }
+  validates_attachment_file_name :image, matches: [/png\z/, /jpe?g\z/]
+  validates_with AttachmentSizeValidator, attributes: :image, less_than: 3.megabytes
 
   validates_uniqueness_of :email, scope: :company_id
   validates_presence_of :email
@@ -32,6 +35,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def role_name
+    User::ROLES.key(role_id)
+  end
+  
   def get_available_leaves
     user_leaves.joins(:leave).where('user_leaves.remaining_count > ?',
                                     0).select('user_leaves.id, leaves.name')
