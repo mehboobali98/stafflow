@@ -30,6 +30,8 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
   payroll:
+    breadcrumbs:
+      home: "Payroll"
     table:
       amount: "Amount"
       salary_item: "Salary Item"
@@ -54,6 +56,10 @@ en:
       payroll_generation: "Are you sure you want to generate new payroll?"
 
   benefit:
+    breadcrumbs:
+      home: "Benefits"
+      new: "New"
+      edit: "Edit"
     table:
       name: "Name"
       type: "Type"
@@ -84,6 +90,10 @@ en:
       benefit_name: "Benefit Name"
 
   users_benefit:
+    breadcrumbs:
+      home: "User Benefits"
+      new: "New"
+      edit: "Edit"
     benefit_amount: "Benefit Amount"
     messages:
       success:
