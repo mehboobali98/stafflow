@@ -9,7 +9,7 @@ class AppliedLeave < ApplicationRecord
   belongs_to :leave
   belongs_to :company
   before_destroy :can_delete_leave?, prepend: true
-  after_create :generate_application_email
+  after_create :send_application_notification
 
   def can_delete_leave?
     return true if pending?
@@ -115,40 +115,39 @@ class AppliedLeave < ApplicationRecord
     state :accepted
     state :rejected
 
-    event :request_accepted, success: :generate_approval_notification do
+    event :request_accepted, success: :send_approval_notification do
       transitions to: :accepted, from: :pending, on_transition: :approve_leave
     end
-    event :request_rejected, success: :generate_rejection_notification do
+    event :request_rejected, success: :send_rejection_notification do
       transitions to: :rejected, from: :pending
     end
   end
 
   private
 
-  def generate_approval_notification
+  def send_approval_notification
     body = I18n.t('notifications.leave_approve_self', from: applied_from, to: applied_till)
     Notification.new(recipient_id: user.id, body: body).save
   end
 
-  def generate_rejection_notification
+  def send_rejection_notification
     body = I18n.t('notifications.leave_reject_self', from: applied_from, to: applied_till)
     Notification.new(recipient_id: user.id, body: body).save
   end
 
-  def generate_application_email
+  def send_application_notification
     body = I18n.t('notifications.new_leave', full_name: user.full_name)
-    admin_ids = get_admin_ids
+    admin_ids = get_admins.pluck(:id)
     admin_ids.each do |id|
       Notification.new(recipient_id: id, body: body).save
     end
   end
 
-  def get_admin_ids
+  def get_admins
     user.company.users.where(role_id: User::ROLES[:department_head])
         .where(department_id: user.department_id)
-        .or(user.company.users.where(role_id: User::ROLES[:hr])
-        .or(user.company.users.where(role_id: User::ROLES[:account_owner])))
-        .where.not(id: user.id).pluck(:id)
+        .or(user.company.users.where(role_id: [User::ROLES[:hr], User::ROLES[:account_owner]]))
+        .where.not(id: user.id)
   end
 
   def approve_leave
