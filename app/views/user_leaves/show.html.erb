@@ -1,0 +1,34 @@
+<div class="contrainer">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card text-center">
+        <div class="card-header">
+          <%= t('user_leave.headings.featured_user_leave') %>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th><%= t('user_leave.headings.leave_type') %></th>
+                <th><%= t('user_leave.headings.leave_count') %></th>
+                <th><%= t('user_leave.headings.leave_remaining_count') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= @user_leave.leave.name %></td>
+                <td><%= @user_leave.total_count %></td>
+                <td><%= @user_leave.remaining_count %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <%= link_to t('user_leave.headings.edit'), edit_member_user_leave_path(@user, @user_leave), class: "btn btn-secondary", remote: true %>
+          <%= link_to t('user_leave.headings.delete'), member_user_leave_path(@user, @user_leave), method: :delete, data: { confirm: t('user_leave.messages.confirmation.delete') }, class: 'btn btn-danger' %>
+          <%= link_to t('user_leave.headings.back'), :back, class: 'btn btn-outline-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
