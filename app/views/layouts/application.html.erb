@@ -16,7 +16,7 @@
     <div class="home-content">
       <%= render partial: "shared/dashboard_navbar" %>
       <%= render partial: "shared/flash_message" %>
-      <%= render_breadcrumbs %>
+      <%= render_breadcrumbs separator: '/' %>
       <%= yield %>
     </div>
   </body>
