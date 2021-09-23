@@ -38,14 +38,10 @@ gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", b
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
 
-# chartkick
-<<<<<<< HEAD
-gem "chartkick"
+
 gem 'searchkick'
-=======
 gem 'chartkick', '= 4.0.5'
 
->>>>>>> 70b790c9628c16efcb4b3138877c74e3346c045b
 # faker gem to seed database
 gem 'faker', '= 2.19.0'
 

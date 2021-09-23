@@ -76,7 +76,6 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    binding.pry
     @users = apply_scopes(@users).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html

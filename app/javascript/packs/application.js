@@ -1,3 +1,4 @@
+
 // This file is automatically compiled by Webpack, along with any other files
 // present in this directory. You're encouraged to place your actual application logic in
 // a relevant structure within app/javascript and only use these pack files to reference
@@ -19,14 +20,18 @@ document.addEventListener("turbolinks:load", function() {
   })
 })
 $(document).ready(function(){
-  $("#search_btn").on("click", function(){
+  $("#search_btn").on("click", function(event){
+    event.preventDefault();
+    // $("#search_form").preventDefault;
     let search_key = document.getElementById("search_box").value;
-    $.ajax({
-      type: "GET",
-      url: "/search/get_search_data",
-      data: {
-       search_data : search_key
-      }
-    })
+    sendMassUpdateRequest("GET", "/search/search_data", search_key);
+
+    // $.ajax({
+    //   type: "GET",
+    //   url: "/search/search_data",
+    //   data: {
+    //    search_data : search_key
+    //   }
+    // })
   })
 })

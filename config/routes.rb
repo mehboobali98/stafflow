@@ -5,9 +5,10 @@ require_relative 'initializers/subdomain_validator'
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
+  root to: "home#index"
   resources :search do
     collection do
-      get "get_search_data"
+      get "search_data"
     end
   end
   resources :events do

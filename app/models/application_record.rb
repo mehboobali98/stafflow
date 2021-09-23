@@ -4,7 +4,7 @@ class ApplicationRecord < ActiveRecord::Base
   def self.inherited(subclass)
     super
 
-    if ENV['default_scope'].nil?
+    if ENV['without_default_scope'].nil?
       subclass.instance_eval do
         def set_not_multitenant
           @not_multitenant = true

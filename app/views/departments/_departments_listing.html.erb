@@ -14,7 +14,7 @@
         <tr>
           <td class="w-25">
             <% if department.avatar.present? %>
-              <%= image_tag department.avatar.url(:medium) %>
+              <%= image_tag department.avatar.url(:medium), class:'w-25' %>
             <% else %>
               <%= image_tag 'department', class:'w-25' %>
             <% end %>
