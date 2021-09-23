@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
     Company.current_company_id = nil
   end
 
-  private :current_company, :set_current_company
+  private :set_current_company
 
   def sub_domain?(request)
     !request.subdomain.blank? && request.subdomain != 'www'

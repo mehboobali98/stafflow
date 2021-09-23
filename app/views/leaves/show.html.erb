@@ -10,11 +10,9 @@
           <p class="card-text"><%= @leave.default_count %></p>
         </div>
         <div class="card-footer">
-          <%= link_to t('leave.forms.links.edit'), edit_leave_path(@leave), class: 'btn btn-secondary' %>
-          <%= link_to t('leave.forms.links.delete'), leave_path(@leave), class: 'btn btn-danger',
-                  method: :delete,
-                  data: { confirm: t('leave.messages.delete_confirm') } %>
-          <%= link_to t('common.back'), :back, class: 'btn btn-outline-primary' %>
+          <%= link_to t('leave.forms.links.edit'), edit_leave_path(@leave), class: 'btn btn-secondary' if can?(:show, @leave) %>
+          <%= link_to t('leave.forms.links.delete'), leave_path(@leave), class: 'btn btn-danger', method: :delete, data: { confirm: t('leave.messages.delete_confirm') } if can?(:destroy, @leave) %>
+          <%= link_to t('common.back'), :back, class: 'btn btn-outline-primary' if can?(:index, Leave) %>
         </div>
       </div>
     </div>
