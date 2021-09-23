@@ -40,8 +40,8 @@ $(document).on('change input', '.js-filter-select', function() {
 
 $(document).on('change', '#department_select', function() {
   if (this.value === '') return;
-  url = `/departments/${this.value}/fetch_designations`
-  designationSelectBox = $('#designation_select');
+  let url = `/departments/${this.value}/fetch_designations`
+  let designationSelectBox = $('#designation_select');
   $.ajax({
     type: 'GET',
     url: url,

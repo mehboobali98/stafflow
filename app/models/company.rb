@@ -8,7 +8,7 @@ class Company < ApplicationRecord
   has_many :departments, dependent: :destroy
   has_many :designations, dependent: :destroy
   set_not_multitenant
-  before_save :build_company_settings
+  before_save :build_company_setting
 
   def self.current_company_id=(company_id)
     Thread.current[:current_company_id] = company_id
@@ -22,7 +22,7 @@ class Company < ApplicationRecord
     Company.find_by!(subdomain: subdomain)
   end
 
-  def build_company_settings
+  def build_company_setting
     build_setting(tax_rate: DEFAULT_TAX_RATE)
   end
 end

@@ -19,8 +19,8 @@ class User < ApplicationRecord
   validates_presence_of :password, if: :password_required?
   validates_confirmation_of :password, if: :password_required?
   validates_length_of :password, within: PASSWORD_LENGTH, allow_blank: true
-  validates_presence_of :department_id, :designation_id, :base_salary, unless: -> { role_id == ROLES[:account_owner] }
-  validate :validate_department_designation_relation, unless: -> { role_id == ROLES[:account_owner] }
+  validates_presence_of :department_id, :designation_id, :base_salary, unless: -> { account_owner? }
+  validate :department_designation_valid?, unless: -> { account_owner? }
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   SENSITIVE_ATTRIBUTES = %i[base_salary department_id designation_id role_id].freeze
@@ -29,17 +29,13 @@ class User < ApplicationRecord
   end
 
   def date_of_birth_valid?
-    if date_of_birth.year.to_s.length > 4
-      errors.add(:base, I18n.t('messages.date_error'))
-      return false
-    end
     if date_of_birth > Date.today
       errors.add(:base, I18n.t('messages.date_error'))
       return false
     end
     true
-  rescue Date::Error => e
-    errors.add(e.message)
+  rescue Date::Error, NoMethodError
+    errors.add(:base, I18n.t('messages.date_error'))
     false
   end
 
@@ -69,7 +65,7 @@ class User < ApplicationRecord
     !persisted? || password.present? || !password_confirmation.nil?
   end
 
-  def validate_department_designation_relation
+  def department_designation_valid?
     if designation.nil? || department.nil?
       errors.add(:base, I18n.t('designation.notfound'))
       return false
