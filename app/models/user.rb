@@ -10,6 +10,9 @@ class User < ApplicationRecord
   belongs_to :company
   belongs_to :department, optional: true
   belongs_to :designation, optional: true
+
+  has_many :payrolls, dependent: :destroy
+  has_many :users_benefits, dependent: :destroy
   accepts_nested_attributes_for :company
   has_many :notifications, foreign_key: :recipient_id
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true

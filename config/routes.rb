@@ -57,7 +57,13 @@ Rails.application.routes.draw do
     end
   end
   constraints subdomain: /^(?!www\Z)(\w+)/ do
-    resources :members, controller: 'users'
+    resources :benefits, except: :show
+    resources :members, controller: 'users' do
+      resources :payrolls
+      resources :users_benefits, except: %i[create show] do
+        post 'mass_create'
+      end
+    end
     resources :departments
     resources :designations
     resources :events do
