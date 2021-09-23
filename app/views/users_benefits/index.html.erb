@@ -1,6 +1,10 @@
 <div class="container">
   <h1><%= t('users_benefit.headings.users_benefits') %></h1>
+<<<<<<< HEAD
   <%= link_to t('users_benefit.table.new_users_benefit'), available_benefits_member_users_benefits_path, class: 'btn btn-outline-dark' if can?(:create, UsersBenefit) %>
+=======
+  <%= link_to t('users_benefit.table.new_users_benefit'), new_member_users_benefit_path, class: 'btn btn-outline-primary' %>
+>>>>>>> 70b790c9628c16efcb4b3138877c74e3346c045b
   <br>
   <br>
   <table class="table table-striped table-hover">
