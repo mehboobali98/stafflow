@@ -1,21 +1,76 @@
-<div class='row'>
-  <div class='col-3'>
-    <%= link_to 'Back', members_path, class: 'btn btn-dark m-3' %>
-    <%= link_to t('users_benefit.button.users_benefit'), member_users_benefits_path(@user), class: 'btn btn-dark m-3' %>
-    <%= link_to t('payroll.button.payroll'), member_payrolls_path(@user), class: 'btn btn-dark m-3' %>
-    
-  </div>
-  <div class='col-6'>
-    <div class='card text-center w-75 m-2'>
-      <h2 class='card-header'><%= I18n.t('headings.employee_profile') %></h2>
-      <div class='card-body'>
-        <h3><%= @user.full_name %></h3>
-        <h4><%= @user.email %></h4>
-        <h4><%= @user.date_of_birth %></h4>
+<%= stylesheet_link_tag 'profile' %>
+<div class="emp-profile">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile-img pt-4">
+        <div class="file btn btn-lg btn-primary">
+          <% if @user.image.present? %>
+            <%= image_tag @user.image.url(:medium) %>
+          <% else %>
+            <%= image_tag('default_user') %>
+          <% end %>
+        </div>
       </div>
     </div>
+    <div class="col-md-6">
+      <div class="profile-head">
+        <h5><%= @user.full_name %></h5>       
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#"><%= t('user.about') %></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-2 edit_button">
+      <%= link_to t('user.edit_profile'), edit_member_path(@user), class:" profile-edit-btn" %> 
+    </div>
   </div>
-  <div class='col-3 text-end'>
-    <%= link_to t('forms.buttons.edit'), edit_member_path(@user), class: 'btn btn-dark m-3' %>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile-work">
+        <p><%= t('user.work_link') %></p>
+        <a href=""><%= t('user..benefits') %></a><br/>
+        <a href=""><%= t('user.leaves') %></a><br/>
+      </div>
+    </div>
+    <div class="col-md-8 user-detail">
+      <div class="tab-content profile-tab" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.role') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.role_name %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.name') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.full_name %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.email') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.email %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.date_of_birth') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.date_of_birth || DEFAULT_VALUE %></p>
+            </div>
+          </div>
+        </div>                        
+      </div>
+    </div>
   </div>
 </div>
