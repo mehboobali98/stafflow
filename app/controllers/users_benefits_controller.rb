@@ -21,7 +21,6 @@ class UsersBenefitsController < ApplicationController
 
   # POST members/:id/users_benefits/mass_create
   def mass_create
-    binding.pry
     create_users_benefit
     if @notice.present?
       flash[:notice] = @notice
