@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
+# Leaves controller
 class LeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_leave, only: %i[show edit update destroy]
+  load_and_authorize_resource
 
   # GET /leaves
   def index
-    @leaves = Leave.all
     respond_to do |format|
       format.html
     end
@@ -19,7 +21,6 @@ class LeavesController < ApplicationController
 
   # GET /leaves/new
   def new
-    @leave = Leave.new
     respond_to do |format|
       format.html
     end
@@ -27,7 +28,6 @@ class LeavesController < ApplicationController
 
   # POST /leaves
   def create
-    @leave = Leave.new(leave_params)
     is_saved = @leave.save
     respond_to do |format|
       format.html do
@@ -81,13 +81,6 @@ class LeavesController < ApplicationController
   end
 
   private
-
-  def set_leave
-    @leave = Leave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('leave.messages.record_error')
-    redirect_to leaves_path
-  end
 
   def leave_params
     params.require(:leave).permit(:name, :default_count)
