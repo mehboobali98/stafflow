@@ -1,6 +1,7 @@
 <div class="container">
   <h1><%= t('applied_leave.headings.applied_leaves') %></h1>
-  <%= link_to t('applied_leave.links.apply_for_leave') , new_member_applied_leave_path(@user), class: 'btn btn-outline-dark mb-2' %>
+  <% binding.pry %>
+  <%= link_to t('applied_leave.links.apply_for_leave') , new_member_applied_leave_path(@user), class: 'btn btn-outline-dark mb-2' if can?(:create, AppliedLeave) %>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
       <tr>

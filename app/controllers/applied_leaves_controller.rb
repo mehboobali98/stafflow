@@ -1,7 +1,7 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  load_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
-  load_resource :applied_leave, through: :user, only: %i[index edit update destroy]
+  load_and_authorize_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
+  load_and_authorize_resource :applied_leave, through: :user, only: %i[index edit update destroy]
   load_resource :applied_leave, only: %i[approve_leave reject_leave]
   load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
@@ -9,6 +9,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
+    binding.pry
     @applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
@@ -17,6 +18,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
+    binding.pry
     @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
@@ -25,6 +27,7 @@ class AppliedLeavesController < ApplicationController
 
   # POST /members/:member_id/applied_leaves
   def create
+    binding.pry
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     if @applied_leave.validate_leave_year && (@applied_leave.set_leave && @applied_leave.leave_available?)
       is_saved = @applied_leave.save
