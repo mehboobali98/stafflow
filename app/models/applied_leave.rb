@@ -128,7 +128,7 @@ class AppliedLeave < ApplicationRecord
 
   def send_email
     emails = get_admins.pluck(:email)
-    LeaveMailer.delay.approve_leave_information(user, applied_from, applied_till, emails) if state == 'accepted'
+    LeaveMailer.delay.approve_email(emails, user, self) if state == 'accepted'
     LeaveMailer.delay.rejection_email(emails, user, self) if state == 'rejected'
     LeaveMailer.delay.request_email(emails, user, self) if state == 'pending'
   end
