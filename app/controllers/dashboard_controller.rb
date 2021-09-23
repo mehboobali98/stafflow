@@ -37,7 +37,7 @@ class DashboardController < ApplicationController
   def fetch_data
     @events_count = @current_company.events.size
     @upcoming_events_count = @current_company.events.where('starts_at > ?', DateTime.now).size
-    @users_count = @current_company.users.all.size
-    @departments_count = @current_company.departments.all.size
+    @users_count = @current_company.users.size
+    @departments_count = @current_company.departments.size
   end
 end
