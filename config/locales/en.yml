@@ -48,6 +48,8 @@ en:
     total_departments: 'Total departments'
     available_reports: 'Available reports'
     alt_dp: 'Profile picture'
+    announcement_placeholder: 'Create your announcements..'
+    post: 'Post'
   chartkick:
     loading: 'Loading...'
     employee_per_dept: 'Employees per department'

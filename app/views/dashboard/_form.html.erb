@@ -1,10 +1,10 @@
-<form class="card">
+<form class="card announcement-form">
   <div class="card-body">
-    <textarea class="form-control" id="dashboard-announcement" rows="3" placeholder="Create your announcements.."></textarea>
+    <textarea class="form-control" id="dashboard-announcement" rows="3" placeholder=<%= t('cards.announcements.placeholder') %> ></textarea>
   </div>
   <div class="card-footer">
     <a href="#"><i class="fas fa-camera-retro"></i></a>
     <a href="#"><i class="fab fa-youtube-square"></i></a>
-    <button type="submit" class="btn btn-primary" style="float: right;">Post</button>
+    <button type="submit" class="btn btn-primary announcement-post-btn"><%= t('cards.post') %></button>
   </div>
 </form>
