@@ -37,7 +37,7 @@ class AppliedLeave < ApplicationRecord
 
   def self.approve_mass_leaves(applied_leave_ids)
     count_approved = 0
-    applied_leaves = find(applied_leave_ids)
+    applied_leaves = where(applied_leave_ids)
     applied_leaves.each do |applied_leave|
       count_approved += 1 if applied_leave.approve_applied_leave
     rescue ActiveRecord::RecordNotFound
@@ -48,7 +48,7 @@ class AppliedLeave < ApplicationRecord
 
   def self.reject_mass_leaves(applied_leave_ids)
     count_rejected = 0
-    applied_leaves = find(applied_leave_ids)
+    applied_leaves = where(applied_leave_ids)
     applied_leaves.each do |applied_leave|
       count_rejected += 1 if applied_leave.reject_applied_leave
     rescue ActiveRecord::RecordNotFound
