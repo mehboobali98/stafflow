@@ -4,7 +4,7 @@ class UsersBenefitsController < ApplicationController
 
   # GET members/:id/users_benefits
   def index
-    @users_benefits = @users_benefits.includes(:benefit)
+    @users_benefits = @user.users_benefits.includes(:benefit).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -12,6 +12,7 @@ class UsersBenefitsController < ApplicationController
 
   # GET members/:id/users_benefits/available_benefits
   def available_benefits
+    add_breadcrumb t('users_benefit.breadcrumbs.new'), :new_member_users_benefit_path
     benefit_ids = @users_benefits.pluck('benefit_id')
     @available_benefits = Benefit.where.not(id: benefit_ids)
     respond_to do |format|
@@ -34,6 +35,7 @@ class UsersBenefitsController < ApplicationController
 
   # GET members/:id/users_benefits/:id/edit
   def edit
+    add_breadcrumb t('users_benefit.breadcrumbs.edit'), :edit_member_users_benefit_path
     respond_to do |format|
       format.html
     end

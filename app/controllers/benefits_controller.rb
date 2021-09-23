@@ -4,6 +4,8 @@ class BenefitsController < ApplicationController
   load_and_authorize_resource find_by: :sequence_num
   # GET /benefits
   def index
+    add_breadcrumb I18n.t('benefit.breadcrumbs.home'), :benefits_path
+    @benefits = Benefit.all.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -11,6 +13,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/new
   def new
+    add_breadcrumb t('benefit.breadcrumbs.new'), :new_benefit_path
     respond_to do |format|
       format.html
     end
@@ -18,6 +21,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/:id/edit
   def edit
+    add_breadcrumb t('benefit.breadcrumbs.edit'), :edit_benefit_path
     respond_to do |format|
       format.html
     end
@@ -25,7 +29,6 @@ class BenefitsController < ApplicationController
 
   # POST /benefits
   def create
-    @benefit = Benefit.new(benefit_params)
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved

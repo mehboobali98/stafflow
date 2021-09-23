@@ -3,6 +3,12 @@
 class ApplicationController < ActionController::Base
   around_action :set_current_company
   helper_method :sub_domain?
+  layout :layout_by_resource
+
+  def layout_by_resource
+    user_signed_in? ? 'application' : 'landing'
+  end
+
   rescue_from CanCan::AccessDenied do
     respond_to do |format|
       format.html { redirect_to members_path, alert: t('messages.unauthorized') }
@@ -24,7 +30,7 @@ class ApplicationController < ActionController::Base
     Company.current_company_id = nil
   end
 
-  private :current_company, :set_current_company
+  private :set_current_company
 
   def sub_domain?(request)
     !request.subdomain.blank? && request.subdomain != 'www'
