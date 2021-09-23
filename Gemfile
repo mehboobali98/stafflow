@@ -28,6 +28,7 @@ gem 'devise'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
+gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
 
 # calendar gem
 gem 'simple_calendar', '= 2.4.3'
