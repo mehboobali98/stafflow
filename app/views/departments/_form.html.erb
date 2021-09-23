@@ -3,9 +3,11 @@
     <div class="col-4">
       <h1><%= local_assigns[:heading] %></h1>
       <%= form_for @department do |form| %>
-        <div class="form-group mb-3">
+        <div class="form-group m-3">
           <%= form.label t('department.name_lable') %>
           <%= form.text_field :name, required: true, class: 'form-control' %>
+          <%= form.label t('department.select_image_lable') %>
+          <%= form.file_field :avatar, class: 'form-control' %>
         </div>
         <div>
           <%= form.submit local_assigns[:label_to_show], class: 'card-link btn btn-dark' %>
