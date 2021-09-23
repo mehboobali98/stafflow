@@ -1,48 +1,53 @@
-<div class='card pb-3 text-center w-75'>
-  <h1 class='card-header'><%= I18n.t('headings.edit_employee') %></h1>
-  <div class='card-body px-5'>
-    <%= form_with model: @user, url: member_path do |form| %>
-      <div class='field mb-3'>
-        <%= form.label t('user.change_image') %><br />
-        <%= form.file_field :image, class: 'form-control' %>
-      </div>
+<div class='d-flex justify-content-around'> 
+  <div class='pb-3 w-50 m-4'>
+    <h1><%= I18n.t('headings.edit_employee') %></h1>
+    <hr>
+    <div>
+      <%= form_with model: @user, local: true, url: member_path do |form| %>
+        <div class='field mb-3'>
+          <%= form.label I18n.t('forms.labels.fname') %><br />
+          <%= form.text_field :first_name, required: true, class: 'form-control' %>
+        </div>
 
-      <div class='field mb-3'>
-        <%= form.label t('forms.labels.email') %><br />
-        <%= form.email_field :email, required: true, class: 'form-control' %>
-      </div>
+        <div class='field mb-3'>
+          <%= form.label I18n.t('forms.labels.lname') %><br />
+          <%= form.text_field :last_name, required: true, class: 'form-control' %>
+        </div>
 
-      <div class='field mb-3'>
-        <%= form.label t('forms.labels.fname') %><br />
-        <%= form.text_field :first_name, required: true, class: 'form-control' %>
-      </div>
-
-      <div class='field mb-3'>
-        <%= form.label t('forms.labels.lname') %><br />
-        <%= form.text_field :last_name, required: true, class: 'form-control' %>
-      </div>
-
-      <div class='field mb-3'>
-        <%= form.label t('forms.labels.dob') %><br />
-        <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
-      </div>
-
-      <div class='field mb-3'>
-        <%= form.label t('forms.labels.role') %><br />
-        <%= form.select :role_id, options_for_select(User::ROLES.except(:account_owner)), {}, class: 'form-control' %>
-      </div>
-
-      <div class='field mb-2'>
-        <%= form.label I18n.t('forms.labels.salary') %><br />
-        <%= form.number_field :base_salary, required: true, class: 'form-control' %>
-      </div>
-
-      <div class='actions'>
-        <%= form.submit t('forms.buttons.update'), class: 'btn btn-dark' %>
-      </div>
-
-    <% end %>
+        <div class='field mb-3'>
+          <%= form.label I18n.t('forms.labels.dob') %><br />
+          <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
+        </div>
+        <% if !@user.account_owner? %>
+          <% if can?(:update, @user, :role_id) %>
+            <div class='field mb-3'>
+              <%= form.label I18n.t('forms.labels.role') %><br />
+              <%= form.select :role_id, options_for_select(user_roles_except_admin), {}, class: 'form-control' %>
+            </div>
+          <% end %>
+          <% if can?(:update, @user, :department_id) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.department') %><br />
+              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
+            </div>
+          <% end %>
+          <% if can?(:update, @user, :designation_id) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.designation') %><br />
+              <%= form.select :designation_id, options_from_collection_for_select(@designations, 'id', 'name'), { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
+            </div>
+          <% end %>
+          <% if can?(:update, @user, :base_salary) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.salary') %><br />
+              <%= form.number_field :base_salary, required: true, class: 'form-control' %>
+            </div>
+          <% end %>
+        <% end %>
+        <div class='actions'>
+          <%= form.submit t('forms.buttons.update'), class: 'btn btn-primary w-100 mt-3' %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
-
-<%= link_to 'Back', members_path %>

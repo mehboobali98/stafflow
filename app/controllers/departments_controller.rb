@@ -70,6 +70,14 @@ class DepartmentsController < ApplicationController
     end
   end
 
+  # GET /departments/:id/fetch_designations
+  def fetch_designations
+    @designations = @department.designations
+    respond_to do |format|
+      format.json { render json: @designations.select(:id, :name) }
+    end
+  end
+
   private
 
   def department_params

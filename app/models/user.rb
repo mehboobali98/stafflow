@@ -29,10 +29,24 @@ class User < ApplicationRecord
   validates_presence_of :password, if: :password_required?
   validates_confirmation_of :password, if: :password_required?
   validates_length_of :password, within: PASSWORD_LENGTH, allow_blank: true
+  validates_presence_of :department_id, :designation_id, :base_salary, unless: -> { account_owner? }
+  validate :department_designation_valid?, unless: -> { account_owner? }
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
+  SENSITIVE_ATTRIBUTES = %i[base_salary department_id designation_id role_id].freeze
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def date_of_birth_valid?(date_of_birth)
+    if Date.parse(date_of_birth) > Date.today
+      errors.add(:base, I18n.t('messages.date_error'))
+      return false
+    end
+    true
+  rescue Date::Error, NoMethodError
+    errors.add(:base, I18n.t('messages.date_error'))
+    false
   end
 
   def role_name
@@ -44,20 +58,11 @@ class User < ApplicationRecord
                                     0).select('user_leaves.id, leaves.name')
   end
 
-  def date_of_birth_valid?
-    return true unless date_of_birth.year.to_s.length > 4
-
-    errors.add(:base, I18n.t('messages.date_error'))
-    false
-  rescue Date::Error => e
-    errors.add(e.message)
-    false
-  end
-
-  def role_id_valid?
-    return true unless role_id == ROLES[:account_owner]
+  def role_id_valid?(role_id)
+    return true unless role_id.to_i == ROLES[:account_owner]
 
     errors.add(:base, I18n.t('messages.cannot_be_account_owner'))
+    false
   end
 
   def account_owner?
@@ -78,5 +83,17 @@ class User < ApplicationRecord
 
   def password_required?
     !persisted? || password.present? || !password_confirmation.nil?
+  end
+
+  def department_designation_valid?
+    if designation.nil? || department.nil?
+      errors.add(:base, I18n.t('designation.notfound'))
+      return false
+    end
+    if designation.department_id != department.id
+      errors.add(:base, I18n.t('designation.department_error'))
+      return false
+    end
+    true
   end
 end
