@@ -7,11 +7,11 @@ class NotificationsController < ApplicationController
   def index
     respond_to do |format|
       format.js do
-        @notifications = @notifications.read_status(params[:status])
+        @notifications = @notifications.read_status(params[:status]).order(created_at: :desc)
                                        .paginate(page: params[:page], per_page: PAGE_SIZE)
       end
       format.html do
-        @notifications = @notifications.unread.paginate(page: params[:page], per_page: PAGE_SIZE)
+        @notifications = @notifications.unread.order(created_at: :desc).paginate(page: params[:page], per_page: PAGE_SIZE)
       end
     end
   end
@@ -26,7 +26,7 @@ class NotificationsController < ApplicationController
 
   # POST /notifications/mark_as_read
   def mark_as_read
-    @notifications.unread.where(id: params[:ids]).update_all(status: Notification::STATUS[:read])
+    @notifications.unread.where(id: params[:ids]).update_all(status: true)
     respond_to do |format|
       format.html { redirect_to notifications_url, notice: t('notifications.markedread') }
     end
