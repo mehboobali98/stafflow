@@ -11,6 +11,7 @@
     <%= javascript_pack_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
     <%= render partial: "shared/sidebar" %>
     <div class="home-content">
       <%= render partial: "shared/dashboard_navbar" %>

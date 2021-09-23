@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/alisyed/sequenceid.git
+  revision: 4cf0c34e7e5aec156f15de4f37bf9a7d359f1e7f
+  branch: feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method
+  specs:
+    sequenceid (0.0.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -198,6 +205,7 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    transitions (1.2.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -249,9 +257,11 @@ DEPENDENCIES
   rails (~> 6.0.4, >= 6.0.4.1)
   sass-rails (>= 6)
   selenium-webdriver
+  sequenceid (= 0.0.7)!
   simple_calendar (= 2.4.3)
   spring
   spring-watcher-listen (~> 2.0.0)
+  transitions (= 1.2.1)
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
