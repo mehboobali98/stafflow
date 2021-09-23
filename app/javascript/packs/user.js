@@ -5,5 +5,35 @@ $(document).ready(function() {
   $("#company").keyup(function() {
     subdomain = $(this).val().replace(/[^A-Z0-9]/ig, "").toLowerCase();
     $('#subdomain').val(subdomain);
+    $('#span_subdomain').html(subdomain);
+  });
+});
+
+$(document).on('click', '.pagination-wrapper a', function(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'GET',
+    url: this.href,
+    data: $('#filter_form').serialize(),
+    dataType: 'script'
+  });
+});
+
+$(document).on('click', '#reset_filter_btn', function(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'GET',
+    url: '/members',
+    dataType: 'script'
+  });
+  $('.js-filter-select').val("");
+})
+
+$(document).on('change', '.js-filter-select', function() {
+  $.ajax({
+    type: 'GET',
+    url: '/members',
+    data: $('#filter_form').serialize(),
+    dataType: 'script'
   });
 })

@@ -1,2 +1,2 @@
-$("#modal").html("<%= escape_javascript (render partial:'edit_modal', locals: { user_leave: @user_leave, user: @user }) %>");
+$("#modal").html("<%= escape_javascript (render partial: 'edit_modal', locals: { user_leave: @user_leave, user: @user }) %>");
 $("#modal").modal("show");

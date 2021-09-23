@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 # Events Controller
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: %i[show edit update destroy]
-  before_action :set_events, only: %i[index display_calendar]
+  load_and_authorize_resource
 
   # GET /events
   def index
@@ -20,7 +21,7 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
-    @event = Event.new
+    @event_date = params[:event_date]
     respond_to do |format|
       format.html
     end
@@ -28,9 +29,8 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
-    @event = Event.new
-    if @event.validate_event_year(event_date)
-      set_event_fields(@event)
+    if @event.validate_event_year(event_params[:event_date])
+      set_event(@event)
       is_saved = @event.save
     end
     respond_to do |format|
@@ -54,8 +54,8 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    if @event.validate_event_year(event_date)
-      set_event_fields(@event)
+    if @event.validate_event_year(event_params[:event_date])
+      set_event(@event)
       is_saved = @event.save
     end
     respond_to do |format|
@@ -73,20 +73,25 @@ class EventsController < ApplicationController
   # DELETE /events/1
   def destroy
     @event.destroy
-    is_destroyed = @event.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @event.errors.full_messages unless is_destroyed
-        flash[:notice] = t('event.messages.success.delete_success')
+        if @event.destroyed?
+          flash[:notice] = t('event.messages.success.delete_success')
+        else
+          flash[:error] = @event.errors.full_messages
+        end
         redirect_to events_path
       end
     end
   end
 
-  # GET    /events/display_calendar
+  # GET /events/display_calendar
   def display_calendar
+    @start_date = event_calendar_start_date
+    @events = @events.events_in_a_month(@start_date)
     respond_to do |format|
       format.html
+      format.js
     end
   end
 
@@ -99,20 +104,24 @@ class EventsController < ApplicationController
     redirect_to events_path
   end
 
-  def set_events
-    @events = Event.all
-  end
-
-  def set_event_fields(event)
+  def set_event(event)
     event.name = event_params[:name]
     event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"
   end
 
-  def event_params
-    params.require(:event).permit(:name, :event_date, :event_time)
+  def event_calendar_start_date
+    return Date.today if params[:start_date].nil?
+
+    Date.parse(params[:start_date])
+  rescue Date::Error
+    flash[:error] = t('event.simple_calendar.invalid_date')
   end
 
-  def event_date
-    event_params[:event_date]
+  def create_params
+    params.require(:event).permit(:name)
+  end
+
+  def event_params
+    params.require(:event).permit(:name, :event_date, :event_time)
   end
 end

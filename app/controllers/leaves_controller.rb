@@ -1,6 +1,6 @@
 class LeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_leave_type, only: %i[show edit update destroy]
+  before_action :set_leave, only: %i[show edit update destroy]
 
   # GET /leaves
   def index
@@ -31,10 +31,13 @@ class LeavesController < ApplicationController
     is_saved = @leave.save
     respond_to do |format|
       format.html do
-        return redirect_to leaves_path, notice: t('leave.messages.success.create_success') if is_saved
-
-        flash.now[:error] = @leave.errors.full_messages
-        render :new
+        if is_saved
+          flash[:notice] = t('leave.messages.success.create_success')
+          redirect_to leaves_path
+        else
+          flash.now[:error] = @leave.errors.full_messages
+          render :new
+        end
       end
     end
   end
@@ -51,10 +54,13 @@ class LeavesController < ApplicationController
     is_updated = @leave.update(leave_params)
     respond_to do |format|
       format.html do
-        return redirect_to leaves_path, notice: t('leave.messages.success.edit_success') if is_updated
-
-        flash.now[:error] = @leave.errors.full_messages
-        render :edit
+        if is_updated
+          flash[:notice] = t('leave.messages.success.edit_success')
+          redirect_to leaves_path
+        else
+          flash.now[:error] = @leave.errors.full_messages
+          render :edit
+        end
       end
     end
   end
@@ -62,11 +68,13 @@ class LeavesController < ApplicationController
   # DELETE /leaves/1
   def destroy
     @leave.destroy
-    is_destroyed = @leave.destroyed?
     respond_to do |format|
       format.html do
-        flash[:error] = @leave.errors.full_messages unless is_destroyed
-        flash[:notice] = I18n.t('leave.messages.success.delete_success')
+        if @leave.destroyed?
+          flash[:notice] = t('leave.messages.success.delete_success')
+        else
+          flash[:error] = @leave.errors.full_messages
+        end
         redirect_to leaves_path
       end
     end
@@ -74,14 +82,14 @@ class LeavesController < ApplicationController
 
   private
 
-  def set_leave_type
+  def set_leave
     @leave = Leave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t('leave.messages.record_error')
     redirect_to leaves_path
   end
 
   def leave_params
-    params.require(:leave).permit(:name, :count)
+    params.require(:leave).permit(:name, :default_count)
   end
 end

@@ -6,7 +6,7 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div id="modal_flash_message"></div>
-    <%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch, local: false, id: 'user_leave_edit_form', html: { class: 'card p-3 bg-light' } do |form| %>
+    <%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch, local: false, html: { class: 'card p-3 bg-light' } do |form| %>
       <div class="modal-body">
         <div class="form-group mb-3">
           <%= form.label :leave_name, t('leave.forms.labels.name'), class: 'text-grey-darkest' %>
@@ -14,16 +14,12 @@
         </div>
         <div class="form-group mb-3">
           <%= form.label :total_count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :total_count, in: VALID_RANGE, required: true, class: 'form-control' %>
-        </div>
-        <div class="form-group mb-3">
-          <%= form.label :remaining_count, t('leave.forms.labels.remaining_count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :remaining_count, in: VALID_RANGE, required: true, step: 0.5, class: 'form-control', placeholder: t('leave.forms.placeholders.count') %>
+          <%= form.number_field :total_count, in: VALID_LEAVE_RANGE, required: true, step: LEAVE_COUNT_SCALE, class: 'form-control' %>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('user_leave.headings.close') %></button>
-        <%= form.submit id: 'edit_modal_submit_btn', class: 'card-link btn btn-primary' %>
+        <%= form.submit class: 'card-link btn btn-primary' %>
       </div>
     <% end %>
   </div>

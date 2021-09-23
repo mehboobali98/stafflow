@@ -29,10 +29,15 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  common:
+    back: "Back"
+    user_not_found: "User with the given id does not exist"
   leave:
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'
+      record_error: 'Leave with the given id does not exist'
+      duplicate_error: 'Leave with the given name already exists'
       success:
         create_success: 'Leave created succcessfully'
         edit_success: 'Leave edited succcessfully'
@@ -61,14 +66,22 @@ en:
   user_leave:
     messages:
       success:
-        create_success: 'User leaves(s) created succcessfully'
+        create: 'User leave(s) created succcessfully'
         update: 'User leave updated succcessfully'
         delete: 'User leave deleted succcessfully'
       failure:
-        create_failure: 'User leave(s) not created'
+        create: 'User leave(s) not created'
         total_leave_count: 'must be greater than remaining leave count'
+        duplicate_error: 'User leave already exists'
+        not_found: 'User leave with the given id does not exist'
+        applied_leave_exists: 'User leave has many applied leaves. Cannot be deleted'
+      info:
+        no_leave_remaining: 'User has already been assigned all the leaves'
       confirmation:
         delete: 'Are you sure?'
+    placeholders:
+      total_count: 'Total count'
+      remaining_count: 'Remaining count'
     headings:
       leave_type: 'Leave type'
       leave_count: 'Leave count'
@@ -93,14 +106,21 @@ en:
       leave_approve_success: 'Leave approved succcessfully'
       leave_reject_success: 'Leave rejected successfully'
       leave_update_success: 'Leave updated succcessfully'
-      leave_reject_failure: 'Leave cannot be rejected'
-      leave_approve_failure: 'Leave cannot be approved'
+      leave_reject_failure: 'Leave cannot be rejected as it has already been accepted or rejected'
+      leave_approve_failure: 'Leave cannot be approved as it has already been approved or rejected'
+      mass_approve: 'Out of %{total} applications, %{actual} were successfully approved'
+      mass_reject: 'Out of %{total} applications, %{actual} were successfully rejected'
       error:
-        leave_count: 'is greater than the remaining count of leaves. Request rejected'
+        leave_count: 'is greater than the remaining count of leaves. Cannot apply for leave'
         leave_date_year: 'cannot have more than 4 digits'
         past_leave_date: 'cannot be in the past'
         end_leave_date: 'cannot be lesser than the leave starting date'
         rejection_error: 'applied leave cannot be rejected'
+        not_found: 'Applied leave with the given id does not exist'
+        invalid_date: 'is invalid'
+        approve_error: 'Leave has already been accepted or rejected'
+        leave_count_error: 'The number of leave days must be greater than 0'
+        delete_error: 'Cannot delete as it has been already approve or rejected'
     headings:
       applicant_email: 'Applicant email'
       leave_type: 'Leave type'
@@ -122,6 +142,7 @@ en:
       leave_type: 'Leave types'
       add_user_leave: 'Add user leave'
       view_user_leave: 'View user leave'
+      select_filter: 'Select filter'
     links:
       approve_leaves: 'Approve leaves'
       reject_leaves: 'Reject leaves'
@@ -138,22 +159,176 @@ en:
       leave_duration: 'Leave duration'
       leave_from: 'Leave from'
       leave_to: 'Leave to'
+      pending: 'Pending'
+      accepted: 'Accepted'
+      rejected: 'Rejected'
+      full_day: 'Full day'
+      half_day: 'Half day'
     placeholders:
       leave_filter: 'Select leave filter'
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
+  appname: "EMS"    
+  payroll:
+    table:
+      amount: "Amount"
+      salary_item: "Salary Item"
+      base_salary: "Base Salary"
+      salary_after_tax: "Salary After Tax"
+      gross_salary: "Gross Salary"
+      options: "Options"
+      month: "Month"
+      year: "Year"
+      salary_slip: "Salary Slip"
+    headings:
+      payroll: "Payrolls"
+    button:
+      generate_payroll: "Generate Payroll"
+      save_payroll: "Save Payroll"
+      payroll: "Payroll"
+    messages:
+      success:
+        create: "Payroll Generated Successfully"
+      failure:
+        created_already: "Payroll for this month has been generated already"
+      payroll_generation: "Are you sure you want to generate new payroll?"
+
+  benefit:
+    table:
+      name: "Name"
+      type: "Type"
+    messages:
+      success:
+        create: "Benefit Created Successfully"
+        update: "Benefit Updated Successfully"
+        delete: "Benefit Deleted Successfully"
+    validation:
+      presence: "This field cannot be left empty"
+      benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+    headings:
+      benefit: "Benefits"
+    label:
+      benefit_name: "Benefit Name"
+      benefit_type: "Benefit Type"
+      amount: "Default Amount"
+  form:
+    message:
+      confirmation: "Are you sure?"
+    button:
+      submit: "Submit"
+      create_benefit: "Create Benefit"
+      update: "Update"
+      delete: "Delete"
+    field:
+      benefit_type: "Benefit Type"
+      benefit_name: "Benefit Name"
+
+  users_benefit:
+    benefit_amount: "Benefit Amount"
+    messages:
+      success:
+        create: "%{benefit_name} User Benefit Created Successfully"
+        update: "Benefit Updated Successfully"
+        delete: "Benefit Deleted Successfully"
+    validation:
+      presence: "This field cannot be left empty"
+    headings:
+      users_benefits: "User Benefits"
+    table:
+      benefit_amount: "Benefit Amount"
+      active: "Active"
+      inactive: "Inactive"
+      new_users_benefit: "New User Benefit"
+      user_name: "User Name"
+      benefit_name: "Benefit name"
+      amount: "Amount"
+      select: "Select"
+      options: "Options"
+    button:
+      users_benefit: "Benefits"
+  notifications:
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
+  navbar: 
+    search: 'Search'
+  forms:
+    buttons:
+      apply_filters: "Apply Filters"
+      reset_filters: "Reset Filters"
   company:
     table_header:
       list: "Companies List"
       name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
+
+  department:
+    name_lable: "Department Name"
+    image_lable: "Upload Image"
+    table_heading: "Departments"
+    table_options: "Options"
+    table_cell_name: "Name"
+    new_link_name: "New Department"
+    already_exist: "Department Alread Exists"
+    created: "Department Created Successfully"
+    not_created: "Department Not Created"
+    updated: "Department Updated Successfully"
+    not_updated: "Department Not Updated"
+    destroy: "Department Destroyed Successfully"
+    edit_message: "Update Department"
+    add_message: "Add Department"
+    not_exist: "Department Does Not Exist"
+    edit_btn_message: "Edit"
+    show_btn_message: "Show"
+    destroy_btn_message: "Destroy"
+    sure_message: "Are You Sure?"
+
+  designation:
+    name_lable: "Designation Name"
+    select_department: "Select Department"
+    table_heading: "Designations"
+    table_options: "Options"
+    table_cell_one_name: "Name"
+    table_cell_two_name: "Department-ID"
+    new_link_name: "New Designation"
+    already_exist: "Designation Alread Exists"
+    created: "Designation Created Successfully"
+    not_created: "Designation Not Created"
+    updated: "Designation Updated Successfully"
+    not_updated: "Designation Not Updated"
+    destroy: "Designation Destroyed Successfully"
+    edit_message: "Update Designation"
+    add_message: "Add Designation"
+    not_exist: "Designation Does Not Exist"
+    edit_btn_message: "Edit"
+    destroy_btn_message: "Destroy"
+    sure_message: "Are You Sure?"
+  
+  appname: "EMS"
+
+  company:
+    label: 'Company'
+    table_header:
+      list: "Companies List"
+      name: "Company Name"
+      subdomain: "Subdomain"
+      options: "Options"
+  labels:
+    signin: "Sign In"
+    ems: "EMS"
+    byteam: "by team ABC"
+    nocompanies: "No Companies Found"
+    choosecompany: "Choose your organization"
+  user:
+    password_autocomplete: "New Password"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
-    title: "Settings"    
+    title: "Settings"
   event:
     messages:
       success:
@@ -177,6 +352,8 @@ en:
         delete: 'Delete'
         view: 'View all'
         show: 'Show'
+        back: 'Back'
+        view_calendar: ' View calendar'
       headings:
         show: 'Featured event'
         add_event: 'Add event'
@@ -191,3 +368,5 @@ en:
         event_time: 'Event time'
       placeholders:
         event_name: 'Enter event name'
+    simple_calendar:
+      invalid_date: "Date is invalid"

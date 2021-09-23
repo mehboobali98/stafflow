@@ -1,21 +1,20 @@
-<%= render partial: 'shared/leave_navbar' %>
-<div class="contrainer">
+<div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card text-center">
         <div class="card-header">
           <%= t('leave.headings.featured_leave') %>
         </div>
         <div class="card-body">
           <h1 class="card-title"><%= @leave.name %></h1>
-          <p class="card-text"><%= @leave.count %></p>
+          <p class="card-text"><%= @leave.default_count %></p>
         </div>
         <div class="card-footer">
           <%= link_to t('leave.forms.links.edit'), edit_leave_path(@leave), class: 'btn btn-secondary' %>
           <%= link_to t('leave.forms.links.delete'), leave_path(@leave), class: 'btn btn-danger',
                   method: :delete,
                   data: { confirm: t('leave.messages.delete_confirm') } %>
-          <%= link_to t('leave.forms.links.view_all'), leaves_path, class: 'btn btn-outline-primary' %>
+          <%= link_to t('common.back'), :back, class: 'btn btn-outline-primary' %>
         </div>
       </div>
     </div>

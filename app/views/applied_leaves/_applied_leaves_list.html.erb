@@ -1,10 +1,14 @@
+<!-- for approving/rejecting leaves-->
 <% applied_leaves.each do |applied_leave| %>
   <tr>
-    <td><%= applied_leave.leave&.name %></td>
-    <td><%= applied_leave.applied_at %></td>
+    <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, class: 'js-selected-applied-leave', disabled: !(applied_leave.pending?) %></td>
+    <td><%= applied_leave.user.email %></td>
+    <td><%= applied_leave.leave.name %></td>
+    <td><%= t("applied_leave.links.#{applied_leave.leave_duration_name}") %></td>
+    <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
-    <td><%= applied_leave.state %></td>
-    <td><%= link_to t('applied_leave.links.edit'), edit_member_applied_leave_path(@user, applied_leave), class: 'btn btn-secondary' if applied_leave.pending? %></td>
-    <td><%= link_to t('applied_leave.links.delete'), member_applied_leave_path(@user, applied_leave), method: :delete, data: { confirm: t('applied_leave.messages.delete_confirm') }, class: 'btn btn-danger' %></td>
+    <td><%= t("applied_leave.links.#{applied_leave.state}") %></td>
+    <td><%= link_to t('applied_leave.links.approve'), approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-success' %></td>
+    <td><%= link_to t('applied_leave.links.reject'), reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' %></td>
   </tr>
 <% end %>

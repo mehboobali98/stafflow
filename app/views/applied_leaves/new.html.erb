@@ -1,2 +1,1 @@
-<%= render partial: 'shared/leave_navbar' %>
-<%= render partial: 'form', locals: { applied_leave: @applied_leave, user_leaves: @user_leaves, user: @user, heading: t('applied_leave.headings.new_application_leave') } %>
+<%= render partial: 'form', locals: { applied_leave: @applied_leave, available_user_leaves: @available_user_leaves, user: @user, heading: t('applied_leave.headings.new_application_leave') } %>

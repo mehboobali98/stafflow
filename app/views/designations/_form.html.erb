@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-4">
+      <h1><%= local_assigns[:heading] %></h1>
+
+      <%= form_for @designation do |form| %>
+        <div class="form-group mb-3">
+          <%= form.label t('designation.name_lable') %>
+          <%= form.text_field :name, required: true, class: 'form-control' %>
+        </div>
+        <div class="input-group mb-3">
+          <div class="col-md-6">
+            <%= form.label t('designation.select_department') %>
+            <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name),{ prompt:'select' },{ class: "form-control" } %>    
+          </div>
+        </div>
+        <div>
+          <%= form.submit local_assigns[:label_to_show], class: 'card-link btn btn-dark' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

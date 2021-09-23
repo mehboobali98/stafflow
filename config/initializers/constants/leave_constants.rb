@@ -1,1 +1,0 @@
-VALID_RANGE = 1..40

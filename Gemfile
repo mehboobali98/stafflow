@@ -21,13 +21,15 @@ gem 'jbuilder', '~> 2.7'
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'will_paginate', '=3.3.0'
 # additional gems
 gem 'cancancan'
 gem 'devise'
+gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
-gem "transitions", :require => ["transitions", "active_model/transitions"]
+gem 'transitions', '=1.2.1', require: %w[transitions active_model/transitions]
+gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
 
 # cron job
 gem 'whenever', '= 1.0.0', require: false
