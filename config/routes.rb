@@ -40,8 +40,11 @@ Rails.application.routes.draw do
     resources :benefits, except: :show
     resources :members, controller: 'users' do
       resources :payrolls
-      resources :users_benefits, except: %i[create show] do
-        post 'mass_create'
+      resources :users_benefits, except: %i[create show new] do
+        collection do
+          post 'mass_create'
+          get 'available_benefits'
+        end
       end
     end
     resources :departments

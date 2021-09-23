@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class PayrollsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :user, id_param: :member_id
+  load_and_authorize_resource through: :user, find_by: :sequence_num
+  before_action :payroll_validation, only: :create
 
   # GET members/:id/payrolls
   def index

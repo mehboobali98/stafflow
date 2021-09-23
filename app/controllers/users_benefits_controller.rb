@@ -1,5 +1,6 @@
 class UsersBenefitsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :user, id_param: :member_id
+  load_and_authorize_resource through: :user, find_by: :sequence_num
 
   # GET members/:id/users_benefits
   def index
@@ -9,8 +10,8 @@ class UsersBenefitsController < ApplicationController
     end
   end
 
-  # GET members/:id/users_benefits/new
-  def new
+  # GET members/:id/users_benefits/available_benefits
+  def available_benefits
     benefit_ids = @users_benefits.pluck('benefit_id')
     @available_benefits = Benefit.where.not(id: benefit_ids)
     respond_to do |format|
@@ -64,6 +65,10 @@ class UsersBenefitsController < ApplicationController
   end
 
   private
+
+  def update_user_benefit_params
+    params.require(:users_benefit).permit(:amount)
+  end
 
   # params[users_benefit][benefit_id] : amount
   # e.g params['users_benefit'][2] = 200

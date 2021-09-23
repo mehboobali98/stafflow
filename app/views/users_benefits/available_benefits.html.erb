@@ -1,6 +1,6 @@
 <%= javascript_pack_tag 'users_benefit_creation', 'data-turbolinks-track': 'reload' %>
 
-<%= form_with model: [@user, @users_benefits], url: member_users_benefit_mass_create_path(@user, @users_benefits) do |form| %>
+<%= form_with model: [@user, @users_benefits], url: mass_create_member_users_benefits_path(@user, @users_benefits) do |form| %>
   <div class="container">
     <div class="row">
       <div>
