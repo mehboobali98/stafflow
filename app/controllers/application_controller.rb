@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::Base
   around_action :set_current_company
   helper_method :sub_domain?
-  layout :layout_by_resource
+  # layout :layout_by_resource
 
   def layout_by_resource
     user_signed_in? ? 'application' : 'landing'
