@@ -2,7 +2,7 @@
 
 class PayrollsController < ApplicationController
   load_and_authorize_resource :user, id_param: :member_id
-  load_and_authorize_resource through: :user, find_by: :sequence_num
+  load_and_authorize_resource through: :user
   before_action :payroll_validation, only: :create
 
   # GET members/:id/payrolls
@@ -33,8 +33,6 @@ class PayrollsController < ApplicationController
       end
     end
   end
-
-  protected
 
   def payroll_validation
     if Payroll.payroll_already_generated?(@user)
