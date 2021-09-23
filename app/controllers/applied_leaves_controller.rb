@@ -1,14 +1,16 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[index new create edit update destroy]
+  load_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
+  load_and_authorize_resource :applied_leave, through: :user, only: %i[index create]
+  load_and_authorize_resource :user_leave, through: :user, find_by: :get_available_leaves
   before_action :set_applied_leave, only: %i[approve_leave reject_leave]
-  before_action :set_user_applied_leave, only: %i[show edit update destroy]
+  before_action :set_user_applied_leave, only: %i[edit update destroy]
   before_action :set_available_leaves, only: %i[new edit]
   before_action :set_applied_leaves, only: :all_applied_leaves
 
   # GET /members/:member_id/applied_leaves
   def index
-    @applied_leaves = @user.applied_leaves.includes(:leave)
+    @applied_leaves.includes(:leave)
     respond_to do |format|
       format.html
     end
@@ -172,13 +174,6 @@ class AppliedLeavesController < ApplicationController
 
   def applied_leave_params
     params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_type)
-  end
-
-  def set_user
-    @user = User.find(params[:member_id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('common.user_not_found')
-    redirect_to members_path
   end
 
   def set_user_applied_leave

@@ -1,6 +1,6 @@
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource :user, id_param: :member_id
+  load_resource :user, id_param: :member_id
   load_and_authorize_resource :leave, through: :current_company, only: :new
   load_and_authorize_resource :user_leave, through: :user, except: %i[new mass_create]
 
