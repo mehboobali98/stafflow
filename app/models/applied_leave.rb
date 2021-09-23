@@ -131,17 +131,17 @@ class AppliedLeave < ApplicationRecord
   end
 
   def calculate_leave_count
-    number_of_days = week_days_in_date_range(applied_from..applied_till)
+    number_of_days = week_days_count(applied_from..applied_till)
     return number_of_days if leave_duration_name.eql?(:full_day)
 
     number_of_days / 2.0 # dividing for half-day
   end
 
   def update_leave_count(leave_count)
-    user_leave&.remaining_count -= leave_count
+    user_leave.remaining_count -= leave_count
   end
 
-  def week_days_in_date_range(date_range)
+  def week_days_count(date_range)
     date_range.select { |day| (1..5).include?(day.wday) }.size
   end
 
