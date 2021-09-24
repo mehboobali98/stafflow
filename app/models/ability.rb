@@ -9,6 +9,9 @@ class Ability
   include DepartmentAbilities
   include DesignationAbilities
   include SettingsAbilities
+  include LeaveAbilities
+  include UserLeaveAbilities
+  include AppliedLeaveAbilities
 
   def initialize(user)
     return if user.blank?
@@ -19,5 +22,8 @@ class Ability
     define_department_abilities(user)
     define_designation_abilities(user)
     define_setting_abilities(user)
+    leave_abilities(user)
+    user_leave_abilities(user)
+    applied_leave_abilities(user)
   end
 end

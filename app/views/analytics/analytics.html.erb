@@ -1,0 +1,29 @@
+<div class="row mt-5">
+  <div class="col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <%= column_chart @current_company.users.joins(:department).group(:gender, :name).count, stacked: true, title: t('chartkick.employee_gender_dist') %>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-6">
+    <div class="card">
+      <div class="card-body">
+        <%= line_chart monthly_payroll_analytics_path, xtitle: t('chartkick.payroll_x_axis_title'), ytitle: t('chartkick.payroll_y_axis_title') , prefix: t('chartkick.amount_prefix'), title: t('chartkick.monthly_payroll') + " #{Date.today.year}" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-xl-6">
+    <div class="card">
+      <div class="card-header"><%= t('cards.available_reports') %></div>
+      <div class="card-body">
+        <ul class="list-group">
+          <li class="list-group-item"><%= t('chartkick.employee_gender_dist') %></li>
+          <li class="list-group-item"><%= t('chartkick.monthly_payroll') %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
