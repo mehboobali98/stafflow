@@ -17,34 +17,51 @@
   </div>
 <% else %>
   <div class="container">
-    <div class="m-3 p-4">
-	    <table class='table table-striped table-hover'>
-        <thead class='table-dark'>
-          <th><%= t('forms.labels.full_name') %></th>
-          <th><%= t('forms.labels.email') %></th>
-          <th>Role</th>
-          <th>Department</th>
-          <th>Designation</th>
-        </thead>
-        <tbody>
-          <% @results.each do |result| %>
-            <tr>
-              <% if result.instance_of? User %>
-                <td><%= result.full_name.presence %></td>
-                <td><%= result.email.presence %></td>
-                <td colspan="3"><%= result.role_name if result.role_id.present? %></td>
-              <% elsif result.instance_of? Department %>
-                <td></td><td></td><td></td>
-                <td><%= result.name %></td><td></td>
-              <% else %>
-                <td></td><td></td><td></td><td></td>
-                <td><%= result.name %></td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+    <% @results.each do |result| %>
+      <div class="card w-75 card-data mb-3 mt-3 shadow p-3 mb-5 bg-light rounded" style="margin-left: 10%">
+        <div class="d-flex justify-content-between">
+          <div class="row">
+            <% if result.instance_of? User %>
+              <div class="col-2">
+                <% if result.image.present? %>
+                  <%= image_tag result.image.url(:medium), class:"card-img-top" %>
+                <% else %>
+                  <%= image_tag 'default_user', class:"card-img-top" %>
+                <% end %>
+              </div>
+              <div class="col-10 ml-1">
+                <h5 class="card-title"><%= result.class %></h5>
+                <div class="mt-4"><%= result.full_name.presence %></div>
+                <div class="fs-6">
+                  <small><%= result.email.presence %> </small>
+                </div>
+              </div>
+              <%= link_to :details, member_path(result), class:"btn btn-primary mr-0 text-center" %>
+            <% elsif result.instance_of? Department %>
+              <div class="col-2">
+                <% if result.avatar.present? %>
+                  <%= image_tag result.avatar.url(:medium), class:"card-img-top" %>
+                <% else %>
+                  <%= image_tag 'department', class:"card-img-top" %>
+                <% end %>
+              </div>
+              <div class="col-10 ml-1">
+                <h5 class="card-title"><%= result.class %></h5>
+                <div class="mt-4"><%= result.name.presence %></div>
+              </div>
+            <% elsif result.instance_of? Designation %>
+              <div class="col-2">
+                <%= image_tag 'designation', class:"card-img-top" %>
+              </div>
+             <div class="col-10 ml-1">
+                <h5 class="card-title"><%= result.class %></h5>
+                <div class="mt-4"><%= result.name.presence %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 <% end %>
 
