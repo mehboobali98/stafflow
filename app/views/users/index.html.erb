@@ -1,5 +1,5 @@
+<h1 class='mb-3 card-header'><%= t('headings.all_employees') %></h1>
 <div class='container'>
-  <h1><%= t('headings.all_employees') %></h1><hr>
   <%= link_to t('headings.create_employee'), new_member_path, class: 'btn btn-outline-primary' if can?(:create, User) %>
   <br><br>
   <div class='card-header mb-3 row'>

@@ -9,21 +9,21 @@
     <tbody>
       <tr>
         <td><%= t('payroll.table.base_salary') %></td>
-        <td><%= @payroll.base_salary %></td>
+        <td><%= number_to_currency(@payroll.base_salary, unit: t('currency.rupees')) %></td>
       </tr>
       <tr>
         <td><%= t('payroll.table.salary_after_tax') %></td>
-        <td><%= @payroll.salary_after_tax %></td>
+        <td><%= number_to_currency(@payroll.salary_after_tax, unit: t('currency.rupees')) %></td>
       </tr>
       <% @applied_benefits.each do |applied_benefit| %>
         <tr>
           <td><%= applied_benefit.benefit.name %></td>
-          <td><%= applied_benefit.amount %></td>
+          <td><%= number_to_currency(applied_benefit.amount, unit: t('currency.rupees')) %></td>
         </tr>
       <% end %>
       <tr>
         <td><%= t('payroll.table.gross_salary') %></td>
-        <td><%= @payroll.gross_salary %></td>
+        <td><%= number_to_currency(@payroll.gross_salary, unit: t('currency.rupees')) %></td>
       </tr>
     </tbody>
   </table> 

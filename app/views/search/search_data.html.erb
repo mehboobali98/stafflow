@@ -1,0 +1,67 @@
+<% if @results.total_count == 0 %>
+  <div class='d-flex justify-content-around'>
+    <div class='card w-50 p-5 mt-5'>
+      <div class='row px-5'>
+        <div class='col-12 d-flex justify-content-start'>
+          <h4 class='border border-primary rounded bg-primary text-white p-2'>Search Results </h4>
+        </div>
+      </div>
+      <hr>
+      <div class='card-body px-5'>
+		    <h1 class='text-center text-muted' mt-4>No Data Found</h1>
+		    <div class='d-flex justify-content-around'>
+		      <%= image_tag("nodata.svg", class: 'illustration') %>
+		    </div>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="container">
+    <% @results.each do |result| %>
+      <div class="card w-75 card-data mb-3 mt-3 shadow p-3 mb-5 bg-light rounded" style="margin-left: 10%">
+        <div class="d-flex justify-content-between">
+          <div class="row">
+            <% if result.instance_of? User %>
+              <div class="col-2">
+                <% if result.image.present? %>
+                  <%= image_tag result.image.url(:medium), class:"card-img-top" %>
+                <% else %>
+                  <%= image_tag 'default_user', class:"card-img-top" %>
+                <% end %>
+              </div>
+              <div class="col-10 ml-1">
+                <h5 class="card-title"><%= result.class %></h5>
+                <div class="mt-4"><%= result.full_name.presence %></div>
+                <div class="fs-6">
+                  <small><%= result.email.presence %> </small>
+                </div>
+              </div>
+              <%= link_to :details, member_path(result), class:"btn btn-primary mr-0 text-center" %>
+            <% elsif result.instance_of? Department %>
+              <div class="col-2">
+                <% if result.avatar.present? %>
+                  <%= image_tag result.avatar.url(:medium), class:"card-img-top" %>
+                <% else %>
+                  <%= image_tag 'department', class:"card-img-top" %>
+                <% end %>
+              </div>
+              <div class="col-10 ml-1">
+                <h5 class="card-title"><%= result.class %></h5>
+                <div class="mt-4"><%= result.name.presence %></div>
+              </div>
+            <% elsif result.instance_of? Designation %>
+              <div class="col-2">
+                <%= image_tag 'designation', class:"card-img-top" %>
+              </div>
+             <div class="col-10 ml-1">
+                <h5 class="card-title"><%= result.class %></h5>
+                <div class="mt-4"><%= result.name.presence %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+

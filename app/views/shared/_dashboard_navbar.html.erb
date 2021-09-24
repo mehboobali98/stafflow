@@ -3,16 +3,16 @@
   <div class="container-fluid">
     <div class="navbar-brand"><%= @current_company&.name %></div>
     <div class="d-flex justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
-      <form class="d-flex">
+      <%= form_tag search_data_search_index_path, method: "get", class: "d-flex" do %>
         <div>
           <%= link_to notifications_path, class: 'nav-item text-white me-5' do %>
             <i class='fa fa-bell fa-lg'>
             </i><span class='counter counter-lg border border-danger p-1 ms-1 bg-danger ps-2 pe-2' id='notifications_count'></span>
-          </i>
-        <% end %>
-      </div>
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-dark" type="submit"><%= t('common.search') %></button>
-    </form>
+            </i>
+          <% end %>
+        </div>
+        <%= text_field_tag :search_query, :search ,class: "form-control m-2" %>
+        <%= submit_tag :search , class: "btn btn-dark h-75 mt-2" %>
+      <% end %> 
   </div>
 </nav>
