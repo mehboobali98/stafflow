@@ -24,7 +24,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   # POST /applied_leaves/add_user_leave
-  def add_user_leave_by_hr
+  def create_user_leave_by_hr
     @user = User.find(params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     @applied_leave.set_leave
@@ -55,7 +55,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET /applied_leaves/show_users_list
-  def show_users_list
+  def new_user_leave_by_hr
     respond_to do |format|
       format.html
     end

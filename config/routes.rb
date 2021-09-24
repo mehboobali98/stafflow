@@ -73,8 +73,8 @@ Rails.application.routes.draw do
         get 'filter_applied_leaves', as: 'filter'
         patch 'approve_leaves', as: 'approve'
         patch 'reject_leaves', as: 'reject'
-        get 'show_users_list'
-        post 'add_user_leave_by_hr'
+        get 'new_user_leave_by_hr'
+        post 'create_user_leave_by_hr'
         get 'get_users_list'
         get 'get_user_leaves'
       end
