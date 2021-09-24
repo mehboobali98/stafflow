@@ -29,7 +29,7 @@ class AppliedLeavesController < ApplicationController
     @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
     @applied_leave.save
     @applied_leave.approve_applied_leave
-    redirect_to show_applied_leaves_path
+    redirect_to all_applied_leaves_path
   end
 
   def get_user_leaves

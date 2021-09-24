@@ -73,6 +73,10 @@ Rails.application.routes.draw do
         get 'filter_applied_leaves', as: 'filter'
         patch 'approve_leaves', as: 'approve'
         patch 'reject_leaves', as: 'reject'
+        get 'show_users_list'
+        post 'add_user_leave'
+        get 'get_users_list'
+        get 'get_user_leaves'
       end
       member do
         patch 'approve_leave', as: 'approve'
