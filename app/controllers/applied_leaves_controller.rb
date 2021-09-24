@@ -46,7 +46,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/get_users_list
   def get_users_list
-    @users = User.where("email LIKE?", "#{params[:user][:email]}%")
+    @users = current_company.users.where("email LIKE?", "#{params[:user][:email]}%")
     respond_to do |format|
       format.json do
         render json: @users
