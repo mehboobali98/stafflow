@@ -21,6 +21,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   def add_user_leave
+    binding.pry
     @user = User.find(params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
@@ -184,7 +185,7 @@ class AppliedLeavesController < ApplicationController
   end
 
   def applied_leave_params
-    params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_id)
+    params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_type)
   end
 
   def multiple_leave_params
