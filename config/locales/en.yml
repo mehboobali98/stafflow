@@ -298,11 +298,8 @@ en:
       options: "Options"
     button:
       users_benefit: "Benefits"
-  notifications:
-    title: 'Notifications'
-    markread: 'Mark Read'
-    selectall: 'Select All'
-    markedread: 'Selected Notifications were marked as read'
+  
+    
   navbar: 
     search: 'Search'
   forms:
@@ -488,3 +485,7 @@ en:
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
     leave_approve_self: "Your request for a leave from %{from} to %{to} has been accepted" 
     invalid_date: "Date is invalid"
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
