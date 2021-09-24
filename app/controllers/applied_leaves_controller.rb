@@ -25,7 +25,7 @@ class AppliedLeavesController < ApplicationController
 
   # POST /applied_leaves/add_user_leave
   def create_user_leave_by_hr
-    @user = User.find(params[:applied_leave][:member_id])
+    @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     @applied_leave.set_leave
     @applied_leave.save
