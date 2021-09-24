@@ -23,15 +23,17 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  def add_user_leave
+  # POST /applied_leaves/add_user_leave
+  def add_user_leave_by_hr
     @user = User.find(params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.leave_id = UserLeave.find_by(id: applied_leave_params[:user_leave_id]).leave.id
+    @applied_leave.set_leave
     @applied_leave.save
     @applied_leave.approve_applied_leave
     redirect_to all_applied_leaves_path
   end
 
+  # POST /applied_leaves/get_user_leaves
   def get_user_leaves
     @user = User.find(params[:user][:member_id])
     @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
@@ -42,6 +44,7 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # GET /applied_leaves/get_users_list
   def get_users_list
     @users = User.where("email LIKE?", "#{params[:user][:email]}%")
     respond_to do |format|
@@ -51,9 +54,8 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  def show_users_list
-    @users = User.all
-  end
+  # GET /applied_leaves/show_users_list
+  def show_users_list; end
 
   # POST /members/:member_id/applied_leaves
   def create

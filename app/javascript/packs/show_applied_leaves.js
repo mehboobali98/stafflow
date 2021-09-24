@@ -70,4 +70,47 @@ $(document).ready(function() {
       }
     });
   });
+
+  $("body").on('select2:select', '#applied_leave_member_id', function(event) {
+    let user = {};
+    user["member_id"] = this.value;
+    $.ajax({
+      type: "GET",
+      url: "/applied_leaves/get_user_leaves",
+      dataType: 'script',
+      data: {
+        user
+      },
+      success:function(response){
+        leavesSelectBox = $('#leaves_select');
+        leavesSelectBox.html("");
+        leaves = JSON.parse(response);
+        leaves.forEach(function(leave) {
+          leavesSelectBox.append(`<option value=${leave.id}> ${leave.name} </option>`)
+        });
+      }
+    });
+  });
+
+  $("body").on('keyup', '.select2-search__field', function(event) {
+    let user = {};
+    user["email"] = this.value;
+    $.ajax({
+      type: "GET",
+      url: "/applied_leaves/get_users_list",
+      dataType: 'script',
+      data: {
+        user
+      },
+      success:function(response){
+        employeesSelectBox = $('#applied_leave_member_id');
+        users = JSON.parse(response);
+        users.forEach(function(user) {
+          if ($(`#applied_leave_member_id option[value=${user.id}]`).length == 0){
+              employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`);
+          }
+        });
+      }
+    });
+  });
 });

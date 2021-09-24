@@ -74,7 +74,7 @@ Rails.application.routes.draw do
         patch 'approve_leaves', as: 'approve'
         patch 'reject_leaves', as: 'reject'
         get 'show_users_list'
-        post 'add_user_leave'
+        post 'add_user_leave_by_hr'
         get 'get_users_list'
         get 'get_user_leaves'
       end
