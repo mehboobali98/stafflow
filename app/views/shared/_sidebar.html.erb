@@ -25,14 +25,15 @@
         <span class="links-name"><%= t('sidebar.departments') %></span>
       <% end %>
     </li>
-    <li>
+    
     <% if !current_user.account_owner? %>
-      <%= link_to member_payrolls_path(current_user) do%>
-        <i class="fas fa-receipt"></i>
-        <span class="links-name"><%= t('sidebar.payroll') %></span>
-      <% end %>
+      <li>
+        <%= link_to member_payrolls_path(current_user) do%>
+          <i class="fas fa-receipt"></i>
+          <span class="links-name"><%= t('sidebar.payroll') %></span>
+        <% end %>
+      </li>
     <% end %>
-    </li>
     <li>
       <%= link_to leaves_path do %>
         <i class="fas fa-tasks"></i>
