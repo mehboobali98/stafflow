@@ -35,8 +35,7 @@ class AppliedLeavesController < ApplicationController
     @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
     @applied_leave.set_leave
-    @applied_leave.save
-    @applied_leave.approve_applied_leave
+    @applied_leave.approve_hr_added_leave
     respond_to do |format|
       format.html do
         redirect_to all_applied_leaves_path
