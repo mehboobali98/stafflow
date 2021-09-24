@@ -29,11 +29,11 @@
         <tbody>
           <% @results.each do |result| %>
             <tr>
-              <% if result.class == User %>
-                <td><%= result.full_name if result.full_name.present? %></td>
-                <td><%= result.email if result.email.present? %></td>
+              <% if result.instance_of? User %>
+                <td><%= result.full_name.presence %></td>
+                <td><%= result.email.presence %></td>
                 <td colspan="3"><%= result.role_name if result.role_id.present? %></td>
-              <% elsif result.class == Department %>
+              <% elsif result.instance_of? Department %>
                 <td></td><td></td><td></td>
                 <td><%= result.name %></td><td></td>
               <% else %>

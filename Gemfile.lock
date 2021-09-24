@@ -299,8 +299,8 @@ DEPENDENCIES
   byebug
   cancancan
   capybara (>= 2.15)
-  delayed_job_active_record (= 4.1.6)
   chartkick (= 4.0.5)
+  delayed_job_active_record (= 4.1.6)
   devise
   faker (= 2.19.0)
   has_scope (= 0.8.0)
@@ -313,7 +313,7 @@ DEPENDENCIES
   puma (~> 4.1)
   rails (~> 6.0.4, >= 6.0.4.1)
   sass-rails (>= 6)
-  searchkick
+  searchkick (= 4.6.0)
   selenium-webdriver
   sequenceid (= 0.0.7)!
   simple_calendar (= 2.4.3)
