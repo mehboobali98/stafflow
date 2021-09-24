@@ -55,7 +55,11 @@ class AppliedLeavesController < ApplicationController
   end
 
   # GET /applied_leaves/show_users_list
-  def show_users_list; end
+  def show_users_list
+    respond_to do |format|
+      format.html
+    end
+  end
 
   # POST /members/:member_id/applied_leaves
   def create
