@@ -41,6 +41,7 @@ en:
     settings: 'Settings'
     logout: 'Logout'
     by_team: 'by team ABC'
+    benefits: "Benefits"
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
@@ -485,3 +486,6 @@ en:
     markread: 'Mark Read'
     selectall: 'Select All'
     markedread: 'Selected Notifications were marked as read'
+  benefits:
+    all: "All Benefits"
+    my: "My Benefits"

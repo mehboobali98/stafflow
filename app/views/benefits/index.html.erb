@@ -1,5 +1,8 @@
-<div class="container">
+<div class='card-header mb-3'>
   <h1><%= t('benefit.headings.benefit') %></h1>
+  <%= link_to t('benefits.my'), member_users_benefits_path(current_user) %>
+</div>
+<div class="container">
   <%= link_to t('form.button.create_benefit'), new_benefit_path, class: 'btn btn-outline-primary' %>
   <br>
   <br>
