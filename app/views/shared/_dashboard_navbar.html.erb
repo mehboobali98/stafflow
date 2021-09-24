@@ -1,7 +1,7 @@
 <%= javascript_pack_tag 'navbar', 'data-turbolinks-track': 'reload' %>
 <nav class="navbar navbar-expand-lg navbar-light dashboard-navbar">
   <div class="container-fluid">
-    <div class="navbar-brand"><%= @current_company.name %></div>
+    <div class="navbar-brand"><%= @current_company&.name %></div>
     <div class="d-flex justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
       <form class="d-flex">
         <div>

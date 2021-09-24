@@ -29,6 +29,12 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  error_pages:
+    not_found: '404 Error'
+    page_not_found: 'Page not found'
+    return_to_dashboard: 'Return to dashboard'
+    unauthorized: '401 Error'
+    format_error: 'The requested format is not supported'
   sidebar:
     dashboard: 'Dashboard'
     users: 'Users'
@@ -481,4 +487,4 @@ en:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
     leave_approve_self: "Your request for a leave from %{from} to %{to} has been accepted" 
-      invalid_date: "Date is invalid"
+    invalid_date: "Date is invalid"
