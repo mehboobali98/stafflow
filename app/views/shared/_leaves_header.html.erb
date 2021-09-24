@@ -1,5 +1,5 @@
-<div class='card-header mb-3'>
-  <h1 class="mb-3"><%= heading %></h1>
+<div class='pms-heading row ms-1'>
+  <h2 class="mb-3"><%= heading %></h2>
   <% unless current_user.account_owner? %>
     <%= link_to "Apply For Leave", new_member_applied_leave_path(current_user), class: 'card-link' %>
     <%= link_to "My Applied Leaves", member_applied_leaves_path(current_user), class: 'card-link' %>
@@ -7,3 +7,4 @@
   <% end %>
   <%= link_to "All Leaves", leaves_path, class: 'card-link' %>  
 </div>
+<br>

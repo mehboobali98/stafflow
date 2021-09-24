@@ -137,7 +137,7 @@ en:
     signup: "Sign Up"
     resend_lock_instructions: "Resend Lock Instructions"
     resend_confirmation_instructions: "Resend Confirmation Instructions"
-    create_employee: "Add A New Employee"
+    create_employee: "Add New Employee"
     edit_employee: "Edit Employee"
     all_employees: "All Employees"
     employee_profile: "Employee Profile"

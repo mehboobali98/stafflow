@@ -16,12 +16,26 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
+
+$sky_blue_app_color: #AFDBF5;
+
 .body-wrapper {
   height: 100%;
   overflow-y: scroll;
   .sidebar-wrapper {
     height: 100%;
   }
+}
+
+.pms-table-header {
+  background-color: $sky_blue_app_color;
+  font-size: large;
+  border: none;
+}
+
+.pms-heading {
+  background-color: $sky_blue_app_color;
+  padding: 15px 0px;
 }
 
 // side bar custom class for toggling. It is added when the sidebar is active

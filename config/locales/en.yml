@@ -127,7 +127,7 @@ en:
       leave_type: 'Leave type'
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
-      user_leaves: 'User leaves'
+      user_leaves: 'My leaves'
       options: 'Options'
       show: 'Show'
       edit: 'Edit'

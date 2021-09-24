@@ -3,16 +3,12 @@
     <h1 class='mt-3'><%= t('headings.create_employee') %></h1>
     <hr>
     <div>
-      <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form' do |form| %>
-        <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li> <%= message %> </li>  
-        <% end %>
-        </ul>
+      <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form', class: 'card bg-light p-4' do |form| %>
         <div class='row'>
           <div class='col-6'>
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.email') %><br />
+              <%= error_messages(:email) %>
               <%= form.email_field :email, class: 'form-control', required: true %>
             </div>
             
@@ -21,47 +17,56 @@
               <% if @minimum_password_length %>
                 <em>(<%= @minimum_password_length %> characters minimum)</em>
               <% end %><br />
+              <%= error_messages(:password) %>
               <%= form.password_field :password, required: true, class: 'form-control' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.confirm_password') %><br />
+              <%= error_messages(:password_confirmation) %>
               <%= form.password_field :password_confirmation, required: true, class: 'form-control' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.fname') %><br />
+              <%= error_messages(:first_name) %>
               <%= form.text_field :first_name, required: true, class: 'form-control', id: 'first_name' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.lname') %><br />
+              <%= error_messages(:last_name) %>
               <%= form.text_field :last_name, required: true, class: 'form-control' %>
             </div>
           </div>
           <div class='col-6'>
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.dob') %><br/>
+              <%= error_messages(:date_of_birth) %>
               <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.role') %><br />
+              <%= error_messages(:role_id) %>
               <%= form.select :role_id, options_for_select(user_roles_except_admin), {}, class: 'form-control' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.department') %><br />
+              <%= error_messages(:department_id) %>
               <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.designation') %><br />
+              <%= error_messages(:designation_id) %>
               <%= form.select :designation_id, {}, { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
             </div>
 
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.salary') %><br />
+              <%= error_messages(:base_salary) %>
               <%= form.number_field :base_salary, required: true, class: 'form-control', min: 0 %>
             </div>
           </div>
