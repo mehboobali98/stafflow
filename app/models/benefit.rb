@@ -8,4 +8,7 @@ class Benefit < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, presence: { message: I18n.t('benefit.validation.presence') }
   validates :name, format: { with: /\A[a-z A-Z]+\z/, message: I18n.t('benefit.validation.benefit_name') }
+  validates :default_amount, presence: { message: I18n.t('users_benefit.validation.presence.') },
+                             numericality: { only_float: true, other_than: 0,
+                                             message: I18n.t('benefit.validation.zero_check') }
 end

@@ -29,6 +29,8 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  currency:
+    rupees: "Rs. "
   error_pages:
     not_found: '404 Error'
     page_not_found: 'Page not found'
@@ -254,6 +256,7 @@ en:
     validation:
       presence: "This field cannot be left empty"
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+      zero_check: "The benefit amount cannot be zero"
       benefit_name: "Benefit name can only contain letters"
     headings:
       benefit: "Benefits"
@@ -267,7 +270,7 @@ en:
     button:
       submit: "Submit"
       create_benefit: "Create Benefit"
-      update: "Update"
+      update: "Edit"
       delete: "Delete"
     field:
       benefit_type: "Benefit Type"
@@ -286,6 +289,7 @@ en:
         delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+      all_benefits_alloted: "All the benefits are already given to the user"
     headings:
       users_benefits: "User Benefits"
     table:
