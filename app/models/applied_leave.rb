@@ -24,6 +24,7 @@ class AppliedLeave < ApplicationRecord
   end
 
   def set_leave
+    binding.pry
     self.leave_id = user_leave.leave.id
   rescue ActiveRecord::RecordInvalid
     false

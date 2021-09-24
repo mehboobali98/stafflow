@@ -12,7 +12,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves
   def index
-    @user_leaves.includes(:leave)
+    @user_leaves = @user_leaves.includes(:leave).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end

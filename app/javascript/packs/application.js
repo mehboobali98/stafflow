@@ -18,3 +18,12 @@ document.addEventListener("turbolinks:load", function() {
     $('[data-toggle="popover"]').popover();
   })
 })
+
+$(document).on('click', '.pagination-wrapper a', function(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'GET',
+    url: this.href,
+    dataType: 'script'
+  });
+});

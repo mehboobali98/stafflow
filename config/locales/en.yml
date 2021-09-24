@@ -33,12 +33,14 @@ en:
     dashboard: 'Dashboard'
     users: 'Users'
     departments: 'Departments'
+    designation: 'Designations'
     payroll: 'Payroll'
     leave: 'Leave'
     calendar: 'Calendar'
     analytics: 'Analytics'
     documents: 'Documents'
-    settings: 'Settings'
+    settings: 'Company settings'
+    view_profile: 'View profile'
     logout: 'Logout'
     by_team: 'by team ABC'
   cards:
@@ -104,7 +106,7 @@ en:
         update: 'User leave updated succcessfully'
         delete: 'User leave deleted succcessfully'
       failure:
-        create: 'User leave(s) not created'
+        create: 'User leave(s) not created due to an error'
         total_leave_count: 'must be greater than remaining leave count'
         duplicate_error: 'User leave already exists'
         not_found: 'User leave with the given id does not exist'
@@ -117,6 +119,8 @@ en:
       total_count: 'Total count'
       remaining_count: 'Remaining count'
     headings:
+      view_user_leave: 'View user leave'
+      add_user_leave: 'Add user leave'
       leave_type: 'Leave type'
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
@@ -128,7 +132,7 @@ en:
       edit_user_leave: 'Edit User Leave'
       save: 'Save'
       close: 'Close'
-      feature_user_leave: 'Feature user leave'
+      feature_user_leave: 'Featured user leave'
       back: "Back"
     buttons:
       add_leaves: 'Add user leave'
@@ -474,6 +478,7 @@ en:
     date_of_birth: "Date of birth"
     email: "Email"
     change_image: "Change Image"
+    apply_for_leave: 'Apply for leave'
   notifications:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"

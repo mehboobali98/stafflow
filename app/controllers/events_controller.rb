@@ -7,6 +7,7 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
+    @events = @events.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end

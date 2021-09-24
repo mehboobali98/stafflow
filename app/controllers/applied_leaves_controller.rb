@@ -9,7 +9,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
-    @applied_leaves.includes(:leave)
+    @applied_leaves = @applied_leaves.includes(:leave).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -17,7 +17,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
-    @applied_leave = AppliedLeave.new
     respond_to do |format|
       format.html
     end
@@ -83,7 +82,8 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
-    @applied_leaves.includes(user_leave: %i[user leave])
+    @applied_leaves = @applied_leaves.includes(user_leave: [:user, :leave]).paginate(page: params[:page],
+                                                                                    per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -165,7 +165,7 @@ class AppliedLeavesController < ApplicationController
 
   def get_filtered_records
     @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].to_s.downcase)
-    @applied_leaves.includes(user_leave: %i[user leave])
+    @applied_leaves = @applied_leaves.paginate(page: params[:page], per_page: PAGE_SIZE)
   end
 
   def applied_leave_params

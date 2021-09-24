@@ -26,16 +26,22 @@
       <% end %>
     </li>
     <li>
+      <%= link_to designations_path do %>
+        <i class="far fa-building"></i>
+        <span class="links-name"><%= t('sidebar.designations') %></span>
+      <% end %>
+    </li>
+    <li>
       <a href="#">
         <i class="fas fa-receipt"></i>
         <span class="links-name"><%= t('sidebar.payroll') %></span>
       </a>
     </li>
     <li>
-      <a href="#">
+      <%= link_to leaves_path do %>
         <i class="fas fa-tasks"></i>
         <span class="links-name"><%= t('sidebar.leave') %></span>
-      </a>
+      <% end %>
     </li>
     <li>
       <%= link_to display_calendar_events_path do %>
@@ -50,15 +56,15 @@
       <% end %>
     </li>
     <li>
-      <a href="#">
-        <i class="far fa-folder-open"></i>
-        <span class="links-name"><%= t('sidebar.documents') %></span>
-      </a>
-    </li>
-    <li>
       <%= link_to settings_path do %>
         <i class="fas fa-cogs"></i>
         <span class="links-name"><%= t('sidebar.settings') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to member_path(current_user) do %>
+        <i class="fas fa-user-edit"></i>
+        <span class="links-name"><%= t('sidebar.view_profile') %></span>
       <% end %>
     </li>
     <li>
