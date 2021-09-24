@@ -22,6 +22,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
+  def after_sign_up_path_for(_resource)
+    new_user_session_path
+  end
+
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     permitted_attributes = [:email, :password, :first_name, :last_name, :department_id, :company_id, :date_of_birth, { company_attributes: [:name, :subdomain] }]
