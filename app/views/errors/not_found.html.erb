@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <title><%= t('error_pages.not_found') %></title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card mt-4">
+            <%= image_tag 'error-404.svg' %>
+            <div class="card-body">
+              <p><small><%= t('error_pages.page_not_found') %></small></p>
+            </div>
+            <div class="card-footer text-center">
+              <%= link_to t('error_pages.return_to_dashboard'), dashboard_path %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

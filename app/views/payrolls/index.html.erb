@@ -1,0 +1,27 @@
+<div class="container">
+  <h1><%= t('payroll.headings.payroll') %></h1>
+  <br>
+  <%= link_to t('payroll.button.generate_payroll'), member_payrolls_path, method: :create, data: { confirm: t('payroll.messages.payroll_generation') }, class: 'btn btn-outline-primary' %>
+  <br><br>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <th><%= t('payroll.table.salary_slip') %></th>
+      <th><%= t('payroll.table.gross_salary') %></th>
+      <th><%= t('payroll.table.month') %></th>
+      <th><%= t('payroll.table.year') %></th>
+    </thead>
+    <% if @payrolls %>    
+      <tbody>
+        <% @payrolls.each do |payroll| %>
+          <tr>
+            <td><%= link_to payroll.sequence_num, member_payroll_path(id: payroll.sequence_num) %></td>
+            <td><%= payroll.gross_salary %></td>
+            <td><%= payroll.created_at.month %></td>
+            <td><%= payroll.created_at.year %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    <% end %>
+  </table> 
+  <%= render partial: 'shared/pagination', locals: { resource: @payrolls } %>
+</div> 

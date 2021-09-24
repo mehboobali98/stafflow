@@ -18,15 +18,60 @@
 @import "simple_calendar";
 .body-wrapper {
   height: 100%;
+  overflow-y: scroll;
   .sidebar-wrapper {
     height: 100%;
   }
 }
-.select-2 {
-  width: 100%;
+
+// side bar custom class for toggling. It is added when the sidebar is active
+.sidebar-toggle {
+  position: absolute;
+  height: 100%;
+  left: 240px;
+  width: calc(100% - 240px);
+  transition: all 0.5s ease;
 }
- // Sign in and Sign up pages styling
- 
+
+.notification-scrollable-container {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+// Navbar
+.notification-icon {
+  height: 2em;
+}
+
+.notification-counter {
+  height: 0.2em;
+  width: 0.2em;
+}
+
+.counter .counter-lg {
+  top: -24px !important;
+}
+
+.notification {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+  margin-right: 14px;
+  margin-top: 7px;
+  .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+  }
+}
+
 .icon{
   width: 3em;
 }
@@ -49,11 +94,7 @@
   margin-top: 1%;
 }
 
-#employee_select {
-  width: 300px !important;
-}
-
-.qwerty {
+.select-dropdown {
   width: 100%;
 }
 
@@ -62,26 +103,17 @@
   .selection {
     width: 100%;
   }
-  .select2-small-dropdown-container {
-    .select2-results {
-      .select2-results__option {
-        padding: 5px 7px !important;
-        line-height: 21px;
-      }
-      .select2-results__option[role=group] {
-        padding: 0 !important;
-      }
-      .select2-results__group:empty {
-        padding: 0 !important;
-      }
-      .select2-results__option:empty {
-        height: 26px !important;
-      }
-      .select2-results__option[role=group]:not(:first-child) {
-        border-top: 1px solid blue;
-        margin-top: 5px !important;
-        padding-top: 5px !important;
-      }
-    }
-  }
 }
+
+//dashboard navbar: start
+.dashboard-navbar {
+  background-color: #006fc8;
+  .navbar-brand {
+    color: white;
+    padding-left: 20px;
+    text-shadow: 2px 2px 5px white;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-family: sans-serif;
+  }
+} // end

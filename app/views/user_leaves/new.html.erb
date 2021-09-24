@@ -1,7 +1,6 @@
 <%= javascript_pack_tag "user_leaves" %>
-<%= render partial: 'shared/leave_navbar' %>
 <div class="container mt-2">
-  <%= form_tag member_user_leaves_path(@user), method: :post do %>
+  <%= form_tag mass_create_member_user_leaves_path(@user), method: :post do %>
     <table class="table table-striped table-hover">
       <thead class="table-dark">
         <tr>
@@ -10,16 +9,16 @@
           <th><%= t('user_leave.headings.leave_count') %></th>
         </tr>
       </thead>
-      <% if @leaves.exists? %>
+      <% if @available_leaves.present? %>
         <tbody>
-          <% @leaves.each do |leave| %>
+          <% @available_leaves.each do |leave| %>
             <tr>
-              <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, data: { "id": "js-leave-count-#{leave.id}" } %></td>
+              <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, class: 'js-available-user-leave', data: { "selected-leave-count": ".js-leave-count-#{leave.id}" } %></td>
               <td><%= leave.name %></td>
-              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.count, disabled: true, class: "js-leave-count-#{leave.id}" %></td>
+              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count, disabled: true, class: "js-leave-count-#{leave.id}" %></td>
             </tr>
           <% end %>
-          <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' %>
+          <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' if can?(:create, UserLeave) %>
         </tbody>
       <% else %>
         <p class="text-danger"><%= t('user_leave.messages.info.no_leave_remaining') %></p>
