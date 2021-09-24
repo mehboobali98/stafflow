@@ -3,7 +3,7 @@ module UsersBenefitAbilities
     if user.employee?
       can :read, UsersBenefit, user_id: user.id, company_id: user.company_id
     elsif user.department_head?
-      can :read, UsersBenefit, company_id: user.company_id
+      can :read, UsersBenefit, user: { department_id: user.department_id }, company_id: user.company_id
     elsif user.hr? || user.account_owner?
       can :manage, UsersBenefit, company_id: user.company_id
       cannot %i[destroy update create], UsersBenefit, user_id: user.id, company_id: user.company_id

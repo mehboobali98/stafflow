@@ -8,7 +8,7 @@ class PayrollsController < ApplicationController
 
   # GET members/:id/payrolls
   def index
-    @payrolls = @payrolls.paginate(page: params[:page], per_page: PAGE_SIZE)
+    @payrolls = @payrolls.paginate(page: params[:page], per_page: PAGE_SIZE) if @payrolls
     respond_to do |format|
       format.html
     end
