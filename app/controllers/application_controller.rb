@@ -5,11 +5,11 @@ class ApplicationController < ActionController::Base
   helper_method :sub_domain?
 
   rescue_from CanCan::AccessDenied do
-    render file: 'app/views/errors/unauthorized.html.erb', layout: false
+    render file: 'app/views/errors/unauthorized.html', layout: false
   end
 
   rescue_from ActiveRecord::RecordNotFound do
-    render file: 'app/views/errors/not_found.html.erb', layout: false
+    render file: 'app/views/errors/not_found.html', layout: false
   end
 
   rescue_from ActionController::UnknownFormat do
