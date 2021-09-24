@@ -1,7 +1,8 @@
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
   load_resource :user, id_param: :member_id
-  load_and_authorize_resource :user_leave, through: :user, except: %i[new mass_create]
+  load_resource :user_leave, through: :user, except: %i[new mass_create]
+  authorize_resource
 
   # GET /members/:member_id/user_leaves/:id
   def show
@@ -35,7 +36,7 @@ class UserLeavesController < ApplicationController
           redirect_to member_user_leaves_path(@user),
                       notice: t('user_leave.messages.success.create')
         else
-          flash[:error] = t('user_leave.messages.failure.create')
+          flash[:error] = @user.errors.full_messages
           redirect_to new_member_user_leave_path(@user)
         end
       end

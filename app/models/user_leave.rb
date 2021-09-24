@@ -20,8 +20,10 @@ class UserLeave < ApplicationRecord
     return false if user_leave_values.blank?
 
     ActiveRecord::Base.transaction do
+      binding.pry
       user_leave_values[:leave].each_value do |leave_values|
         user.user_leaves.build(leave_values.merge(remaining_count: leave_values[:total_count]))
+        binding.pry
         user.save!
       end
       true

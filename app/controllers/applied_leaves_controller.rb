@@ -1,7 +1,7 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
-  load_and_authorize_resource :applied_leave, through: :user, only: %i[index edit update destroy]
+  load_resource :user, only: %i[index new create edit update destroy]
+  load_resource :applied_leave, through: :user, only: %i[index new create edit update destroy]
   load_resource :applied_leave, only: %i[approve_leave reject_leave]
   load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
@@ -9,6 +9,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
+    binding.pry
     @applied_leaves = @applied_leaves.includes(:leave).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
@@ -17,6 +18,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
+    binding.pry
     respond_to do |format|
       format.html
     end
@@ -82,7 +84,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
-    @applied_leaves = @applied_leaves.includes(user_leave: [:user, :leave]).paginate(page: params[:page],
+    @applied_leaves = @applied_leaves.includes(:user_leave, :user, :leave).paginate(page: params[:page],
                                                                                     per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
@@ -165,7 +167,8 @@ class AppliedLeavesController < ApplicationController
 
   def get_filtered_records
     @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].to_s.downcase)
-    @applied_leaves = @applied_leaves.paginate(page: params[:page], per_page: PAGE_SIZE)
+    @applied_leaves = @applied_leaves.includes(:user_leave, :user, :leave).paginate(page: params[:page],
+                                                                                    per_page: PAGE_SIZE)
   end
 
   def applied_leave_params

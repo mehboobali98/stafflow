@@ -10,6 +10,7 @@ class LeavesController < ApplicationController
     @leaves = @leaves.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
+      format.js
     end
   end
 

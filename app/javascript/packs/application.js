@@ -19,7 +19,7 @@ document.addEventListener("turbolinks:load", function() {
   })
 })
 
-$(document).on('click', '.pagination-wrapper a', function(event) {
+$(document).on('click', '.leave-pagination-wrapper a', function(event) {
   event.preventDefault();
   $.ajax({
     type: 'GET',
