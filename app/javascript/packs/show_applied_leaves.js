@@ -72,14 +72,13 @@ $(document).ready(function() {
   });
 
   $("body").on('select2:select', '#applied_leave_member_id', function(event) {
-    let user = {};
-    user["member_id"] = this.value;
+    let member_id = this.value;
     $.ajax({
       type: "GET",
-      url: "/applied_leaves/get_user_leaves",
+      url: "/applied_leaves/get_available_user_leaves",
       dataType: 'script',
       data: {
-        user
+        member_id
       },
       success:function(response){
         leavesSelectBox = $('#leaves_select');
@@ -93,14 +92,13 @@ $(document).ready(function() {
   });
 
   $("body").on('keyup', '.select2-search__field', function(event) {
-    let user = {};
-    user["email"] = this.value;
+    let query = this.value;
     $.ajax({
       type: "GET",
-      url: "/applied_leaves/get_users_list",
+      url: "/applied_leaves/search_users",
       dataType: 'script',
       data: {
-        user
+        query
       },
       success:function(response){
         employeesSelectBox = $('#applied_leave_member_id');
@@ -112,5 +110,10 @@ $(document).ready(function() {
         });
       }
     });
+  });
+  $("#applied_leave_member_id").select2({
+    theme: "classic",
+    dropdownCssClass: 'select-dropdown',
+    width: '100%'
   });
 });

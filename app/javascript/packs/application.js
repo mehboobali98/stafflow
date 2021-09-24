@@ -18,10 +18,3 @@ document.addEventListener("turbolinks:load", function() {
     $('[data-toggle="popover"]').popover();
   })
 })
-$(document).ready(function() {
-  $("#applied_leave_member_id").select2({
-    theme: "classic",
-    dropdownCssClass: 'select-dropdown',
-    width: '100%'
-  });
-});

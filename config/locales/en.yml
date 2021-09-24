@@ -140,6 +140,7 @@ en:
       add_leaves: 'Add user leave'
   applied_leave:
     messages:
+      select_leave_type: 'Select leave type'
       delete_confirm: 'Are you sure you want to delete this?'
       leave_applied_success: 'Leave applied successfully'
       leave_delete_success: 'Leave deleted succcessfully'
