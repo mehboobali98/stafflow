@@ -18,6 +18,14 @@
           <%= form.label I18n.t('forms.labels.dob') %><br />
           <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
         </div>
+        <div class='field mb-2'>
+          <%= form.label t('forms.labels.gender') %>
+          <%= form.select :gender, options_for_select(User::GENDERS), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
+        </div>
+        <div class='field mb-2'>
+          <%= form.label t('forms.labels.country') %><br />
+          <%= form.select :country, options_for_select(countries_list), { prompt: t('forms.labels.country')  }, class: 'form-control' %>
+        </div>
         <% if !@user.account_owner? %>
           <% if can?(:update, @user, :role_id) %>
             <div class='field mb-3'>

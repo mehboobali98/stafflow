@@ -69,6 +69,22 @@
               <p><%= @user.date_of_birth || DEFAULT_VALUE %></p>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('forms.labels.country') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.country || DEFAULT_VALUE %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('forms.labels.gender') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.gender || DEFAULT_VALUE %></p>
+            </div>
+          </div>
         </div>                        
       </div>
     </div>

@@ -104,6 +104,8 @@ en:
       sign_in_with: "Sign In with:"
       department: "Department"
       designation: "Designation"
+      gender: "Gender"
+      country: "Country"
   messages:
     confirm_account: "Confirm my account"
     email_changed_unconfirmed: "We're contacting you to notify you that your email is being changed to %{email}"
