@@ -1,6 +1,6 @@
 <%= javascript_pack_tag "show_applied_leaves" %>
+<%= render partial: 'shared/leaves_header', locals: { heading: t('applied_leave.headings.applied_leaves') } %>
 <div class="container">
-  <h1 class="my-2"><%= t('applied_leave.headings.applied_leaves') %></h1>
   <div class="d-flex justify-content-between">
     <%= select_tag "filter", options_for_select(leave_states), prompt: t('applied_leave.headings.select_filter'), class: 'form-select w-25 d-inline mb-2 p-2' %>
     <div id="submit_buttons" class="d-none">

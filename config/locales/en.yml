@@ -31,6 +31,12 @@
 en:
   currency:
     rupees: "Rs. "
+  error_pages:
+    not_found: '404 Error'
+    page_not_found: 'Page not found'
+    return_to_dashboard: 'Return to dashboard'
+    unauthorized: '401 Error'
+    format_error: 'The requested format is not supported'
   sidebar:
     dashboard: 'Dashboard'
     users: 'Users'
@@ -43,6 +49,7 @@ en:
     settings: 'Settings'
     logout: 'Logout'
     by_team: 'by team ABC'
+    benefits: "Benefits"
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
@@ -250,6 +257,7 @@ en:
       presence: "This field cannot be left empty"
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
       zero_check: "The benefit amount cannot be zero"
+      benefit_name: "Benefit name can only contain letters"
     headings:
       benefit: "Benefits"
     label:
@@ -473,11 +481,13 @@ en:
     work_link: "Work Link"
     benefits: "Benefits"
     leaves: "Leaves"
+    set_leave: "Set Leaves"
     role: "User Role"
     name: "Name"
     date_of_birth: "Date of birth"
     email: "Email"
     change_image: "Change Image"
+    appliedleave: "Applied Leaves"
   notifications:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
@@ -487,3 +497,6 @@ en:
     markread: 'Mark Read'
     selectall: 'Select All'
     markedread: 'Selected Notifications were marked as read'
+  benefits:
+    all: "All Benefits"
+    my: "My Benefits"

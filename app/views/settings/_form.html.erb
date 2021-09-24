@@ -2,33 +2,35 @@
 
 <div class='m-0 p-0'>
   <h1 class='card-header'><%= t('settings.title') %></h1>
-  <div class='w-75 mt-5'>
-    <%= form_with model: setting, id: 'setting_form' do |form| %>
-      <div class='card p-3 card-header'>
-        <div class='m-3 card p-3'>
-          <%= form.label :tax_rate, class: 'form-label' %>
-          <%= form.number_field :tax_rate, min: 0, required: true, class: 'form-control' %>
+  <div class='container'>
+    <div class='w-75 mt-5'>
+      <%= form_with model: setting, id: 'setting_form' do |form| %>
+        <div class='card p-3 card-header'>
+          <div class='m-3 card p-3'>
+            <%= form.label :tax_rate, class: 'form-label' %>
+            <%= form.number_field :tax_rate, min: 0, required: true, class: 'form-control' %>
+          </div>
+
+          <div class='m-3 card p-3'>
+          <%= form.label :theme, class: 'form-label' %>
+            <div class = 'form-check'>
+              <%= form.radio_button :theme, 'red', required: true, class: 'form-check-input' %>
+              <%= form.label :Red %>
+            </div>
+
+            <div class='form-check'>
+              <%= form.radio_button :theme, 'blue', required: true, class: 'form-check-input' %>
+              <%= form.label :Blue %>
+            </div>
+
+            <div class='form-check'>
+              <%= form.radio_button :theme, 'black', required: true, class: 'form-check-input' %>
+              <%= form.label :Black %>
+            </div>
+          </div>
         </div>
-
-        <div class='m-3 card p-3'>
-        <%= form.label :theme, class: 'form-label' %>
-          <div class = 'form-check'>
-            <%= form.radio_button :theme, 'red', required: true, class: 'form-check-input' %>
-            <%= form.label :Red %>
-          </div>
-
-          <div class='form-check'>
-            <%= form.radio_button :theme, 'blue', required: true, class: 'form-check-input' %>
-            <%= form.label :Blue %>
-          </div>
-
-          <div class='form-check'>
-            <%= form.radio_button :theme, 'black', required: true, class: 'form-check-input' %>
-            <%= form.label :Black %>
-          </div>
-        </div>
-      </div>
-      <%= form.submit disabled: true, class: 'btn btn-primary m-3 pull-right', id: 'submit_button' %>
-    <% end %>
+        <%= form.submit disabled: true, class: 'btn btn-primary m-3 pull-right', id: 'submit_button' %>
+      <% end %>
+    </div>
   </div>
 </div>
