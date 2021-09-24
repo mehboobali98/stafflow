@@ -8,6 +8,7 @@
       <tr>
         <td><%= user.full_name %></td>
         <td><%= user.email %></td>
+        <td><%= user.department&.name %></td>
         <td>
           <%= link_to t('forms.buttons.details'), member_path(user), class:'btn btn-outline-secondary' if can?(:read, user) %>
           <%= link_to t('forms.buttons.edit'), edit_member_path(user), class:'btn btn-outline-secondary' if can?(:update, user) %>
