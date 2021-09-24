@@ -264,8 +264,8 @@ DEPENDENCIES
   byebug
   cancancan
   capybara (>= 2.15)
-  delayed_job_active_record (= 4.1.6)
   chartkick (= 4.0.5)
+  delayed_job_active_record (= 4.1.6)
   devise
   faker (= 2.19.0)
   has_scope (= 0.8.0)
