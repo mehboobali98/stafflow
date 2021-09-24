@@ -5,11 +5,16 @@ class ApplicationController < ActionController::Base
   helper_method :sub_domain?
 
   rescue_from CanCan::AccessDenied do
-    respond_to do |format|
-      format.html { redirect_to members_path, alert: t('messages.unauthorized') }
-      format.json { render nothing: true, status: :not_found }
-      format.js   { render nothing: true, status: :not_found }
-    end
+    render file: 'app/views/errors/unauthorized.html', layout: false
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do
+    render file: 'app/views/errors/not_found.html', layout: false
+  end
+
+  rescue_from ActionController::UnknownFormat do
+    flash[:error] = t('error_pages.format_error')
+    redirect_to dashboard_path
   end
 
   def current_company
@@ -19,8 +24,6 @@ class ApplicationController < ActionController::Base
   def set_current_company
     Company.current_company_id = current_company.id if sub_domain?(request)
     yield
-  rescue ActiveRecord::RecordNotFound
-    redirect_to '/?NoRecordFound'
   ensure
     Company.current_company_id = nil
   end

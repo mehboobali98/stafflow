@@ -1,0 +1,41 @@
+<%= javascript_pack_tag 'users_benefit_creation', 'data-turbolinks-track': 'reload' %>
+
+<%= form_with model: [@user, @users_benefits], url: mass_create_member_users_benefits_path(@user), local: true do |form| %>
+  <div class="container">
+    <div class="row">
+      <div>
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th><%= t('users_benefit.table.select') %></th>
+              <th><%= t('users_benefit.table.benefit_name') %></th>
+              <th><%= t('users_benefit.table.amount') %></th>
+            </tr>
+          </thead>
+          <% if @available_benefits.present? %>
+            <tbody>
+              <% @available_benefits.each do |benefit| %>
+                <tr>
+                  <td>
+                    <div class="custom-control custom-checkbox">
+                      <%= check_box_tag '', nil, false, class: 'new_user_benefit', data: { "new_user_benefit_amount": "number_field_#{benefit.id}" } %>
+                    </div>
+                  </td>
+                  <td><%= benefit.name %></td>
+                  <td>
+                    <div class="form-group">
+                      <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, id: "number_field_#{benefit.id}", disabled: true %>
+                    </div>
+                  </td>
+                </tr>      
+                <% end %>
+            </tbody>
+          </table>
+          <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1' %>
+          <% else %>
+            <p class='text-danger'><%= t('users_benefit.validation.all_benefits_alloted') %></p>
+          <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
