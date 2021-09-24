@@ -35,7 +35,7 @@ class AppliedLeavesController < ApplicationController
 
   # POST /applied_leaves/get_user_leaves
   def get_user_leaves
-    @user = User.find(params[:user][:member_id])
+    @user = current_company.users.find_by(id: params[:user][:member_id])
     @user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
     respond_to do |format|
       format.json do
