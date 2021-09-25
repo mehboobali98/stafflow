@@ -34,7 +34,6 @@ class AppliedLeavesController < ApplicationController
   def create_applied_leave_by_hr
     @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.set_leave
     @applied_leave.approve_hr_added_leave
     respond_to do |format|
       format.html do

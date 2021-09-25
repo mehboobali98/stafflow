@@ -126,6 +126,7 @@ class AppliedLeave < ApplicationRecord
 
   def approve_hr_added_leave
     ActiveRecord::Base.transaction do
+      set_leave
       update_leave_count(calculate_leave_count)
       save!
       user_leave.save!
@@ -186,7 +187,6 @@ class AppliedLeave < ApplicationRecord
     save!
     user_leave.save!
   end
-
 
   def calculate_leave_count
     number_of_days = week_days_count(applied_from..applied_till)
