@@ -1,7 +1,6 @@
 class UsersBenefitsController < ApplicationController
-  before_action :load_user
-  before_action :load_users_benefit, only: %i[destroy edit update]
-  before_action :load_users_benefits, only: %i[new mass_create]
+  load_and_authorize_resource :user, id_param: :member_id
+  load_and_authorize_resource through: :user, find_by: :sequence_num
   add_breadcrumb I18n.t('users_benefit.breadcrumbs.home'), :member_users_benefits_path
 
   # GET members/:id/users_benefits
@@ -12,9 +11,9 @@ class UsersBenefitsController < ApplicationController
     end
   end
 
-  # GET members/:id/users_benefits/new
-  def new
-    add_breadcrumb t('users_benefit.breadcrumbs.new'), :new_member_users_benefit_path
+  # GET members/:id/users_benefits/available_benefits
+  def available_benefits
+    add_breadcrumb t('users_benefit.breadcrumbs.new'), :available_benefits_member_users_benefits_path
     benefit_ids = @users_benefits.pluck('benefit_id')
     @available_benefits = Benefit.where.not(id: benefit_ids)
     respond_to do |format|
@@ -72,18 +71,6 @@ class UsersBenefitsController < ApplicationController
 
   def update_user_benefit_params
     params.require(:users_benefit).permit(:amount)
-  end
-
-  def load_users_benefit
-    @users_benefit = @user.users_benefits.find_by(sequence_num: params[:id])
-  end
-
-  def load_users_benefits
-    @users_benefits = @user.users_benefits
-  end
-
-  def load_user
-    @user = User.find_by(id: params[:member_id])
   end
 
   # params[users_benefit][benefit_id] : amount

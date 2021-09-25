@@ -108,9 +108,11 @@
     font-size: 1.5em;
     font-family: sans-serif;
   }
-  .notification-container a{
-    padding-left: 5px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
+  .notification-container
+    a{
+      padding-left: 5px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      height: 38px;
+    }
 } // end
