@@ -36,6 +36,7 @@ $sky_blue_app_color: #AFDBF5;
 .pms-heading {
   background-color: $sky_blue_app_color;
   padding: 15px 0px;
+  max-width: 96vw;
 }
 
 // side bar custom class for toggling. It is added when the sidebar is active

@@ -76,7 +76,7 @@ class UsersController < ApplicationController
 
   # GET /members
   def index
-    @users = apply_scopes(@users).paginate(page: params[:page], per_page: PAGE_SIZE)
+    @users = apply_scopes(@users).includes(:department).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
       format.js
