@@ -4,6 +4,7 @@ class DepartmentsController < ApplicationController
   load_and_authorize_resource
   # GET /departments
   def index
+    binding.pry
     @departments = @departments.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html

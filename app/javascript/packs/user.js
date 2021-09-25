@@ -9,7 +9,7 @@ $(document).ready(function() {
   });
 });
 
-$(document).on('click', '.pagination-wrapper a', function(event) {
+$(document).on('click', '.js-pagination-wrapper a', function(event) {
   event.preventDefault();
   $.ajax({
     type: 'GET',
