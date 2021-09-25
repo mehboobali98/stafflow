@@ -25,17 +25,20 @@
         <span class="links-name"><%= t('sidebar.departments') %></span>
       <% end %>
     </li>
+    
+    <% unless current_user.account_owner? %>
+      <li>
+        <%= link_to member_payrolls_path(current_user) do %>
+          <i class="fas fa-receipt"></i>
+          <span class="links-name"><%= t('sidebar.payroll') %></span>
+        <% end %>
+      </li>
+    <% end %>
     <li>
-      <a href="#">
-        <i class="fas fa-receipt"></i>
-        <span class="links-name"><%= t('sidebar.payroll') %></span>
-      </a>
-    </li>
-    <li>
-      <a href="#">
+      <%= link_to leaves_path do %>
         <i class="fas fa-tasks"></i>
         <span class="links-name"><%= t('sidebar.leave') %></span>
-      </a>
+      <% end %>
     </li>
     <li>
       <%= link_to display_calendar_events_path do %>
@@ -50,17 +53,19 @@
       <% end %>
     </li>
     <li>
-      <a href="#">
+      <%= link_to benefits_path do %>
         <i class="far fa-folder-open"></i>
-        <span class="links-name"><%= t('sidebar.documents') %></span>
-      </a>
-    </li>
-    <li>
-      <%= link_to settings_path do %>
-        <i class="fas fa-cogs"></i>
-        <span class="links-name"><%= t('sidebar.settings') %></span>
+        <span class="links-name"><%= t('sidebar.benefits') %></span>
       <% end %>
     </li>
+    <% if current_user.account_owner? || current_user.hr? %>
+      <li>
+        <%= link_to settings_path do %>
+          <i class="fas fa-cogs"></i>
+          <span class="links-name"><%= t('sidebar.settings') %></span>
+        <% end %>
+      </li>
+    <% end %>
     <li>
       <%= link_to destroy_user_session_path, method: :delete do %>
         <i class="fas fa-sign-out-alt" id="log-out"></i>

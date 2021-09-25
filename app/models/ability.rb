@@ -9,6 +9,9 @@ class Ability
   include DepartmentAbilities
   include DesignationAbilities
   include SettingsAbilities
+  include BenefitAbilities
+  include UsersBenefitAbilities
+  include PayrollAbilities
   include LeaveAbilities
   include UserLeaveAbilities
   include AppliedLeaveAbilities
@@ -22,6 +25,9 @@ class Ability
     define_department_abilities(user)
     define_designation_abilities(user)
     define_setting_abilities(user)
+    define_benefit_abilities(user)
+    define_users_benefit_abilities(user)
+    define_payroll_abilities(user)
     leave_abilities(user)
     user_leave_abilities(user)
     applied_leave_abilities(user)

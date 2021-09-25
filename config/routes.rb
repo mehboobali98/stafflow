@@ -3,7 +3,13 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
+
   root to: 'home#index'
+  resources :search, only: [] do
+    collection do
+      get 'search_data'
+    end
+  end
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
@@ -27,8 +33,11 @@ Rails.application.routes.draw do
     resources :benefits, except: :show
     resources :members, controller: 'users' do
       resources :payrolls
-      resources :users_benefits, except: %i[create show] do
-        post 'mass_create'
+      resources :users_benefits, except: %i[create show new] do
+        collection do
+          post 'mass_create'
+          get 'available_benefits'
+        end
       end
     end
     resources :departments

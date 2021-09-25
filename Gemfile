@@ -24,7 +24,6 @@ gem 'jbuilder', '~> 2.7'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'paperclip', '=6.0.0'
 gem 'will_paginate', '=3.3.0'
-gem 'paperclip', '=6.0.0'
 # additional gems
 gem 'cancancan'
 gem 'devise'
@@ -36,13 +35,13 @@ gem 'transitions', '=1.2.1', require: %w[transitions active_model/transitions]
 gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
 
 # calendar gem
-gem 'simple_calendar', '= 2.4.3'
+gem 'simple_calendar', '=2.4.3'
 
-# chartkick
-gem 'chartkick', '= 4.0.5'
+gem 'searchkick', '=4.6.0'
+gem 'chartkick', '=4.0.5'
 
 # faker gem to seed database
-gem 'faker', '= 2.19.0'
+gem 'faker', '=2.19.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
