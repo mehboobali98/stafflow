@@ -1,23 +1,25 @@
 <%= javascript_pack_tag 'notifications', 'data-turbolinks-track': 'reload' %>
-<h1><%= t('notifications.title') %></h1>
-<br><br>
-<div class='card p-3 bg-light me-3'>
-  <div class='d-flex bd-highlight'>
-    <div class='flex-grow-1 bd-highlight'>
-      <%= select_tag :status, options_for_select(Notification::STATUS), class: 'form-control w-25', id: 'notification_status' %>
-    </div>
-    <div class='bd-highlight me-5'>
-      <button class='btn btn-primary' id='read-button' disabled=true><%= t('notifications.markread') %></button>
+<h1 class='card-header'><%= t('notifications.title') %></h1>
+<div class='container'>
+  <br><br>
+  <div class='card p-3 bg-light me-3'>
+    <div class='d-flex bd-highlight'>
+      <div class='flex-grow-1 bd-highlight'>
+        <%= select_tag :status, options_for_select(Notification::STATUS), class: 'form-control w-25', id: 'notification_status' %>
+      </div>
+      <div class='bd-highlight me-5'>
+        <button class='btn btn-primary' id='read-button' disabled=true><%= t('notifications.markread') %></button>
+      </div>
     </div>
   </div>
-</div>
-<br><br>
-<div class='me-3'>
-  <label class="list-group-item bg-primary text-white">
-    <input class="form-check-input me-1" type="checkbox" value="" id='select_all'>
-    <%= t('notifications.selectall') %>
-  </label>
-  <div id='notifications_list'>
-    <%= render partial: 'notifications', locals: { notifications: @notifications } %>
+  <br><br>
+  <div class='me-3'>
+    <label class="list-group-item bg-primary text-white">
+      <input class="form-check-input me-1" type="checkbox" value="" id='select_all'>
+      <%= t('notifications.selectall') %>
+    </label>
+    <div id='notifications_list'>
+      <%= render partial: 'notifications', locals: { notifications: @notifications } %>
+    </div>
   </div>
-</div>
+</div> 

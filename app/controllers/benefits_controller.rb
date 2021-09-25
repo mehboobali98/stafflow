@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class BenefitsController < ApplicationController
-  before_action :load_benefit, only: %i[destroy edit update]
+  load_and_authorize_resource find_by: :sequence_num
+  add_breadcrumb I18n.t('benefit.breadcrumbs.home'), :benefits_path
 
   # GET /benefits
   def index
-    @benefits = Benefit.all
+    add_breadcrumb I18n.t('benefit.breadcrumbs.home'), :benefits_path
+    @benefits = Benefit.all.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -13,7 +15,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/new
   def new
-    @benefit = Benefit.new
+    add_breadcrumb t('benefit.breadcrumbs.new'), :new_benefit_path
     respond_to do |format|
       format.html
     end
@@ -21,6 +23,7 @@ class BenefitsController < ApplicationController
 
   # GET /benefits/:id/edit
   def edit
+    add_breadcrumb t('benefit.breadcrumbs.edit'), :edit_benefit_path
     respond_to do |format|
       format.html
     end
@@ -28,7 +31,6 @@ class BenefitsController < ApplicationController
 
   # POST /benefits
   def create
-    @benefit = Benefit.new(permitted_benefit_params)
     is_saved = @benefit.save
     respond_to do |format|
       if is_saved
@@ -68,11 +70,7 @@ class BenefitsController < ApplicationController
 
   private
 
-  def permitted_benefit_params
+  def benefit_params
     params.require(:benefit).permit(:name, :default_amount)
-  end
-
-  def load_benefit
-    @benefit = Benefit.find_by(sequence_num: params[:id])
   end
 end

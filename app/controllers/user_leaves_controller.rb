@@ -1,7 +1,7 @@
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user
-  before_action :set_user_leave, only: %i[show edit update destroy]
+  load_resource :user, id_param: :member_id
+  load_and_authorize_resource :user_leave, through: :user, except: %i[new mass_create]
 
   # GET /members/:member_id/user_leaves/:id
   def show
@@ -12,7 +12,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves
   def index
-    @user_leaves = @user.user_leaves.includes(:leave)
+    @user_leaves.includes(:leave)
     respond_to do |format|
       format.html
     end
@@ -87,19 +87,5 @@ class UserLeavesController < ApplicationController
 
   def user_leave_params
     params.permit(leave: {})
-  end
-
-  def set_user_leave
-    @user_leave = @user.user_leaves.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('user_leave.messages.failure.not_found')
-    redirect_to member_user_leaves_path(@user)
-  end
-
-  def set_user
-    @user = User.find(params[:member_id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('common.user_not_found')
-    redirect_to members_path
   end
 end

@@ -1,0 +1,76 @@
+<div class="sidebar">
+  <div class="logo-content">
+    <div class="logo">
+      <i class="fab fa-fedora"></i>
+      <div class="logo-name"><%= t('sidebar.by_team') %></div>
+    </div>
+    <i class="fas fa-bars css-sidebar-toggle" id="sidebar_toggle_btn"></i>
+  </div>
+  <ul>
+    <li>
+      <%= link_to dashboard_path do %>
+        <i class="fas fa-border-none"></i>
+        <span class="links-name"><%= t('sidebar.dashboard') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to members_path do %>
+        <i class="far fa-user"></i>
+        <span class="links-name"><%= t('sidebar.users') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to departments_path do %>
+        <i class="far fa-building"></i>
+        <span class="links-name"><%= t('sidebar.departments') %></span>
+      <% end %>
+    </li>
+    
+    <% unless current_user.account_owner? %>
+      <li>
+        <%= link_to member_payrolls_path(current_user) do %>
+          <i class="fas fa-receipt"></i>
+          <span class="links-name"><%= t('sidebar.payroll') %></span>
+        <% end %>
+      </li>
+    <% end %>
+    <li>
+      <%= link_to leaves_path do %>
+        <i class="fas fa-tasks"></i>
+        <span class="links-name"><%= t('sidebar.leave') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to display_calendar_events_path do %>
+        <i class="far fa-calendar-plus"></i>
+        <span class="links-name"><%= t('sidebar.calendar') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to analytics_path do %>
+        <i class="fas fa-chart-line"></i>
+        <span class="links-name"><%= t('sidebar.analytics') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to benefits_path do %>
+        <i class="far fa-folder-open"></i>
+        <span class="links-name"><%= t('sidebar.benefits') %></span>
+      <% end %>
+    </li>
+    <% if current_user.account_owner? || current_user.hr? %>
+      <li>
+        <%= link_to settings_path do %>
+          <i class="fas fa-cogs"></i>
+          <span class="links-name"><%= t('sidebar.settings') %></span>
+        <% end %>
+      </li>
+    <% end %>
+    <li>
+      <%= link_to destroy_user_session_path, method: :delete do %>
+        <i class="fas fa-sign-out-alt" id="log-out"></i>
+        <span class="links-name"><%= t('sidebar.logout') %></span>
+      <% end %>
+    </li>
+  </ul>
+</div>
