@@ -3,10 +3,10 @@
 class Department < ApplicationRecord
   searchkick word_start: [:name], inheritance: true, searchable: [:name]
   belongs_to :company
-  has_many :designations, dependent: :destroy
+  has_many :designations, dependent: :restrict_with_error
   has_many :users, dependent: :restrict_with_error
   validates :name, presence: true
-  validates_uniqueness_of :name, scope: :company_id
+  validates_uniqueness_of :name, scope: :company_id, case_sensitive: false
 
   has_attached_file :avatar, styles: { medium: "350x350>", thumb: "100x100>" }
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/

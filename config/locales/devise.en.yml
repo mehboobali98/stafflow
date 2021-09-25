@@ -91,6 +91,7 @@ en:
       fname: "First Name"
       lname: "Last Name"
       dob: "Date Of Birth"
+      image: "Profile Picture"
       role: "Role"
       salary: "Salary"
       full_name: "Full Name"

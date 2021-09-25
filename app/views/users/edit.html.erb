@@ -18,6 +18,11 @@
           <%= form.label I18n.t('forms.labels.dob') %><br />
           <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
         </div>
+
+        <div class='field mb-3'>
+          <%= form.label I18n.t('forms.labels.image') %><br />
+          <%= form.file_field :image, class: 'form-control' %>
+        </div>
         <% if !@user.account_owner? %>
           <% if can?(:update, @user, :role_id) %>
             <div class='field mb-3'>

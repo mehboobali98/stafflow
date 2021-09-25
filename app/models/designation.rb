@@ -6,5 +6,5 @@ class Designation < ApplicationRecord
   belongs_to :company
   has_many :users
   validates :name, presence: true
-  validates_uniqueness_of :name, scope: :department_id
+  validates_uniqueness_of :name, scope: :department_id, case_sensitive: false
 end
