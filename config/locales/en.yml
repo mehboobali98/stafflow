@@ -29,6 +29,8 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  currency:
+    rupees: "Rs. "
   error_pages:
     not_found: '404 Error'
     page_not_found: 'Page not found'
@@ -47,6 +49,7 @@ en:
     settings: 'Settings'
     logout: 'Logout'
     by_team: 'by team ABC'
+    benefits: "Benefits"
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
@@ -140,6 +143,7 @@ en:
       add_leaves: 'Add user leave'
   applied_leave:
     messages:
+      select_leave_type: 'Select leave type'
       delete_confirm: 'Are you sure you want to delete this?'
       leave_applied_success: 'Leave applied successfully'
       leave_delete_success: 'Leave deleted succcessfully'
@@ -210,6 +214,7 @@ en:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
+    leave_reset_error: 'Leave reset date cannot be in the past'
   appname: "EMS"    
   payroll:
     breadcrumbs:
@@ -253,6 +258,8 @@ en:
     validation:
       presence: "This field cannot be left empty"
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+      zero_check: "The benefit amount cannot be zero"
+      benefit_name: "Benefit name can only contain letters"
     headings:
       benefit: "Benefits"
     label:
@@ -265,7 +272,7 @@ en:
     button:
       submit: "Submit"
       create_benefit: "Create Benefit"
-      update: "Update"
+      update: "Edit"
       delete: "Delete"
     field:
       benefit_type: "Benefit Type"
@@ -284,6 +291,7 @@ en:
         delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+      all_benefits_alloted: "All the benefits are already given to the user"
     headings:
       users_benefits: "User Benefits"
     table:
@@ -475,11 +483,13 @@ en:
     work_link: "Work Link"
     benefits: "Benefits"
     leaves: "Leaves"
+    set_leave: "Set Leaves"
     role: "User Role"
     name: "Name"
     date_of_birth: "Date of birth"
     email: "Email"
     change_image: "Change Image"
+    appliedleave: "Applied Leaves"
   notifications:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
@@ -491,3 +501,6 @@ en:
     markedread: 'Selected Notifications were marked as read'
   gender:
     error: "The given gender is invalid"
+  benefits:
+    all: "All Benefits"
+    my: "My Benefits"

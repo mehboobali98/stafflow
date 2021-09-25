@@ -52,9 +52,6 @@
   top: -24px !important;
 }
 
- // Sign in and Sign up pages styling
- 
-
 .notification {
   color: white;
   text-decoration: none;
@@ -95,7 +92,17 @@
   width: 100%;
   color: white;
   margin-top: 1%;
-} // end
+}
+
+.select-dropdown {
+  width: 100%;
+}
+
+.select2-container {
+  .selection {
+    width: 100%;
+  }
+}
 
 //dashboard navbar: start
 .dashboard-navbar {
@@ -108,4 +115,16 @@
     font-size: 1.5em;
     font-family: sans-serif;
   }
+  .notification-container
+    a {
+      padding-left: 5px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      height: 38px;
+    }
 } // end
+
+//flash message: start
+.flash-message {
+  padding-bottom: 0px;
+}
