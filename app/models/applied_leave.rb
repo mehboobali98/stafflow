@@ -124,6 +124,22 @@ class AppliedLeave < ApplicationRecord
     end
   end
 
+  def approve_hr_added_leave
+    ActiveRecord::Base.transaction do
+      set_leave
+      update_leave_count(calculate_leave_count)
+      save!
+      user_leave.save!
+      request_accepted!
+      true
+    rescue Transitions::InvalidTransition
+      errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+      false
+    rescue ActiveRecord::RecordInvalid
+      false
+    end
+  end
+
   private
 
   def send_request_email
