@@ -126,6 +126,7 @@ en:
     cannot_be_account_owner: "Sorry. You cannot be account owner"
     error_deleting: "An error occured while deleting user."
     date_error: "There is an error in date format"
+    dob_error: 'Date of birth cannot be in the future'
     unauthorized: "You are unauthorized to perform this action"
     confirmation: "Are you sure about this action?"
 

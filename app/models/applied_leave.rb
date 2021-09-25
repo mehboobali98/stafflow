@@ -24,9 +24,10 @@ class AppliedLeave < ApplicationRecord
   end
 
   def set_leave
+    return false if user_leave.nil?
+
     self.leave_id = user_leave.leave.id
-  rescue ActiveRecord::RecordInvalid
-    false
+    true
   end
 
   def leave_available?
