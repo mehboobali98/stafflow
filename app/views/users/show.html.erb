@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-6">
       <div class="profile-head">
-        <h5><%= @user.full_name %></h5>
+        <h5><%= @user.full_name %></h5>       
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#"><%= t('user.about') %></a>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="col-md-2 edit_button">
-      <%= link_to t('user.edit_profile'), edit_member_path(@user), class:" profile-edit-btn" %>
+      <%= link_to t('user.edit_profile'), edit_member_path(@user), class:" profile-edit-btn" %> 
     </div>
   </div>
   <div class="row">
@@ -31,53 +31,64 @@
       <div class="profile-work">
         <p><%= t('user.work_link') %></p>
         <a href=""><%= t('user..benefits') %></a><br/>
-<<<<<<< HEAD
-        <%= link_to t('user_leave.headings.add_user_leave'), new_member_user_leave_path(@user) if can?(:create, UserLeave) %></br>
-      <%= link_to t('user_leave.headings.view_user_leave'), member_user_leaves_path(@user) if can?(:show, UserLeave) %></br>
-  </div>
-</div>
-<div class="col-md-8 user-detail">
-  <div class="tab-content profile-tab" id="myTabContent">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-      <div class="row">
-        <div class="col-md-6">
-          <label><%= t('user.role') %></label>
-        </div>
-        <div class="col-md-6">
-          <p><%= @user.role_name %></p>
-        </div>
-=======
         <%= link_to t('user.leaves'), member_user_leaves_path(@user) %> <br>
         <%= link_to t('user.set_leave'), new_member_user_leave_path(@user) %> <br>
         <%= link_to t('user.appliedleave'), member_applied_leaves_path(@user) %> <br>
->>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <label><%= t('user.name') %></label>
-        </div>
-        <div class="col-md-6">
-          <p><%= @user.full_name %></p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <label><%= t('user.email') %></label>
-        </div>
-        <div class="col-md-6">
-          <p><%= @user.email %></p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <label><%= t('user.date_of_birth') %></label>
-        </div>
-        <div class="col-md-6">
-          <p><%= @user.date_of_birth || DEFAULT_VALUE %></p>
-        </div>
+    </div>
+    <div class="col-md-8 user-detail">
+      <div class="tab-content profile-tab" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.role') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.role_name %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.name') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.full_name %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.email') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.email %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('user.date_of_birth') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.date_of_birth || DEFAULT_VALUE %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('forms.labels.country') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.country || DEFAULT_VALUE %></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label><%= t('forms.labels.gender') %></label>
+            </div>
+            <div class="col-md-6">
+              <p><%= @user.gender || DEFAULT_VALUE %></p>
+            </div>
+          </div>
+        </div>                        
       </div>
     </div>
   </div>
-</div>
-</div>
 </div>

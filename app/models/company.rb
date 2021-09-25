@@ -13,6 +13,7 @@ class Company < ApplicationRecord
   has_many :designations, dependent: :destroy
   has_many :events, dependent: :destroy
   has_many :leaves, dependent: :destroy
+  has_many :user_leaves
   has_many :applied_leaves
 
   set_not_multitenant

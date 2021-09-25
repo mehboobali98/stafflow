@@ -29,6 +29,7 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  leave_error: 'Leave reset date cannot be in the past'
   currency:
     rupees: "Rs. "
   error_pages:
@@ -147,6 +148,7 @@ en:
       add_leaves: 'Add user leave'
   applied_leave:
     messages:
+      select_leave_type: 'Select leave type'
       delete_confirm: 'Are you sure you want to delete this?'
       leave_applied_success: 'Leave applied successfully'
       leave_delete_success: 'Leave deleted succcessfully'
@@ -262,6 +264,7 @@ en:
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
       zero_check: "The benefit amount cannot be zero"
       benefit_name: "Benefit name can only contain letters"
+      duplicate_error: 'Benefit with the given name already exists'
     headings:
       benefit: "Benefits"
     label:
@@ -505,6 +508,8 @@ en:
     markread: 'Mark Read'
     selectall: 'Select All'
     markedread: 'Selected Notifications were marked as read'
+  gender:
+    error: "The given gender is invalid"
   benefits:
     all: "All Benefits"
     my: "My Benefits"

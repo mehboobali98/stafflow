@@ -2,6 +2,7 @@
 // removes any white spaces or special characters from the company_name value and then converts it into 
 // lower case before setting it to subdomain text field 
 <<<<<<< HEAD
+<<<<<<< HEAD
 $(document).ready(function() {
   $("#company").keyup(function() {
     subdomain = $(this).val().replace(/[^A-Z0-9]/ig, "").toLowerCase();
@@ -11,9 +12,6 @@ $(document).ready(function() {
 });
 
 $(document).on('click', '.js-pagination-wrapper a', function(event) {
-=======
-$(document).on('click', '.pagination-wrapper a', function(event) {
->>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
   event.preventDefault();
   $.ajax({
     type: 'GET',
