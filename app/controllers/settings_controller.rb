@@ -25,7 +25,7 @@ class SettingsController < ApplicationController
   private
 
   def settings_params
-    params.require(:setting).permit(:tax_rate, :theme)
+    params.require(:setting).permit(:tax_rate, :theme, :leave_resets_at)
   end
 
   def load_setting

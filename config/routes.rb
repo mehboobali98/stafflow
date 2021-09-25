@@ -3,7 +3,6 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   root to: 'home#index'
   resources :search, only: [] do
@@ -83,6 +82,10 @@ Rails.application.routes.draw do
         get 'filter_applied_leaves', as: 'filter'
         patch 'approve_leaves', as: 'approve'
         patch 'reject_leaves', as: 'reject'
+        get 'new_applied_leave_by_hr'
+        post 'create_applied_leave_by_hr'
+        get 'search_users'
+        get 'get_available_user_leaves'
       end
       member do
         patch 'approve_leave', as: 'approve'
