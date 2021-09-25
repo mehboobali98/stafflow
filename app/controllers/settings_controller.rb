@@ -17,7 +17,10 @@ class SettingsController < ApplicationController
       if is_updated
         format.html { redirect_to settings_path, notice: t('settings.updated') }
       else
-        format.html { render :settings, alert: t('settings.not_updated') }
+        format.html do
+          flash.now[:alert] = @setting.errors.full_messages
+          render :settings
+        end
       end
     end
   end

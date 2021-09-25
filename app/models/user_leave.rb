@@ -5,7 +5,7 @@ class UserLeave < ApplicationRecord
   has_many :applied_leaves, dependent: :nullify
   validates_uniqueness_of :user_id, scope: :leave_id, message: I18n.t('user_leave.messages.duplicate_error')
   validates :total_count, :remaining_count, presence: true
-  validates :total_count, :remaining_count, numericality: { in: VALID_LEAVE_RANGE }
+  validates :total_count, :remaining_count, numericality: { greater_than: MIN_LEAVE_COUNT, less_than: MAX_LEAVE_COUNT }
   before_update :set_remaining_leave_count
   before_destroy :check_pending_leaves?, prepend: true
 
