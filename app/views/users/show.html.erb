@@ -31,6 +31,7 @@
       <div class="profile-work">
         <p><%= t('user.work_link') %></p>
         <a href=""><%= t('user..benefits') %></a><br/>
+<<<<<<< HEAD
         <%= link_to t('user_leave.headings.add_user_leave'), new_member_user_leave_path(@user) if can?(:create, UserLeave) %></br>
       <%= link_to t('user_leave.headings.view_user_leave'), member_user_leaves_path(@user) if can?(:show, UserLeave) %></br>
   </div>
@@ -45,6 +46,11 @@
         <div class="col-md-6">
           <p><%= @user.role_name %></p>
         </div>
+=======
+        <%= link_to t('user.leaves'), member_user_leaves_path(@user) %> <br>
+        <%= link_to t('user.set_leave'), new_member_user_leave_path(@user) %> <br>
+        <%= link_to t('user.appliedleave'), member_applied_leaves_path(@user) %> <br>
+>>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
       </div>
       <div class="row">
         <div class="col-md-6">
