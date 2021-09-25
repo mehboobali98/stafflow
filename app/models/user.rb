@@ -6,7 +6,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :confirmable
   has_many :user_leaves, dependent: :destroy
   has_many :leaves, through: :user_leaves
-  has_many :applied_leaves, through: :user_leaves
   has_many :applied_leaves
 
   belongs_to :company
