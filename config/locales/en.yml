@@ -500,6 +500,8 @@ en:
     markread: 'Mark Read'
     selectall: 'Select All'
     markedread: 'Selected Notifications were marked as read'
+  gender:
+    error: "The given gender is invalid"
   benefits:
     all: "All Benefits"
     my: "My Benefits"

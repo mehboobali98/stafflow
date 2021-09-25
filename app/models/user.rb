@@ -31,9 +31,11 @@ class User < ApplicationRecord
   validates_length_of :password, within: PASSWORD_LENGTH, allow_blank: true
   validates_presence_of :department_id, :designation_id, :base_salary, unless: -> { account_owner? }
   validate :department_designation_valid?, unless: -> { account_owner? }
+  validate :gender_valid?, unless: -> { account_owner? }
   validates :base_salary, numericality: { greater_than: 0, less_than: FLOAT_MAX }, unless: -> { account_owner? }
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
+  GENDERS = { male: 'Male', female: 'Female' }.freeze
   SENSITIVE_ATTRIBUTES = %i[base_salary department_id designation_id role_id].freeze
   def full_name
     "#{first_name} #{last_name}"
@@ -96,5 +98,11 @@ class User < ApplicationRecord
       return false
     end
     true
+  end
+
+  def gender_valid?
+    return true unless GENDERS.value?(gender)
+
+    errors.add(:base, I18n.t('gender.error'))
   end
 end
