@@ -1,5 +1,5 @@
 <%= javascript_pack_tag 'signup', 'data-turbolinks-track': 'reload' %>
-<div class='row h-100 overflow-auto'>
+<div class='d-flex vh-100'>
   <div class='col-lg-6 col-md-12 d-flex align-items-center justify-content-center'>
     <div class='w-75'>
       <h2><%= t('headings.signup') %></h2>
@@ -62,6 +62,6 @@
   </div>
 
   <div class='col-lg-6 col-md-0 bg-primary d-flex align-items-center justify-content-center'>
-    <%= image_tag 'signup.svg' %>
+    <%= render partial: 'shared/svgs/signup' %>
   </div>
 </div>
