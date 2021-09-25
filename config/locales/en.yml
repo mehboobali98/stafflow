@@ -29,6 +29,7 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  leave_error: 'Leave reset date cannot be in the past'
   currency:
     rupees: "Rs. "
   error_pages:
@@ -214,7 +215,6 @@ en:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
-    leave_reset_error: 'Leave reset date cannot be in the past'
   appname: "EMS"    
   payroll:
     breadcrumbs:
