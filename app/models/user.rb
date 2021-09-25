@@ -7,16 +7,14 @@ class User < ApplicationRecord
   has_many :user_leaves, dependent: :destroy
   has_many :leaves, through: :user_leaves
   has_many :applied_leaves
+  has_many :payrolls, dependent: :destroy
+  has_many :users_benefits, dependent: :destroy
+  has_many :notifications, foreign_key: :recipient_id
 
   belongs_to :company
   belongs_to :department, optional: true
   belongs_to :designation, optional: true
-
-  has_many :payrolls, dependent: :destroy
-  has_many :users_benefits, dependent: :destroy
   accepts_nested_attributes_for :company
-  has_many :notifications, foreign_key: :recipient_id
-  validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   scope :role_id, ->(role_id) { where(role_id: role_id) }
   scope :department_id, ->(department_id) { where(department_id: department_id) }
   scope :match_users_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
@@ -24,6 +22,7 @@ class User < ApplicationRecord
   validates_attachment_file_name :image, matches: [/png\z/, /jpe?g\z/]
   validates_with AttachmentSizeValidator, attributes: :image, less_than: 3.megabytes
 
+  validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   validates_uniqueness_of :email, scope: :company_id
   validates_presence_of :email
   validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
@@ -42,7 +41,7 @@ class User < ApplicationRecord
 
   def date_of_birth_valid?(date_of_birth)
     if Date.parse(date_of_birth.to_s) > Date.today
-      errors.add(:base, I18n.t('messages.date_error'))
+      errors.add(:base, I18n.t('messages.dob_error'))
       return false
     end
     true
