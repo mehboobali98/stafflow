@@ -25,7 +25,12 @@
         <span class="links-name"><%= t('sidebar.departments') %></span>
       <% end %>
     </li>
-    
+    <li>
+      <%= link_to events_path do %>
+        <i class="far fa-calendar"></i>
+        <span class="links-name"><%= t('sidebar.events') %></span>
+      <% end %>
+    </li>
     <% unless current_user.account_owner? %>
       <li>
         <%= link_to member_payrolls_path(current_user) do %>

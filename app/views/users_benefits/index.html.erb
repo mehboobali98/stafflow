@@ -9,7 +9,7 @@
   </div>
   <%= link_to t('benefits.all'), benefits_path %>
 </div>
-<div>
+<div class='p-3'>
   <br>
   <br>
   <table class="table table-hover">
@@ -27,8 +27,12 @@
           <td><%= users_benefit.benefit.name %></td>
           <td><%= users_benefit.amount %></td>
           <td>
-            <%= link_to t('form.button.update'), edit_member_users_benefit_path(@user, users_benefit), class: 'btn btn-secondary' %>
-            <%= link_to t('form.button.delete'), member_users_benefit_path(@user, users_benefit), method: :delete, data: { confirm: t('form.message.confirmation') }, class: 'btn btn-danger' %>
+            <%= link_to edit_member_users_benefit_path(@user, users_benefit) do %>
+              <i class='fa fa-bars ms-3'></i>
+            <% end %>
+            <%= link_to member_users_benefit_path(@user, users_benefit), method: :delete, data: { confirm: t('form.message.confirmation') } do %>
+              <i class='fa fa-trash ms-3'></i>
+            <% end %>
           </td>
         </tr>
       <% end %>

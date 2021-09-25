@@ -48,6 +48,7 @@ en:
     logout: 'Logout'
     by_team: 'by team ABC'
     benefits: "Benefits"
+    events: "Events"
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'

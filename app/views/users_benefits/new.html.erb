@@ -1,11 +1,13 @@
 <%= javascript_pack_tag 'users_benefit_creation', 'data-turbolinks-track': 'reload' %>
 
 <%= form_with model: [@user, @users_benefits], url: member_users_benefit_mass_create_path(@user, @users_benefits) do |form| %>
-  <div class="container">
+  <div class='p-4'>
+    <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1 float-end' %>
+    <br><br>
     <div class="row">
       <div>
-        <table class="table table-bordered table-striped">
-          <thead class="table-dark">
+        <table class="table table-bordered">
+          <thead class="pms-table-header">
             <tr>
               <th><%= t('users_benefit.table.select') %></th>
               <th><%= t('users_benefit.table.benefit_name') %></th>
@@ -32,6 +34,5 @@
         </table>
       </div>
     </div>
-    <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1' %>
   </div>
 <% end %>
