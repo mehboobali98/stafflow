@@ -90,7 +90,7 @@ class UsersController < ApplicationController
 
     params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
                                  :department_id, :password, :password_confirmation,
-                                 :role_id, :base_salary, :designation_id)
+                                 :role_id, :base_salary, :designation_id, :country, :gender)
   end
 
   def load_departments_and_designations
