@@ -31,7 +31,7 @@ class Payroll < ApplicationRecord
 
   def self.payroll_already_generated?(user)
     payrolls = user.payrolls.last
-    return false unless payrolls.present?
+    return false unless payrolls.id.present?
 
     date = payrolls.created_at
     return true if DateTime.now.month == date.month && DateTime.now.year == date.year
