@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource
   before_action :load_departments_and_designations, only: %i[edit create update]
   before_action :load_departments, only: %i[new index]
+  before_action :set_user_password, only: :create
   has_scope :role_id
   has_scope :department_id
   has_scope :match_users_name
@@ -90,7 +91,7 @@ class UsersController < ApplicationController
 
     params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
                                  :department_id, :password, :password_confirmation,
-                                 :role_id, :base_salary, :designation_id)
+                                 :role_id, :base_salary, :designation_id, :country, :gender)
   end
 
   def load_departments_and_designations
@@ -100,5 +101,9 @@ class UsersController < ApplicationController
 
   def load_departments
     @departments = current_company.departments
+  end
+
+  def set_user_password
+    @user.password = @user.random_password = User.generate_password
   end
 end

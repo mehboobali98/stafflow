@@ -1,7 +1,7 @@
 // The following script fires on event change on company_name text field. After that it 
 // removes any white spaces or special characters from the company_name value and then converts it into 
 // lower case before setting it to subdomain text field 
-$(document).on('click', '.pagination-wrapper a', function(event) {
+$(document).on('click', '.js-pagination-wrapper a', function(event) {
   event.preventDefault();
   $.ajax({
     type: 'GET',

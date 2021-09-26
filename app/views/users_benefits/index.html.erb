@@ -17,7 +17,7 @@
       <th><%= t('users_benefit.table.user_name') %></th>
       <th><%= t('users_benefit.table.benefit_name') %></th>
       <th><%= t('users_benefit.table.amount') %></th>
-      <th colspan="2"><%= t('users_benefit.table.options') %></th>
+      <th colspan="2"><%= t('users_benefit.table.options') if can?(:update, UsersBenefit) %></th>
     </tr>
     </thead>
     <tbody>
@@ -27,11 +27,15 @@
           <td><%= users_benefit.benefit.name %></td>
           <td><%= users_benefit.amount %></td>
           <td>
-            <%= link_to edit_member_users_benefit_path(@user, users_benefit) do %>
-              <i class='fa fa-bars ms-3'></i>
+            <% if can?(:update, users_benefit) %>
+              <%= link_to edit_member_users_benefit_path(@user, users_benefit) do %>
+                <i class='fa fa-bars ms-3'></i>
+              <% end %>
             <% end %>
-            <%= link_to member_users_benefit_path(@user, users_benefit), method: :delete, data: { confirm: t('form.message.confirmation') } do %>
-              <i class='fa fa-trash ms-3'></i>
+            <% if can?(:destroy, users_benefit) %>
+              <%= link_to member_users_benefit_path(@user, users_benefit), method: :delete, data: { confirm: t('form.message.confirmation') } do %>
+                <i class='fa fa-trash ms-3'></i>
+              <% end %>
             <% end %>
           </td>
         </tr>

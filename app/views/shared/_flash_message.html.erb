@@ -1,15 +1,10 @@
 <% flash.each do |message_type, error_message| %>
-  <div class="<%= add_flash_bootstrap_class(message_type) %> alert-dismissible fade show text-center p-2" role="alert" >
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div class="<%= add_flash_bootstrap_class(message_type) %> alert-dismissible fade show text-center flash-message mt-2 mx-2" role="alert" >
     <% if error_message.is_a?(Array) %>
-      <ul class="list-unstyled">
-        <% error_message.each do |message| %>
-          <li class="text-center mt-2"><%= message %></li>
-        <% end %>
-      </ul>
+      <p><%= error_message.first %></p>
     <% else %>
-      <p class="text-center mt-2"><%= error_message %></p>
+      <p><%= error_message %></p>
     <% end %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% end %>
-

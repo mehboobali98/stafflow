@@ -24,9 +24,10 @@ class AppliedLeave < ApplicationRecord
   end
 
   def set_leave
+    return false if user_leave.nil?
+
     self.leave_id = user_leave.leave.id
-  rescue ActiveRecord::RecordInvalid
-    false
+    true
   end
 
   def leave_available?
@@ -121,6 +122,22 @@ class AppliedLeave < ApplicationRecord
     end
     event :request_rejected, success: %i[create_rejection_notification send_rejection_email] do
       transitions to: :rejected, from: :pending
+    end
+  end
+
+  def approve_hr_added_leave
+    ActiveRecord::Base.transaction do
+      set_leave
+      update_leave_count(calculate_leave_count)
+      save!
+      user_leave.save!
+      request_accepted!
+      true
+    rescue Transitions::InvalidTransition
+      errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+      false
+    rescue ActiveRecord::RecordInvalid
+      false
     end
   end
 

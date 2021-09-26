@@ -29,6 +29,15 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  mailer:
+    payroll_subject: 'Payroll Generated'
+
+  leave_error: 'Leave reset date cannot be in the past'
+  mailer:
+    password_mailer_subject: 'Account password'
+    sign_in: 'Sign in'
+  currency:
+    rupees: "Rs. "
   error_pages:
     not_found: '404 Error'
     page_not_found: 'Page not found'
@@ -142,6 +151,7 @@ en:
       add_leaves: 'Add user leave'
   applied_leave:
     messages:
+      select_leave_type: 'Select leave type'
       delete_confirm: 'Are you sure you want to delete this?'
       leave_applied_success: 'Leave applied successfully'
       leave_delete_success: 'Leave deleted succcessfully'
@@ -255,7 +265,9 @@ en:
     validation:
       presence: "This field cannot be left empty"
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+      zero_check: "The benefit amount cannot be zero"
       benefit_name: "Benefit name can only contain letters"
+      duplicate_error: 'Benefit with the given name already exists'
     headings:
       benefit: "Benefits"
     label:
@@ -268,7 +280,7 @@ en:
     button:
       submit: "Submit"
       create_benefit: "Create Benefit"
-      update: "Update"
+      update: "Edit"
       delete: "Delete"
     field:
       benefit_type: "Benefit Type"
@@ -287,6 +299,7 @@ en:
         delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+      all_benefits_alloted: "All the benefits are already given to the user"
     headings:
       users_benefits: "User Benefits"
     table:
@@ -333,8 +346,8 @@ en:
       member_four_name: "Mehboob"
       member_one_designation: "Chief Executive Officer"
       member_two_designation: "Product Manager"
-      member_three_designation: "CTO"
-      member_four_designation: "Accountant"
+      member_three_designation: "Chief Technology Office"
+      member_four_designation: "Program Manager"
       member_one_details: "Explicabo voluptatem mollitia et repellat qui dolorum quasi"
       member_two_details: "Aut maiores voluptates amet et quis praesentium qui senda para"
       member_three_details: "Quisquam facilis cum velit laborum corrupti fuga rerum quia"
@@ -366,8 +379,9 @@ en:
 
   department:
     name_lable: "Department Name"
-    select_image_lable: "Select Image"
-    table_heading: "Departments"
+    select_image_lable: "Cover Photo"
+    table_heading: "All Departments"
+    number_of_employees: "Number of Employees"
     name: "Name"
     image: "Image"
     options: "Options"
@@ -379,8 +393,8 @@ en:
     updated: "Department Updated Successfully"
     not_updated: "Department Not Updated"
     destroy: "Department Destroyed Successfully"
-    edit_message: "Update Department"
-    add_message: "Add Department"
+    edit_message: "Edit Department"
+    add_message: "Add New Department"
     not_exist: "Department Does Not Exist"
     edit_btn_message: "Edit"
     show_btn_message: "Show"
@@ -390,10 +404,11 @@ en:
   designation:
     name_lable: "Designation Name"
     select_department: "Select Department"
-    table_heading: "Designations"
+    table_heading: "All Designations"
     table_options: "Options"
     table_cell_one_name: "Name"
-    table_cell_two_name: "Department-ID"
+    table_cell_two_name: "Department"
+    table_cell_three_name: "Number of Employees"
     new_link_name: "New Designation"
     already_exist: "Designation Alread Exists"
     created: "Designation Created Successfully"
@@ -401,8 +416,8 @@ en:
     updated: "Designation Updated Successfully"
     not_updated: "Designation Not Updated"
     destroy: "Designation Destroyed Successfully"
-    edit_message: "Update Designation"
-    add_message: "Add Designation"
+    edit_message: "Edit Designation"
+    add_message: "Add New Designation"
     not_exist: "Designation Does Not Exist"
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
@@ -477,6 +492,7 @@ en:
     edit_profile: "Edit Profile"
     work_link: "Work Link"
     benefits: "Benefits"
+    payrolls: "Payrolls"
     leaves: "Leaves"
     set_leave: "Set Leaves"
     role: "User Role"
@@ -494,6 +510,8 @@ en:
     markread: 'Mark Read'
     selectall: 'Select All'
     markedread: 'Selected Notifications were marked as read'
+  gender:
+    error: "The given gender is invalid"
   benefits:
     all: "All Benefits"
     my: "My Benefits"

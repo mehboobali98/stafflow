@@ -23,6 +23,35 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # GET /applied_leaves/new_applied_leave_by_hr
+  def new_applied_leave_by_hr
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # POST /applied_leaves/create_applied_leave_by_hr
+  def create_applied_leave_by_hr
+    @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
+    @applied_leave = @user.applied_leaves.build(applied_leave_params)
+    @applied_leave.approve_hr_added_leave
+    respond_to do |format|
+      format.html do
+        redirect_to all_applied_leaves_path
+      end
+    end
+  end
+
+  # GET /applied_leaves/search_users
+  def search_users
+    @users = current_company.users.where("email LIKE?", "#{params[:query]}%")
+    respond_to do |format|
+      format.json do
+        render json: @users
+      end
+    end
+  end
+
   # POST /members/:member_id/applied_leaves
   def create
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
@@ -62,6 +91,17 @@ class AppliedLeavesController < ApplicationController
           flash[:error] = @leave.errors.full_messages
           redirect_to edit_member_applied_leave_path(@user, @applied_leave)
         end
+      end
+    end
+  end
+
+  # GET /members/get_available_user_leaves
+  def get_available_user_leaves
+    @user = current_company.users.find_by(id: params[:member_id])
+    @available_user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where('remaining_count > ?', 0)
+    respond_to do |format|
+      format.json do
+        render json: @available_user_leaves
       end
     end
   end

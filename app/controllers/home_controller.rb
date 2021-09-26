@@ -9,6 +9,7 @@ class HomeController < ApplicationController
     User.unscoped do
       @companies = Company.joins(:users).where(users: { email: home_params[:email] }).load # If Load not used, then in template, default scope applied and query changed.
     end
+    return redirect_to new_user_session_url(subdomain: @companies[0].subdomain, email: home_params[:email]) if @companies.length == 1
     respond_to do |format|
       format.html { render layout: 'landing' }
     end
