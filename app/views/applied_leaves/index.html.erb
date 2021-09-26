@@ -1,4 +1,4 @@
-<div class='pms-heading ms-1'>
+<div class='pms-heading p-3'>
   <div class='row'>
     <div class='col-10'>
       <h2 class="mb-3"><%= t('applied_leave.headings.applied_leaves') %></h2>
@@ -16,7 +16,7 @@
 
 <br>
 <br>
-<div class='w-100'>
+<div class='p-3'>
   <table class="table table-hover">
     <thead class="pms-table-header">
     <tr>
@@ -31,4 +31,9 @@
       <%= render partial: 'applied_leaves_index', locals: { applied_leaves: @applied_leaves } %>
     </tbody>
   </table>
+  <% if @applied_leaves.empty? %>
+    <div class="d-flex justify-content-md-center align-items-center mt-5">
+      <h1 class='text-muted'><%= t('nodata') %></h1>
+    </div>
+  <% end %>
 </div>

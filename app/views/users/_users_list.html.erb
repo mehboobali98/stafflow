@@ -2,7 +2,8 @@
   <thead class='pms-table-header p-3 table-borderless'>
     <th><%= t('forms.labels.full_name') %></th>
     <th><%= t('forms.labels.department') %></th>
-    <th colspan='2'><%= t('forms.labels.email') %></th>
+    <th><%= t('forms.labels.email') %></th>
+    <th><%= t('forms.labels.actions') %></th>
   </thead>
   <tbody>
     <% users.each do |user| %>
@@ -33,6 +34,11 @@
     <% end %>
   </tbody>
 </table>
+<% if users.empty? %>
+  <div class="d-flex justify-content-md-center align-items-center mt-5">
+    <h1 class='text-muted'><%= t('nodata') %></h1>
+  </div>
+<% end %>
 
 <div class='js-pagination-wrapper pagination-wrapper'>
   <%= will_paginate users, container: false %>

@@ -1,5 +1,5 @@
-<div class='pms-heading ms-1'>  
-  <div class='row'>
+<div class='pms-heading p-3'>  
+  <div class='row p-2'>
     <div class='col-10'>
       <h2><%= t('benefit.headings.benefit') %></h2>
     </div>
@@ -9,7 +9,7 @@
   </div>
   <%= link_to t('benefits.my'), member_users_benefits_path(current_user) unless current_user.account_owner? %>
 </div>
-<div>
+<div class='p-2'>
   <br>
   <br>
   <table class="table table-hover">
@@ -40,5 +40,10 @@
     <% end %>
   </tbody>
 </table>
+<% if @benefits.empty? %>
+  <div class="d-flex justify-content-md-center align-items-center mt-5">
+    <h1 class='text-muted'><%= t('nodata') %></h1>
+  </div>
+<% end %>
 <%= render partial: 'shared/pagination', locals: { resource: @benefits } %>
 </div> 

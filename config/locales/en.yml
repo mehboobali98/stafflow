@@ -48,6 +48,7 @@ en:
     dashboard: 'Dashboard'
     users: 'Users'
     departments: 'Departments'
+    designations: "Designations"
     payroll: 'Payroll'
     leave: 'Leave'
     calendar: 'Calendar'
@@ -58,6 +59,7 @@ en:
     by_team: 'by team ABC'
     benefits: "Benefits"
     events: "Events"
+    cp: "Change Password"
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
@@ -83,6 +85,7 @@ en:
     back: "Back"
     user_not_found: "User with the given id does not exist"
     search: "Search"
+    all: "All"
   leave:
     messages:
       name_error: 'Leave type name can only contain letters'
@@ -464,7 +467,7 @@ en:
       confirmation:
         deletion: 'Are you sure?'
       links:
-        create: 'Create'
+        create: 'Create Event'
         edit: 'Edit'
         delete: 'Delete'
         view: 'View all'
@@ -515,3 +518,5 @@ en:
   benefits:
     all: "All Benefits"
     my: "My Benefits"
+  nodata: "No Data"
+  nonotis: "No Notifications"

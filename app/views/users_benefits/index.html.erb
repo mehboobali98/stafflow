@@ -42,5 +42,10 @@
       <% end %>
     </tbody>
   </table>
+  <% if @users_benefits.empty? %>
+    <div class="d-flex justify-content-md-center align-items-center mt-5">
+      <h1 class='text-muted'><%= t('nodata') %></h1>
+    </div>
+  <% end %>
   <%= render partial: 'shared/pagination', locals: { resource: @users_benefits } %>
 </div> 

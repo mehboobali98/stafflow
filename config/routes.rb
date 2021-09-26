@@ -10,7 +10,9 @@ Rails.application.routes.draw do
       get 'search_data'
     end
   end
-
+  devise_scope :user do
+    get 'users', to: 'users/registrations#new'
+  end
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
@@ -24,14 +26,18 @@ Rails.application.routes.draw do
     end
   end
   constraints subdomain: /^(?!www\Z)(\w+)/ do
-    resources :members, controller: 'users'
     resources :departments do
       member do
         get 'fetch_designations'
       end
     end
     resources :benefits, except: :show
+
     resources :members, controller: 'users' do
+      collection do
+        get :edit_password, to: 'users#edit_password'
+        post :update_password, to: 'users#update_password'
+      end
       resources :payrolls
       resources :users_benefits, except: %i[create show new] do
         collection do

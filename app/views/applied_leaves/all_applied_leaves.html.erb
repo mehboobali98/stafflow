@@ -1,5 +1,5 @@
 <%= javascript_pack_tag "show_applied_leaves" %>
-<div class='pms-heading ms-1'>
+<div class='pms-heading ms-1 p-2'>
   <div class='row'>
     <div class='col-10'>
       <h2 class="mb-3"><%= t('applied_leave.headings.applied_leaves') %></h2>
@@ -36,8 +36,13 @@
         <th class="text-center" colspan="2"><%= t('applied_leave.headings.options') %></th>
       </tr>
     </thead>
-    <tbody id="applied_leaves_list_body">
-      <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves } %>
-    </tbody>
+      <tbody id="applied_leaves_list_body">
+        <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves } %>
+      </tbody>
   </table>
+  <% if @applied_leaves.empty? %>
+    <div class="d-flex justify-content-md-center align-items-center mt-5">
+      <h1 class='text-muted'><%= t('nodata') %></h1>
+    </div>
+  <% end %>
 </div>

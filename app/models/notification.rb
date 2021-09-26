@@ -4,5 +4,5 @@ class Notification < ApplicationRecord
   STATUS = { unread: 0, read: 1 }.freeze
   scope :unread, -> { where(status: false) }
   scope :read, -> { where(status: true) }
-  scope :read_status, ->(status) { where(status: status) }
+  scope :read_status, ->(status) { status.empty? ? nil : where(status: status) }
 end

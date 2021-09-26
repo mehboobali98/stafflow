@@ -45,7 +45,7 @@
               <label><%= t('user.role') %></label>
             </div>
             <div class="col-md-6">
-              <p><%= @user.role_name %></p>
+              <p><%= @user.role_name.to_s.humanize %></p>
             </div>
           </div>
           <div class="row">

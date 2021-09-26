@@ -38,6 +38,10 @@ $sky_blue_app_color: #AFDBF5;
   background-color: $sky_blue_app_color;
   padding: 15px 0px;
   max-width: 96vw;
+  border-width: thin;
+  border-color: royalblue;
+  border-style: solid;
+
 }
 
 // side bar custom class for toggling. It is added when the sidebar is active

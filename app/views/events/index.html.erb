@@ -1,9 +1,11 @@
-<div class='pms-heading row ms-1'>
-  <div class='col-11'>
-    <h2><%= t('event.forms.headings.event') %></h2>
-  </div>
-  <div class='col-1'>
-    <%= link_to t('event.forms.links.create'), new_event_path, class: 'btn btn-primary mt-2' %>
+<div class='pms-heading p-3'>
+  <div class='row'>
+    <div class='col-11'>
+      <h2><%= t('event.forms.headings.event') %></h2>
+    </div>
+    <div class='col-1'>
+      <%= link_to t('event.forms.links.create'), new_event_path, class: 'btn btn-primary mt-2' %>
+    </div>
   </div>
 </div>
 <br><br>
@@ -48,4 +50,9 @@
       <% end %>
     </tbody>
   </table>
+  <% if @events.empty? %>
+    <div class="d-flex justify-content-md-center align-items-center mt-5">
+      <h1 class='text-muted'><%= t('nodata') %></h1>
+    </div>
+  <% end %>
 </div>

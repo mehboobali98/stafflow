@@ -58,6 +58,12 @@
               <%= form.number_field :base_salary, required: true, class: 'form-control' %>
             </div>
           <% end %>
+          <% if can?(:update, @user, :password) %>
+            <div class='field mb-2'>
+              <%= form.label I18n.t('forms.labels.salary') %><br />
+              <%= form.password_field :current_password, required: true, class: 'form-control' %>
+            </div>
+          <% end %>
         <% end %>
         <div class='actions'>
           <%= form.submit t('forms.buttons.update'), class: 'btn btn-primary w-100 mt-3' %>

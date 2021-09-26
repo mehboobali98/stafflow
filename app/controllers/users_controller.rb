@@ -84,6 +84,27 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET /members/edit_password
+  def edit_password
+    @user = current_user
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # POST /members/update_password
+  def update_password
+    if current_user.update_with_password(user_params)
+      sign_in(current_user, bypass: true)
+      flash[:notice] = 'Updated Password Successfully'
+      redirect_to dashboard_path
+    else
+      flash.now[:error] = current_user.errors.full_messages
+      @user = current_user
+      render :edit_password
+    end
+  end
+
   private
 
   def user_params
@@ -91,7 +112,8 @@ class UsersController < ApplicationController
 
     params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
                                  :department_id, :password, :password_confirmation,
-                                 :role_id, :base_salary, :designation_id, :country, :gender)
+                                 :role_id, :base_salary, :designation_id, :country, :gender, :current_password,
+                                 :password_confirmation, :password)
   end
 
   def load_departments_and_designations

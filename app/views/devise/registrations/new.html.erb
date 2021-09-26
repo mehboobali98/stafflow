@@ -6,40 +6,40 @@
       <hr>
       <div>
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-          <%= error_messages(:email) %>
-          <div class="form-floating mb-2">
-            <%= f.email_field :email, required: true, class: 'form-control', placeholder: t('forms.labels.email') %>
-            <%= f.label t('forms.labels.email') %>
-          </div>
-          <%= error_messages(:password) %>
-          <div class="form-floating mb-2">
-            <%= f.password_field :password, required: true, class: 'form-control', placeholder: t('forms.labels.password') %>
-            <%= f.label t('forms.labels.password') %>
-          </div>
-          <%= error_messages(:password_confirmation) %>
-          <div class="form-floating mb-2">
-            <%= f.password_field :password_confirmation, required: true, class: 'form-control', placeholder: t('forms.labels.confirm_password') %>
-            <%= f.label t('forms.labels.confirm_password') %>
-          </div>
           <%= error_messages(:first_name) %>
           <div class="form-floating mb-2">
             <%= f.text_field :first_name, required: true, class: 'form-control', placeholder: t('forms.labels.fname') %>
-            <%= f.label t('forms.labels.fname') %>
+            <%= f.label t('forms.labels.fname')+'*' %>
           </div>
           <%= error_messages(:last_name) %>
           <div class="form-floating mb-2">
             <%= f.text_field :last_name, required: true, class: 'form-control', placeholder: t('forms.labels.lname') %>
-            <%= f.label t('forms.labels.lname') %>
+            <%= f.label t('forms.labels.lname')+'*' %>
+          </div>
+          <%= error_messages(:email) %>
+          <div class="form-floating mb-2">
+            <%= f.email_field :email, required: true, class: 'form-control', placeholder: t('forms.labels.email') %>
+            <%= f.label t('forms.labels.email')+'*' %>
+          </div>
+          <%= error_messages(:password) %>
+          <div class="form-floating mb-2">
+            <%= f.password_field :password, required: true, class: 'form-control', placeholder: t('forms.labels.password') %>
+            <%= f.label t('forms.labels.password')+'*' %>
+          </div>
+          <%= error_messages(:password_confirmation) %>
+          <div class="form-floating mb-2">
+            <%= f.password_field :password_confirmation, required: true, class: 'form-control', placeholder: t('forms.labels.confirm_password') %>
+            <%= f.label t('forms.labels.confirm_password')+'*' %>
           </div>
           <%= error_messages(:date_of_birth) %>
           <div class="form-floating mb-2">
             <%= f.date_field :date_of_birth, required: true, class: 'form-control', placeholder: t('forms.labels.date_of_birth') %>
-            <%= f.label t('forms.labels.dob') %>
+            <%= f.label t('forms.labels.dob')+'*' %>
           </div>
           <%= f.fields_for :company_attributes do |form| %>
             <div class="form-floating mb-2">
               <%= form.text_field :name, required: true, id: "company", class: 'form-control', placeholder: 'Company' %>
-              <%= form.label t('company.label') %>
+              <%= form.label t('company.label')+'*' %>
             </div>
             <%= error_messages(:"company.subdomain") %>
             <div class="field">
