@@ -30,6 +30,9 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
   leave_error: 'Leave reset date cannot be in the past'
+  mailer:
+    password_mailer_subject: 'Account password'
+    sign_in: 'Sign in'
   currency:
     rupees: "Rs. "
   error_pages:

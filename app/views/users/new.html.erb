@@ -15,19 +15,6 @@
               <%= form.label t('forms.labels.email') %><br />
               <%= form.email_field :email, class: 'form-control', required: true %>
             </div>
-            
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.password') %>
-              <% if @minimum_password_length %>
-                <em>(<%= @minimum_password_length %> characters minimum)</em>
-              <% end %><br />
-              <%= form.password_field :password, required: true, class: 'form-control' %>
-            </div>
-
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.confirm_password') %><br />
-              <%= form.password_field :password_confirmation, required: true, class: 'form-control' %>
-            </div>
 
             <div class='field mb-2'>
               <%= form.label t('forms.labels.fname') %><br />
@@ -42,12 +29,12 @@
               <%= form.label t('forms.labels.gender') %>
               <%= form.select :gender, options_for_select(User::GENDERS), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
             </div>
-          </div>
-          <div class='col-6'>
             <div class='field mb-2'>
               <%= form.label t('forms.labels.dob') %><br/>
               <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
             </div>
+          </div>
+          <div class='col-6'>
 
             <div class='field mb-2'>
               <%= form.label t('forms.labels.role') %><br />
