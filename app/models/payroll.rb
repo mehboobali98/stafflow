@@ -43,7 +43,7 @@ class Payroll < ApplicationRecord
   private
 
   def deliver_payroll_generation_email
-    recipient_id = user.department.department_head
+    recipient_id = user.department.department_head.id
     PayrollMailer.delay.payroll_generation(recipient_id, user.id, user.company.id)
   end
 end

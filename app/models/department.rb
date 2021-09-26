@@ -14,6 +14,6 @@ class Department < ApplicationRecord
   validates_with AttachmentSizeValidator, attributes: :avatar, less_than: 3.megabytes
 
   def department_head
-    users.find_by(role_id: User::ROLES[:department_head]).id
+    users.find_by(role_id: User::ROLES[:department_head])
   end
 end
