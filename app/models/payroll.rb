@@ -30,10 +30,10 @@ class Payroll < ApplicationRecord
   end
 
   def self.payroll_already_generated?(user)
-    payrolls = user.payrolls.last
-    return false unless payrolls.present?
+    payroll = user.payrolls.reload.last
+    return false unless payroll.present?
 
-    date = payrolls.created_at
+    date = payroll.created_at
     return true if DateTime.now.month == date.month && DateTime.now.year == date.year
 
     false
