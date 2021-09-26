@@ -25,7 +25,7 @@ class DepartmentsController < ApplicationController
         if is_saved
           redirect_to departments_path, notice: t('department.created')
         else
-          flash.now[:error] = @department.errors.full_messages
+          flash[:error] = @department.errors.full_messages
           render :new
         end
       end
@@ -47,7 +47,7 @@ class DepartmentsController < ApplicationController
         if is_updated
           redirect_to departments_path, notice: t('department.updated')
         else
-          flash.now[:error] = @department.errors.full_messages
+          flash[:error] = @department.errors.full_messages
           redirect_to departments_path
         end
       end
