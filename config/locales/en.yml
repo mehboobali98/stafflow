@@ -450,6 +450,14 @@ en:
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
   event:
+    no_events: 'It lookes like you have not scheduled an event yet'
+    create_new_event: 'Create a new event'
+    breadcrumbs:
+      home: "Events"
+      new: "Create"
+      edit: "Edit"
+      show: 'Show'
+      display_calendar: 'Calendar'
     messages:
       success:
         create_success: 'Event created successfully'
@@ -483,9 +491,9 @@ en:
         event: 'Event'
         option: 'Options'
       labels:
-        event_name: 'Event name'
-        event_date: 'Event date'
-        event_time: 'Event time'
+        event_name: 'Event name*'
+        event_date: 'Event date*'
+        event_time: 'Event time*'
       placeholders:
         event_name: 'Enter event name'
     simple_calendar:

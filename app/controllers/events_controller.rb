@@ -4,9 +4,11 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
+  add_breadcrumb I18n.t('event.breadcrumbs.home'), :events_path
 
   # GET /events
   def index
+    @events = @events.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -14,6 +16,7 @@ class EventsController < ApplicationController
 
   # GET /events/1
   def show
+    add_breadcrumb t('event.breadcrumbs.edit'), :event_path
     respond_to do |format|
       format.html
     end
@@ -21,6 +24,7 @@ class EventsController < ApplicationController
 
   # GET /events/new
   def new
+    add_breadcrumb t('event.breadcrumbs.new'), :new_event_path
     @event_date = params[:event_date]
     respond_to do |format|
       format.html
@@ -47,6 +51,7 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
+    add_breadcrumb t('event.breadcrumbs.edit'), :edit_event_path
     respond_to do |format|
       format.html
     end
@@ -87,6 +92,7 @@ class EventsController < ApplicationController
 
   # GET /events/display_calendar
   def display_calendar
+    add_breadcrumb t('event.breadcrumbs.display_calendar'), :display_calendar_events_path
     @start_date = event_calendar_start_date
     @events = @events.events_in_a_month(@start_date)
     respond_to do |format|

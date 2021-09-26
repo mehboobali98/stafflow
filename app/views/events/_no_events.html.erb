@@ -1,0 +1,12 @@
+<div class="max-wd-md my-10 m-auto p-12 bg-white rounded border text-center shadow">
+  <%= image_tag "schedule_events", class: 'my-4' %>
+  <h1 class="text-indigo-darker text-t2xl mb-6"><%= t('event.no_events')%></h1>
+  <%= link_to new_event_path, class: 'btn btn-outline-primary py-3 px-4 my-4' do %>
+    <i class="fas fa-plus"></i>
+    <%= t('event.create_new_event') %>
+  <% end %>
+  <%= link_to display_calendar_events_path, class: 'btn btn-outline-dark py-3 px-5 my-4' do %>
+    <i class="fa fa-calendar" aria-hidden="true"></i>
+    <%= t('event.forms.links.view_calendar') %>
+  <% end %>
+</div>
