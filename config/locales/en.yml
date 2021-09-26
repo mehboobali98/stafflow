@@ -29,6 +29,10 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  dashboard:
+    my_applied_leaves: 'My applied leaves'
+    my_available_leaves: 'My available leaves'
+    all_applied_leaves: 'All applied leaves'
   leave_error: 'Leave reset date cannot be in the past'
   currency:
     rupees: "Rs. "
@@ -79,6 +83,11 @@ en:
     user_not_found: "User with the given id does not exist"
     search: "Search"
   leave:
+    breadcrumbs:
+      home: "Leave"
+      show: 'Show'
+      new: "New"
+      edit: "Edit"
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'
@@ -98,8 +107,8 @@ en:
       featured_leave: 'Featured leave'
     forms:
       labels:
-        name: 'Leave name'
-        count: 'Leave count'
+        name: 'Leave name*'
+        count: 'Leave count*'
       placeholders:
         name: 'Enter leave name'
         count: 'Enter leave count'

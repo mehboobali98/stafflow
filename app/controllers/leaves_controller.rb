@@ -4,10 +4,10 @@
 class LeavesController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
+  add_breadcrumb I18n.t('leave.breadcrumbs.home'), :leaves_path
 
   # GET /leaves
   def index
-    binding.pry
     @leaves = @leaves.paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
@@ -17,6 +17,7 @@ class LeavesController < ApplicationController
 
   # GET /leaves/1
   def show
+    add_breadcrumb t('leave.breadcrumbs.show'), :leave_path
     respond_to do |format|
       format.html
     end
@@ -24,6 +25,7 @@ class LeavesController < ApplicationController
 
   # GET /leaves/new
   def new
+    add_breadcrumb t('leave.breadcrumbs.new'), :new_leave_path
     respond_to do |format|
       format.html
     end
@@ -47,6 +49,7 @@ class LeavesController < ApplicationController
 
   # GET /leaves/1/edit
   def edit
+    add_breadcrumb t('leave.breadcrumbs.edit'), :edit_leave_path
     respond_to do |format|
       format.html
     end
