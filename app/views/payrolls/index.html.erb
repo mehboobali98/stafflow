@@ -1,7 +1,7 @@
 <div class="container">
   <h1><%= t('payroll.headings.payroll') %></h1>
   <br>
-  <%= link_to t('payroll.button.generate_payroll'), member_payrolls_path(@user, @payroll), method: :create, data: { confirm: t('payroll.messages.payroll_generation') }, class: 'btn btn-outline-dark' if can?(:create, Payroll) %>
+  <%= link_to t('payroll.button.generate_payroll'), member_payrolls_path(@user, @payroll), method: :create, data: { confirm: t('payroll.messages.payroll_generation') }, class: 'btn btn-outline-dark' if can?(:create, Payroll)  %>
   <br><br>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
