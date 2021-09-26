@@ -43,13 +43,7 @@ class Payroll < ApplicationRecord
   private
 
   def deliver_payroll_generation_email
-    recipient_id = get_department_head
+    recipient_id = user.department.department_head
     PayrollMailer.delay.payroll_generation(recipient_id, user.id, user.company.id)
-  end
-
-  def get_department_head
-    company.users.where(role_id: User::ROLES[:department_head])
-           .where(department_id: user.department_id)
-           .where.not(id: id)
   end
 end

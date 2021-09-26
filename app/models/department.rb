@@ -12,4 +12,8 @@ class Department < ApplicationRecord
   validates_attachment_content_type :avatar, content_type: %r{\Aimage/.*\z}
   validates_attachment_file_name :avatar, matches: [/png\z/, /jpe?g\z/]
   validates_with AttachmentSizeValidator, attributes: :avatar, less_than: 3.megabytes
+
+  def department_head
+    users.where(role_id: User::ROLES[:department_head])
+  end
 end
