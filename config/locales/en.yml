@@ -29,6 +29,9 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  mailer:
+    payroll_subject: 'Payroll Generated'
+
   leave_error: 'Leave reset date cannot be in the past'
   currency:
     rupees: "Rs. "
