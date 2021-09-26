@@ -197,7 +197,7 @@ class AppliedLeavesController < ApplicationController
 
   private
 
-  def validate_user_id?
+  def validate_user_id
     binding.pry
     current_user.id.eql?(params[:member_id])
   end

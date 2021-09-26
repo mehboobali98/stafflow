@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
   load_resource :user, id_param: :member_id
   load_resource :user_leave, through: :user, except: %i[new mass_create]
   authorize_resource
+  add_breadcrumb I18n.t('user_leave.breadcrumbs.home'), :member_user_leaves_path
 
   # GET /members/:member_id/user_leaves/:id
   def show
+    add_breadcrumb t('user_leave.breadcrumbs.show'), :member_user_leave_path
     respond_to do |format|
       format.html
     end
@@ -13,7 +17,8 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves
   def index
-    @user_leaves = @user_leaves.includes(:leave).paginate(page: params[:page], per_page: PAGE_SIZE)
+    @user_leaves = UserLeave.accessible_by(current_ability, :index).includes(:leave).paginate(page: params[:page],
+                                                                                              per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -21,6 +26,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves/new
   def new
+    add_breadcrumb t('user_leave.breadcrumbs.new'), :new_member_user_leave_path
     @available_leaves = @current_company.leaves.where.not(id: @user.leaves.ids)
     respond_to do |format|
       format.html
@@ -45,6 +51,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/:id/edit
   def edit
+    add_breadcrumb t('user_leave.breadcrumbs.edit'), :edit_member_user_leave
     respond_to do |format|
       format.js
     end

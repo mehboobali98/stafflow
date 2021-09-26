@@ -119,6 +119,11 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    breadcrumbs:
+      home: "User leave"
+      show: 'Show'
+      new: "New"
+      edit: "Edit"
     messages:
       success:
         create: 'User leave(s) created succcessfully'

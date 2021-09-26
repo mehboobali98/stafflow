@@ -101,7 +101,7 @@ class User < ApplicationRecord
   end
 
   def gender_valid?
-    return true unless GENDERS.value?(gender)
+    return true if GENDERS.value?(gender)
 
     errors.add(:base, I18n.t('gender.error'))
   end
