@@ -494,11 +494,8 @@ en:
     date_of_birth: "Date of birth"
     email: "Email"
     change_image: "Change Image"
-<<<<<<< HEAD
     apply_for_leave: 'Apply for leave'
-=======
     appliedleave: "Applied Leaves"
->>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
   notifications:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"

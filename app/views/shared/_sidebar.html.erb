@@ -25,7 +25,12 @@
         <span class="links-name"><%= t('sidebar.departments') %></span>
       <% end %>
     </li>
-    
+    <li>
+      <%= link_to designations_path do %>
+        <i class="far fa-building"></i>
+        <span class="links-name"><%= t('sidebar.designations') %></span>
+      <% end %>
+    </li>
     <% unless current_user.account_owner? %>
       <li>
         <%= link_to member_payrolls_path(current_user) do %>
@@ -35,21 +40,8 @@
       </li>
     <% end %>
     <li>
-<<<<<<< HEAD
-      <%= link_to designations_path do %>
-        <i class="far fa-building"></i>
-        <span class="links-name"><%= t('sidebar.designations') %></span>
-      <% end %>
-    </li>
-    <li>
-      <a href="#">
-        <i class="fas fa-receipt"></i>
-        <span class="links-name"><%= t('sidebar.payroll') %></span>
-      </a>
-    </li>
-    <li>
-=======
->>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
+      =======
+      >>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
       <%= link_to leaves_path do %>
         <i class="fas fa-tasks"></i>
         <span class="links-name"><%= t('sidebar.leave') %></span>
@@ -65,18 +57,6 @@
       <%= link_to analytics_path do %>
         <i class="fas fa-chart-line"></i>
         <span class="links-name"><%= t('sidebar.analytics') %></span>
-      <% end %>
-    </li>
-    <li>
-<<<<<<< HEAD
-      <%= link_to settings_path do %>
-        <i class="fas fa-cogs"></i>
-        <span class="links-name"><%= t('sidebar.settings') %></span>
-=======
-      <%= link_to benefits_path do %>
-        <i class="far fa-folder-open"></i>
-        <span class="links-name"><%= t('sidebar.benefits') %></span>
->>>>>>> 84942c27e5508d5a1e48ad53c20128903b8df7bf
       <% end %>
     </li>
     <% if current_user.account_owner? || current_user.hr? %>
