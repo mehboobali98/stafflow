@@ -33,6 +33,9 @@ en:
     payroll_subject: 'Payroll Generated'
 
   leave_error: 'Leave reset date cannot be in the past'
+  mailer:
+    password_mailer_subject: 'Account password'
+    sign_in: 'Sign in'
   currency:
     rupees: "Rs. "
   error_pages:
@@ -486,6 +489,7 @@ en:
     edit_profile: "Edit Profile"
     work_link: "Work Link"
     benefits: "Benefits"
+    payrolls: "Payrolls"
     leaves: "Leaves"
     set_leave: "Set Leaves"
     role: "User Role"
