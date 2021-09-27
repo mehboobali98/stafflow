@@ -32,16 +32,19 @@ gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 gem 'delayed_job_active_record', '4.1.6'
 gem 'transitions', '=1.2.1', require: %w[transitions active_model/transitions]
-gem 'sequenceid', '= 0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
+gem 'sequenceid', '=0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
 
 # cron job
-gem 'whenever', '= 1.0.0', require: false
+gem 'whenever', '=1.0.0', require: false
 
 # calendar gem
 gem 'simple_calendar', '=2.4.3'
 
-gem 'searchkick', '=4.6.0'
+# graphs
 gem 'chartkick', '=4.0.5'
+
+# elastic search
+gem 'searchkick', '=4.6.0'
 
 # faker gem to seed database
 gem 'faker', '=2.19.0'
@@ -52,7 +55,7 @@ gem 'faker', '=2.19.0'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
-gem 'breadcrumbs_on_rails', '= 4.1.0'
+gem 'breadcrumbs_on_rails', '=4.1.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

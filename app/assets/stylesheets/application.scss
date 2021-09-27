@@ -16,12 +16,30 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
+
+$sky_blue_app_color: #AFDBF5;
+
 .body-wrapper {
   height: 100%;
   overflow-y: scroll;
   .sidebar-wrapper {
     height: 100%;
   }
+}
+
+.pms-table-header {
+  background-color: $sky_blue_app_color;
+  font-size: large;
+  border: none;
+}
+
+.pms-heading {
+  background-color: $sky_blue_app_color;
+  padding: 15px 0px;
+  max-width: 96vw;
+  border-width: thin;
+  border-color: royalblue;
+  border-style: solid;
 }
 
 // side bar custom class for toggling. It is added when the sidebar is active
@@ -132,9 +150,16 @@
       padding-bottom: 0px;
       height: 38px;
     }
-} // end
+}
+// end
 
 //flash message: start
 .flash-message {
   padding-bottom: 0px;
+}
+
+// Notifications
+
+.notificationfalse{
+  font-weight: bold;
 }
