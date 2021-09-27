@@ -10,7 +10,8 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
-    @applied_leaves = @applied_leaves.includes(:leave).paginate(page: params[:page], per_page: PAGE_SIZE)
+    @applied_leaves = AppliedLeave.accessible_by(current_ability, :index).includes(:leave).paginate(page: params[:page],
+                                                                                                    per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end

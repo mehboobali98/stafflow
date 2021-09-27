@@ -31,17 +31,6 @@ class AppliedLeave < ApplicationRecord
     false
   end
 
-  def self.approve_mass_leaves(applied_leave_ids)
-    count_approved = 0
-    applied_leaves = where(applied_leave_ids)
-    applied_leaves.each do |applied_leave|
-      count_approved += 1 if applied_leave.approve_applied_leave
-    rescue ActiveRecord::RecordNotFound
-      count_approved
-    end
-    count_approved
-  end
-
   def approve_applied_leave
     ActiveRecord::Base.transaction do
       request_accepted! # change state
@@ -64,6 +53,17 @@ class AppliedLeave < ApplicationRecord
     false
   rescue ActiveRecord::RecordInvalid
     false
+  end
+
+  def self.approve_mass_leaves(applied_leave_ids)
+    count_approved = 0
+    applied_leaves = where(applied_leave_ids)
+    applied_leaves.each do |applied_leave|
+      count_approved += 1 if applied_leave.approve_applied_leave
+    rescue ActiveRecord::RecordNotFound
+      count_approved
+    end
+    count_approved
   end
 
   def self.reject_mass_leaves(applied_leave_ids)
