@@ -15,19 +15,7 @@
 </div>
 <br><br>
 <div class='p-2'>
-  <table class="table table-hover">
-    <thead class="pms-table-header">
-      <tr>
-        <th><%= t('user_leave.headings.leave_type') %></th>
-        <th><%= t('user_leave.headings.leave_count') %></th>
-        <th><%= t('user_leave.headings.leave_remaining_count') %></th>
-        <th><%= t('user_leave.headings.options') %></th>
-      </tr>
-    </thead>
-    <tbody id="user_leaves_table">
-      <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
-    </tbody>
-  </table>
+  <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
   <% if @user_leaves.empty? %>
     <div class="d-flex justify-content-md-center align-items-center mt-5">
       <h1 class='text-muted'><%= t('nodata') %></h1>

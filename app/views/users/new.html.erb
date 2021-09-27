@@ -22,7 +22,7 @@
             </div>
             <div class='field mb-2'>
               <%= form.label t('forms.labels.gender') %>
-              <%= form.select :gender, options_for_select(User::GENDERS), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
+              <%= form.select :gender, options_for_select(genders), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
             </div>
             <div class='field mb-2'>
               <%= form.label t('forms.labels.dob') %><br/>

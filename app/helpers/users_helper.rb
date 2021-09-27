@@ -7,6 +7,10 @@ module UsersHelper
     User::ROLES.map { |key, value| [t("user_roles.#{key}"), value] }
   end
 
+  def genders
+    User::GENDERS.map { |key, value| [t("user_genders.#{key}"), value] }
+  end
+
   def error_messages(attribute)
     return unless @user.errors.include?(attribute)
 
