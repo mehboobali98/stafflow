@@ -3,6 +3,7 @@
   <%= link_to 'My Applied Leaves', member_applied_leaves_path(current_user), class: 'card-link' unless current_user.account_owner? %>
   <%= link_to 'My Available Leaves', member_user_leaves_path(current_user), class: 'card-link' unless current_user.account_owner? %>
   <%= link_to 'All Applied Leaves', all_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
+   <%= link_to 'Add User Leave', new_applied_leave_by_hr_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
 </div>
 <div class="container">
   <%= link_to t('leave.forms.links.create'), new_leave_path, class: 'btn btn-outline-primary mb-2' %>

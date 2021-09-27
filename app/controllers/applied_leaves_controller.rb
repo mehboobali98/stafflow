@@ -34,9 +34,16 @@ class AppliedLeavesController < ApplicationController
   def create_applied_leave_by_hr
     @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.approve_hr_added_leave
+    if @applied_leave.validate_leave_year
+      is_saved = @applied_leave.approve_hr_added_leave
+    end
     respond_to do |format|
       format.html do
+        if is_saved
+          flash[:notice] = t('applied_leave.messages.leave_applied_success')
+        else
+          flash[:error] = @applied_leave.errors.full_messages
+        end
         redirect_to all_applied_leaves_path
       end
     end

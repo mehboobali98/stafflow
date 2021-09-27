@@ -87,7 +87,7 @@ class AppliedLeave < ApplicationRecord
   end
 
   def validate_past_leave_date
-    return true unless applied_from < Date.today && applied_till < Date.today
+    return true unless applied_from < Date.today || applied_till < Date.today
 
     errors.add(:leave_date, I18n.t('applied_leave.messages.error.past_leave_date'))
     false
