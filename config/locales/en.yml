@@ -261,7 +261,7 @@ en:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
-  appname: "EMS"    
+  appname: "PMS"    
   payroll:
     breadcrumbs:
       home: "Payroll"
@@ -459,9 +459,6 @@ en:
     sure_message: "Are You Sure?"
     notfound: "The department or designation doesnt exist" 
     department_error: "This designation doesn't exist in the selected department"
-  
-  appname: "EMS"
-
   company:
     label: 'Company'
     table_header:
