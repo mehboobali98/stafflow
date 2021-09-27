@@ -94,14 +94,17 @@ class UsersController < ApplicationController
 
   # POST /members/update_password
   def update_password
-    if current_user.update_with_password(user_params)
-      sign_in(current_user, bypass: true)
-      flash[:notice] = 'Updated Password Successfully'
-      redirect_to dashboard_path
-    else
-      flash.now[:error] = current_user.errors.full_messages
-      @user = current_user
-      render :edit_password
+    is_updated = current_user.update_with_password(user_params)
+    respond_to do |format|
+      if is_updated
+        sign_in(current_user, bypass: true)
+        flash[:notice] = 'Updated Password Successfully'
+        format.html { redirect_to dashboard_path }
+      else
+        flash.now[:error] = current_user.errors.full_messages
+        @user = current_user
+        format.html { render :edit_password }
+      end
     end
   end
 

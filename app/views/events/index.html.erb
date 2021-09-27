@@ -1,58 +1,15 @@
-<div class='pms-heading p-4'>
-  <div class='row'>
-    <div class='col-11'>
-      <h2><%= t('event.forms.headings.event') %></h2>
-    </div>
-    <div class='col-1'>
-      <%= link_to t('event.forms.links.create'), new_event_path, class: 'btn btn-primary mt-1' %>
-    </div>
-  </div>
-</div>
-<br><br>
-<div class='p-3'>
-  <div class="d-flex flex-row justify-content-between">
-    <%= link_to display_calendar_events_path, class: 'btn btn-outline-dark pt-2 mb-2 float-end' do %>
-      <i class="fa fa-calendar" aria-hidden="true"></i>
-      <%= t('event.forms.links.view_calendar') %>
-    <% end %>
-  </div>
-  <table class="table table-hover">
-    <thead class="pms-table-header">
-      <tr>
-        <th><%= t('event.forms.headings.name') %></th>
-        <th><%= t('event.forms.headings.starts_at') %></th>
-        <th><%= t('event.forms.headings.option') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @events.each do |event| %>
-        <tr>
-          <td><%= truncate_event_name(event.name) %></td>
-          <td><%= format_date(event.starts_at) %></td>
-          <td>
-          <% if can?(:show, event) %>
-            <%= link_to event do %>
-              <i class='fa fa-eye fa-lg'></i>
-            <% end %>
-          <% end %>
-          <% if can?(:edit, event) %>
-            <%= link_to edit_event_path(event) do %>
-              <i class='fa fa-bars ms-3'></i>
-            <% end %>
-          <% end %>
-          <% if can?(:delete, event) %>
-            <%= link_to event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') } do %>
-              <i class='fa fa-trash ms-3'></i>
-            <% end %>
-          <% end %>
-          </td>
-        </tr>
+<div class="p-3">
+  <% unless @events.present? %>
+    <%= render partial: 'no_events.html.erb' %>
+  <% else %>
+    <div class="d-flex flex-row justify-content-between">
+      <%= link_to display_calendar_events_path, class: 'btn btn-outline-dark pt-2 mb-2' do %>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <%= t('event.forms.links.view_calendar') %>
       <% end %>
-    </tbody>
-  </table>
-  <% if @events.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
+    </div>
+    <div class="events_table">
+      <%= render partial: 'events_list', locals: { events: @events } %>
     </div>
   <% end %>
 </div>
