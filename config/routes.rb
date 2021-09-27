@@ -3,7 +3,6 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
-
   root to: 'home#index'
   resources :search, only: [] do
     collection do
@@ -110,5 +109,9 @@ Rails.application.routes.draw do
         get '/', to: 'settings#settings'
       end
     end
+
+    match '/500', to: 'errors#internal_server_error', via: :all
+    match '/404', to: 'errors#not_found', via: :all
+    match '/401', to: 'errors#unauthorized', via: :all
   end
 end

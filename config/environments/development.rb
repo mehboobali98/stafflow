@@ -64,4 +64,6 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.consider_all_requests_local = true
   config.active_storage.service = :local
+
+  config.consider_all_requests_local = false
 end
