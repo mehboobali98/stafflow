@@ -11,7 +11,7 @@
     <%= link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user), class: 'card-link' unless current_user.account_owner? %>
     <%= link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user), class: 'card-link' unless current_user.account_owner? %>
     <%= link_to t('applied_leave.all'), all_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
-    <%= link_to 'Add User Leave', new_applied_leave_by_hr_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
+    <%= link_to t('applied_leave.add_user'), new_applied_leave_by_hr_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
   </div>
 </div>
 <br><br>
