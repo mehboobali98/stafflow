@@ -101,8 +101,6 @@ class AppliedLeavesController < ApplicationController
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
     add_breadcrumb t('applied_leave.breadcrumbs.new'), :all_applied_leaves_path
-    binding.pry
-
     get_filtered_records
     respond_to do |format|
       format.html
@@ -168,7 +166,6 @@ class AppliedLeavesController < ApplicationController
   def filter_applied_leaves
     get_filtered_records
     respond_to do |format|
-      binding.pry
       format.js { render 'approve_leaves' }
     end
   end
@@ -215,7 +212,6 @@ class AppliedLeavesController < ApplicationController
   end
 
   def get_filtered_records
-    binding.pry
     @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].to_s.downcase)
     @applied_leaves = @applied_leaves.includes(:user_leave, :user, :leave).paginate(page: params[:page],
                                                                                     per_page: PAGE_SIZE)
