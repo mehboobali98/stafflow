@@ -1,8 +1,8 @@
 <%= javascript_pack_tag "user_leaves" %>
-<div class="container mt-2">
+<div class="mt-2 p-3">
   <%= form_tag mass_create_member_user_leaves_path(@user), method: :post do %>
-    <table class="table table-striped table-hover">
-      <thead class="table-dark">
+    <table class="table table-hover">
+      <thead class="pms-table-header">
         <tr>
           <th></th>
           <th><%= t('user_leave.headings.leave_type') %></th>
