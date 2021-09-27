@@ -9,38 +9,40 @@
   </div>
 </div>
 <br><br>
-<table class="table table-hover">
-  <thead class="pms-table-header">
-    <tr>
-      <th><%= t('event.forms.headings.name') %></th>
-      <th><%= t('event.forms.headings.starts_at') %></th>
-      <th><%= t('event.forms.headings.option') %></th>
-    </tr>
-  </thead>
-  <tbody>
-      <% events.each do |event| %>
-        <tr>
-          <td><%= truncate_event_name(event.name) %></td>
-          <td><%= format_date(event.starts_at) %></td>
-          <td>
-          <% if can?(:show, event) %>
-            <%= link_to event do %>
-              <i class='fa fa-eye fa-lg'></i>
+<div class='p-3'>
+  <table class="table table-hover">
+    <thead class="pms-table-header">
+      <tr>
+        <th><%= t('event.forms.headings.name') %></th>
+        <th><%= t('event.forms.headings.starts_at') %></th>
+        <th><%= t('event.forms.headings.option') %></th>
+      </tr>
+    </thead>
+    <tbody>
+        <% events.each do |event| %>
+          <tr>
+            <td><%= truncate_event_name(event.name) %></td>
+            <td><%= format_date(event.starts_at) %></td>
+            <td>
+            <% if can?(:show, event) %>
+              <%= link_to event do %>
+                <i class='fa fa-eye fa-lg'></i>
+              <% end %>
             <% end %>
-          <% end %>
-          <% if can?(:edit, event) %>
-            <%= link_to edit_event_path(event) do %>
-              <i class='fa fa-bars ms-3'></i>
+            <% if can?(:edit, event) %>
+              <%= link_to edit_event_path(event) do %>
+                <i class='fa fa-bars ms-3'></i>
+              <% end %>
             <% end %>
-          <% end %>
-          <% if can?(:delete, event) %>
-            <%= link_to event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') } do %>
-              <i class='fa fa-trash ms-3'></i>
+            <% if can?(:delete, event) %>
+              <%= link_to event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') } do %>
+                <i class='fa fa-trash ms-3'></i>
+              <% end %>
             <% end %>
-          <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-</table>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+  </table>
+</div>
 <%= render partial: 'shared/pagination', locals: { resource: events } %>
