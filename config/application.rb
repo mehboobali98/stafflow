@@ -14,6 +14,7 @@ module PMS
     ActionView::Base.field_error_proc = proc do |html_tag, instance|
       html_tag.gsub("form-control", "form-control").html_safe
     end
+    config.exceptions_app = self.routes # Add this line
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

@@ -46,6 +46,7 @@ en:
     page_not_found: 'Page not found'
     return_to_dashboard: 'Return to dashboard'
     unauthorized: '401 Error'
+    server_error: '500 Error'
     format_error: 'The requested format is not supported'
   sidebar:
     dashboard: 'Dashboard'

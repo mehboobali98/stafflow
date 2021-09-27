@@ -43,7 +43,7 @@ class Payroll < ApplicationRecord
   private
 
   def deliver_payroll_generation_email
-    return if user.account_owner? && user.department.department_head.nil?
+    return if user.account_owner? && user.department.department_head.nil
 
     recipient_id = user.department.department_head.id
     PayrollMailer.delay.payroll_generation(recipient_id, user.id, user.company.id)
