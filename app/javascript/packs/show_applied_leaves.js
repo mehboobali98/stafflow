@@ -1,6 +1,6 @@
 $(document).ready(function() {
   toggleMassUpdateButtons();
-  
+
   $(".js-selected-applied-leave").on("change", function() {
     toggleMassUpdateButtons();
   });
@@ -55,8 +55,7 @@ $(document).ready(function() {
     return countChecked;
   }
 
-  function getCurrentFilter()
-  {
+  function getCurrentFilter() {
     return $("#filter").val();
   }
 
@@ -65,6 +64,7 @@ $(document).ready(function() {
     $.ajax({
       type: "GET",
       url: "/applied_leaves/filter_applied_leaves",
+      dataType: 'script',
       data: {
         filter_type: currentFilter
       }
@@ -80,7 +80,7 @@ $(document).ready(function() {
       data: {
         member_id
       },
-      success:function(response){
+      success: function(response) {
         leavesSelectBox = $('#leaves_select');
         leavesSelectBox.html("");
         leaves = JSON.parse(response);
@@ -100,20 +100,34 @@ $(document).ready(function() {
       data: {
         query
       },
-      success:function(response){
+      success: function(response) {
         employeesSelectBox = $('#applied_leave_member_id');
         users = JSON.parse(response);
         users.forEach(function(user) {
-          if ($(`#applied_leave_member_id option[value=${user.id}]`).length == 0){
-              employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`);
+          if ($(`#applied_leave_member_id option[value=${user.id}]`).length == 0) {
+            employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`);
           }
         });
       }
     });
   });
+
   $("#applied_leave_member_id").select2({
     theme: "classic",
     dropdownCssClass: 'select-dropdown',
     width: '100%'
+  });
+});
+
+
+$(document).on('click', '.js-applied-leaves-pagination a', function(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'GET',
+    url: this.href,
+    data: {
+      filter_type: $("#filter").val()
+    },
+    dataType: 'script'
   });
 });

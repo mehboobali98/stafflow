@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody id="user_leaves_table">
-      <%= render partial: 'user_leaves_table', locals: { user_leaves: @user_leaves } %>
+      <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
     </tbody>
   </table>
   <% if @user_leaves.empty? %>

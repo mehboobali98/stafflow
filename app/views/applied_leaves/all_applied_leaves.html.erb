@@ -17,29 +17,13 @@
 <br><br>
 <div class='p-3'>
   <div class="d-flex justify-content-between">
-    <%= select_tag "filter", options_for_select(leave_states), prompt: t('applied_leave.headings.select_filter'), class: 'form-select w-25 d-inline mb-2 p-2' %>
+    <%= select_tag "filter", options_for_select(leave_states), prompt: t('applied_leave.headings.select_filter'), class: 'form-select w-25 d-inline mb-2 p-2' if can?(:filter_applied_leaves, AppliedLeave) %>
     <div id="submit_buttons" class="d-none">
-      <button type="button" id="approve_leaves_btn" class="btn btn-success mb-2 p-2 me-2"><%= t('applied_leave.links.approve_leaves') %></button>
-      <button type="button" id="reject_leaves_btn" class="btn btn-danger mb-2 p-2"><%= t('applied_leave.links.reject_leaves') %></button>
+      <button type="button" id="approve_leaves_btn" class="btn btn-success mb-2 p-2 me-2"><%= t('applied_leave.links.approve_leaves') if can?(:approve_leaves, AppliedLeave) %></button>
+      <button type="button" id="reject_leaves_btn" class="btn btn-danger mb-2 p-2"><%= t('applied_leave.links.reject_leaves') if can?(:reject_leaves, AppliedLeave) %></button>
     </div>
   </div>
-  <table class="table table-hover">
-    <thead class="pms-table-header">
-      <tr>
-        <th></th>
-        <th><%= t('applied_leave.headings.applicant_email') %></th>
-        <th><%= t('applied_leave.headings.leave_type') %></th>
-        <th><%= t('applied_leave.headings.leave_duration') %></th>
-        <th><%= t('applied_leave.headings.leave_from') %></th>
-        <th><%= t('applied_leave.headings.leave_to') %></th>
-        <th><%= t('applied_leave.headings.leave_status') %></th>
-        <th class="text-center" colspan="2"><%= t('applied_leave.headings.options') %></th>
-      </tr>
-    </thead>
-      <tbody id="applied_leaves_list_body">
-        <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves } %>
-      </tbody>
-  </table>
+  <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves } %>
   <% if @applied_leaves.empty? %>
     <div class="d-flex justify-content-md-center align-items-center mt-5">
       <h1 class='text-muted'><%= t('nodata') %></h1>

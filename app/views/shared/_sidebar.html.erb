@@ -63,12 +63,6 @@
         <span class="links-name"><%= t('sidebar.analytics') %></span>
       <% end %>
     </li>
-    <li>
-      <%= link_to benefits_path do %>
-        <i class="far fa-folder-open"></i>
-        <span class="links-name"><%= t('sidebar.benefits') %></span>
-      <% end %>
-    </li>
     <% if current_user.account_owner? || current_user.hr? %>
       <li>
         <%= link_to settings_path do %>
@@ -79,8 +73,14 @@
     <% end %>
     <li>
       <%= link_to edit_password_members_path do %>
-        <i class="fas fa-unlock-alt" id="log-out"></i>
+        <i class="fas fa-unlock-alt"></i>
         <span class="links-name"><%= t('sidebar.cp') %></span>
+      <% end %>
+    </li>
+    <li>
+      <%= link_to member_path(current_user) do %>
+        <i class="fas fa-user-edit"></i>
+        <span class="links-name"><%= t('sidebar.view_profile') %></span>
       <% end %>
     </li>
     <li>
