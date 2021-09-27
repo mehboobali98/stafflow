@@ -6,7 +6,7 @@ class AppliedLeavesController < ApplicationController
   load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
   authorize_resource
-  add_breadcrumb I18n.t('applied_leave.breadcrumbs.home'), :member_applied_leaves_path
+  add_breadcrumb I18n.t('applied_leave.breadcrumbs.home'), :member_applied_leaves_path, except: :all_applied_leaves
 
   # GET /members/:member_id/applied_leaves
   def index
@@ -44,7 +44,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/:id/edit
   def edit
-    add_breadcrumb t('applied_leave.breadcrumbs.new'), :edit_member_applied_leave_path
+    add_breadcrumb t('applied_leave.breadcrumbs.edit'), :edit_member_applied_leave_path
     respond_to do |format|
       format.html
     end
@@ -99,7 +99,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
-    add_breadcrumb t('applied_leave.breadcrumbs.all'), :all_applied_leaves_path
+    add_breadcrumb t('applied_leave.breadcrumbs.new'), :all_applied_leaves_path
     get_filtered_records
     respond_to do |format|
       format.html

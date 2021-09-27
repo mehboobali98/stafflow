@@ -307,7 +307,6 @@ en:
     field:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
-
   users_benefit:
     breadcrumbs:
       home: "User Benefits"
@@ -336,8 +335,6 @@ en:
       options: "Options"
     button:
       users_benefit: "Benefits"
-  
-    
   navbar: 
     search: 'Search'
   forms:
