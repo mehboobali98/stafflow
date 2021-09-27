@@ -17,7 +17,7 @@
           <div class='col-10'>
             <%= select_tag :department_id, options_from_collection_for_select(@departments, 'id', 'name'), prompt: t('forms.labels.department'), class: 'form-control w-25 d-inline m-1 js-filter-select' %>
             <%= text_field_tag :match_users_name, '', class: 'form-control w-25 d-inline m-1 js-filter-select', placeholder: t('forms.labels.name') %>
-            <%= select_tag :role_id, options_for_select(User::ROLES), prompt: t('forms.labels.role'), class: 'form-control w-25 d-inline m-1 js-filter-select' %>
+            <%= select_tag :role_id, options_for_select(user_roles), prompt: t('forms.labels.role'), class: 'form-control w-25 d-inline m-1 js-filter-select' %>
           </div>
           <div class='col-2'>
             <%= submit_tag t('forms.buttons.reset_filters'), id: 'reset_filter_btn', remote: true, class: 'btn btn-primary d-inline ms-5' %>

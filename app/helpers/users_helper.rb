@@ -1,6 +1,10 @@
 module UsersHelper
   def user_roles_except_admin
-    User::ROLES.except(:account_owner)
+    User::ROLES.except(:account_owner).map { |key, value| [t("user_roles.#{key}"), value] }
+  end
+
+  def user_roles
+    User::ROLES.map { |key, value| [t("user_roles.#{key}"), value] }
   end
 
   def error_messages(attribute)
