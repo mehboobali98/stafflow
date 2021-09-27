@@ -29,6 +29,14 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  user_roles:
+    admin: "Admin"
+    hr: "HR"
+    department_head: "Department Head"
+    account_owner: "Account Owner"
+  user_genders:
+    male: "Male"
+    female: "Female"
   dashboard:
     my_applied_leaves: 'My applied leaves'
     my_available_leaves: 'My available leaves'
