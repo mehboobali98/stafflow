@@ -111,9 +111,9 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    return params.require(:user).permit(current_ability.permitted_attributes(:update, @user)) if action_name == 'update'
+    return params.require(:user).permit(current_ability.permitted_attributes(:update, @user) + [:image]) if action_name == 'update'
 
-    params.require(:user).permit(:first_name, :email, :last_name, :date_of_birth,
+    params.require(:user).permit(:image, :first_name, :email, :last_name, :date_of_birth,
                                  :department_id, :password, :password_confirmation,
                                  :role_id, :base_salary, :designation_id, :country, :gender, :current_password,
                                  :password_confirmation, :password)
