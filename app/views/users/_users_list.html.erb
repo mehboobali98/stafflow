@@ -3,6 +3,7 @@
     <th><%= t('forms.labels.full_name') %></th>
     <th><%= t('forms.labels.department') %></th>
     <th><%= t('forms.labels.email') %></th>
+    <th><%= t('forms.labels.role') %></th>
     <th><%= t('forms.labels.actions') %></th>
   </thead>
   <tbody>
@@ -11,6 +12,7 @@
         <td><%= user.full_name %></td>
         <td><%= user.department.name unless user.department.nil? %></td>
         <td><%= user.email %></td>
+        <td><%= user.role %></td>
         <td>
           <% if can?(:read, user) %>
             <%= link_to member_path(user) do %>
