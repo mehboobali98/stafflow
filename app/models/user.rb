@@ -115,6 +115,10 @@ class User < ApplicationRecord
     Faker::Internet.password(min_length: PASSWORD_LENGTH.first, max_length: PASSWORD_LENGTH.last, mix_case: true)
   end
 
+  def role
+    I18n.t("user_roles.#{ROLES.invert[role_id]}")
+  end
+
   private
 
   def deliver_password_email
