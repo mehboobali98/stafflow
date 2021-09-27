@@ -37,6 +37,7 @@ class AppliedLeave < ApplicationRecord
       true
     rescue Transitions::InvalidTransition
       errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+      false
     rescue ArgumentError
       errors.add(:base, I18n.t('applied_leave.messages.error.leave_count_error'))
       false
