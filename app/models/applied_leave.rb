@@ -31,6 +31,7 @@ class AppliedLeave < ApplicationRecord
   end
 
   def leave_available?
+    binding.pry
     leave_count = calculate_leave_count
     return true if leave_count.positive? && user_leave.count_available?(leave_count)
 
@@ -49,23 +50,14 @@ class AppliedLeave < ApplicationRecord
     count_approved
   end
 
-  def self.reject_mass_leaves(applied_leave_ids)
-    count_rejected = 0
-    applied_leaves = where(applied_leave_ids)
-    applied_leaves.each do |applied_leave|
-      count_rejected += 1 if applied_leave.reject_applied_leave
-    rescue ActiveRecord::RecordNotFound
-      count_rejected
-    end
-    count_rejected
-  end
-
   def approve_applied_leave
     ActiveRecord::Base.transaction do
       request_accepted! # change state
       true
     rescue Transitions::InvalidTransition
       errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+    rescue ArgumentError
+      errors.add(:base, I18n.t('applied_leave.messages.error.leave_count_error'))
       false
     rescue ActiveRecord::RecordInvalid
       false
@@ -80,6 +72,17 @@ class AppliedLeave < ApplicationRecord
     false
   rescue ActiveRecord::RecordInvalid
     false
+  end
+
+  def self.reject_mass_leaves(applied_leave_ids)
+    count_rejected = 0
+    applied_leaves = where(applied_leave_ids)
+    applied_leaves.each do |applied_leave|
+      count_rejected += 1 if applied_leave.reject_applied_leave
+    rescue ActiveRecord::RecordNotFound
+      count_rejected
+    end
+    count_rejected
   end
 
   def validate_leave_year
@@ -118,11 +121,15 @@ class AppliedLeave < ApplicationRecord
     state :rejected
 
     event :request_accepted, success: %i[create_approval_notification send_approval_email] do
-      transitions to: :accepted, from: :pending, on_transition: :approve_leave
+      transitions to: :accepted, from: :pending, guard: :validate_leave_count, on_transition: :approve_leave
     end
     event :request_rejected, success: %i[create_rejection_notification send_rejection_email] do
       transitions to: :rejected, from: :pending
     end
+  end
+
+  def validate_leave_count
+    raise ArgumentError unless leave_available?
   end
 
   def approve_hr_added_leave

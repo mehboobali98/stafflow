@@ -121,7 +121,6 @@ $(document).ready(function() {
 
 $(document).on('click', '.js-applied-leaves-pagination a', function(event) {
   event.preventDefault();
-  alert($("#filter").val());
   $.ajax({
     type: 'GET',
     url: this.href,

@@ -10,7 +10,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves
   def index
-    binding.pry
     @applied_leaves = @applied_leaves.includes(:leave).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
@@ -19,7 +18,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
-    binding.pry
     respond_to do |format|
       format.html
     end
@@ -83,7 +81,9 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /members/:member_id/applied_leaves/:id
   def update
-    is_updated = @applied_leave.update(applied_leave_params)
+    if @applied_leave.validate_leave_year && @applied_leave.leave_available?
+      is_updated = @applied_leave.update(applied_leave_params)
+    end
     respond_to do |format|
       format.html do
         if is_updated
@@ -128,7 +128,6 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
-    binding.pry
     get_filtered_records
     respond_to do |format|
       format.html
