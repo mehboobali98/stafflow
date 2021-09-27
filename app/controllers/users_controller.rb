@@ -46,7 +46,7 @@ class UsersController < ApplicationController
                                               @user.role_id_valid?(params.dig(:user, :role_id))
     respond_to do |format|
       if is_updated
-        format.html { redirect_to members_path, notice: I18n.t('messages.updated_employee') }
+        format.html { redirect_to member_path(@user), notice: I18n.t('messages.updated_employee') }
       else
         format.html do
           flash.now[:error] = @user.errors.full_messages
