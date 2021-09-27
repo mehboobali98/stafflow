@@ -23,15 +23,7 @@ class AppliedLeave < ApplicationRecord
     LEAVE_DURATION.invert[leave_duration_type]
   end
 
-  def set_leave
-    return false if user_leave.nil?
-
-    self.leave_id = user_leave.leave.id
-    true
-  end
-
   def leave_available?
-    binding.pry
     leave_count = calculate_leave_count
     return true if leave_count.positive? && user_leave.count_available?(leave_count)
 
@@ -146,6 +138,13 @@ class AppliedLeave < ApplicationRecord
     rescue ActiveRecord::RecordInvalid
       false
     end
+  end
+
+  def set_leave
+    return false if user_leave.nil?
+
+    self.leave_id = user_leave.leave.id
+    true
   end
 
   private
