@@ -29,9 +29,12 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  dashboard:
+    my_applied_leaves: 'My applied leaves'
+    my_available_leaves: 'My available leaves'
+    all_applied_leaves: 'All applied leaves'
   mailer:
     payroll_subject: 'Payroll Generated'
-
   leave_error: 'Leave reset date cannot be in the past'
   mailer:
     password_mailer_subject: 'Account password'
@@ -48,12 +51,14 @@ en:
     dashboard: 'Dashboard'
     users: 'Users'
     departments: 'Departments'
+    designation: 'Designations'
     payroll: 'Payroll'
     leave: 'Leave'
     calendar: 'Calendar'
     analytics: 'Analytics'
     documents: 'Documents'
-    settings: 'Settings'
+    settings: 'Company settings'
+    view_profile: 'View profile'
     logout: 'Logout'
     by_team: 'by team ABC'
     benefits: "Benefits"
@@ -83,6 +88,11 @@ en:
     user_not_found: "User with the given id does not exist"
     search: "Search"
   leave:
+    breadcrumbs:
+      home: "Leave"
+      show: 'Show'
+      new: "New"
+      edit: "Edit"
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'
@@ -102,8 +112,8 @@ en:
       featured_leave: 'Featured leave'
     forms:
       labels:
-        name: 'Leave name'
-        count: 'Leave count'
+        name: 'Leave name*'
+        count: 'Leave count*'
       placeholders:
         name: 'Enter leave name'
         count: 'Enter leave count'
@@ -114,13 +124,18 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    breadcrumbs:
+      home: "User leave"
+      show: 'Show'
+      new: "New"
+      edit: "Edit"
     messages:
       success:
         create: 'User leave(s) created succcessfully'
         update: 'User leave updated succcessfully'
         delete: 'User leave deleted succcessfully'
       failure:
-        create: 'User leave(s) not created'
+        create: 'User leave(s) not created due to an error'
         total_leave_count: 'must be greater than remaining leave count'
         duplicate_error: 'User leave already exists'
         not_found: 'User leave with the given id does not exist'
@@ -133,6 +148,8 @@ en:
       total_count: 'Total count'
       remaining_count: 'Remaining count'
     headings:
+      view_user_leave: 'View user leave'
+      add_user_leave: 'Add user leave'
       leave_type: 'Leave type'
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
@@ -144,11 +161,17 @@ en:
       edit_user_leave: 'Edit User Leave'
       save: 'Save'
       close: 'Close'
-      feature_user_leave: 'Feature user leave'
+      feature_user_leave: 'Featured user leave'
       back: "Back"
     buttons:
       add_leaves: 'Add user leave'
   applied_leave:
+    breadcrumbs:
+      home: "Leave management"
+      show: 'Show'
+      new: "Leave application"
+      edit: "Edit leave application"
+      all: 'All applied leaves'
     messages:
       select_leave_type: 'Select leave type'
       delete_confirm: 'Are you sure you want to delete this?'
@@ -170,7 +193,7 @@ en:
         not_found: 'Applied leave with the given id does not exist'
         invalid_date: 'is invalid'
         approve_error: 'Leave has already been accepted or rejected'
-        leave_count_error: 'The number of leave days must be greater than 0'
+        leave_count_error: 'Leave count is greater than the remaining count of leaves. Request rejected.'
         delete_error: 'Cannot delete as it has been already approve or rejected'
     headings:
       applicant_email: 'Applicant email'
@@ -284,7 +307,6 @@ en:
     field:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
-
   users_benefit:
     breadcrumbs:
       home: "User Benefits"
@@ -313,8 +335,6 @@ en:
       options: "Options"
     button:
       users_benefit: "Benefits"
-  
-    
   navbar: 
     search: 'Search'
   forms:
@@ -507,6 +527,7 @@ en:
     date_of_birth: "Date of birth"
     email: "Email"
     change_image: "Change Image"
+    apply_for_leave: 'Apply for leave'
     appliedleave: "Applied Leaves"
   notifications:
     new_leave: "A leave has been applied by %{full_name}"

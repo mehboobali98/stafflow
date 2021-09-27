@@ -6,11 +6,11 @@
       <%= link_to t('event.forms.links.create'), new_event_path, class: 'btn btn-outline-primary mb-2' %>
       <%= link_to display_calendar_events_path, class: 'btn btn-outline-dark pt-2 mb-2' do %>
         <i class="fa fa-calendar" aria-hidden="true"></i>
+        <div class="events_table">
+          <%= render partial: 'events_list', locals: { events: @events } %>
+        </div>
         <%= t('event.forms.links.view_calendar') %>
       <% end %>
-    </div>
-    <div class="events_table">
-      <%= render partial: 'events_list', locals: { events: @events } %>
     </div>
   <% end %>
 </div>

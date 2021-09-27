@@ -14,7 +14,7 @@
         </div>
         <div class="form-group mb-3">
           <%= form.label :total_count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :total_count, in: VALID_LEAVE_RANGE, required: true, step: LEAVE_COUNT_SCALE, class: 'form-control' %>
+          <%= form.number_field :total_count, in: MIN_LEAVE_COUNT..MAX_LEAVE_COUNT, required: true, step: LEAVE_COUNT_SCALE, class: 'form-control' %>
         </div>
       </div>
       <div class="modal-footer">
