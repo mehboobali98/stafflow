@@ -129,6 +129,8 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    myappleaves: 'My Applied Leaves'
+    myavleaves: "My Available Leaves"
     breadcrumbs:
       home: "User leave"
       show: 'Show'

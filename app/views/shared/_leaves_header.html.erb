@@ -1,9 +1,9 @@
 <div class='pms-heading row ms-1'>
   <h2 class="mb-3"><%= heading %></h2>
   <% unless current_user.account_owner? %>
-    <%= link_to "Apply For Leave", new_member_applied_leave_path(current_user), class: 'card-link' %>
-    <%= link_to "My Applied Leaves", member_applied_leaves_path(current_user), class: 'card-link' %>
-    <%= link_to "My Available Leaves", member_user_leaves_path(current_user), class: 'card-link' %> 
+    <%= link_to t('applied_leave.heading.leave_apply'), new_member_applied_leave_path(current_user), class: 'card-link' %>
+    <%= link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user), class: 'card-link' %>
+    <%= link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user), class: 'card-link' %> 
   <% end %>
   <%= link_to t('leave.all'), leaves_path, class: 'card-link' %>  
 </div>
