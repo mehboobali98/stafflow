@@ -6,6 +6,7 @@ class AppliedLeavesController < ApplicationController
   load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
   authorize_resource
+  add_breadcrumb I18n.t('applied_leave.breadcrumbs.home'), :member_applied_leaves_path
 
   # GET /members/:member_id/applied_leaves
   def index
@@ -17,37 +18,9 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
+    add_breadcrumb t('applied_leave.breadcrumbs.new'), :new_member_applied_leave_path
     respond_to do |format|
       format.html
-    end
-  end
-
-  # GET /applied_leaves/new_applied_leave_by_hr
-  def new_applied_leave_by_hr
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  # POST /applied_leaves/create_applied_leave_by_hr
-  def create_applied_leave_by_hr
-    @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
-    @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.approve_hr_added_leave
-    respond_to do |format|
-      format.html do
-        redirect_to all_applied_leaves_path
-      end
-    end
-  end
-
-  # GET /applied_leaves/search_users
-  def search_users
-    @users = current_company.users.where('email LIKE?', "#{params[:query]}%")
-    respond_to do |format|
-      format.json do
-        render json: @users
-      end
     end
   end
 
@@ -71,6 +44,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/:id/edit
   def edit
+    add_breadcrumb t('applied_leave.breadcrumbs.new'), :edit_member_applied_leave_path
     respond_to do |format|
       format.html
     end
@@ -125,6 +99,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
+    add_breadcrumb t('applied_leave.breadcrumbs.all'), :all_applied_leaves_path
     get_filtered_records
     respond_to do |format|
       format.html
@@ -191,6 +166,35 @@ class AppliedLeavesController < ApplicationController
     get_filtered_records
     respond_to do |format|
       format.js { render 'approve_leaves' }
+    end
+  end
+
+  # GET /applied_leaves/new_applied_leave_by_hr
+  def new_applied_leave_by_hr
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # POST /applied_leaves/create_applied_leave_by_hr
+  def create_applied_leave_by_hr
+    @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
+    @applied_leave = @user.applied_leaves.build(applied_leave_params)
+    @applied_leave.approve_hr_added_leave
+    respond_to do |format|
+      format.html do
+        redirect_to all_applied_leaves_path
+      end
+    end
+  end
+
+  # GET /applied_leaves/search_users
+  def search_users
+    @users = current_company.users.where('email LIKE?', "#{params[:query]}%")
+    respond_to do |format|
+      format.json do
+        render json: @users
+      end
     end
   end
 
