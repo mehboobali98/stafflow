@@ -87,6 +87,7 @@ en:
     search: "Search"
     all: "All"
   leave:
+    all: "All Leaves"
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'

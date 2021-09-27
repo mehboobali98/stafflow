@@ -5,6 +5,6 @@
     <%= link_to "My Applied Leaves", member_applied_leaves_path(current_user), class: 'card-link' %>
     <%= link_to "My Available Leaves", member_user_leaves_path(current_user), class: 'card-link' %> 
   <% end %>
-  <%= link_to "All Leaves", leaves_path, class: 'card-link' %>  
+  <%= link_to t('leave.all'), leaves_path, class: 'card-link' %>  
 </div>
 <br>
