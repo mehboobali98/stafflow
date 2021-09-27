@@ -19,7 +19,7 @@ class DesignationsController < ApplicationController
         if is_saved
           redirect_to designations_path, notice: t('designation.created')
         else
-          flash.now[:error] = @designation.errors.full_messages
+          flash[:error] = @designation.errors.full_messages
           redirect_to designations_path
         end
       end
@@ -42,7 +42,7 @@ class DesignationsController < ApplicationController
         if is_updated
           redirect_to designations_path, notice: t('designation.updated') 
         else
-          flash.now[:error] = @designation.errors.full_messages
+          flash[:error] = @designation.errors.full_messages
           redirect_to designations_path
         end
       end

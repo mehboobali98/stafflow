@@ -30,7 +30,8 @@
     <div class="col-md-4">
       <div class="profile-work">
         <p><%= t('user.work_link') %></p>
-        <a href=""><%= t('user..benefits') %></a><br/>
+        <%= link_to t('user.payrolls'), member_payrolls_path(@user) %><br>
+        <%= link_to t('user.benefits'), member_users_benefits_path(@user) %><br>
         <%= link_to t('user.leaves'), member_user_leaves_path(@user) %> <br>
         <%= link_to t('user.set_leave'), new_member_user_leave_path(@user) %> <br>
         <%= link_to t('user.appliedleave'), member_applied_leaves_path(@user) %> <br>

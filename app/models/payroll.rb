@@ -5,6 +5,7 @@ class Payroll < ApplicationRecord
   has_many :applied_benefits, dependent: :destroy
   belongs_to :user
   belongs_to :company
+  after_create :deliver_payroll_generation_email
 
   def self.generate_payroll(user)
     ActiveRecord::Base.transaction do
@@ -30,12 +31,19 @@ class Payroll < ApplicationRecord
   end
 
   def self.payroll_already_generated?(user)
-    payrolls = user.payrolls.last
-    return false unless payrolls.present?
+    payroll = user.payrolls.reload.last
+    return false unless payroll.present?
 
-    date = payrolls.created_at
+    date = payroll.created_at
     return true if DateTime.now.month == date.month && DateTime.now.year == date.year
 
     false
+  end
+
+  private
+
+  def deliver_payroll_generation_email
+    recipient_id = user.department.department_head.id
+    PayrollMailer.delay.payroll_generation(recipient_id, user.id, user.company.id)
   end
 end

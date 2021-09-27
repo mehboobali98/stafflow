@@ -4,6 +4,9 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :confirmable
+
+  attr_accessor :random_password
+
   has_many :user_leaves, dependent: :destroy
   has_many :leaves, through: :user_leaves
   has_many :applied_leaves
@@ -33,6 +36,7 @@ class User < ApplicationRecord
   validate :department_designation_valid?, unless: -> { account_owner? }
   validate :gender_valid?, unless: -> { account_owner? }
   validates :base_salary, numericality: { greater_than: 0, less_than: FLOAT_MAX }, unless: -> { account_owner? }
+  after_create :deliver_password_email
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
   GENDERS = { male: 'Male', female: 'Female' }.freeze
@@ -104,5 +108,16 @@ class User < ApplicationRecord
     return true if GENDERS.value?(gender)
 
     errors.add(:base, I18n.t('gender.error'))
+    false
+  end
+
+  def self.generate_password
+    Faker::Internet.password(min_length: PASSWORD_LENGTH.first, max_length: PASSWORD_LENGTH.last, mix_case: true)
+  end
+
+  private
+
+  def deliver_password_email
+    PasswordMailer.delay.account_password_email(id, company_id, random_password)
   end
 end

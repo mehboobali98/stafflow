@@ -85,7 +85,7 @@
   width: 10em;
 }
 
-// display calendar event link styling
+// model: event
 .event-link {
   background-color: #0275d8;
   display: inline-block;
@@ -93,6 +93,16 @@
   color: white;
   margin-top: 1%;
 }
+
+.event-form {
+  .event-date {
+    padding-right: 1.5em;
+  }
+  .event-time {
+    padding-left: 1.5em;
+  }
+}
+//end
 
 .select-dropdown {
   width: 100%;
