@@ -25,42 +25,6 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
-  # GET /applied_leaves/new_applied_leave_by_hr
-  def new_applied_leave_by_hr
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  # POST /applied_leaves/create_applied_leave_by_hr
-  def create_applied_leave_by_hr
-    @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
-    @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    if @applied_leave.validate_leave_year
-      is_saved = @applied_leave.approve_hr_added_leave
-    end
-    respond_to do |format|
-      format.html do
-        if is_saved
-          flash[:notice] = t('applied_leave.messages.leave_applied_success')
-        else
-          flash[:error] = @applied_leave.errors.full_messages
-        end
-        redirect_to all_applied_leaves_path
-      end
-    end
-  end
-
-  # GET /applied_leaves/search_users
-  def search_users
-    @users = current_company.users.where("email LIKE?", "#{params[:query]}%")
-    respond_to do |format|
-      format.json do
-        render json: @users
-      end
-    end
-  end
-
   # POST /members/:member_id/applied_leaves
   def create
     if @applied_leave.validate_leave_year && (@applied_leave.set_leave && @applied_leave.leave_available?)
@@ -217,9 +181,16 @@ class AppliedLeavesController < ApplicationController
   def create_applied_leave_by_hr
     @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
     @applied_leave = @user.applied_leaves.build(applied_leave_params)
-    @applied_leave.approve_hr_added_leave
+    if @applied_leave.validate_leave_year
+      is_saved = @applied_leave.approve_hr_added_leave
+    end
     respond_to do |format|
       format.html do
+        if is_saved
+          flash[:notice] = t('applied_leave.messages.leave_applied_success')
+        else
+          flash[:error] = @applied_leave.errors.full_messages
+        end
         redirect_to all_applied_leaves_path
       end
     end
