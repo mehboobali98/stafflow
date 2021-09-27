@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PMS</title>
+    <title><%= t('appname') %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -19,7 +19,7 @@
     <div class="home-content">
       <%= render partial: "shared/dashboard_navbar" %>
       <%= render partial: "shared/flash_message" %>
-      <%= render_breadcrumbs separator: '/' %>
+      <%= render_breadcrumbs separator: ' / ' %>
       <br><br><br>
       <%= yield %>
     </div>
