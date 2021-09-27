@@ -7,11 +7,11 @@
         </div>
         <div class="card-body">
           <h1 class="card-title"><%= @event.name %></h1>
-          <p class="card-text"><%= format_date(@event.starts_at) %></p>
+          <small><%= format_date(@event.starts_at) %></small>
         </div>
         <div class="card-footer">
           <%= link_to t('event.forms.links.edit'), edit_event_path(@event), class: 'btn btn-secondary' if can?(:edit, @event) %>
-          <%= link_to t('event.forms.links.delete'), event_path(@event), class: 'btn btn-danger', method: :delete, data: { confirm: t('event.forms.links.confirmation.deletion') } if can?(:delete, @event) %>
+          <%= link_to t('event.forms.links.delete'), event_path(@event), class: 'btn btn-danger', method: :delete, data: { confirm: t('event.forms.confirmation.deletion') } if can?(:delete, @event) %>
           <%= link_to t('event.forms.links.back'), :back, class: 'btn btn-outline-primary' if can?(:index, Event) %>
         </div>
       </div>

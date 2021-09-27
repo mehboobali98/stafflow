@@ -16,11 +16,39 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
+
+$sky_blue_app_color: #AFDBF5;
+
 .body-wrapper {
   height: 100%;
+  overflow-y: scroll;
   .sidebar-wrapper {
     height: 100%;
   }
+}
+
+.pms-table-header {
+  background-color: $sky_blue_app_color;
+  font-size: large;
+  border: none;
+}
+
+.pms-heading {
+  background-color: $sky_blue_app_color;
+  padding: 15px 0px;
+  max-width: 96vw;
+  border-width: thin;
+  border-color: royalblue;
+  border-style: solid;
+}
+
+// side bar custom class for toggling. It is added when the sidebar is active
+.sidebar-toggle {
+  position: absolute;
+  height: 100%;
+  left: 240px;
+  width: calc(100% - 240px);
+  transition: all 0.5s ease;
 }
 
 .notification-scrollable-container {
@@ -29,7 +57,6 @@
 }
 
 // Navbar
-
 .notification-icon {
   height: 2em;
 }
@@ -42,8 +69,27 @@
 .counter .counter-lg {
   top: -24px !important;
 }
- // Sign in and Sign up pages styling
- 
+
+.notification {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+  margin-right: 14px;
+  margin-top: 7px;
+  .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+  }
+}
+
 .icon{
   width: 3em;
 }
@@ -57,11 +103,63 @@
   width: 10em;
 }
 
-// display calendar event link styling
+// model: event
 .event-link {
   background-color: #0275d8;
   display: inline-block;
   width: 100%;
   color: white;
   margin-top: 1%;
+}
+
+.event-form {
+  .event-date {
+    padding-right: 1.5em;
+  }
+  .event-time {
+    padding-left: 1.5em;
+  }
+}
+//end
+
+.select-dropdown {
+  width: 100%;
+}
+
+.select2-container {
+  .selection {
+    width: 100%;
+  }
+}
+
+//dashboard navbar: start
+.dashboard-navbar {
+  background-color: #006fc8;
+  .navbar-brand {
+    color: white;
+    padding-left: 20px;
+    text-shadow: 2px 2px 5px white;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-family: sans-serif;
+  }
+  .notification-container
+    a {
+      padding-left: 5px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      height: 38px;
+    }
+}
+// end
+
+//flash message: start
+.flash-message {
+  padding-bottom: 0px;
+}
+
+// Notifications
+
+.notificationfalse{
+  font-weight: bold;
 }

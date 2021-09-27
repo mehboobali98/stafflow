@@ -1,0 +1,157 @@
+<%= stylesheet_link_tag 'landing_page' %>
+<%= javascript_pack_tag 'landing_page', 'data-turbolinks-track': 'reload' %>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<header id="header" class="fixed-top header-scrolled">
+  <div class="container d-flex align-items-center">
+    <h1 class="logo me-auto"><a><%= t('landing_page.header_name') %></a></h1>
+    <nav id="navbar" class="navbar">
+      <ul>
+        <li><a class="nav-link" href="#hero"><%= t('landing_page.nav_items.home') %></a></li>
+        <li><a class="nav-link" href="#team"><%= t('landing_page.nav_items.team') %></a></li>
+        <li><a class="nav-link" href="#service"><%= t('landing_page.nav_items.services') %></a></li>
+        <li><a class="nav-link" href="#about"><%= t('landing_page.nav_items.about') %></a></li>
+        <li><%= link_to t('forms.buttons.signin'), new_user_session_url, class: 'm-2 sign-in-up' %></li>
+        <li><%= link_to t('forms.buttons.signup'), new_user_registration_url, class: 'sign-in-up' %></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section id="hero" class="d-flex align-items-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+        <h1><%= t('landing_page.header_message_one') %></h1>
+        <h2><%= t('landing_page.header_message_two') %></h2>
+      </div>
+      <div class="col-sm-6 order-1 order-lg-2 hero-img" data-aos="zoom-in"data-aos-delay="200">
+        <%= image_tag("hero-img.png", class:"img-fluid animated", alt:"") %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team" class="team-section section-bg">
+  <div class="container" data-aos="fade-up">
+    <div class="section-title">
+      <h2><%= t('landing_page.team.heading') %></h2>
+      <p><%= t('landing_page.team.paragraph') %></p>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
+          <div class="pic">
+            <%= image_tag("nadia.png", class:"img-fluid animated", alt:"") %>
+          </div>
+          <div class="member-info">
+            <h4><%= t('landing_page.team.member_one_name') %></h4>
+            <span><%= t('landing_page.team.member_one_designation') %></span>
+            <p><%= t('landing_page.team.member_one_details') %></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 mt-4 mt-lg-0">
+        <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="200">
+          <div class="pic">
+            <%= image_tag("basit.png", class:"img-fluid animated", alt:"") %>
+          </div>
+          <div class="member-info">
+            <h4><%= t('landing_page.team.member_two_name') %></h4>
+            <span><%= t('landing_page.team.member_two_designation') %></span>
+            <p><%= t('landing_page.team.member_two_details') %></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 mt-4">
+        <div class="member d-flex align-items-start" >
+          <div class="pic">
+            <%= image_tag("sheharyar.png", class:"img-fluid animated", alt:"") %>
+          </div>
+          <div class="member-info">
+            <h4><%= t('landing_page.team.member_three_name') %></h4>
+            <span><%= t('landing_page.team.member_three_designation') %></span>
+            <p><%= t('landing_page.team.member_three_details') %></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 mt-4">
+        <div class="member d-flex align-items-start" data-aos-delay="400">
+          <div class="pic">                
+          <%= image_tag("mehboob.png", class:"img-fluid animated", alt:"") %>
+          </div>
+          <div class="member-info">
+            <h4><%= t('landing_page.team.member_four_name') %></h4>
+            <span><%= t('landing_page.team.member_four_designation') %></span>
+            <p><%= t('landing_page.team.member_four_details') %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 
+
+<section id="service" class="service-section section-bg">
+  <div class="container">
+    <div class="section-title">
+      <h2><%= t('landing_page.services.header_message') %></h2>
+    </div>
+    <div class="row">
+      <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos-delay="1000">
+        <div class="icon-box">
+          <div class="icon"><i class="bx bxl-dribbble"></i></div>
+          <h4><%= t('landing_page.services.first_header') %></h4>
+          <p><%= t('landing_page.services.first_detail') %></p>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos-delay="200">
+        <div class="icon-box">
+          <div class="icon"><i class="bx bx-file"></i></div>
+          <h4><%= t('landing_page.services.second_header') %></h4>
+          <p><%= t('landing_page.services.second_detail') %></p>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos-delay="300">
+        <div class="icon-box">
+          <div class="icon"><i class="bx bx-tachometer"></i></div>
+          <h4><%= t('landing_page.services.third_header') %></h4>
+          <p><%= t('landing_page.services.third_detail') %></p>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos-delay="400">
+        <div class="icon-box">
+          <div class="icon"><i class="bx bx-layer"></i></div>
+          <h4><%= t('landing_page.services.fourth_header') %></h4>
+          <p><%= t('landing_page.services.fourth_detail') %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about-section">
+  <div class="container">
+    <div class="section-title">
+      <h2><%= t('landing_page.about.header_message') %></h2>
+    </div>
+    <div class="row content">
+      <div class="col-lg-6">
+        <p><%= t('landing_page.about.first_paragraph') %></p>
+        <ul>
+          <li><i class="ri-check-double-line"></i><%= t('landing_page.about.first_list') %></li>
+          <li><i class="ri-check-double-line"></i><%= t('landing_page.about.secong_list') %></li></li>
+          <li><i class="ri-check-double-line"></i><%= t('landing_page.about.third_list') %></li></li>
+        </ul>
+      </div>
+      <div class="col-lg-6 pt-4 pt-lg-0">
+        <p><%= t('landing_page.about.second_paragraph') %></p>
+        <a href="#" class="btn-learn-more"><%= t('landing_page.button.learn_more') %></a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer id="footer">
+  <div class="container footer-bottom clearfix" >
+    &copy; <%= t('landing_page.footer.text_one') %><strong><span><%= t('landing_page.footer.text_two') %></span></strong><%= t('landing_page.footer.text_three') %>
+  </div>
+</footer>

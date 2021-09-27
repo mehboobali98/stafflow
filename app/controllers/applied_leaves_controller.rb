@@ -1,14 +1,17 @@
 class AppliedLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[index new create edit update destroy]
-  before_action :set_applied_leave, only: %i[approve_leave reject_leave]
-  before_action :set_user_applied_leave, only: %i[show edit update destroy]
+  load_resource :user, id_param: :member_id, only: %i[index new create edit update destroy]
+  load_resource :applied_leave, through: :user, only: %i[index new create edit update destroy]
+  load_resource :applied_leave, only: %i[approve_leave reject_leave]
+  load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
-  before_action :set_applied_leaves, only: :all_applied_leaves
+  authorize_resource
+  add_breadcrumb I18n.t('applied_leave.breadcrumbs.home'), :member_applied_leaves_path, except: :all_applied_leaves
 
   # GET /members/:member_id/applied_leaves
   def index
-    @applied_leaves = @user.applied_leaves.includes(:leave)
+    @applied_leaves = AppliedLeave.accessible_by(current_ability, :index).includes(:leave).paginate(page: params[:page],
+                                                                                                    per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -16,7 +19,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/new
   def new
-    @applied_leave = AppliedLeave.new
+    add_breadcrumb t('applied_leave.breadcrumbs.new'), :new_member_applied_leave_path
     respond_to do |format|
       format.html
     end
@@ -24,7 +27,6 @@ class AppliedLeavesController < ApplicationController
 
   # POST /members/:member_id/applied_leaves
   def create
-    @applied_leave = @user.applied_leaves.build(applied_leave_params)
     if @applied_leave.validate_leave_year && (@applied_leave.set_leave && @applied_leave.leave_available?)
       is_saved = @applied_leave.save
     end
@@ -43,6 +45,7 @@ class AppliedLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/:id/edit
   def edit
+    add_breadcrumb t('applied_leave.breadcrumbs.edit'), :edit_member_applied_leave_path
     respond_to do |format|
       format.html
     end
@@ -50,7 +53,9 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /members/:member_id/applied_leaves/:id
   def update
-    is_updated = @applied_leave.update(applied_leave_params)
+    if @applied_leave.validate_leave_year && @applied_leave.leave_available?
+      is_updated = @applied_leave.update(applied_leave_params)
+    end
     respond_to do |format|
       format.html do
         if is_updated
@@ -61,6 +66,19 @@ class AppliedLeavesController < ApplicationController
           flash[:error] = @leave.errors.full_messages
           redirect_to edit_member_applied_leave_path(@user, @applied_leave)
         end
+      end
+    end
+  end
+
+  # GET /members/get_available_user_leaves
+  def get_available_user_leaves
+    @user = current_company.users.find_by(id: params[:member_id])
+    @available_user_leaves = @user.user_leaves.joins(:leave).select('user_leaves.id, leaves.name').where(
+      'remaining_count > ?', 0
+    )
+    respond_to do |format|
+      format.json do
+        render json: @available_user_leaves
       end
     end
   end
@@ -82,8 +100,11 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/all_applied_leaves
   def all_applied_leaves
+    add_breadcrumb t('applied_leave.breadcrumbs.new'), :all_applied_leaves_path
+    get_filtered_records
     respond_to do |format|
       format.html
+      format.js
     end
   end
 
@@ -149,6 +170,35 @@ class AppliedLeavesController < ApplicationController
     end
   end
 
+  # GET /applied_leaves/new_applied_leave_by_hr
+  def new_applied_leave_by_hr
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # POST /applied_leaves/create_applied_leave_by_hr
+  def create_applied_leave_by_hr
+    @user = current_company.users.find_by(id: params[:applied_leave][:member_id])
+    @applied_leave = @user.applied_leaves.build(applied_leave_params)
+    @applied_leave.approve_hr_added_leave
+    respond_to do |format|
+      format.html do
+        redirect_to all_applied_leaves_path
+      end
+    end
+  end
+
+  # GET /applied_leaves/search_users
+  def search_users
+    @users = current_company.users.where('email LIKE?', "#{params[:query]}%")
+    respond_to do |format|
+      format.json do
+        render json: @users
+      end
+    end
+  end
+
   private
 
   def total_request_count
@@ -161,37 +211,13 @@ class AppliedLeavesController < ApplicationController
     @available_user_leaves = @user.get_available_leaves
   end
 
-  def set_applied_leaves
-    @applied_leaves = @current_company.applied_leaves.includes(user_leave: %i[user leave])
-  end
-
   def get_filtered_records
     @applied_leaves = AppliedLeave.get_filtered_records(params[:filter_type].to_s.downcase)
-    @applied_leaves.includes(user_leave: %i[user leave])
+    @applied_leaves = @applied_leaves.includes(:user_leave, :user, :leave).paginate(page: params[:page],
+                                                                                    per_page: PAGE_SIZE)
   end
 
   def applied_leave_params
     params.require(:applied_leave).permit(:user_leave_id, :applied_from, :applied_till, :leave_duration_type)
-  end
-
-  def set_user
-    @user = User.find(params[:member_id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('common.user_not_found')
-    redirect_to members_path
-  end
-
-  def set_user_applied_leave
-    @applied_leave = @user.applied_leaves.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('applied_leave.messages.error.not_found')
-    redirect_to member_applied_leaves_path(@user)
-  end
-
-  def set_applied_leave
-    @applied_leave = AppliedLeave.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('applied_leave.messages.error.not_found')
-    redirect_to member_applied_leaves_path(@user)
   end
 end

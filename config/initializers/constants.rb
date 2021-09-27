@@ -1,6 +1,9 @@
-EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\z/.freeze
+# frozen_string_literal: true
+
+EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.com/.freeze
 PASSWORD_LENGTH = (6..128).freeze
-VALID_LEAVE_RANGE = (1..40).freeze
+MIN_LEAVE_COUNT = 0
+MAX_LEAVE_COUNT = 40
 LEAVE_COUNT_SCALE = 0.5
 PAGE_SIZE = 5
 TRUNCATE_LENGTH = 15

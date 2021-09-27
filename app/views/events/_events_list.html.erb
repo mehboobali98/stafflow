@@ -1,0 +1,48 @@
+<div class='pms-heading p-4'>
+  <div class='row'>
+    <div class='col-10'>
+      <h2><%= t('event.forms.headings.event') %></h2>
+    </div>
+    <div class='col-2'>
+      <%= link_to t('event.forms.links.create'), new_event_path, class: 'btn btn-primary mt-1' %>
+    </div>
+  </div>
+</div>
+<br><br>
+<div class='p-3'>
+  <table class="table table-hover">
+    <thead class="pms-table-header">
+      <tr>
+        <th><%= t('event.forms.headings.name') %></th>
+        <th><%= t('event.forms.headings.starts_at') %></th>
+        <th><%= t('event.forms.headings.option') %></th>
+      </tr>
+    </thead>
+    <tbody>
+        <% events.each do |event| %>
+          <tr>
+            <td><%= truncate_event_name(event.name) %></td>
+            <td><%= format_date(event.starts_at) %></td>
+            <td>
+            <% if can?(:show, event) %>
+              <%= link_to event do %>
+                <i class='fa fa-eye fa-lg'></i>
+              <% end %>
+            <% end %>
+            <% if can?(:edit, event) %>
+              <%= link_to edit_event_path(event) do %>
+                <i class='fa fa-bars ms-3'></i>
+              <% end %>
+            <% end %>
+            <% if can?(:delete, event) %>
+              <%= link_to event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') } do %>
+                <i class='fa fa-trash ms-3'></i>
+              <% end %>
+            <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+  </table>
+</div>
+<%= render partial: 'shared/pagination', locals: { resource: events } %>

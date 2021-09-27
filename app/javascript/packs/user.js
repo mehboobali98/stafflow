@@ -9,7 +9,7 @@ $(document).ready(function() {
   });
 });
 
-$(document).on('click', '.pagination-wrapper a', function(event) {
+$(document).on('click', '.js-pagination-wrapper a', function(event) {
   event.preventDefault();
   $.ajax({
     type: 'GET',
@@ -27,13 +27,31 @@ $(document).on('click', '#reset_filter_btn', function(event) {
     dataType: 'script'
   });
   $('.js-filter-select').val("");
-})
+});
 
-$(document).on('change', '.js-filter-select', function() {
+$(document).on('change input', '.js-filter-select', function() {
   $.ajax({
     type: 'GET',
     url: '/members',
     data: $('#filter_form').serialize(),
     dataType: 'script'
   });
-})
+});
+
+$(document).on('change', '#department_select', function() {
+  if (this.value === '') return;
+  let url = `/departments/${this.value}/fetch_designations`
+  let designationSelectBox = $('#designation_select');
+  $.ajax({
+    type: 'GET',
+    url: url,
+    dataType: 'script',
+    success: function(response) {
+      designationSelectBox.html("");
+      designations = JSON.parse(response);
+      designations.forEach(function(designation) {
+        designationSelectBox.append(`<option value=${designation.id}> ${designation.name} </option>`)
+      });
+    }
+  });
+});

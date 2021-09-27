@@ -9,6 +9,8 @@ class AppliedLeave < ApplicationRecord
   belongs_to :leave
   belongs_to :company
   before_destroy :can_delete_leave?, prepend: true
+  after_create :send_request_email
+  after_create :create_request_notification
 
   def can_delete_leave?
     return true if pending?
@@ -21,17 +23,36 @@ class AppliedLeave < ApplicationRecord
     LEAVE_DURATION.invert[leave_duration_type]
   end
 
-  def set_leave
-    self.leave_id = user_leave.leave.id
-  rescue ActiveRecord::RecordInvalid
-    false
-  end
-
   def leave_available?
     leave_count = calculate_leave_count
     return true if leave_count.positive? && user_leave.count_available?(leave_count)
 
     errors.add(:leave_count, I18n.t('applied_leave.messages.error.leave_count'))
+    false
+  end
+
+  def approve_applied_leave
+    ActiveRecord::Base.transaction do
+      request_accepted! # change state
+      true
+    rescue Transitions::InvalidTransition
+      errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+      false
+    rescue ArgumentError
+      errors.add(:base, I18n.t('applied_leave.messages.error.leave_count_error'))
+      false
+    rescue ActiveRecord::RecordInvalid
+      false
+    end
+  end
+
+  def reject_applied_leave
+    request_rejected! # change state
+    true
+  rescue Transitions::InvalidTransition
+    errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+    false
+  rescue ActiveRecord::RecordInvalid
     false
   end
 
@@ -55,28 +76,6 @@ class AppliedLeave < ApplicationRecord
       count_rejected
     end
     count_rejected
-  end
-
-  def approve_applied_leave
-    ActiveRecord::Base.transaction do
-      request_accepted! # change state
-      true
-    rescue Transitions::InvalidTransition
-      errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
-      false
-    rescue ActiveRecord::RecordInvalid
-      false
-    end
-  end
-
-  def reject_applied_leave
-    request_rejected! # change state
-    true
-  rescue Transitions::InvalidTransition
-    errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
-    false
-  rescue ActiveRecord::RecordInvalid
-    false
   end
 
   def validate_leave_year
@@ -114,15 +113,82 @@ class AppliedLeave < ApplicationRecord
     state :accepted
     state :rejected
 
-    event :request_accepted do
-      transitions to: :accepted, from: :pending, on_transition: :approve_leave
+    event :request_accepted, success: %i[create_approval_notification send_approval_email] do
+      transitions to: :accepted, from: :pending, guard: :validate_leave_count, on_transition: :approve_leave
     end
-    event :request_rejected do
+    event :request_rejected, success: %i[create_rejection_notification send_rejection_email] do
       transitions to: :rejected, from: :pending
     end
   end
 
+  def validate_leave_count
+    raise ArgumentError unless leave_available?
+  end
+
+  def approve_hr_added_leave
+    ActiveRecord::Base.transaction do
+      set_leave
+      update_leave_count(calculate_leave_count)
+      save!
+      user_leave.save!
+      request_accepted!
+      true
+    rescue Transitions::InvalidTransition
+      errors.add(:base, I18n.t('applied_leave.messages.error.approve_error'))
+      false
+    rescue ActiveRecord::RecordInvalid
+      false
+    end
+  end
+
+  def set_leave
+    return false if user_leave.nil?
+
+    self.leave_id = user_leave.leave.id
+    true
+  end
+
   private
+
+  def send_request_email
+    recipients_ids = get_admins.pluck(:id)
+    LeaveMailer.delay.request_email(recipients_ids, user.id, id, user.company.id)
+  end
+
+  def send_approval_email
+    recipients_ids = get_admins.pluck(:id)
+    LeaveMailer.delay.approve_email(recipients_ids, user.id, id, user.company.id)
+  end
+
+  def send_rejection_email
+    recipients_ids = get_admins.pluck(:id)
+    LeaveMailer.delay.rejection_email(recipients_ids, user.id, id, user.company.id)
+  end
+
+  def create_approval_notification
+    body = I18n.t('notifications.leave_approve_self', from: applied_from, to: applied_till)
+    Notification.create(recipient_id: user.id, body: body)
+  end
+
+  def create_rejection_notification
+    body = I18n.t('notifications.leave_reject_self', from: applied_from, to: applied_till)
+    Notification.create(recipient_id: user.id, body: body)
+  end
+
+  def create_request_notification
+    body = I18n.t('notifications.new_leave', full_name: user.full_name)
+    admin_ids = get_admins.pluck(:id)
+    admin_ids.each do |id|
+      Notification.create(recipient_id: id, body: body)
+    end
+  end
+
+  def get_admins
+    company.users.where(role_id: User::ROLES[:department_head])
+           .where(department_id: user.department_id)
+           .or(user.company.users.where(role_id: [User::ROLES[:hr], User::ROLES[:account_owner]]))
+           .where.not(id: user.id)
+  end
 
   def approve_leave
     update_leave_count(calculate_leave_count)

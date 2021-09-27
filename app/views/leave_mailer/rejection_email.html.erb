@@ -1,0 +1,6 @@
+<h1>Hello there</h1>
+<h4>This is to inform you that a leave request by <%= @user.full_name %> has been rejected</h4>
+<h4>Details: </h4>
+<h4>From: <%= @applied_leave.applied_from.strftime("%A, %d %B, %Y") %></h4>
+<h4>To <%= @applied_leave.applied_till.strftime("%A, %d %B, %Y") %></h4>
+<h4>Duration: <%= @applied_leave.leave_duration_name %></h4>

@@ -3,47 +3,16 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :members, controller: 'users' do
-    resources :user_leaves, except: :create do
-      collection do
-        post 'mass_create'
-      end
-    end
-    resources :applied_leaves, except: :show
-  end
-  resources :leaves
 
-  resources :applied_leaves, only: [] do
+  root to: 'home#index'
+  resources :search, only: [] do
     collection do
-      get 'all_applied_leaves', as: 'all'
-      get 'filter_applied_leaves', as: 'filter'
-      patch 'approve_leaves', as: 'approve'
-      patch 'reject_leaves', as: 'reject'
-    end
-    member do
-      patch 'approve_leave', as: 'approve'
-      patch 'reject_leave', as: 'reject'
+      get 'search_data'
     end
   end
-
-  resources :notifications, only: %i[index] do
-    collection do
-      post 'mark_as_read'
-      get 'count'
-    end
+  devise_scope :user do
+    get 'users', to: 'users/registrations#new'
   end
-
-  as :user do
-    root to: 'devise/sessions#new'
-  end
-
-  resources :settings, only: %i[update] do
-    collection do
-      get '/', to: 'settings#settings'
-    end
-  end
-
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
@@ -57,11 +26,24 @@ Rails.application.routes.draw do
     end
   end
   constraints subdomain: /^(?!www\Z)(\w+)/ do
+    resources :departments do
+      member do
+        get 'fetch_designations'
+      end
+    end
     resources :benefits, except: :show
+
     resources :members, controller: 'users' do
+      collection do
+        get :edit_password, to: 'users#edit_password'
+        post :update_password, to: 'users#update_password'
+      end
       resources :payrolls
-      resources :users_benefits, except: %i[create show] do
-        post 'mass_create'
+      resources :users_benefits, except: %i[create show new] do
+        collection do
+          post 'mass_create'
+          get 'available_benefits'
+        end
       end
     end
     resources :departments
@@ -69,6 +51,63 @@ Rails.application.routes.draw do
     resources :events do
       collection do
         get 'display_calendar'
+      end
+    end
+
+    resources :dashboard, only: [] do
+      collection do
+        get 'total_events'
+        get 'employees_per_department'
+        get 'employees_per_city'
+      end
+    end
+
+    resources :analytics, only: [] do
+      collection do
+        get 'employee_gender_distribution'
+        get 'monthly_payroll'
+      end
+    end
+
+    get '/dashboard', action: :dashboard, controller: 'dashboard'
+    get '/analytics', action: :analytics, controller: 'analytics'
+
+    resources :members, controller: 'users' do
+      resources :user_leaves, except: :create do
+        collection do
+          post 'mass_create'
+        end
+      end
+      resources :applied_leaves, except: :show
+    end
+    resources :leaves
+
+    resources :applied_leaves, only: [] do
+      collection do
+        get 'all_applied_leaves', as: 'all'
+        get 'filter_applied_leaves', as: 'filter'
+        patch 'approve_leaves', as: 'approve'
+        patch 'reject_leaves', as: 'reject'
+        get 'new_applied_leave_by_hr'
+        post 'create_applied_leave_by_hr'
+        get 'search_users'
+        get 'get_available_user_leaves'
+      end
+      member do
+        patch 'approve_leave', as: 'approve'
+        patch 'reject_leave', as: 'reject'
+      end
+    end
+
+    resources :notifications, only: %i[index] do
+      collection do
+        post 'mark_as_read'
+        get 'count'
+      end
+    end
+    resources :settings, only: %i[update] do
+      collection do
+        get '/', to: 'settings#settings'
       end
     end
   end

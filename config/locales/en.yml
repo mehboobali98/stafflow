@@ -29,10 +29,75 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  dashboard:
+    my_applied_leaves: 'My applied leaves'
+    my_available_leaves: 'My available leaves'
+    all_applied_leaves: 'All applied leaves'
+  mailer:
+    payroll_subject: 'Payroll Generated'
+  leave_error: 'Leave reset date cannot be in the past'
+  mailer:
+    password_mailer_subject: 'Account password'
+    sign_in: 'Sign in'
+  currency:
+    rupees: "Rs. "
+  error_pages:
+    not_found: '404 Error'
+    page_not_found: 'Page not found'
+    return_to_dashboard: 'Return to dashboard'
+    unauthorized: '401 Error'
+    format_error: 'The requested format is not supported'
+  sidebar:
+    dashboard: 'Dashboard'
+    users: 'Users'
+    departments: 'Departments'
+    designations: "Designations"
+    designation: 'Designations'
+    payroll: 'Payroll'
+    leave: 'Leave'
+    calendar: 'Calendar'
+    analytics: 'Analytics'
+    documents: 'Documents'
+    settings: 'Company settings'
+    view_profile: 'View profile'
+    logout: 'Logout'
+    by_team: 'by team ABC'
+    benefits: "Benefits"
+    events: "Events"
+    cp: "Change Password"
+  cards:
+    total_events: 'Total events'
+    upcoming_events: 'Upcoming events'
+    total_employees: 'Total employees'
+    total_departments: 'Total departments'
+    available_reports: 'Available reports'
+    alt_dp: 'Profile picture'
+    announcement_placeholder: 'Create your announcements'
+    post: 'Post'
+    name: 'Basit Ali'
+    designation: 'SWE'
+    quote: 'Either you run the day or the the day runs you. - Jim Rohn'
+  chartkick:
+    loading: 'Loading...'
+    employee_per_dept: 'Employees per department'
+    employee_per_city: 'Employees per city'
+    employee_gender_dist: 'Employee gender distribution'
+    monthly_payroll: 'Monthly payroll'
+    payroll_x_axis_title: 'Months'
+    payroll_y_axis_title: 'Amount'
+    amount_prefix: 'Rs '
   common:
     back: "Back"
     user_not_found: "User with the given id does not exist"
+    search: "Search"
+    all: "All"
   leave:
+    all: "All Leaves"
+    breadcrumbs:
+      home: "Leave"
+      show: 'Show'
+      new: "New"
+      edit: "Edit"
     messages:
       name_error: 'Leave type name can only contain letters'
       delete_confirm: 'Are your sure?'
@@ -52,8 +117,8 @@ en:
       featured_leave: 'Featured leave'
     forms:
       labels:
-        name: 'Leave name'
-        count: 'Leave count'
+        name: 'Leave name*'
+        count: 'Leave count*'
       placeholders:
         name: 'Enter leave name'
         count: 'Enter leave count'
@@ -64,13 +129,20 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    myappleaves: 'My Applied Leaves'
+    myavleaves: "My Available Leaves"
+    breadcrumbs:
+      home: "User leave"
+      show: 'Show'
+      new: "New"
+      edit: "Edit"
     messages:
       success:
         create: 'User leave(s) created succcessfully'
         update: 'User leave updated succcessfully'
         delete: 'User leave deleted succcessfully'
       failure:
-        create: 'User leave(s) not created'
+        create: 'User leave(s) not created due to an error'
         total_leave_count: 'must be greater than remaining leave count'
         duplicate_error: 'User leave already exists'
         not_found: 'User leave with the given id does not exist'
@@ -83,10 +155,12 @@ en:
       total_count: 'Total count'
       remaining_count: 'Remaining count'
     headings:
+      view_user_leave: 'View user leave'
+      add_user_leave: 'Add user leave'
       leave_type: 'Leave type'
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
-      user_leaves: 'User leaves'
+      user_leaves: 'My leaves'
       options: 'Options'
       show: 'Show'
       edit: 'Edit'
@@ -94,12 +168,19 @@ en:
       edit_user_leave: 'Edit User Leave'
       save: 'Save'
       close: 'Close'
-      feature_user_leave: 'Feature user leave'
+      feature_user_leave: 'Featured user leave'
       back: "Back"
     buttons:
       add_leaves: 'Add user leave'
   applied_leave:
+    all: 'All applied leaves'
+    breadcrumbs:
+      home: "Leave management"
+      show: 'Show'
+      new: "Leave application"
+      edit: "Edit leave application"
     messages:
+      select_leave_type: 'Select leave type'
       delete_confirm: 'Are you sure you want to delete this?'
       leave_applied_success: 'Leave applied successfully'
       leave_delete_success: 'Leave deleted succcessfully'
@@ -119,7 +200,7 @@ en:
         not_found: 'Applied leave with the given id does not exist'
         invalid_date: 'is invalid'
         approve_error: 'Leave has already been accepted or rejected'
-        leave_count_error: 'The number of leave days must be greater than 0'
+        leave_count_error: 'Leave count is greater than the remaining count of leaves. Request rejected.'
         delete_error: 'Cannot delete as it has been already approve or rejected'
     headings:
       applicant_email: 'Applicant email'
@@ -172,6 +253,8 @@ en:
     title: "Settings"
   appname: "EMS"    
   payroll:
+    breadcrumbs:
+      home: "Payroll"
     table:
       amount: "Amount"
       salary_item: "Salary Item"
@@ -196,6 +279,10 @@ en:
       payroll_generation: "Are you sure you want to generate new payroll?"
 
   benefit:
+    breadcrumbs:
+      home: "Benefits"
+      new: "New"
+      edit: "Edit"
     table:
       name: "Name"
       type: "Type"
@@ -207,7 +294,9 @@ en:
     validation:
       presence: "This field cannot be left empty"
       benefit_type_uniqueness: "Please enter a valid selection for Benefit Type"
+      zero_check: "The benefit amount cannot be zero"
       benefit_name: "Benefit name can only contain letters"
+      duplicate_error: 'Benefit with the given name already exists'
     headings:
       benefit: "Benefits"
     label:
@@ -220,13 +309,16 @@ en:
     button:
       submit: "Submit"
       create_benefit: "Create Benefit"
-      update: "Update"
+      update: "Edit"
       delete: "Delete"
     field:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
-
   users_benefit:
+    breadcrumbs:
+      home: "User Benefits"
+      new: "New"
+      edit: "Edit"
     benefit_amount: "Benefit Amount"
     messages:
       success:
@@ -235,6 +327,7 @@ en:
         delete: "Benefit Deleted Successfully"
     validation:
       presence: "This field cannot be left empty"
+      all_benefits_alloted: "All the benefits are already given to the user"
     headings:
       users_benefits: "User Benefits"
     table:
@@ -249,11 +342,6 @@ en:
       options: "Options"
     button:
       users_benefit: "Benefits"
-  notifications:
-    title: 'Notifications'
-    markread: 'Mark Read'
-    selectall: 'Select All'
-    markedread: 'Selected Notifications were marked as read'
   navbar: 
     search: 'Search'
   forms:
@@ -266,12 +354,62 @@ en:
       name: "Company Name"
       subdomain: "Subdomain"
       options: "Options"
+  landing_page:
+    header_name: "Web HR"
+    nav_items:
+      home: "Home"
+      team: "Team"
+      services: "Services"
+      about: "About"
+    header_message_one: "Better Solutions To Manage Employees"
+    header_message_two: "We are providing software to manage employees"
+    team:
+      heading: "Team"
+      paragraph: "He suffers great pains. The consequences of his avoidance had to do with some. May they be the main game. No one had any desire. And no one who hinders receives them otherwise. It is because he is shunning the services which he has in his advantage."
+      member_one_name: "Nadia Ahsan"
+      member_two_name: "Abdul Baist"
+      member_three_name: "Sheharyar"
+      member_four_name: "Mehboob"
+      member_one_designation: "Chief Executive Officer"
+      member_two_designation: "Product Manager"
+      member_three_designation: "Chief Technology Office"
+      member_four_designation: "Program Manager"
+      member_one_details: "I will explain the softness of pleasure and drive back pain as it were."
+      member_two_details: "Or loves greater pleasures and any of those present who senda para"
+      member_three_details: "Who is easy when he chooses toil, because he is corrupted by the avoidance of things"
+      member_four_details: "He hates the times of sorrows in the offices of labor, and we accuse him of the obligations"
+    services:
+      header_message: "Services"
+      details: "Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas."
+      first_header: "Fantastic Software" 
+      second_header: "User Freindly" 
+      third_header: "Customization" 
+      fourth_header: "Excellent Service" 
+      first_detail: "Fantastic software, allows me to track over 1300 shared pieces of photographic equipment."
+      second_detail: "We've been using Web HR for about 4 years now.The mobile is so easy to use.We will continue to use this service as it is user friendly and cost-effective."
+      third_detail: "We use Web HR to manage employees. It also allows us to import and export from/to a CSV, and LOTS of customization."
+      fourth_detail: "Web HR proposes an excellent service for our company. It's a relatively easy to use interface. We can keep track of our employees with ease."
+    about:
+      header_message: "About"
+      first_paragraph: "We enable businesses to accelerate workflows by focusing on their strengths.Web HR  is global, with customers from over 20% of Fortune 500 companies"
+      second_paragraph: "Nurturing employees and refining their skillset makes us better every day.All the easy problems have been solved already. We’re here to build on them"
+      first_list: "All the easy problems have been solved already. We’re here to build on them."
+      third_list: "Maintain control over your users by configuring unique roles for them with Custom Roles. Define data that a user can access and the actions they can take."
+    button: 
+      learn_more: "Learn More"
+    footer:
+      text_one: "Copyright "
+      text_two: "Web-HR ."
+      text_three: "All Rights Reserved"
 
   department:
     name_lable: "Department Name"
-    image_lable: "Upload Image"
-    table_heading: "Departments"
-    table_options: "Options"
+    select_image_lable: "Cover Photo"
+    table_heading: "All Departments"
+    number_of_employees: "Number of Employees"
+    name: "Name"
+    image: "Image"
+    options: "Options"
     table_cell_name: "Name"
     new_link_name: "New Department"
     already_exist: "Department Alread Exists"
@@ -280,8 +418,8 @@ en:
     updated: "Department Updated Successfully"
     not_updated: "Department Not Updated"
     destroy: "Department Destroyed Successfully"
-    edit_message: "Update Department"
-    add_message: "Add Department"
+    edit_message: "Edit Department"
+    add_message: "Add New Department"
     not_exist: "Department Does Not Exist"
     edit_btn_message: "Edit"
     show_btn_message: "Show"
@@ -291,10 +429,11 @@ en:
   designation:
     name_lable: "Designation Name"
     select_department: "Select Department"
-    table_heading: "Designations"
+    table_heading: "All Designations"
     table_options: "Options"
     table_cell_one_name: "Name"
-    table_cell_two_name: "Department-ID"
+    table_cell_two_name: "Department"
+    table_cell_three_name: "Number of Employees"
     new_link_name: "New Designation"
     already_exist: "Designation Alread Exists"
     created: "Designation Created Successfully"
@@ -302,12 +441,14 @@ en:
     updated: "Designation Updated Successfully"
     not_updated: "Designation Not Updated"
     destroy: "Designation Destroyed Successfully"
-    edit_message: "Update Designation"
-    add_message: "Add Designation"
+    edit_message: "Edit Designation"
+    add_message: "Add New Designation"
     not_exist: "Designation Does Not Exist"
     edit_btn_message: "Edit"
     destroy_btn_message: "Destroy"
     sure_message: "Are You Sure?"
+    notfound: "The department or designation doesnt exist" 
+    department_error: "This designation doesn't exist in the selected department"
   
   appname: "EMS"
 
@@ -331,6 +472,14 @@ en:
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
   event:
+    no_events: 'It lookes like you have not scheduled an event yet'
+    create_new_event: 'Create a new event'
+    breadcrumbs:
+      home: "Events"
+      new: "Create"
+      edit: "Edit"
+      show: 'Show'
+      display_calendar: 'Calendar'
     messages:
       success:
         create_success: 'Event created successfully'
@@ -348,7 +497,7 @@ en:
       confirmation:
         deletion: 'Are you sure?'
       links:
-        create: 'Create'
+        create: 'Create Event'
         edit: 'Edit'
         delete: 'Delete'
         view: 'View all'
@@ -364,10 +513,41 @@ en:
         event: 'Event'
         option: 'Options'
       labels:
-        event_name: 'Event name'
-        event_date: 'Event date'
-        event_time: 'Event time'
+        event_name: 'Event name*'
+        event_date: 'Event date*'
+        event_time: 'Event time*'
       placeholders:
         event_name: 'Enter event name'
     simple_calendar:
       invalid_date: "Date is invalid"
+  user:
+    about: "About"
+    edit_profile: "Edit Profile"
+    work_link: "Work Link"
+    benefits: "Benefits"
+    payrolls: "Payrolls"
+    leaves: "Leaves"
+    set_leave: "Set Leaves"
+    role: "User Role"
+    name: "Name"
+    date_of_birth: "Date of birth"
+    email: "Email"
+    change_image: "Change Image"
+    apply_for_leave: 'Apply for leave'
+    appliedleave: "Applied Leaves"
+  notifications:
+    new_leave: "A leave has been applied by %{full_name}"
+    leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
+    leave_approve_self: "Your request for a leave from %{from} to %{to} has been accepted" 
+    invalid_date: "Date is invalid"
+    title: 'Notifications'
+    markread: 'Mark Read'
+    selectall: 'Select All'
+    markedread: 'Selected Notifications were marked as read'
+  gender:
+    error: "The given gender is invalid"
+  benefits:
+    all: "All Benefits"
+    my: "My Benefits"
+  nodata: "No Data"
+  nonotis: "No Notifications"

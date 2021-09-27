@@ -1,10 +1,15 @@
+# frozen_string_literal: true
+
 class UserLeavesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user
-  before_action :set_user_leave, only: %i[show edit update destroy]
+  load_resource :user, id_param: :member_id
+  load_resource :user_leave, through: :user, except: %i[new mass_create]
+  authorize_resource
+  add_breadcrumb I18n.t('user_leave.breadcrumbs.home'), :member_user_leaves_path
 
   # GET /members/:member_id/user_leaves/:id
   def show
+    add_breadcrumb t('user_leave.breadcrumbs.show'), :member_user_leave_path
     respond_to do |format|
       format.html
     end
@@ -12,7 +17,8 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves
   def index
-    @user_leaves = @user.user_leaves.includes(:leave)
+    @user_leaves = UserLeave.accessible_by(current_ability, :index).includes(:leave).paginate(page: params[:page],
+                                                                                              per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
     end
@@ -20,6 +26,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves/new
   def new
+    add_breadcrumb t('user_leave.breadcrumbs.new'), :new_member_user_leave_path
     @available_leaves = @current_company.leaves.where.not(id: @user.leaves.ids)
     respond_to do |format|
       format.html
@@ -35,7 +42,7 @@ class UserLeavesController < ApplicationController
           redirect_to member_user_leaves_path(@user),
                       notice: t('user_leave.messages.success.create')
         else
-          flash[:error] = t('user_leave.messages.failure.create')
+          flash[:error] = @user.errors.full_messages
           redirect_to new_member_user_leave_path(@user)
         end
       end
@@ -44,6 +51,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/applied_leaves/:id/edit
   def edit
+    add_breadcrumb t('user_leave.breadcrumbs.edit'), :edit_member_user_leave
     respond_to do |format|
       format.js
     end
@@ -87,19 +95,5 @@ class UserLeavesController < ApplicationController
 
   def user_leave_params
     params.permit(leave: {})
-  end
-
-  def set_user_leave
-    @user_leave = @user.user_leaves.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('user_leave.messages.failure.not_found')
-    redirect_to member_user_leaves_path(@user)
-  end
-
-  def set_user
-    @user = User.find(params[:member_id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('common.user_not_found')
-    redirect_to members_path
   end
 end

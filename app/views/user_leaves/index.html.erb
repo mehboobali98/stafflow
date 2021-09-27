@@ -1,16 +1,36 @@
-<div class="container">
-  <h1><%= t('user_leave.headings.user_leaves') %></h1>
-  <table class="table table-striped table-hover">
-    <thead class="table-dark">
+<div class='pms-heading p-3'>
+  <div class='row'>
+    <div class='col-10'>
+      <h2 class="mb-3"><%= t('user_leave.headings.user_leaves') %></h2>
+    </div>
+    <div class='col-2'>
+      <%= link_to t('applied_leave.links.apply_for_leave'), new_member_applied_leave_path(current_user), class: 'btn btn-primary mb-2' if can?(:create, AppliedLeave) %>
+    </div>
+  </div>
+  <%= link_to t('leave.all'), leaves_path, class: 'card-link' %>  
+  <% unless current_user.account_owner? %>
+      <%= link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user), class: 'card-link' %>
+      <%= link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user), class: 'card-link' %> 
+  <% end %>
+</div>
+<br><br>
+<div class='p-2'>
+  <table class="table table-hover">
+    <thead class="pms-table-header">
       <tr>
         <th><%= t('user_leave.headings.leave_type') %></th>
         <th><%= t('user_leave.headings.leave_count') %></th>
         <th><%= t('user_leave.headings.leave_remaining_count') %></th>
-        <th class="text-center" colspan="3"><%= t('user_leave.headings.options') %></th>
+        <th><%= t('user_leave.headings.options') %></th>
       </tr>
     </thead>
     <tbody id="user_leaves_table">
-      <%= render partial: 'user_leaves_table', locals: { user_leaves: @user_leaves } %>
+      <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
     </tbody>
   </table>
+  <% if @user_leaves.empty? %>
+    <div class="d-flex justify-content-md-center align-items-center mt-5">
+      <h1 class='text-muted'><%= t('nodata') %></h1>
+    </div>
+  <% end %>
 </div>

@@ -25,7 +25,7 @@ class DepartmentsController < ApplicationController
         if is_saved
           redirect_to departments_path, notice: t('department.created')
         else
-          flash.now[:error] = @department.errors.full_messages
+          flash[:error] = @department.errors.full_messages
           render :new
         end
       end
@@ -47,7 +47,7 @@ class DepartmentsController < ApplicationController
         if is_updated
           redirect_to departments_path, notice: t('department.updated')
         else
-          flash.now[:error] = @department.errors.full_messages
+          flash[:error] = @department.errors.full_messages
           redirect_to departments_path
         end
       end
@@ -70,9 +70,17 @@ class DepartmentsController < ApplicationController
     end
   end
 
+  # GET /departments/:id/fetch_designations
+  def fetch_designations
+    @designations = @department.designations
+    respond_to do |format|
+      format.json { render json: @designations.select(:id, :name) }
+    end
+  end
+
   private
 
   def department_params
-    params.require(:department).permit(:name)
+    params.require(:department).permit(:name, :avatar)
   end
 end
