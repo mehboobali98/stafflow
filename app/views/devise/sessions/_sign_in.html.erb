@@ -6,6 +6,7 @@
     </div>
     <div class='col-9'>
       <%= form.email_field :email, required: true, class: 'form-control', value: params.dig(:email) %>
+      <%= error_messages(:email) %>
     </div>
   </div>
   <div class="row mb-2">
@@ -14,6 +15,7 @@
     </div>
     <div class='col-9'>
       <%= form.password_field :password, required: true, class: 'form-control' %>
+      <%= error_messages(:password) %>
     </div>
   </div>
   <% if devise_mapping.rememberable? %>

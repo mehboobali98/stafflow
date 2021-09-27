@@ -2,7 +2,7 @@ class Setting < ApplicationRecord
   belongs_to :company
   validates :tax_rate,
             numericality: { only_float: true, greater_than: MIN_TAX_RATE, less_than_or_equal_to: MAX_TAX_RATE }
-  validate :leave_reset_date_valid?
+  validate :leave_reset_date_valid?, on: :update
 
   private
 

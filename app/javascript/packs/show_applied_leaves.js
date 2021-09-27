@@ -64,6 +64,7 @@ $(document).ready(function() {
     $.ajax({
       type: "GET",
       url: "/applied_leaves/filter_applied_leaves",
+      dataType: 'script',
       data: {
         filter_type: currentFilter
       }

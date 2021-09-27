@@ -31,6 +31,12 @@
         <span class="links-name"><%= t('sidebar.designations') %></span>
       <% end %>
     </li>
+    <li>
+      <%= link_to events_path do %>
+        <i class="far fa-calendar"></i>
+        <span class="links-name"><%= t('sidebar.events') %></span>
+      <% end %>
+    </li>
     <% unless current_user.account_owner? %>
       <li>
         <%= link_to member_payrolls_path(current_user) do %>
@@ -65,6 +71,12 @@
         <% end %>
       </li>
     <% end %>
+    <li>
+      <%= link_to edit_password_members_path do %>
+        <i class="fas fa-unlock-alt"></i>
+        <span class="links-name"><%= t('sidebar.cp') %></span>
+      <% end %>
+    </li>
     <li>
       <%= link_to member_path(current_user) do %>
         <i class="fas fa-user-edit"></i>

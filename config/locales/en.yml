@@ -51,6 +51,7 @@ en:
     dashboard: 'Dashboard'
     users: 'Users'
     departments: 'Departments'
+    designations: "Designations"
     designation: 'Designations'
     payroll: 'Payroll'
     leave: 'Leave'
@@ -62,6 +63,8 @@ en:
     logout: 'Logout'
     by_team: 'by team ABC'
     benefits: "Benefits"
+    events: "Events"
+    cp: "Change Password"
   cards:
     total_events: 'Total events'
     upcoming_events: 'Upcoming events'
@@ -87,7 +90,9 @@ en:
     back: "Back"
     user_not_found: "User with the given id does not exist"
     search: "Search"
+    all: "All"
   leave:
+    all: "All Leaves"
     breadcrumbs:
       home: "Leave"
       show: 'Show'
@@ -124,6 +129,8 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    myappleaves: 'My Applied Leaves'
+    myavleaves: "My Available Leaves"
     breadcrumbs:
       home: "User leave"
       show: 'Show'
@@ -153,7 +160,7 @@ en:
       leave_type: 'Leave type'
       leave_count: 'Leave count'
       leave_remaining_count: 'Remaining count'
-      user_leaves: 'User leaves'
+      user_leaves: 'My leaves'
       options: 'Options'
       show: 'Show'
       edit: 'Edit'
@@ -490,7 +497,7 @@ en:
       confirmation:
         deletion: 'Are you sure?'
       links:
-        create: 'Create'
+        create: 'Create Event'
         edit: 'Edit'
         delete: 'Delete'
         view: 'View all'
@@ -542,3 +549,5 @@ en:
   benefits:
     all: "All Benefits"
     my: "My Benefits"
+  nodata: "No Data"
+  nonotis: "No Notifications"

@@ -2,7 +2,7 @@
   <div class='pb-3 w-50 m-4'>
     <h1><%= local_assigns[:heading] %></h1>
     <hr>
-    <div>
+    <div  class='card bg-light p-4'>
       <%= form_for @designation do |form| %>
         <div class="field mb-3">
           <%= form.label t('designation.name_lable') %>
