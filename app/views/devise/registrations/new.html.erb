@@ -33,7 +33,7 @@
           </div>
           <%= error_messages(:date_of_birth) %>
           <div class="form-floating mb-2">
-            <%= f.date_field :date_of_birth, required: true, class: 'form-control', placeholder: t('forms.labels.date_of_birth') %>
+            <%= f.date_field :date_of_birth, required: true, class: 'form-control', placeholder: t('forms.labels.dob') %>
             <%= f.label t('forms.labels.dob')+'*' %>
           </div>
           <%= f.fields_for :company_attributes do |form| %>
