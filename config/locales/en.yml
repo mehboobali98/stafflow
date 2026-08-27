@@ -190,6 +190,7 @@ en:
       edit: "Edit leave application"
     messages:
       select_leave_type: 'Select leave type'
+      select_employees: 'Select employee'
       delete_confirm: 'Are you sure you want to delete this?'
       leave_applied_success: 'Leave applied successfully'
       leave_delete_success: 'Leave deleted succcessfully'
@@ -291,6 +292,8 @@ en:
     table:
       name: "Name"
       type: "Type"
+      amount: "Amount"
+      options: "Options"
     messages:
       success:
         create: "Benefit Created Successfully"
