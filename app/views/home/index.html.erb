@@ -39,57 +39,18 @@
       <p><%= t('landing_page.team.paragraph') %></p>
     </div>
     <div class="row">
-      <div class="col-lg-6">
-        <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
-          <div class="pic">
-            <%= image_tag("nadia.png", class:"img-fluid animated", alt:"") %>
-          </div>
-          <div class="member-info">
-            <h4><%= t('landing_page.team.member_one_name') %></h4>
-            <span><%= t('landing_page.team.member_one_designation') %></span>
-            <p><%= t('landing_page.team.member_one_details') %></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 mt-4 mt-lg-0">
-        <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="200">
-          <div class="pic">
-            <%= image_tag("basit.png", class:"img-fluid animated", alt:"") %>
-          </div>
-          <div class="member-info">
-            <h4><%= t('landing_page.team.member_two_name') %></h4>
-            <span><%= t('landing_page.team.member_two_designation') %></span>
-            <p><%= t('landing_page.team.member_two_details') %></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 mt-4">
-        <div class="member d-flex align-items-start" >
-          <div class="pic">
-            <%= image_tag("sheharyar.png", class:"img-fluid animated", alt:"") %>
-          </div>
-          <div class="member-info">
-            <h4><%= t('landing_page.team.member_three_name') %></h4>
-            <span><%= t('landing_page.team.member_three_designation') %></span>
-            <p><%= t('landing_page.team.member_three_details') %></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 mt-4">
-        <div class="member d-flex align-items-start" data-aos-delay="400">
-          <div class="pic">                
-          <%= image_tag("mehboob.png", class:"img-fluid animated", alt:"") %>
-          </div>
-          <div class="member-info">
-            <h4><%= t('landing_page.team.member_four_name') %></h4>
-            <span><%= t('landing_page.team.member_four_designation') %></span>
-            <p><%= t('landing_page.team.member_four_details') %></p>
-          </div>
-        </div>
-      </div>
+      <% %w[one two three four].each_with_index do |slot, index| %>
+        <%= render 'contributor',
+                   name:          t("landing_page.team.member_#{slot}_name"),
+                   area:          t("landing_page.team.member_#{slot}_designation"),
+                   details:       t("landing_page.team.member_#{slot}_details"),
+                   delay:         (index + 1) * 100,
+                   color_seed:    index,
+                   extra_classes: index >= 2 ? 'mt-4' : 'mt-4 mt-lg-0' %>
+      <% end %>
     </div>
   </div>
-</section> 
+</section>
 
 <section id="service" class="service-section section-bg">
   <div class="container">
