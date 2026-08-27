@@ -42,10 +42,9 @@ en:
     my_applied_leaves: 'My applied leaves'
     my_available_leaves: 'My available leaves'
     all_applied_leaves: 'All applied leaves'
-  mailer:
-    payroll_subject: 'Payroll Generated'
   leave_error: 'Leave reset date cannot be in the past'
   mailer:
+    payroll_subject: 'Payroll Generated'
     password_mailer_subject: 'Account password'
     sign_in: 'Sign in'
   currency:
@@ -258,10 +257,6 @@ en:
       half_day: 'Half day'
     placeholders:
       leave_filter: 'Select leave filter'
-  settings:
-    updated: "Settings were successfully updated"
-    not_updated: "Settings were not updated due to an error"
-    title: "Settings"
   appname: "Stafflow"
   payroll:
     breadcrumbs:
@@ -359,12 +354,6 @@ en:
     buttons:
       apply_filters: "Apply Filters"
       reset_filters: "Reset Filters"
-  company:
-    table_header:
-      list: "Companies List"
-      name: "Company Name"
-      subdomain: "Subdomain"
-      options: "Options"
   landing_page:
     header_name: "Web HR"
     nav_items:
@@ -473,8 +462,6 @@ en:
     byteam: "by team ABC"
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
-  user:
-    password_autocomplete: "New Password"
   settings:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
@@ -529,6 +516,7 @@ en:
     simple_calendar:
       invalid_date: "Date is invalid"
   user:
+    password_autocomplete: "New Password"
     about: "About"
     edit_profile: "Edit Profile"
     work_link: "Work Link"
