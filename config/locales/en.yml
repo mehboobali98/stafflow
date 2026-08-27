@@ -262,7 +262,7 @@ en:
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
-  appname: "PMS"    
+  appname: "Stafflow"
   payroll:
     breadcrumbs:
       home: "Payroll"
