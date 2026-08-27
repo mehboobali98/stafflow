@@ -1,0 +1,13 @@
+<div class="col-lg-6 <%= extra_classes %>">
+  <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="<%= delay %>">
+    <div class="pic">
+      <span class="avatar-initials" style="background-color: <%= avatar_color_for(color_seed) %>"
+            role="img" aria-label="<%= name %>"><%= initials_for(name) %></span>
+    </div>
+    <div class="member-info">
+      <h4><%= name %></h4>
+      <span><%= area %></span>
+      <p><%= details %></p>
+    </div>
+  </div>
+</div>
