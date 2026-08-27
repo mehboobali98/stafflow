@@ -22,6 +22,10 @@
 /storage/*
 !/storage/.keep
 
+# Paperclip writes uploads here. Real employee and department avatars were
+# committed from a running instance in the past; never track them again.
+/public/system/
+
 /public/assets
 .byebug_history
 
