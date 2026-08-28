@@ -135,6 +135,39 @@ RSpec.describe Payroll do
     end
   end
 
+  # The rescue path had no coverage, which is how it went unnoticed that it
+  # referred to a name local to the transaction block. Returning from inside
+  # that block was also deprecated in 6.1 and rolls back in 7.0.
+  describe '.generate_payroll when the record will not save' do
+    # AppliedBenefit requires a benefit, and generate_payroll builds one child
+    # per assigned benefit. A balance whose benefit has gone missing therefore
+    # makes the payroll invalid through its children, with nothing stubbed.
+    def user_with_unsaveable_payroll
+      user = employee(salary: 100_000.0)
+      set_tax_rate(10.0)
+      benefit = create(:benefit, company: company)
+      assignment = create(:users_benefit, company: company, user: user, benefit: benefit)
+      assignment.update_columns(benefit_id: 999_999)
+      user.reload
+    end
+
+    it 'returns the unsaved payroll rather than raising' do
+      user = user_with_unsaveable_payroll
+
+      result = nil
+      expect { result = described_class.generate_payroll(user) }.not_to raise_error
+      expect(result).to be_a(described_class)
+      expect(result).not_to be_persisted
+    end
+
+    it 'persists nothing' do
+      user = user_with_unsaveable_payroll
+
+      expect { described_class.generate_payroll(user) }
+        .not_to(change { described_class.unscoped.count })
+    end
+  end
+
   describe '.payroll_already_generated?' do
     it 'is false for an employee with no payroll yet' do
       expect(described_class.payroll_already_generated?(employee)).to be(false)

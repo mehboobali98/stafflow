@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 160 examples, 0 pending |
+| Tests | 191 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 15 found, 13 fixed, 2 open |
+| Known defects | 15 found, 14 fixed, 1 open |
 
 ---
 
@@ -151,25 +151,48 @@ than absorbing them; they are described where they sit.
 
 ## Phase 3 — Modernise the stack
 
-**Do this next.** Estimated 3–5 weeks.
+**In progress.** Estimated 3–5 weeks.
 
 Ruby 2.7 and Rails 6.0 are both past end of life, and the original repo reports
 132 dependency vulnerabilities. This is the largest phase, and it is also the
 best interview story in the project — a real legacy upgrade with a test suite
 underneath it, which is why it comes after Phase 1 rather than before.
 
-- [ ] Ruby 2.7.1 → 3.3 — mostly keyword-argument fallout
-- [ ] Rails 6.0 → 6.1 → 7.0 → 7.1, one minor at a time, running the suite at
-      each step
+- [x] Replace the `sequenceid` dependency, which was pinned to a branch on a
+      third-party fork — if that branch disappeared the app stopped building.
+      Done first, since it patched ActiveRecord STI internals and would have
+      been an unknown in every step below
+- [ ] Ruby and Rails, interleaved. **The two cannot be done in sequence:**
+      Rails 6.0 does not support Ruby 3.x, and 6.1 was the first release that
+      did, so raising Ruby first leaves the app unable to boot. The suite runs
+      at every stop:
+
+      | | |
+      | --- | --- |
+      | Rails 6.0 → 6.1 | still on Ruby 2.7 |
+      | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
+      | Rails 6.1 → 7.0 | |
+      | Ruby 3.0 → 3.2 | |
+      | Rails 7.0 → 7.1 | |
+      | Ruby 3.2 → 3.3 | |
+
+- [ ] Enable the Rails 6.1 framework defaults. The app runs on 6.1 but still
+      loads 6.0 defaults, so its behaviour has not moved yet. Two of the flips
+      need checking by hand first:
+      `action_view.form_with_generates_remote_forms` — `users_benefits/new` and
+      `applied_leaves/new_applied_leave_by_hr` call `form_with` without
+      `local: true`, so they submit over XHR and their controllers only answer
+      `format.html`; and `action_dispatch.cookies_same_site_protection` — sign-in
+      crosses from the apex page to a tenant subdomain, and a `:lax` cookie is
+      not sent on a cross-site POST
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
       importmaps
-- [ ] Replace the `sequenceid` dependency, currently pinned to a branch on a
-      third-party fork — if that branch disappears the app stops building
 - [ ] Clear the Dependabot backlog once the framework bumps land
 - [ ] Revisit the `TracePoint` multi-tenancy hook against modern Rails
-      autoloading
+      autoloading. `event.rb` in the defect backlog belongs with this, since
+      both turn on how the hook injects `company_id`
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
 pinned to a git branch.

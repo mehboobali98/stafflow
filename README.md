@@ -121,7 +121,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 2.7.1 / 6.0.4 |
+| Ruby / Rails | 2.7.1 / 6.1.7 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Background jobs | delayed_job |
@@ -153,14 +153,18 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 160 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 191 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, leave updates and the
   error paths.
-- **Ruby 2.7 and Rails 6.0 are both end-of-life.** The Docker setup pins the
-  contemporary toolchain so the app runs today, but upgrading is outstanding
-  work.
+- **Ruby 2.7 is end-of-life.** Rails is on 6.1 as the first step of the
+  upgrade; 6.1 is also out of support. Ruby cannot move until Rails does,
+  since Rails 6.0 did not support Ruby 3.x, so the two are being raised
+  alternately. [ROADMAP.md](ROADMAP.md) has the order.
+- **Rails 6.1 runs with 6.0 framework defaults**, so its behaviour has not
+  moved yet. [ROADMAP.md](ROADMAP.md) lists the two flips that need checking by
+  hand first.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router
