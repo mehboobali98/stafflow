@@ -121,8 +121,14 @@ class AppliedLeave < ApplicationRecord
     end
   end
 
+  # Used as a state machine guard, so it must return true on success.
+  # `raise ... unless cond` evaluates to nil when cond holds, and the
+  # transitions gem treats a nil guard as "not executable", which silently
+  # blocked every approval.
   def validate_leave_count
     raise ArgumentError unless leave_available?
+
+    true
   end
 
   def approve_hr_added_leave
@@ -198,7 +204,10 @@ class AppliedLeave < ApplicationRecord
 
   def calculate_leave_count
     number_of_days = week_days_count(applied_from..applied_till)
-    return number_of_days if leave_duration_name.eql?(:full_day)
+    # LEAVE_DURATION is a HashWithIndifferentAccess, so invert gives String
+    # keys and comparing with the Symbol :full_day was always false - every
+    # full-day leave was being counted, and deducted, as a half day.
+    return number_of_days if leave_duration_name.to_s == 'full_day'
 
     number_of_days / 2.0 # dividing for half-day
   end
