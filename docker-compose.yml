@@ -1,0 +1,88 @@
+services:
+  db:
+    image: mysql:8.0
+    # mysql2 0.5.3 links against the MariaDB client, which cannot speak
+    # caching_sha2_password. Fall back to the older auth plugin.
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD:-stafflow}
+      MYSQL_DATABASE: ${DATABASE_NAME:-stafflow_development}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DATABASE_PASSWORD:-stafflow}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  elasticsearch:
+    image: elasticsearch:7.17.9
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      xpack.security.enabled: "false"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  mail:
+    # Catches every outbound email; browse them at http://localhost:8025
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "8025:8025"
+
+  web:
+    build: .
+    command: bundle exec rails server -b 0.0.0.0
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-stafflow}
+      DATABASE_NAME: ${DATABASE_NAME:-stafflow_development}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      SMTP_HOST: mail
+      SMTP_PORT: 1025
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+
+  worker:
+    build: .
+    command: bundle exec rake jobs:work
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-stafflow}
+      DATABASE_NAME: ${DATABASE_NAME:-stafflow_development}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      SMTP_HOST: mail
+      SMTP_PORT: 1025
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  es_data:
+  bundle_cache:
+  node_modules:

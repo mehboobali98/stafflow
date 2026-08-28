@@ -38,4 +38,6 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
-/db/schema.rb
+
+# Local environment overrides; .env.example is the tracked template.
+.env
