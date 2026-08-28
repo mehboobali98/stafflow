@@ -27,11 +27,11 @@ RSpec.describe Setting do
       expect(setting.tax_rate).to eq(25.0)
     end
 
-    # Company declares `before_save :build_company_setting`, which runs on
-    # every save rather than only on create, replacing the setting with a fresh
-    # one at DEFAULT_TAX_RATE. Editing the company name silently reverts a
-    # configured tax rate, and every payroll generated afterwards is wrong.
-    it 'keeps the configured tax rate when the company record is updated', pending: 'before_save rebuilds the setting on every save' do
+    # build_company_setting used to run on every save rather than only on
+    # create, replacing the setting with a fresh one at DEFAULT_TAX_RATE.
+    # Editing the company name silently reverted a configured tax rate, and
+    # every payroll generated afterwards was wrong.
+    it 'keeps the configured tax rate when the company record is updated' do
       setting.update!(tax_rate: 25.0)
       company.update!(name: 'Renamed Co')
       expect(setting.tax_rate).to eq(25.0)
@@ -59,8 +59,24 @@ RSpec.describe Setting do
     # leave_reset_date_valid? calls DateTime.parse(leave_resets_at.to_s) with
     # no nil guard, and build_company_setting never sets the column, so the
     # settings form raises rather than failing validation on a fresh company.
-    it 'does not raise when leave_resets_at has never been set', pending: 'Date::Error on nil leave_resets_at' do
-      expect { setting.update(tax_rate: 12.0) }.not_to raise_error
+    it 'does not raise when leave_resets_at has never been set' do
+      record = setting
+      record.update_columns(leave_resets_at: nil)
+
+      expect { record.update(tax_rate: 12.0) }.not_to raise_error
+    end
+
+    it 'saves other attributes while no reset date is set' do
+      record = setting
+      record.update_columns(leave_resets_at: nil)
+
+      expect(record.update(tax_rate: 12.0)).to be(true)
+      expect(record.reload.tax_rate).to eq(12.0)
+    end
+
+    it 'accepts a reset date in the future' do
+      record = setting
+      expect(record.update(leave_resets_at: Date.today + 30)).to be(true)
     end
   end
 end
