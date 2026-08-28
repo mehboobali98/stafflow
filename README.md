@@ -1,5 +1,7 @@
 # Stafflow
 
+[![CI](https://github.com/mehboobali98/stafflow/actions/workflows/ci.yml/badge.svg)](https://github.com/mehboobali98/stafflow/actions/workflows/ci.yml)
+
 A multi-tenant HR management system built with Ruby on Rails. One deployment
 serves many companies, each isolated on its own subdomain with its own
 employees, org structure, leave policy, benefits and payroll history.
@@ -24,6 +26,14 @@ docker compose up -d web worker
 ```
 
 The first request compiles the webpack bundle and takes a minute or two.
+
+To run the tests:
+
+```sh
+docker compose run --rm web bundle exec rails db:test:prepare
+docker compose run --rm web bundle exec rspec
+docker compose run --rm web bundle exec rubocop
+```
 
 Then open **<http://acme.localhost:3000>** and sign in:
 
@@ -143,9 +153,9 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **No test suite.** `capybara` and `selenium-webdriver` are in the Gemfile but
-  no specs were ever written. This is the biggest gap.
-- **No CI.**
+- **Coverage is deliberately partial.** 121 specs cover tenant isolation, the
+  permission matrix, payroll calculation, the leave workflow and user
+  validations. Controllers and views are not covered.
 - **Ruby 2.7 and Rails 6.0 are both end-of-life.** The Docker setup pins the
   contemporary toolchain so the app runs today, but upgrading is outstanding
   work.
@@ -153,7 +163,8 @@ line numbers.
   outstanding.
 - `EMAIL_REGEX` in `config/initializers/constants.rb` only accepts `.com`
   addresses, which is why the seed data uses `example.com`.
-- Seven known defects, two of which crash on ordinary input. Listed with
+- Six known defects, one of which crashes on ordinary input. Three of them are
+  recorded as pending specs, so they turn green when fixed. Listed with
   locations in [ROADMAP.md](ROADMAP.md#defect-backlog).
 
 ## Contributors

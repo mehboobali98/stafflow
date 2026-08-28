@@ -1,0 +1,64 @@
+inherit_from: .rubocop_todo.yml
+
+# .rubocop_todo.yml records the offenses that already existed when this config
+# was introduced, so CI enforces the standard on new code without requiring a
+# single sweeping reformat. Entries should be removed as the code is cleaned.
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.7
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'tmp/**/*'
+    - 'config/environments/**/*'
+
+# The codebase was written before this config existed and already follows
+# most of these. Cops below are relaxed where the existing style is
+# deliberate rather than accidental.
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/ClassLength:
+  Max: 200
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'db/seeds.rb'
+
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/MultipleExpectations:
+  Max: 6
+
+RSpec/NestedGroups:
+  Max: 4
+
+# The ability matrix and tenant isolation specs describe behaviour that has no
+# single subject, so instance variables and let names read better than subject.
+RSpec/InstanceVariable:
+  Enabled: false
