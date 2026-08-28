@@ -176,6 +176,15 @@ underneath it, which is why it comes after Phase 1 rather than before.
       | Rails 7.0 → 7.1 | |
       | Ruby 3.2 → 3.3 | |
 
+- [ ] Enable the Rails 6.1 framework defaults. The app runs on 6.1 but still
+      loads 6.0 defaults, so its behaviour has not moved yet. Two of the flips
+      need checking by hand first:
+      `action_view.form_with_generates_remote_forms` — `users_benefits/new` and
+      `applied_leaves/new_applied_leave_by_hr` call `form_with` without
+      `local: true`, so they submit over XHR and their controllers only answer
+      `format.html`; and `action_dispatch.cookies_same_site_protection` — sign-in
+      crosses from the apex page to a tenant subdomain, and a `:lax` cookie is
+      not sent on a cross-site POST
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus

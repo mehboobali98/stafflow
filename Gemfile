@@ -6,12 +6,9 @@ ruby '2.7.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.7'
-# concurrent-ruby 1.3.5 dropped the `require 'logger'` it used to pull in as a
-# side effect, and ActiveSupport before 7.1 relies on Logger already being
-# defined. Without this pin the app dies on boot with "uninitialized constant
-# ActiveSupport::LoggerThreadSafeLevel::Logger" - including in bin/webpack,
-# which bootstraps straight from bundler/setup and never loads config/boot.rb.
-# Remove when the app reaches Rails 7.1, which requires logger itself.
+# 1.3.5 dropped a `require 'logger'` that ActiveSupport < 7.1 depends on. Fails
+# in bin/webpack rather than the suite, so removing this pin looks safe and is
+# not. Comes out at Rails 7.1.
 gem 'concurrent-ruby', '< 1.3.5'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'

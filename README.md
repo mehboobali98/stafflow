@@ -162,10 +162,9 @@ line numbers.
   upgrade; 6.1 is also out of support. Ruby cannot move until Rails does,
   since Rails 6.0 did not support Ruby 3.x, so the two are being raised
   alternately. [ROADMAP.md](ROADMAP.md) has the order.
-- **Rails 6.1 runs with 6.0 framework defaults.** The 6.1 defaults are staged
-  in `config/initializers/new_framework_defaults_6_1.rb` and enabled one at a
-  time. Two need care before flipping: `form_with` remote forms, and SameSite
-  cookies, which the subdomain sign-in flow depends on.
+- **Rails 6.1 runs with 6.0 framework defaults**, so its behaviour has not
+  moved yet. [ROADMAP.md](ROADMAP.md) lists the two flips that need checking by
+  hand first.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router

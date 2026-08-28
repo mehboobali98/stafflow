@@ -26,11 +26,6 @@ class User < ApplicationRecord
   validates_with AttachmentSizeValidator, attributes: :image, less_than: 3.megabytes
 
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
-  # Explicit rather than inherited: Rails 6.1 changed the default for this
-  # validator from case-sensitive to case-insensitive, so leaving it unstated
-  # meant the behaviour moved underneath the app on a framework bump. Addresses
-  # differing only in case are the same person, and the column collation
-  # (utf8mb4_0900_ai_ci) already agrees.
   validates_uniqueness_of :email, scope: :company_id, case_sensitive: false
   validates_presence_of :email
   validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
