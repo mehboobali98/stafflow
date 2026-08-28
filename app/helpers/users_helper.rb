@@ -11,13 +11,14 @@ module UsersHelper
     User::GENDERS.map { |key, value| [t("user_genders.#{key}"), value] }
   end
 
+  # Built with the tag helper rather than an interpolated html_safe string:
+  # the message carries model and attribute names through I18n, and marking a
+  # string containing them as safe means nothing in it is ever escaped.
+  # full_messages_for always returns an array, so the second branch this
+  # replaces was unreachable.
   def error_messages(attribute)
     return unless @user.errors.include?(attribute)
 
-    attribute_errors = @user.errors.full_messages_for(attribute)
-    if attribute_errors.is_a?(Array)
-      return "<span class='text-danger'>#{attribute_errors[0]}</span>".html_safe
-    end
-    "<span class='text-danger'>#{attribute_errors}</span>".html_safe
+    tag.span(@user.errors.full_messages_for(attribute).first, class: 'text-danger')
   end
 end
