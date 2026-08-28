@@ -41,6 +41,48 @@ RSpec.describe User do
 
       expect(reused).to be_valid
     end
+
+    describe 'format' do
+      def with_email(address)
+        build(:user, :employee, company: company, department: department,
+                                designation: designation, email: address)
+      end
+
+      # The pattern used to end at a literal '.com' with nothing anchoring it,
+      # so every other top-level domain was rejected and anything trailing a
+      # valid-looking address was ignored.
+      %w[
+        someone@example.com
+        someone@example.org
+        someone@example.io
+        someone@example.co.uk
+        first.last+tag@sub.example.com
+      ].each do |address|
+        it "accepts #{address}" do
+          expect(with_email(address)).to be_valid
+        end
+      end
+
+      %w[
+        someone@example
+        someone@example.
+        someoneexample.com
+        someone@@example.com
+        someone@example.c
+      ].each do |address|
+        it "rejects #{address}" do
+          expect(with_email(address)).not_to be_valid
+        end
+      end
+
+      it 'rejects an address with anything trailing it' do
+        expect(with_email('someone@example.com and more')).not_to be_valid
+      end
+
+      it 'rejects an address with a trailing newline' do
+        expect(with_email("someone@example.com\nelsewhere@example.com")).not_to be_valid
+      end
+    end
   end
 
   describe 'department and designation' do
