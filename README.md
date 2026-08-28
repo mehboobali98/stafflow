@@ -5,7 +5,8 @@ serves many companies, each isolated on its own subdomain with its own
 employees, org structure, leave policy, benefits and payroll history.
 
 > Originally built as a team project in 2021 under the name PMS. Renamed and
-> modernised since; see [CONTRIBUTING.md](CONTRIBUTING.md) for the branching model.
+> modernised since. See [ROADMAP.md](ROADMAP.md) for what is planned next and
+> [CONTRIBUTING.md](CONTRIBUTING.md) for the branching model.
 
 ## Running it
 
@@ -138,7 +139,9 @@ db/
 
 ## Known gaps
 
-Honest list of what this project does not have yet.
+Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
+sequences the work to close these, and carries the full defect backlog with
+line numbers.
 
 - **No test suite.** `capybara` and `selenium-webdriver` are in the Gemfile but
   no specs were ever written. This is the biggest gap.
@@ -150,8 +153,8 @@ Honest list of what this project does not have yet.
   outstanding.
 - `EMAIL_REGEX` in `config/initializers/constants.rb` only accepts `.com`
   addresses, which is why the seed data uses `example.com`.
-- Two known bugs still open in `app/models/payroll.rb` and
-  `app/controllers/applied_leaves_controller.rb`.
+- Seven known defects, two of which crash on ordinary input. Listed with
+  locations in [ROADMAP.md](ROADMAP.md#defect-backlog).
 
 ## Contributors
 
