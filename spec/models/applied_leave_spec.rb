@@ -140,6 +140,39 @@ RSpec.describe AppliedLeave do
     end
   end
 
+  # An allowance is spent when the balance reaches zero, so the last day has to
+  # be both requestable and saveable. Two separate rules stopped it: the
+  # balance check refused a request equal to what was left, and the balance
+  # itself would not validate at zero.
+  describe 'spending the final day of an allowance' do
+    # A single-day allowance of its own, so the shared 20-day balance stays
+    # available to the rest of the file.
+    def one_day_balance
+      create(:user_leave, company: company, user: employee,
+                          leave: create(:leave, company: company, default_count: 1.0),
+                          total_count: 1.0, remaining_count: 1.0)
+    end
+
+    it 'counts a request for exactly the remaining balance as available' do
+      expect(one_day_balance.count_available?(1.0)).to be(true)
+    end
+
+    it 'refuses a request for more than the remaining balance' do
+      expect(one_day_balance.count_available?(2.0)).to be(false)
+    end
+
+    it 'approves the request and empties the balance' do
+      remaining = one_day_balance
+      applied   = create(:applied_leave, company: company, user_leave: remaining,
+                                         user: employee, leave: remaining.leave,
+                                         applied_from: next_monday, applied_till: next_monday,
+                                         leave_duration_type: described_class::LEAVE_DURATION[:full_day])
+
+      expect(applied.approve_applied_leave).to be(true)
+      expect(remaining.reload.remaining_count).to eq(0.0)
+    end
+  end
+
   describe '#reject_applied_leave' do
     it 'moves the application to rejected' do
       applied = apply
