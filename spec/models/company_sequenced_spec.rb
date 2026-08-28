@@ -2,10 +2,8 @@
 
 require 'rails_helper'
 
-# CompanySequenced replaced the sequenceid gem, which was pinned to a feature
-# branch of a third-party fork. The two behaviours it has to keep are the
-# per-company numbering and to_param, since the controllers load these records
-# with `find_by: :sequence_num` and every generated path uses it.
+# Two behaviours have to hold together: numbering that restarts per company,
+# and to_param, which makes that number the URL identifier.
 RSpec.describe CompanySequenced do
   let(:company) { create(:company) }
   let(:other)   { create(:company) }

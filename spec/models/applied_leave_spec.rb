@@ -57,10 +57,8 @@ RSpec.describe AppliedLeave do
       expect(apply).to be_valid
     end
 
-    # validate_leave_dates and validate_past_leave_date compare the two dates,
-    # and Rails runs them alongside the presence validator rather than after
-    # it, so a cleared field arrives as nil. Comparing nil raised instead of
-    # reporting the blank field.
+    # Rails runs custom validators alongside the presence validator rather than
+    # after it, so a cleared field reaches these comparisons as nil.
     %i[applied_from applied_till].each do |field|
       it "reports a blank #{field} instead of raising" do
         record = build(:applied_leave, company: company, user_leave: balance,

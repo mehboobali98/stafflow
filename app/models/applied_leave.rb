@@ -82,9 +82,6 @@ class AppliedLeave < ApplicationRecord
     validate_date_year(applied_from) && validate_date_year(applied_till)
   end
 
-  # Both date checks run alongside the presence validator rather than after it,
-  # so a blank date reaches them as nil. Comparing that raises, which hid the
-  # presence error behind a 500 whenever a date field was cleared.
   def validate_past_leave_date
     return true if applied_from.blank? || applied_till.blank?
     return true unless applied_from < Date.today || applied_till < Date.today
@@ -126,10 +123,8 @@ class AppliedLeave < ApplicationRecord
     end
   end
 
-  # Used as a state machine guard, so it must return true on success.
-  # `raise ... unless cond` evaluates to nil when cond holds, and the
-  # transitions gem treats a nil guard as "not executable", which silently
-  # blocked every approval.
+  # Must return true, not nil: the transitions gem treats a nil guard as
+  # "not executable" and silently skips the transition.
   def validate_leave_count
     raise ArgumentError unless leave_available?
 
@@ -209,9 +204,8 @@ class AppliedLeave < ApplicationRecord
 
   def calculate_leave_count
     number_of_days = week_days_count(applied_from..applied_till)
-    # LEAVE_DURATION is a HashWithIndifferentAccess, so invert gives String
-    # keys and comparing with the Symbol :full_day was always false - every
-    # full-day leave was being counted, and deducted, as a half day.
+    # to_s is load-bearing: LEAVE_DURATION is a HashWithIndifferentAccess, so
+    # invert gives String keys and comparing to a Symbol is always false.
     return number_of_days if leave_duration_name.to_s == 'full_day'
 
     number_of_days / 2.0 # dividing for half-day
