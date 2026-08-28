@@ -52,6 +52,19 @@ jobs:
           ruby-version: '2.7.1'
           bundler-cache: true
 
+      # Request specs render real views, and the test environment compiles
+      # webpack packs on demand, so the JS toolchain has to be present or every
+      # request spec fails on a missing pack rather than on its own assertion.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile --ignore-engines
+
+      - name: Compile packs
+        run: bundle exec rails webpacker:compile
+
       - name: Prepare the database
         run: bundle exec rails db:test:prepare
 
