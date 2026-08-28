@@ -41,6 +41,48 @@ RSpec.describe User do
 
       expect(reused).to be_valid
     end
+
+    describe 'format' do
+      def with_email(address)
+        build(:user, :employee, company: company, department: department,
+                                designation: designation, email: address)
+      end
+
+      # The pattern used to end at a literal '.com' with nothing anchoring it,
+      # so every other top-level domain was rejected and anything trailing a
+      # valid-looking address was ignored.
+      %w[
+        someone@example.com
+        someone@example.org
+        someone@example.io
+        someone@example.co.uk
+        first.last+tag@sub.example.com
+      ].each do |address|
+        it "accepts #{address}" do
+          expect(with_email(address)).to be_valid
+        end
+      end
+
+      %w[
+        someone@example
+        someone@example.
+        someoneexample.com
+        someone@@example.com
+        someone@example.c
+      ].each do |address|
+        it "rejects #{address}" do
+          expect(with_email(address)).not_to be_valid
+        end
+      end
+
+      it 'rejects an address with anything trailing it' do
+        expect(with_email('someone@example.com and more')).not_to be_valid
+      end
+
+      it 'rejects an address with a trailing newline' do
+        expect(with_email("someone@example.com\nelsewhere@example.com")).not_to be_valid
+      end
+    end
   end
 
   describe 'department and designation' do
@@ -144,19 +186,16 @@ RSpec.describe User do
       spent     = create(:leave, company: company)
 
       create(:user_leave, company: company, user: user, leave: available, remaining_count: 5.0)
-      exhausted = create(:user_leave, company: company, user: user, leave: spent, remaining_count: 1.0)
-      # remaining_count validates greater_than 0, so a spent balance can only
-      # be written past validation. See the pending example below.
-      exhausted.update_columns(remaining_count: 0.0)
+      create(:user_leave, company: company, user: user, leave: spent, remaining_count: 0.0)
 
       expect(user.get_available_leaves.map(&:name)).to contain_exactly(available.name)
     end
   end
 
-  # UserLeave validates remaining_count with greater_than: MIN_LEAVE_COUNT,
-  # which is 0. An employee who uses their entire allowance cannot have that
-  # balance saved, so approving the last day of leave fails validation.
-  describe 'exhausting a leave balance', pending: 'remaining_count must be greater than 0' do
+  # remaining_count used to validate greater_than: MIN_LEAVE_COUNT, which is 0,
+  # so an employee who used their entire allowance could not have that balance
+  # saved and approving their last day of leave failed validation.
+  describe 'exhausting a leave balance' do
     it 'can be saved when the balance reaches zero' do
       user  = create(:user, :employee, company: company, department: department)
       leave = create(:leave, company: company)

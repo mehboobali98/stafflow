@@ -82,7 +82,11 @@ class AppliedLeave < ApplicationRecord
     validate_date_year(applied_from) && validate_date_year(applied_till)
   end
 
+  # Both date checks run alongside the presence validator rather than after it,
+  # so a blank date reaches them as nil. Comparing that raises, which hid the
+  # presence error behind a 500 whenever a date field was cleared.
   def validate_past_leave_date
+    return true if applied_from.blank? || applied_till.blank?
     return true unless applied_from < Date.today || applied_till < Date.today
 
     errors.add(:leave_date, I18n.t('applied_leave.messages.error.past_leave_date'))
@@ -90,6 +94,7 @@ class AppliedLeave < ApplicationRecord
   end
 
   def validate_leave_dates
+    return true if applied_from.blank? || applied_till.blank?
     return true unless applied_till < applied_from
 
     errors.add(:ending_leave_date, I18n.t('applied_leave.messages.error.end_leave_date'))

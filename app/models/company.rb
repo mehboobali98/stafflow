@@ -17,7 +17,10 @@ class Company < ApplicationRecord
   has_many :applied_leaves
 
   set_not_multitenant
-  before_save :build_company_setting
+  # Only on create. Run on every save this replaced the company's configured
+  # settings with a fresh default-rate row, so any later edit to the company
+  # silently reverted the tax rate and every payroll after it was wrong.
+  before_create :build_company_setting
 
   def self.current_company_id=(company_id)
     Thread.current[:current_company_id] = company_id
