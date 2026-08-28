@@ -28,14 +28,20 @@ RSpec.describe 'tenant resolution', type: :request do
     expect(response.body).to include('404')
   end
 
-  # ApplicationController rescues RecordNotFound with
+  # ApplicationController used to rescue RecordNotFound with
   #   render file: 'app/views/errors/not_found.html'
-  # which sets no status, so a missing tenant answers 200 OK. Anything
-  # consuming this app programmatically cannot tell success from failure.
-  it 'answers 404 for an unknown subdomain', pending: 'rescue_from sets no status' do
+  # which sets no status, so a missing tenant answered 200 OK. Anything
+  # consuming this app programmatically could not tell success from failure.
+  it 'answers 404 for an unknown subdomain' do
     get_with_host('nosuchtenant.localhost', '/users/sign_in')
 
     expect(response).to have_http_status(:not_found)
+  end
+
+  it 'renders the not-found page through ERB rather than as raw source' do
+    get_with_host('nosuchtenant.localhost', '/users/sign_in')
+
+    expect(response.body).not_to include('<%=')
   end
 
   it 'leaves no tenant set once the request is finished' do

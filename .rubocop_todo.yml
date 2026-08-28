@@ -201,6 +201,7 @@ RSpecRails/InferredSpecType:
   Exclude:
     - 'spec/requests/applied_leaves_spec.rb'
     - 'spec/requests/authentication_spec.rb'
+    - 'spec/requests/error_handling_spec.rb'
     - 'spec/requests/tenant_routing_spec.rb'
 
 # Offense count: 10
