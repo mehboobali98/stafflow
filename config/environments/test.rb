@@ -26,6 +26,12 @@ Rails.application.configure do
   config.cache_store = :null_store
 
   # Raise exceptions instead of rendering exception templates.
+  # Tenants are resolved from the request subdomain. Development sets this so
+  # that acme.localhost yields the subdomain "acme"; without it here, request
+  # specs see no subdomain at all and exercise a different code path than the
+  # running app.
+  config.action_dispatch.tld_length = 0
+
   config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment.

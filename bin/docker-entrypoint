@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+# Rails leaves a pidfile behind if the container was killed uncleanly.
+rm -f /app/tmp/pids/server.pid
+
+if [ -n "$DATABASE_HOST" ]; then
+  echo "waiting for mysql at ${DATABASE_HOST}..."
+  until mysqladmin ping -h"$DATABASE_HOST" -u"${DATABASE_USERNAME:-root}" -p"${DATABASE_PASSWORD}" --silent 2>/dev/null; do
+    sleep 2
+  done
+  echo "mysql is up"
+fi
+
+if [ -n "$ELASTICSEARCH_URL" ]; then
+  echo "waiting for elasticsearch at ${ELASTICSEARCH_URL}..."
+  until curl -sf "${ELASTICSEARCH_URL}/_cluster/health" >/dev/null 2>&1; do
+    sleep 2
+  done
+  echo "elasticsearch is up"
+fi
+
+exec "$@"

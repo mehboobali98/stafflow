@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: RSpec
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: stafflow
+          MYSQL_DATABASE: stafflow_test
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pstafflow"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+
+      elasticsearch:
+        image: elasticsearch:7.17.9
+        env:
+          discovery.type: single-node
+          xpack.security.enabled: 'false'
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+        ports: ['9200:9200']
+        options: >-
+          --health-cmd="curl -sf http://localhost:9200/_cluster/health || exit 1"
+          --health-interval=10s --health-timeout=5s --health-retries=20
+
+    env:
+      RAILS_ENV: test
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: stafflow
+      TEST_DATABASE_NAME: stafflow_test
+      ELASTICSEARCH_URL: http://localhost:9200
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MySQL client libraries
+        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.1'
+          bundler-cache: true
+
+      # Request specs render real views, and the test environment compiles
+      # webpack packs on demand, so the JS toolchain has to be present or every
+      # request spec fails on a missing pack rather than on its own assertion.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile --ignore-engines
+
+      - name: Compile packs
+        run: bundle exec rails webpacker:compile
+
+      - name: Prepare the database
+        run: bundle exec rails db:test:prepare
+
+      - name: Run the suite
+        run: bundle exec rspec --format progress
+
+  lint:
+    name: RuboCop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MySQL client libraries
+        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.1'
+          bundler-cache: true
+      - run: bundle exec rubocop --format github
+
+  security:
+    name: Brakeman
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MySQL client libraries
+        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.1'
+          bundler-cache: true
+      # Brakeman reports three warnings, all dependency-related and all tracked
+      # in ROADMAP.md against phase 3: end-of-life Ruby 2.7 and Rails 6.0, and
+      # CVE-2022-32209 in rails-html-sanitizer. The unanchored EMAIL_REGEX it
+      # used to flag was fixed in phase 2. It reports without failing the build
+      # until the upgrade closes the rest, at which point drop
+      # --no-exit-on-warn.
+      - run: bundle exec brakeman --no-pager --format plain --no-exit-on-warn

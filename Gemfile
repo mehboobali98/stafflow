@@ -32,7 +32,6 @@ gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 gem 'delayed_job_active_record', '4.1.6'
 gem 'transitions', '=1.2.1', require: %w[transitions active_model/transitions]
-gem 'sequenceid', '=0.0.7', git: "https://github.com/alisyed/sequenceid.git", branch: 'feature/change_activerecord_base_to_applicationrecord_in_sti_parent_class_method'
 
 # cron job
 gem 'whenever', '=1.0.0', require: false
@@ -60,6 +59,15 @@ gem 'breadcrumbs_on_rails', '=4.1.0'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  # factory_bot 6.4 uses Ruby 3.0 argument forwarding (...) which 2.7 cannot
+  # parse, so both are pinned to the last releases supporting this Ruby.
+  gem 'brakeman', '~> 5.2', require: false
+  gem 'factory_bot', '= 6.2.1'
+  gem 'factory_bot_rails', '= 6.2.0'
+  gem 'rspec-rails', '~> 5.1'
+  gem 'rubocop', '~> 1.28', require: false
+  gem 'rubocop-rails', '~> 2.14', require: false
+  gem 'rubocop-rspec', '~> 2.10', require: false
 end
 
 group :development do
@@ -77,6 +85,7 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -1,24 +1,185 @@
-# README
+# Stafflow
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[![CI](https://github.com/mehboobali98/stafflow/actions/workflows/ci.yml/badge.svg)](https://github.com/mehboobali98/stafflow/actions/workflows/ci.yml)
 
-Things you may want to cover:
+A multi-tenant HR management system built with Ruby on Rails. One deployment
+serves many companies, each isolated on its own subdomain with its own
+employees, org structure, leave policy, benefits and payroll history.
 
-* Ruby version
+> Originally built as a team project in 2021 under the name PMS. Renamed and
+> modernised since. See [ROADMAP.md](ROADMAP.md) for what is planned next and
+> [CONTRIBUTING.md](CONTRIBUTING.md) for the branching model.
 
-* System dependencies
+## Running it
 
-* Configuration
+You need Docker. Nothing else — Ruby, MySQL, Node and Elasticsearch all run in
+containers.
 
-* Database creation
+```sh
+git clone git@github.com:mehboobali98/stafflow.git
+cd stafflow
+cp .env.example .env
 
-* Database initialization
+docker compose up -d db elasticsearch mail
+docker compose run --rm web bundle exec rails db:create db:migrate db:seed
+docker compose up -d web worker
+```
 
-* How to run the test suite
+The first request compiles the webpack bundle and takes a minute or two.
 
-* Services (job queues, cache servers, search engines, etc.)
+To run the tests:
 
-* Deployment instructions
+```sh
+docker compose run --rm web bundle exec rails db:test:prepare
+docker compose run --rm web bundle exec rspec
+docker compose run --rm web bundle exec rubocop
+```
 
-* ...
+Then open **<http://acme.localhost:3000>** and sign in:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Account owner | `owner@example.com` | `password123` |
+| HR | `hr@example.com` | `password123` |
+| Department head | `head@example.com` | `password123` |
+| Employee | `employee@example.com` | `password123` |
+
+Each role sees a different application — that is the point of the permission
+model, so it is worth signing in as more than one.
+
+Outbound mail is captured by MailHog at <http://localhost:8025> rather than
+being delivered.
+
+If port 3000 is already in use, set `WEB_PORT` in `.env`.
+
+### The subdomain matters
+
+Tenants are resolved from the subdomain, so `localhost:3000` is the public
+marketing page and `acme.localhost:3000` is the Acme tenant. Browsers resolve
+`*.localhost` to `127.0.0.1` automatically; no hosts-file entry is needed.
+
+## How it works
+
+### Multi-tenancy
+
+Every tenant-owned table carries a `company_id`, and the scoping is applied
+automatically rather than being left to individual queries.
+
+`ApplicationRecord.inherited` installs a `TracePoint` that fires when a model
+class finishes being defined, and gives it a default scope:
+
+```ruby
+default_scope { where(company_id: Company.current_company_id) }
+```
+
+A model opts out by calling `set_not_multitenant` in its body — `Company`
+itself is the only one that does.
+
+The current tenant lives in `Thread.current`, set by an `around_action` in
+`ApplicationController` that resolves the subdomain and clears the value in an
+`ensure` block, so a thread cannot leak tenant context into the next request it
+serves.
+
+```
+request to acme.localhost
+        │
+        ▼
+ApplicationController#set_current_company
+  Company.find_company_by_subdomain!("acme")
+  Thread.current[:current_company_id] = company.id
+        │
+        ▼
+any query on any model
+  ... WHERE company_id = 5      ← injected by the default scope
+        │
+        ▼
+ensure: Thread.current[:current_company_id] = nil
+```
+
+### Authorization
+
+Four roles — account owner, HR, department head, employee — implemented with
+CanCanCan. Rather than one large `Ability` class, permissions are split by
+resource into `app/models/concerns/*_abilities.rb`, each contributing rules for
+one part of the domain.
+
+### Leave workflow
+
+Leave types carry a default allowance. Each employee gets a `UserLeave` balance
+per type. Applying draws against the remaining balance; HR and department heads
+approve or reject, individually or in bulk. Balances reset on a schedule driven
+by `whenever` (`lib/tasks/leave.rake`).
+
+### Payroll
+
+`Payroll.generate_payroll` runs in a transaction: it applies the company tax
+rate to the base salary, sums the employee's assigned benefits into itemised
+`AppliedBenefit` rows, and stores the gross. The department head is notified by
+a background email.
+
+## Stack
+
+| | |
+| --- | --- |
+| Ruby / Rails | 2.7.1 / 6.0.4 |
+| Database | MySQL 8 |
+| Search | Elasticsearch 7 via Searchkick |
+| Background jobs | delayed_job |
+| Auth | Devise |
+| Authorization | CanCanCan |
+| Assets | Webpacker 5, Bootstrap 5 |
+| Charts | Chartkick |
+| Scheduling | whenever |
+
+## Layout
+
+```
+app/
+  controllers/        thin; filtering via has_scope, pagination via will_paginate
+  models/
+    concerns/         one *_abilities.rb per resource (CanCanCan rules)
+    application_record.rb   multi-tenant default scope installation
+  views/
+config/
+  locales/en.yml      every user-facing string; no hardcoded copy in views
+db/
+  migrate/            41 migrations
+  seeds.rb            builds one complete demo tenant
+```
+
+## Known gaps
+
+Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
+sequences the work to close these, and carries the full defect backlog with
+line numbers.
+
+- **Coverage is deliberately partial.** 160 specs cover tenant isolation, the
+  permission matrix, payroll calculation, the leave workflow, error handling
+  and user validations. Views are not covered, and controllers only through
+  request specs for authentication, tenant routing, leave updates and the
+  error paths.
+- **Ruby 2.7 and Rails 6.0 are both end-of-life.** The Docker setup pins the
+  contemporary toolchain so the app runs today, but upgrading is outstanding
+  work.
+- **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
+  outstanding.
+- `public/404.html` and `public/500.html` are served ahead of the router
+  whenever the static file server is on, so the styled error pages behind
+  `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
+  no static counterpart and render normally.
+- Two known defects remain, both recorded with locations in
+  [ROADMAP.md](ROADMAP.md#defect-backlog). Neither is reachable from ordinary
+  use: one is an error path that has no spec, the other a missing association
+  the default scope currently papers over.
+
+## Contributors
+
+Built by four engineers. Areas reflect what each person primarily worked on,
+derived from the commit history.
+
+| | |
+| --- | --- |
+| Nadia Ahsan | Departments, designations |
+| Abdul Basit | Devise authentication, employee records |
+| Shehryar Khan | Benefits, payroll |
+| Mehboob Ali | Leave workflows, events calendar |
