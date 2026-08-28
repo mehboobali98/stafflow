@@ -7,7 +7,15 @@ class Payroll < ApplicationRecord
   belongs_to :company
   after_create :deliver_payroll_generation_email
 
+  # `payroll` is declared before the transaction for two reasons. Returning from
+  # inside a transaction block is deprecated in Rails 6.1 and rolls the
+  # transaction back in 7.0 rather than committing it, which would have stopped
+  # payroll persisting at all. And the rescue below referred to a name that only
+  # existed inside the block, so the failure path raised NameError over the
+  # RecordInvalid it meant to report.
   def self.generate_payroll(user)
+    payroll = nil
+
     ActiveRecord::Base.transaction do
       tax_amount           = user.base_salary * (user.company.setting.tax_rate / 100)
       salary_after_tax     = user.base_salary - tax_amount
@@ -24,8 +32,9 @@ class Payroll < ApplicationRecord
                                        benefit_id: user_benefit.benefit_id)
       end
       payroll.save!
-      return payroll
     end
+
+    payroll
   rescue ActiveRecord::RecordInvalid
     payroll
   end
