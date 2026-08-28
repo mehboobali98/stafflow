@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.com/.freeze
+# Anchored at both ends: unanchored at the tail it matched any prefix, so
+# 'someone@example.com.example' and 'someone@example.com <trailing junk>' both
+# passed as 'someone@example.com'. The literal '.com' also rejected every
+# other top-level domain.
+EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/i.freeze
 PASSWORD_LENGTH = (6..128).freeze
 MIN_LEAVE_COUNT = 0
 MAX_LEAVE_COUNT = 40
