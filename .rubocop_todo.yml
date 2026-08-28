@@ -199,6 +199,7 @@ RSpec/ScatteredLet:
 # Configuration parameters: Inferences.
 RSpecRails/InferredSpecType:
   Exclude:
+    - 'spec/requests/applied_leaves_spec.rb'
     - 'spec/requests/authentication_spec.rb'
     - 'spec/requests/tenant_routing_spec.rb'
 
