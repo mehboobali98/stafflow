@@ -20,7 +20,7 @@ somewhere to run.
 | Tests | 191 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 15 found, 14 fixed, 1 open |
+| Known defects | 16 found, 15 fixed, 1 open |
 
 ---
 
@@ -264,12 +264,12 @@ Line numbers current as of 28 Aug 2026.
 
 | Location | Problem | Effect | Severity |
 | --- | --- | --- | --- |
-| `app/models/payroll.rb:30` | `payroll` is referenced in the `rescue` but only assigned inside the transaction block, where it is block-local | The rescue raises `NameError` over the `RecordInvalid` it meant to handle. No spec reaches this path | Wrong |
 | `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
 
-Neither was in the phase 2 checklist, and neither is reachable from ordinary
-use. `event.rb` is worth doing alongside the `TracePoint` review in phase 3,
-since both turn on how the tenancy hook injects the company id.
+`event.rb` is worth doing alongside the `TracePoint` review in phase 3, since
+both turn on how the tenancy hook injects the company id. `payroll.rb` closed
+during the Rails 6.1 upgrade: the deprecation that forced the transaction
+block to be restructured took the block-local `rescue` with it.
 
 ### Fixed
 
@@ -290,6 +290,7 @@ Phase 2, each with a regression spec:
 | `app/controllers/application_controller.rb:8,12` | `render file:` served raw ERB under `200 OK` for denied and missing resources |
 | `config/initializers/constants.rb:3` | `EMAIL_REGEX` accepted only `.com` and was unanchored at the end |
 | `config/locales/en.yml:217,233` | `applied_leave.headings.leave_type` defined twice; the plural silently won |
+| `app/models/payroll.rb` | `return` inside the transaction block, deprecated in 6.1 and a rollback in 7.0, and a `rescue` referring to a name local to that block |
 | `app/helpers/users_helper.rb:19` | Model error text interpolated into an `html_safe` string |
 
 ---
