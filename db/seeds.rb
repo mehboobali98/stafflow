@@ -4,8 +4,7 @@
 #
 #   docker compose run --rm web bundle exec rails db:seed
 #
-# Addresses use example.com (RFC 2606) rather than the more natural .test,
-# because EMAIL_REGEX in config/initializers/constants.rb only accepts .com.
+# Addresses use example.com, which RFC 2606 reserves for exactly this.
 #
 # Everything below is scoped to a single company. Multi-tenancy applies a
 # default scope keyed on Company.current_company_id, so that is set up front

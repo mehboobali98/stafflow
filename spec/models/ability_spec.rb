@@ -126,6 +126,47 @@ RSpec.describe Ability do
     end
   end
 
+  describe 'AppliedLeave' do
+    let(:employee_leave) do
+      user_leave = create(:user_leave, company: company, user: employee)
+      create(:applied_leave, company: company, user_leave: user_leave)
+    end
+
+    # The conditions read `state: 'pending'`, and `state` is a string column.
+    # Written as the symbol `:pending` the comparison never held, which denied
+    # update and destroy to every role and made the edit form unreachable.
+    it 'lets a pending application be edited by its owner and by the approvers' do
+      expect(ability_for(employee)).to be_able_to(:update, employee_leave)
+      expect(ability_for(owner)).to    be_able_to(:update, employee_leave)
+      expect(ability_for(hr)).to       be_able_to(:update, employee_leave)
+      expect(ability_for(head)).to     be_able_to(:update, employee_leave)
+    end
+
+    it 'lets a pending application be withdrawn by its owner' do
+      expect(ability_for(employee)).to be_able_to(:destroy, employee_leave)
+    end
+
+    it 'freezes an application once it has been decided' do
+      employee_leave.state = 'accepted'
+
+      [owner, hr, head, employee].each do |actor|
+        expect(ability_for(actor)).not_to be_able_to(:update, employee_leave),
+                                          "#{actor.role_name} can edit an accepted leave"
+        expect(ability_for(actor)).not_to be_able_to(:destroy, employee_leave),
+                                          "#{actor.role_name} can delete an accepted leave"
+      end
+    end
+
+    it 'keeps one employee out of another employee application' do
+      colleague       = user_with(:employee, department: department)
+      colleague_leave = create(:applied_leave, company: company,
+                                               user_leave: create(:user_leave, company: company, user: colleague))
+
+      expect(ability_for(employee)).to     be_able_to(:update, employee_leave)
+      expect(ability_for(employee)).not_to be_able_to(:update, colleague_leave)
+    end
+  end
+
   describe 'User' do
     it 'stops anyone from editing their own salary, role or department' do
       [owner, hr, head, employee].each do |actor|

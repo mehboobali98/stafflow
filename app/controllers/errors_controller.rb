@@ -11,4 +11,8 @@ class ErrorsController < ApplicationController
   def unauthorized
     render status: 401, layout: false
   end
+
+  def forbidden
+    render status: 403, layout: false
+  end
 end

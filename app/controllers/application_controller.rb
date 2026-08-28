@@ -4,12 +4,15 @@ class ApplicationController < ActionController::Base
   around_action :set_current_company
   helper_method :sub_domain?
 
+  # `render file:` takes a filesystem path and serves the file verbatim, so
+  # these went out as unrendered ERB and, with no status given, under 200 OK.
+  # The error pages are whole documents, hence layout: false.
   rescue_from CanCan::AccessDenied do
-    render file: 'app/views/errors/unauthorized.html', layout: false
+    render template: 'errors/forbidden', status: :forbidden, layout: false
   end
 
   rescue_from ActiveRecord::RecordNotFound do
-    render file: 'app/views/errors/not_found.html', layout: false
+    render template: 'errors/not_found', status: :not_found, layout: false
   end
 
   rescue_from ActionController::UnknownFormat do
