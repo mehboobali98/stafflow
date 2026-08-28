@@ -23,7 +23,7 @@ RSpec.describe 'records addressed by sequence number', type: :request do
 
   before do
     post '/users/sign_in',
-         params: { user: { email: 'hr@example.com', password: 'password123' } },
+         params: { user: { email: hr.email, password: 'password123' } },
          headers: host
   end
 
