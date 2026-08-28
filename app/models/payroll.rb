@@ -43,9 +43,11 @@ class Payroll < ApplicationRecord
   private
 
   def deliver_payroll_generation_email
-    return if user.account_owner? && user.department.department_head.nil
+    # Department#department_head returns nil when nobody in the department
+    # holds that role, and an account owner has no department at all.
+    department_head = user.department&.department_head
+    return if department_head.nil?
 
-    recipient_id = user.department.department_head.id
-    PayrollMailer.delay.payroll_generation(recipient_id, user.id, user.company.id)
+    PayrollMailer.delay.payroll_generation(department_head.id, user.id, user.company.id)
   end
 end
