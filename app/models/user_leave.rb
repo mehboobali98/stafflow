@@ -5,7 +5,11 @@ class UserLeave < ApplicationRecord
   has_many :applied_leaves, dependent: :nullify
   validates_uniqueness_of :user_id, scope: :leave_id, message: I18n.t('user_leave.messages.failure.duplicate_error')
   validates :total_count, :remaining_count, presence: true
-  validates :total_count, :remaining_count, numericality: { greater_than: MIN_LEAVE_COUNT, less_than: MAX_LEAVE_COUNT }
+  validates :total_count, numericality: { greater_than: MIN_LEAVE_COUNT, less_than: MAX_LEAVE_COUNT }
+  # A fully spent allowance is zero, not an invalid balance. An allowance of
+  # zero days is still meaningless, so total_count keeps the stricter rule.
+  validates :remaining_count,
+            numericality: { greater_than_or_equal_to: MIN_LEAVE_COUNT, less_than: MAX_LEAVE_COUNT }
   before_update :set_remaining_leave_count
   before_destroy :check_pending_leaves?, prepend: true
 
@@ -37,8 +41,9 @@ class UserLeave < ApplicationRecord
     throw(:abort)
   end
 
+  # Asking for exactly what is left is allowed; the balance simply ends at zero.
   def count_available?(leave_count)
-    return true if leave_count < remaining_count
+    return true if leave_count <= remaining_count
 
     false
   end
