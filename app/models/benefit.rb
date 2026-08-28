@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Benefit < ApplicationRecord
-  sequenceid :company, :benefits
+  include CompanySequenced
   has_many :users_benefits, dependent: :restrict_with_error
   has_many :applied_benefits, dependent: :restrict_with_error
   belongs_to :company
