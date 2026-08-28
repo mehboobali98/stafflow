@@ -1,0 +1,27 @@
+<%# Rendered by the CanCan::AccessDenied handler in ApplicationController and %>
+<%# by the /403 route. The 401 illustration is a generic padlock drawing with %>
+<%# no status number in it, so both pages share it.                           %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <title><%= t('error_pages.forbidden') %></title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card mt-4">
+            <div class="card-body">
+              <%= image_tag 'error-401.svg' %>
+              <p class="text-center"><small><%= t('error_pages.access_denied') %></small></p>
+            </div>
+            <div class="card-footer text-center">
+              <%= link_to t('error_pages.return_to_dashboard'), dashboard_path %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

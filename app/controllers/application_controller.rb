@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   # these went out as unrendered ERB and, with no status given, under 200 OK.
   # The error pages are whole documents, hence layout: false.
   rescue_from CanCan::AccessDenied do
-    render template: 'errors/unauthorized', status: :forbidden, layout: false
+    render template: 'errors/forbidden', status: :forbidden, layout: false
   end
 
   rescue_from ActiveRecord::RecordNotFound do
