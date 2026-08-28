@@ -95,10 +95,9 @@ jobs:
         with:
           ruby-version: '2.7.1'
           bundler-cache: true
-      # Brakeman reports three warnings, all dependency-related and all tracked
-      # in ROADMAP.md against phase 3: end-of-life Ruby 2.7 and Rails 6.0, and
-      # CVE-2022-32209 in rails-html-sanitizer. The unanchored EMAIL_REGEX it
-      # used to flag was fixed in phase 2. It reports without failing the build
-      # until the upgrade closes the rest, at which point drop
-      # --no-exit-on-warn.
+      # Brakeman reports one warning: end-of-life Ruby 2.7, which is the next
+      # step of the phase 3 upgrade. The Rails 6.1 bump cleared the other two -
+      # end-of-life Rails 6.0, and CVE-2022-32209 in rails-html-sanitizer,
+      # which moved 1.4.2 -> 1.7.1 with the framework. Drop --no-exit-on-warn
+      # once Ruby is raised and the count reaches zero.
       - run: bundle exec brakeman --no-pager --format plain --no-exit-on-warn
