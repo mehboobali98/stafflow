@@ -56,6 +56,23 @@ RSpec.describe AppliedLeave do
     it 'accepts a single upcoming weekday' do
       expect(apply).to be_valid
     end
+
+    # validate_leave_dates and validate_past_leave_date compare the two dates,
+    # and Rails runs them alongside the presence validator rather than after
+    # it, so a cleared field arrives as nil. Comparing nil raised instead of
+    # reporting the blank field.
+    %i[applied_from applied_till].each do |field|
+      it "reports a blank #{field} instead of raising" do
+        record = build(:applied_leave, company: company, user_leave: balance,
+                                       user: employee, leave: leave,
+                                       applied_from: next_monday,
+                                       applied_till: next_monday)
+        record[field] = nil
+
+        expect { record.valid? }.not_to raise_error
+        expect(record.errors[field]).to be_present
+      end
+    end
   end
 
   describe 'counting days' do
