@@ -27,10 +27,6 @@ RSpec.describe Setting do
       expect(setting.tax_rate).to eq(25.0)
     end
 
-    # build_company_setting used to run on every save rather than only on
-    # create, replacing the setting with a fresh one at DEFAULT_TAX_RATE.
-    # Editing the company name silently reverted a configured tax rate, and
-    # every payroll generated afterwards was wrong.
     it 'keeps the configured tax rate when the company record is updated' do
       setting.update!(tax_rate: 25.0)
       company.update!(name: 'Renamed Co')
