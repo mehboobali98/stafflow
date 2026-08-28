@@ -6,23 +6,15 @@ RSpec.describe Payroll do
   let(:company)    { create(:company) }
   let(:department) { create(:department, company: company) }
 
-  before do
-    Company.current_company_id = company.id
-    # Setting validates leave_resets_at on update by parsing it, and raises
-    # Date::Error when it is nil - which is how Company#build_company_setting
-    # leaves it. See spec/models/setting_spec.rb.
-    setting.update_columns(leave_resets_at: Date.today.end_of_year)
-  end
+  before { Company.current_company_id = company.id }
 
   # Read through the table rather than company.setting: the association is
-  # cached from the before_save that builds it, so it does not reflect writes
-  # made behind it.
+  # cached from the before_create that builds it, so it does not reflect
+  # writes made behind it.
   def setting
     Setting.unscoped.find_by!(company_id: company.id)
   end
 
-  # Set the rate only after every user exists: saving a user saves the company,
-  # and Company#before_save rebuilds the setting at DEFAULT_TAX_RATE.
   def set_tax_rate(rate)
     setting.update!(tax_rate: rate)
   end
