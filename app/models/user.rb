@@ -26,7 +26,7 @@ class User < ApplicationRecord
   validates_with AttachmentSizeValidator, attributes: :image, less_than: 3.megabytes
 
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
-  validates_uniqueness_of :email, scope: :company_id
+  validates_uniqueness_of :email, scope: :company_id, case_sensitive: false
   validates_presence_of :email
   validates_format_of :email, with: EMAIL_REGEX, allow_blank: true, if: :will_save_change_to_email?
   validates_presence_of :password, if: :password_required?

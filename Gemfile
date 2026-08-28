@@ -5,7 +5,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.0.4', '>= 6.0.4.1'
+gem 'rails', '~> 6.1.7'
+# 1.3.5 dropped a `require 'logger'` that ActiveSupport < 7.1 depends on. Fails
+# in bin/webpack rather than the suite, so removing this pin looks safe and is
+# not. Comes out at Rails 7.1.
+gem 'concurrent-ruby', '< 1.3.5'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'
 # Use Puma as the app server
