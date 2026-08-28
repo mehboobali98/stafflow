@@ -62,8 +62,7 @@ class AppliedLeavesController < ApplicationController
           redirect_to member_applied_leaves_path(@user),
                       notice: t('applied_leave.messages.leave_update_success')
         else
-
-          flash[:error] = @leave.errors.full_messages
+          flash[:error] = @applied_leave.errors.full_messages
           redirect_to edit_member_applied_leave_path(@user, @applied_leave)
         end
       end
