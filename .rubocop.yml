@@ -1,5 +1,3 @@
-inherit_from: .rubocop_todo.yml
-
 # .rubocop_todo.yml records the offenses that already existed when this config
 # was introduced, so CI enforces the standard on new code without requiring a
 # single sweeping reformat. Entries should be removed as the code is cleaned.
