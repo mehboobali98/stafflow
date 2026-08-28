@@ -16,10 +16,10 @@ everything that proves the code works.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 0 — `capybara` sits in the Gemfile unused |
-| CI workflows | 0 — nothing runs on push |
+| Tests | 121 examples, 4 pending |
+| CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 7, two of which crash on ordinary input |
+| Known defects | 9 found, 3 fixed, 6 open |
 
 ---
 
@@ -43,47 +43,63 @@ company's marketing copy. Both are now fixed.
 
 ---
 
-## Phase 1 — Tests and CI
+## Phase 1 — Tests and CI ✅
 
-**Do this next.** Estimated 1–2 weeks.
+*Shipped.*
 
 This is the single loudest gap. An engineer reading this repo sees non-trivial
 architecture with nothing verifying it, and has to take the whole thing on
 faith. Tests are also the only credible way to demonstrate that tenant
 isolation actually holds.
 
-- [ ] RSpec, factory_bot, shoulda-matchers, database_cleaner
-- [ ] **Tenant isolation specs.** Create two companies, assert that queries
+- [x] RSpec, factory_bot, shoulda-matchers
+- [x] **Tenant isolation specs.** Create two companies, assert that queries
       under one never return the other's rows, and that clearing the
       thread-local scopes correctly. *The highest-value tests in the suite —
       this is the architecture you will be asked about.*
-- [ ] **Ability matrix specs.** Four roles across every resource, driven from a
+- [x] **Ability matrix specs.** Four roles across every resource, driven from a
       table rather than written out longhand
-- [ ] **Payroll calculation specs.** Tax applied to base salary, benefits
+- [x] **Payroll calculation specs.** Tax applied to base salary, benefits
       itemised, gross correct, transaction rolls back on invalid
-- [ ] Leave workflow specs: apply against balance, approve, reject, bulk
+- [x] Leave workflow specs: apply against balance, approve, reject, bulk
       approve, balance decrements exactly once
-- [ ] Request specs for sign-in, subdomain resolution, and the 403 / 404 paths
-- [ ] GitHub Actions running RSpec, RuboCop and Brakeman with MySQL and
+- [x] Request specs for sign-in, subdomain resolution, and the 403 / 404 paths
+- [x] GitHub Actions running RSpec, RuboCop and Brakeman with MySQL and
       Elasticsearch services
-- [ ] Add `.rubocop.yml` — the code is already written in RuboCop style, it
+- [x] Add `.rubocop.yml` — the code is already written in RuboCop style, it
       just has no config
 
-**Done when:** a green CI badge sits at the top of the README, and the tenant
-isolation spec fails if someone removes the default scope.
+Writing the suite uncovered three defects that no amount of reading had found,
+all fixed here because each one blocked the specs that found it:
+
+- **Leave approval never worked.** `validate_leave_count` is used as a state
+  machine guard but was written as `raise ArgumentError unless leave_available?`,
+  which evaluates to `nil` when the leave *is* available. The transitions gem
+  treats a nil guard as "not executable", so every approval silently did
+  nothing and still reported success.
+- **Full-day leaves deducted half a day.** `LEAVE_DURATION` is a
+  `HashWithIndifferentAccess`, so `invert` yields String keys, and
+  `leave_duration_name.eql?(:full_day)` compared a String to a Symbol — always
+  false. Every full-day leave took the half-day branch.
+- **Payroll generation crashed** on the `.nil` typo described in the backlog.
+
+Three more were found and left recorded as pending specs rather than fixed
+here: see the backlog below.
 
 ---
 
 ## Phase 2 — Clear the known defects
 
-Estimated 2–3 days.
+**Do this next.** Estimated 2–3 days.
 
-Seven defects found by reading the code, listed in full below. Doing this after
-Phase 1 means each fix lands with a test that proves it, which is worth more
-than the fix alone.
+Six defects remain, listed in full below. Each has, or should get, a spec in
+front of it. The three marked pending in the suite will go green as they are
+fixed, which makes them self-tracking.
 
-- [ ] Fix the two crashers first — payroll email delivery and leave-update
-      validation both raise on ordinary input
+- [ ] Fix the remaining crasher — leave-update validation raises on ordinary
+      input (`applied_leaves_controller.rb:66`)
+- [ ] Stop `before_save :build_company_setting` resetting configured settings
+      on every company save
 - [ ] Give the error handlers real status codes; a 403 currently returns
       `200 OK`
 - [ ] Widen `EMAIL_REGEX` beyond `.com` and anchor it at both ends
@@ -188,13 +204,20 @@ as of 28 Aug 2026.
 
 | Location | Problem | Effect | Severity |
 | --- | --- | --- | --- |
-| `app/models/payroll.rb:46` | `.nil` is not a method, and an account owner has no department to call it on | Raises `NoMethodError` in an `after_create` hook whenever payroll is generated | **Crash** |
 | `app/controllers/applied_leaves_controller.rb:66` | `@leave` is never assigned in `update`; should be `@applied_leave` | Every validation failure on a leave update raises instead of showing the error | **Crash** |
+| `app/models/company.rb:20` | `before_save :build_company_setting` runs on every save, not only on create | Editing a company silently resets its tax rate to the 10% default, so later payroll is wrong | **Wrong** |
+| `app/models/setting.rb:10` | `DateTime.parse(leave_resets_at.to_s)` with no nil guard, and the column is never initialised | Updating settings on a fresh company raises `Date::Error` rather than failing validation | **Wrong** |
+| `app/models/user_leave.rb:8` | `remaining_count` validates `greater_than: 0` | An employee cannot spend their final day of leave; the balance fails to save at zero | **Wrong** |
 | `app/models/payroll.rb:29` | `payroll` is referenced in the `rescue` but only assigned inside the transaction block | The rescue path returns nothing useful | Wrong |
 | `app/controllers/application_controller.rb:8,12` | `render file:` with a relative path, and no status code set | 403 and 404 responses return `200 OK`; the template renders raw, without ERB or layout | Wrong |
 | `config/initializers/constants.rb:3` | `EMAIL_REGEX` accepts only `.com`, and is unanchored at the end | Rejects `.org`, `.io`, `.co.uk`; accepts `a@b.com.evil` | Wrong |
 | `config/locales/en.yml:217,233` | `applied_leave.headings.leave_type` defined twice, as "Leave type" and "Leave types" | The later definition silently wins everywhere | Tidy |
 | `app/helpers/users_helper.rb:19` | Model error text interpolated into an `html_safe` string | Low practical risk, but it is what a reviewer greps for | Tidy |
+| `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails | Tidy |
+
+Fixed in phase 1, each with a regression spec: `payroll.rb:46` (`.nil` typo),
+`applied_leave.rb` state machine guard returning nil, and `applied_leave.rb`
+full-day duration comparison.
 
 ---
 
