@@ -7,12 +7,8 @@ class Payroll < ApplicationRecord
   belongs_to :company
   after_create :deliver_payroll_generation_email
 
-  # `payroll` is declared before the transaction for two reasons. Returning from
-  # inside a transaction block is deprecated in Rails 6.1 and rolls the
-  # transaction back in 7.0 rather than committing it, which would have stopped
-  # payroll persisting at all. And the rescue below referred to a name that only
-  # existed inside the block, so the failure path raised NameError over the
-  # RecordInvalid it meant to report.
+  # Declared outside the transaction so the rescue can see it, and so the block
+  # does not need a `return` - which rolls back rather than commits in Rails 7.0.
   def self.generate_payroll(user)
     payroll = nil
 
