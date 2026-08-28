@@ -144,19 +144,16 @@ RSpec.describe User do
       spent     = create(:leave, company: company)
 
       create(:user_leave, company: company, user: user, leave: available, remaining_count: 5.0)
-      exhausted = create(:user_leave, company: company, user: user, leave: spent, remaining_count: 1.0)
-      # remaining_count validates greater_than 0, so a spent balance can only
-      # be written past validation. See the pending example below.
-      exhausted.update_columns(remaining_count: 0.0)
+      create(:user_leave, company: company, user: user, leave: spent, remaining_count: 0.0)
 
       expect(user.get_available_leaves.map(&:name)).to contain_exactly(available.name)
     end
   end
 
-  # UserLeave validates remaining_count with greater_than: MIN_LEAVE_COUNT,
-  # which is 0. An employee who uses their entire allowance cannot have that
-  # balance saved, so approving the last day of leave fails validation.
-  describe 'exhausting a leave balance', pending: 'remaining_count must be greater than 0' do
+  # remaining_count used to validate greater_than: MIN_LEAVE_COUNT, which is 0,
+  # so an employee who used their entire allowance could not have that balance
+  # saved and approving their last day of leave failed validation.
+  describe 'exhausting a leave balance' do
     it 'can be saved when the balance reaches zero' do
       user  = create(:user, :employee, company: company, department: department)
       leave = create(:leave, company: company)
