@@ -10,16 +10,17 @@ reads; everything after is depth.
 
 ## Where it stands
 
-The app runs from a clean clone in three commands. What it still lacks is
-everything that proves the code works.
+The app runs from a clean clone in three commands, with a suite in front of it
+and the known defects cleared. What it still lacks is a modern stack and
+somewhere to run.
 
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 121 examples, 4 pending |
+| Tests | 160 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 9 found, 3 fixed, 6 open |
+| Known defects | 15 found, 13 fixed, 2 open |
 
 ---
 
@@ -88,34 +89,69 @@ here: see the backlog below.
 
 ---
 
-## Phase 2 — Clear the known defects
+## Phase 2 — Clear the known defects ✅
 
-**Do this next.** Estimated 2–3 days.
+*Shipped.*
 
-Six defects remain, listed in full below. Each has, or should get, a spec in
-front of it. The three marked pending in the suite will go green as they are
-fixed, which makes them self-tracking.
-
-- [ ] Fix the remaining crasher — leave-update validation raises on ordinary
+- [x] Fix the remaining crasher — leave-update validation raises on ordinary
       input (`applied_leaves_controller.rb:66`)
-- [ ] Stop `before_save :build_company_setting` resetting configured settings
+- [x] Stop `before_save :build_company_setting` resetting configured settings
       on every company save
-- [ ] Give the error handlers real status codes; a 403 currently returns
-      `200 OK`
-- [ ] Widen `EMAIL_REGEX` beyond `.com` and anchor it at both ends
-- [ ] Resolve the two remaining nested i18n duplicates — needs a copy decision:
-      "Leave type" or "Leave types"
-- [ ] Replace `html_safe` string interpolation in `users_helper` with a tag
+- [x] Give the error handlers real status codes, where a 403 returned `200 OK`
+      and the page went out as raw ERB
+- [x] Stop `leave_reset_date_valid?` raising `Date::Error` on the nil the
+      column starts at
+- [x] Let a leave balance reach zero, so an employee can spend their last day
+- [x] Widen `EMAIL_REGEX` beyond `.com` and anchor it at both ends
+- [x] Resolve the two remaining nested i18n duplicates — settled on the
+      singular "Leave type", which is what both call sites are: column headers
+      over a column holding one leave type per row
+- [x] Replace `html_safe` string interpolation in `users_helper` with a tag
       builder
 
-**Done when:** the defect table below is empty, and each row has a regression
-test behind it.
+Every spec that was pending is now green: 160 examples, none pending.
+
+Fixing the leave-update crasher turned up two further defects stacked in front
+of it, both of the same kind the suite found in phase 1 — a comparison between
+values that were never the same type:
+
+- **No leave application could be edited or withdrawn, by anyone.** The CanCan
+  rules conditioned `update` and `destroy` on `state: :pending`, but `state` is
+  a string column. CanCan compares the condition to the attribute with `==`,
+  and `'pending' == :pending` is false, so the rule matched for no role at all
+  and every attempt answered with the unauthorized page. `AppliedLeave` had no
+  section in the ability matrix, which is how a rule that denied everyone went
+  unnoticed; it has one now.
+- **Clearing a date on the leave form returned a 500.** `validate_leave_dates`
+  and `validate_past_leave_date` compare the two dates, and Rails runs custom
+  validators alongside the presence validator rather than after it, so a blank
+  field arrives as `nil` and the comparison raises. The presence error the user
+  should have seen was never reached.
+
+Fixing the zero-balance defect turned up a second half to it: `count_available?`
+treated a request as available only when it was *strictly* less than the
+remaining balance, so asking for exactly the days left was refused before the
+validation was ever reached. Both halves were needed for an employee to spend
+their last day.
+
+One further finding, recorded rather than fixed: `public/404.html` and
+`public/500.html` are served by `ActionDispatch::Static` ahead of the router,
+so the styled pages behind the `/404` and `/500` routes never render while the
+static file server is on. It always is in test, and in production whenever
+`RAILS_SERVE_STATIC_FILES` is set — which matters for phase 4. `/401` and
+`/403` have no static counterpart and render normally. Deleting the static
+files would fix it but costs the fallback that works when the app cannot boot,
+so it is a deployment decision rather than a defect.
+
+Two rows are left in the backlog below. Neither was in this phase's checklist
+and neither is reachable from ordinary use, so the phase closes here rather
+than absorbing them; they are described where they sit.
 
 ---
 
 ## Phase 3 — Modernise the stack
 
-Estimated 3–5 weeks.
+**Do this next.** Estimated 3–5 weeks.
 
 Ruby 2.7 and Rails 6.0 are both past end of life, and the original repo reports
 132 dependency vulnerabilities. This is the largest phase, and it is also the
@@ -199,25 +235,39 @@ spends about ninety seconds here.
 
 ## Defect backlog
 
-Found by reading the code, all still present on `develop`. Line numbers current
-as of 28 Aug 2026.
+Line numbers current as of 28 Aug 2026.
+
+### Open
 
 | Location | Problem | Effect | Severity |
 | --- | --- | --- | --- |
-| `app/controllers/applied_leaves_controller.rb:66` | `@leave` is never assigned in `update`; should be `@applied_leave` | Every validation failure on a leave update raises instead of showing the error | **Crash** |
-| `app/models/company.rb:20` | `before_save :build_company_setting` runs on every save, not only on create | Editing a company silently resets its tax rate to the 10% default, so later payroll is wrong | **Wrong** |
-| `app/models/setting.rb:10` | `DateTime.parse(leave_resets_at.to_s)` with no nil guard, and the column is never initialised | Updating settings on a fresh company raises `Date::Error` rather than failing validation | **Wrong** |
-| `app/models/user_leave.rb:8` | `remaining_count` validates `greater_than: 0` | An employee cannot spend their final day of leave; the balance fails to save at zero | **Wrong** |
-| `app/models/payroll.rb:29` | `payroll` is referenced in the `rescue` but only assigned inside the transaction block | The rescue path returns nothing useful | Wrong |
-| `app/controllers/application_controller.rb:8,12` | `render file:` with a relative path, and no status code set | 403 and 404 responses return `200 OK`; the template renders raw, without ERB or layout | Wrong |
-| `config/initializers/constants.rb:3` | `EMAIL_REGEX` accepts only `.com`, and is unanchored at the end | Rejects `.org`, `.io`, `.co.uk`; accepts `a@b.com.evil` | Wrong |
-| `config/locales/en.yml:217,233` | `applied_leave.headings.leave_type` defined twice, as "Leave type" and "Leave types" | The later definition silently wins everywhere | Tidy |
-| `app/helpers/users_helper.rb:19` | Model error text interpolated into an `html_safe` string | Low practical risk, but it is what a reviewer greps for | Tidy |
-| `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails | Tidy |
+| `app/models/payroll.rb:30` | `payroll` is referenced in the `rescue` but only assigned inside the transaction block, where it is block-local | The rescue raises `NameError` over the `RecordInvalid` it meant to handle. No spec reaches this path | Wrong |
+| `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
 
-Fixed in phase 1, each with a regression spec: `payroll.rb:46` (`.nil` typo),
+Neither was in the phase 2 checklist, and neither is reachable from ordinary
+use. `event.rb` is worth doing alongside the `TracePoint` review in phase 3,
+since both turn on how the tenancy hook injects the company id.
+
+### Fixed
+
+Phase 1, each with a regression spec: `payroll.rb:46` (`.nil` typo),
 `applied_leave.rb` state machine guard returning nil, and `applied_leave.rb`
 full-day duration comparison.
+
+Phase 2, each with a regression spec:
+
+| Location | Problem |
+| --- | --- |
+| `app/models/concerns/applied_leave_abilities.rb` | `state: :pending` compared a symbol to a string column, denying `update` and `destroy` to every role |
+| `app/models/applied_leave.rb` | Date validators compared `nil` when a date field was cleared, returning a 500 instead of the presence error |
+| `app/controllers/applied_leaves_controller.rb:66` | `@leave` never assigned in `update`; should be `@applied_leave` |
+| `app/models/company.rb:20` | `before_save :build_company_setting` ran on every save, resetting the configured tax rate |
+| `app/models/setting.rb:10` | `DateTime.parse(leave_resets_at.to_s)` raised `Date::Error` on the nil the column starts at |
+| `app/models/user_leave.rb:8` | `remaining_count` validated `greater_than: 0`, and `count_available?` compared with `<`, so the last day of an allowance could be neither requested nor saved |
+| `app/controllers/application_controller.rb:8,12` | `render file:` served raw ERB under `200 OK` for denied and missing resources |
+| `config/initializers/constants.rb:3` | `EMAIL_REGEX` accepted only `.com` and was unanchored at the end |
+| `config/locales/en.yml:217,233` | `applied_leave.headings.leave_type` defined twice; the plural silently won |
+| `app/helpers/users_helper.rb:19` | Model error text interpolated into an `html_safe` string |
 
 ---
 

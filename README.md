@@ -153,19 +153,24 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 121 specs cover tenant isolation, the
-  permission matrix, payroll calculation, the leave workflow and user
-  validations. Controllers and views are not covered.
+- **Coverage is deliberately partial.** 160 specs cover tenant isolation, the
+  permission matrix, payroll calculation, the leave workflow, error handling
+  and user validations. Views are not covered, and controllers only through
+  request specs for authentication, tenant routing, leave updates and the
+  error paths.
 - **Ruby 2.7 and Rails 6.0 are both end-of-life.** The Docker setup pins the
   contemporary toolchain so the app runs today, but upgrading is outstanding
   work.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
-- `EMAIL_REGEX` in `config/initializers/constants.rb` only accepts `.com`
-  addresses, which is why the seed data uses `example.com`.
-- Six known defects, one of which crashes on ordinary input. Three of them are
-  recorded as pending specs, so they turn green when fixed. Listed with
-  locations in [ROADMAP.md](ROADMAP.md#defect-backlog).
+- `public/404.html` and `public/500.html` are served ahead of the router
+  whenever the static file server is on, so the styled error pages behind
+  `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
+  no static counterpart and render normally.
+- Two known defects remain, both recorded with locations in
+  [ROADMAP.md](ROADMAP.md#defect-backlog). Neither is reachable from ordinary
+  use: one is an error path that has no spec, the other a missing association
+  the default scope currently papers over.
 
 ## Contributors
 
