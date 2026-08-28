@@ -41,6 +41,29 @@ RSpec.describe 'error handling', type: :request do
       expect(response.body).not_to include('<%=')
       expect(response.body).to include('<!DOCTYPE html>')
     end
+
+    # The denial page is its own template rather than the 401 one, so its
+    # title matches the status the response actually carries.
+    it 'renders the forbidden page rather than the unauthorized one' do
+      get '/settings', headers: host
+
+      expect(response.body).to include('403')
+      expect(response.body).not_to include('401 Error')
+    end
+  end
+
+  # config.exceptions_app is the router, so these paths are what Rails falls
+  # back to for an unhandled response. /404 and /500 are deliberately absent:
+  # public/404.html and public/500.html shadow them whenever the static file
+  # server is enabled, which it always is in test. See ROADMAP.md.
+  describe 'the error routes used by exceptions_app' do
+    { '/401' => :unauthorized, '/403' => :forbidden }.each do |path, status|
+      it "serves #{path} as #{status}" do
+        get path, headers: host
+
+        expect(response).to have_http_status(status)
+      end
+    end
   end
 
   describe 'a record that does not exist' do
