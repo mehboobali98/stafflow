@@ -12,15 +12,8 @@ FactoryBot.define do
     sequence(:name) { |n| "Designation #{n}" }
   end
 
-  # Event is tenant-scoped by the default scope but, unlike every other
-  # tenant-owned model, declares no belongs_to :company — so it has no
-  # company= writer and the id has to be set directly.
   factory :event do
-    transient do
-      company { nil }
-    end
-
-    company_id { company&.id || Company.current_company_id }
+    company
     sequence(:name) { |n| "Event #{n}" }
     starts_at { Date.today + 7 }
   end

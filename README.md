@@ -153,7 +153,7 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 201 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 209 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
@@ -165,19 +165,16 @@ line numbers.
   alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
   force; the 7.1 defaults are staged in
   `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
-- **Two known defects remain**, listed with locations in
-  [ROADMAP.md](ROADMAP.md#defect-backlog). Neither is reachable from ordinary
-  use: a missing association the default scope papers over, and a search result
-  count taken from an index that is not partitioned by company.
+- **One known defect remains**, listed with its location in
+  [ROADMAP.md](ROADMAP.md#defect-backlog): search reports a result count taken
+  from an Elasticsearch index that is not partitioned by company. The records
+  themselves are scoped correctly; the number is not.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
   no static counterpart and render normally.
-- One known defect remains, recorded with its location in
-  [ROADMAP.md](ROADMAP.md#defect-backlog). It is not reachable from ordinary
-  use: a missing association the default scope currently papers over.
 
 ## Contributors
 
