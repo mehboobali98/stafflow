@@ -17,7 +17,7 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 193 examples, 0 pending |
+| Tests | 196 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
 | Known defects | 17 found, 16 fixed, 1 open |
@@ -252,7 +252,33 @@ is not the request's, and sign-in reaches a tenant by exactly that route —
 `allow_other_host: true` closes the front door of the application, and that
 redirect has no spec covering it today.
 
-- [ ] Enable the Rails 7.0 framework defaults
+- [x] Enable the Rails 7.0 framework defaults. Of the two flagged for
+      hand-checking, one was real and one turned out to be unreachable:
+
+      `action_controller.raise_on_open_redirects` was the real one.
+      `home_controller.rb` hands a visitor from the apex host to
+      `new_user_session_url` on their company's subdomain, which is the only
+      cross-host redirect the app makes and the way every session starts. It
+      now says `allow_other_host: true`, and the path has a request spec, which
+      it did not before.
+
+      `active_support.executor_around_test_case` was raised because a query
+      cache spanning a test case could serve one tenant's rows to another
+      through the thread-local default scope. It changes nothing here, for a
+      reason worth recording rather than treating as reassurance: Rails
+      installs the executor through an `active_support_test_case` load hook, so
+      it reaches only classes descending from `ActiveSupport::TestCase`.
+      rspec-rails 5.1.2 does not, and never reads the flag — the config is true
+      and the query cache is still off inside an example. The interaction is
+      untested rather than safe, and goes live if the suite moves to
+      rspec-rails 6.
+
+      The rest are inert: no `button_to`, no scoped associations, no Active
+      Storage, and `wrap_parameters_by_default` matches what
+      `config/initializers/wrap_parameters.rb` already sets by hand. The two
+      digest defaults rotate the key generator to SHA256 and invalidate every
+      signed and encrypted cookie, which costs nothing while there is no
+      deployment to sign anyone out of.
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
