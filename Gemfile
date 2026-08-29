@@ -28,7 +28,13 @@ gem 'jbuilder', '~> 2.7'
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'paperclip', '=6.0.0'
+# Active Storage variants. The 7.0 framework defaults select the vips
+# processor, so the image is built with libvips rather than ImageMagick.
+gem 'image_processing', '~> 1.12'
+# Active Storage ships no content-type or size validators of its own. Sniffing
+# upload types by hand is where this kind of code goes wrong, so it is left to
+# a gem that validates the analysed type rather than the declared one.
+gem 'active_storage_validations', '~> 1.1'
 gem 'will_paginate', '=3.3.0'
 # additional gems
 gem 'cancancan'
@@ -64,9 +70,6 @@ gem 'elasticsearch', '~> 7.17'
 
 # faker gem to seed database
 gem 'faker', '=2.19.0'
-
-# Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false

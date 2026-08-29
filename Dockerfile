@@ -8,6 +8,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
       default-libmysqlclient-dev \
       default-mysql-client \
       libxml2-dev libxslt1-dev zlib1g-dev \
+      libvips42 \
       xz-utils curl git tzdata \
  && rm -rf /var/lib/apt/lists/*
 
