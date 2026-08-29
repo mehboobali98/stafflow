@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 160 examples, 0 pending |
+| Tests | 193 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 15 found, 13 fixed, 2 open |
+| Known defects | 17 found, 16 fixed, 1 open |
 
 ---
 
@@ -151,25 +151,82 @@ than absorbing them; they are described where they sit.
 
 ## Phase 3 — Modernise the stack
 
-**Do this next.** Estimated 3–5 weeks.
+**In progress.** Estimated 3–5 weeks.
 
 Ruby 2.7 and Rails 6.0 are both past end of life, and the original repo reports
 132 dependency vulnerabilities. This is the largest phase, and it is also the
 best interview story in the project — a real legacy upgrade with a test suite
 underneath it, which is why it comes after Phase 1 rather than before.
 
-- [ ] Ruby 2.7.1 → 3.3 — mostly keyword-argument fallout
-- [ ] Rails 6.0 → 6.1 → 7.0 → 7.1, one minor at a time, running the suite at
-      each step
+- [x] Replace the `sequenceid` dependency, which was pinned to a branch on a
+      third-party fork — if that branch disappeared the app stopped building.
+      Done first, since it patched ActiveRecord STI internals and would have
+      been an unknown in every step below
+- [ ] Ruby and Rails, interleaved. **The two cannot be done in sequence:**
+      Rails 6.0 does not support Ruby 3.x, and 6.1 was the first release that
+      did, so raising Ruby first leaves the app unable to boot. The suite runs
+      at every stop:
+
+      | | | |
+      | --- | --- | --- |
+      | ✅ | Rails 6.0 → 6.1 | still on Ruby 2.7 |
+      | ✅ | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
+      | | Rails 6.1 → 7.0 | |
+      | | Ruby 3.0 → 3.2 | |
+      | | Rails 7.0 → 7.1 | |
+      | | Ruby 3.2 → 3.3 | |
+
+The Ruby 3.0 step needed one dependency moved and turned up two pieces of dead
+code that only Ruby 3.0 can see:
+
+- **Every Rails command crashed at boot** under bootsnap 1.9.1. Ruby
+  [Bug #18250] makes `RubyVM::InstructionSequence#to_binary` raise on a method
+  that takes an anonymous splat and forwards it through a bare `super` inside a
+  block — `thor/base.rb` defines three. bootsnap caches compiled iseqs, so it
+  hit the bug on the first `require`. bootsnap 1.9.2 detects the bug and skips
+  the files it affects — the lockfile sat exactly one patch release behind the
+  fix, on a gem the Gemfile never pinned.
+- `.freeze` on the `EMAIL_REGEX` and `PASSWORD_LENGTH` literals, and `.sort` on
+  the `Dir[]` glob in `rails_helper`, are all no-ops as of Ruby 3.0, which
+  froze Regexp and Range literals and made glob results sorted by default.
+
+Brakeman now reports zero warnings, which is worth reading carefully rather
+than as a clean bill of health: Ruby 3.0 went out of support in March 2024, but
+Brakeman 5.4.1's table writes that range as `['3.0.0', '2.8.99']`, which no
+version satisfies, and its Rails table has no entry past 6.0. The stack is two
+steps less current than the check can say.
+
+- [x] Enable the Rails 6.1 framework defaults. Both flips that were flagged for
+      hand-checking turned out to be safe, and the first one fixed a form that
+      had never worked:
+
+      `action_view.form_with_generates_remote_forms` was expected to affect two
+      forms. Only one exists. `users_benefits/new.html.erb` is dead — routes
+      declare `except: %i[create show new]`, the controller has no `new`, and
+      the view calls `member_users_benefit_mass_create_path`, which is not a
+      route helper this app generates; it has been deleted.
+      `applied_leaves/new_applied_leave_by_hr` was the real one, and it rendered
+      `data-remote="true"` against a controller that only answers `format.html`
+      and redirects, so the XHR followed the redirect, got HTML back, and
+      rails-ujs did nothing with it — the submit button appeared dead. The flip
+      makes it an ordinary POST, and it now redirects and persists.
+
+      `action_dispatch.cookies_same_site_protection` was a false alarm. The
+      sign-in form posts to `/users/sign_in` on the same host it was served
+      from, so nothing crosses an origin; the only apex-to-subdomain hop is the
+      top-level GET link on `display_companies`, which `:lax` permits and which
+      carries no session yet. Subdomains of one registrable domain are same-site
+      regardless. The cookie previously carried no `SameSite` attribute at all,
+      which browsers have themselves defaulted to `Lax` since 2020, so this
+      writes down behaviour the app already had.
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
       importmaps
-- [ ] Replace the `sequenceid` dependency, currently pinned to a branch on a
-      third-party fork — if that branch disappears the app stops building
 - [ ] Clear the Dependabot backlog once the framework bumps land
 - [ ] Revisit the `TracePoint` multi-tenancy hook against modern Rails
-      autoloading
+      autoloading. `event.rb` in the defect backlog belongs with this, since
+      both turn on how the hook injects `company_id`
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
 pinned to a git branch.
@@ -235,18 +292,18 @@ spends about ninety seconds here.
 
 ## Defect backlog
 
-Line numbers current as of 28 Aug 2026.
+Line numbers current as of 29 Aug 2026.
 
 ### Open
 
 | Location | Problem | Effect | Severity |
 | --- | --- | --- | --- |
-| `app/models/payroll.rb:30` | `payroll` is referenced in the `rescue` but only assigned inside the transaction block, where it is block-local | The rescue raises `NameError` over the `RecordInvalid` it meant to handle. No spec reaches this path | Wrong |
 | `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
 
-Neither was in the phase 2 checklist, and neither is reachable from ordinary
-use. `event.rb` is worth doing alongside the `TracePoint` review in phase 3,
-since both turn on how the tenancy hook injects the company id.
+`event.rb` is worth doing alongside the `TracePoint` review in phase 3, since
+both turn on how the tenancy hook injects the company id. `payroll.rb` closed
+during the Rails 6.1 upgrade: the deprecation that forced the transaction
+block to be restructured took the block-local `rescue` with it.
 
 ### Fixed
 
@@ -267,7 +324,14 @@ Phase 2, each with a regression spec:
 | `app/controllers/application_controller.rb:8,12` | `render file:` served raw ERB under `200 OK` for denied and missing resources |
 | `config/initializers/constants.rb:3` | `EMAIL_REGEX` accepted only `.com` and was unanchored at the end |
 | `config/locales/en.yml:217,233` | `applied_leave.headings.leave_type` defined twice; the plural silently won |
+| `app/models/payroll.rb` | `return` inside the transaction block, deprecated in 6.1 and a rollback in 7.0, and a `rescue` referring to a name local to that block |
 | `app/helpers/users_helper.rb:19` | Model error text interpolated into an `html_safe` string |
+
+Phase 3, with a regression spec:
+
+| Location | Problem |
+| --- | --- |
+| `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
 
 ---
 

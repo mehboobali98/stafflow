@@ -7,7 +7,11 @@ class Payroll < ApplicationRecord
   belongs_to :company
   after_create :deliver_payroll_generation_email
 
+  # Declared outside the transaction so the rescue can see it, and so the block
+  # does not need a `return` - which rolls back rather than commits in Rails 7.0.
   def self.generate_payroll(user)
+    payroll = nil
+
     ActiveRecord::Base.transaction do
       tax_amount           = user.base_salary * (user.company.setting.tax_rate / 100)
       salary_after_tax     = user.base_salary - tax_amount
@@ -24,8 +28,9 @@ class Payroll < ApplicationRecord
                                        benefit_id: user_benefit.benefit_id)
       end
       payroll.save!
-      return payroll
     end
+
+    payroll
   rescue ActiveRecord::RecordInvalid
     payroll
   end

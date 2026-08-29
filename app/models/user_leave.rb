@@ -6,8 +6,6 @@ class UserLeave < ApplicationRecord
   validates_uniqueness_of :user_id, scope: :leave_id, message: I18n.t('user_leave.messages.failure.duplicate_error')
   validates :total_count, :remaining_count, presence: true
   validates :total_count, numericality: { greater_than: MIN_LEAVE_COUNT, less_than: MAX_LEAVE_COUNT }
-  # A fully spent allowance is zero, not an invalid balance. An allowance of
-  # zero days is still meaningless, so total_count keeps the stricter rule.
   validates :remaining_count,
             numericality: { greater_than_or_equal_to: MIN_LEAVE_COUNT, less_than: MAX_LEAVE_COUNT }
   before_update :set_remaining_leave_count

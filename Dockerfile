@@ -1,13 +1,13 @@
-# Ruby 2.7.1 to match .ruby-version. The image is Debian Buster, which has
-# reached end of life, so apt sources are repointed at the Debian archive.
-FROM ruby:2.7.1
+# Debian Bullseye, whose LTS ends 31 Aug 2026, so apt sources are repointed at
+# the Debian archive. bullseye-security is not archived at all, so that suite is
+# dropped rather than left behind to 404 the build.
+FROM ruby:3.0.7
 
 ARG NODE_VERSION=14.21.3
 ARG YARN_VERSION=1.22.19
 
-RUN sed -i -e 's|deb.debian.org|archive.debian.org|g' \
-           -e 's|security.debian.org|archive.debian.org|g' \
-           -e '/buster-updates/d' /etc/apt/sources.list \
+RUN sed -i -e '/bullseye-security/d' \
+           -e 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
  && printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99no-check-valid-until
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
@@ -18,7 +18,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
       xz-utils curl git tzdata \
  && rm -rf /var/lib/apt/lists/*
 
-# Node from the official tarball; the NodeSource apt repo no longer serves Buster.
+# Node from the official tarball; the NodeSource apt repo no longer serves Bullseye.
 RUN set -eux; \
     case "$(dpkg --print-architecture)" in \
       amd64) NODE_ARCH=x64 ;; \
@@ -33,10 +33,9 @@ RUN set -eux; \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-# The committed lockfile pins nokogiri to x86_64-linux. Register the other
-# platforms so the image builds on Apple Silicon as well as on x86.
-RUN gem install bundler:2.2.25 \
- && bundle lock --add-platform x86_64-linux aarch64-linux ruby \
+# 2.4's PubGrub resolver settles this dependency graph in seconds; 2.2's
+# Molinillo backtracked on it for twenty minutes without converging.
+RUN gem install bundler:2.4.22 \
  && bundle config set --local without 'production' \
  && bundle install --jobs 4 --retry 3
 

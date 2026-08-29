@@ -8,8 +8,7 @@ Bundler.require(*Rails.groups)
 
 module Stafflow
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 6.1
     config.active_job.queue_adapter = :delayed_job
     ActionView::Base.field_error_proc = proc do |html_tag, instance|
       html_tag.gsub("form-control", "form-control").html_safe
