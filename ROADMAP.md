@@ -174,7 +174,7 @@ underneath it, which is why it comes after Phase 1 rather than before.
       | ✅ | Rails 6.1 → 7.0 | |
       | ✅ | Ruby 3.0 → 3.2 | 3.1 skipped; nothing needs it as a stop |
       | ✅ | Rails 7.0 → 7.1 | |
-      | | Ruby 3.2 → 3.3 | |
+      | ✅ | Ruby 3.2 → 3.3 | |
 
 The Ruby 3.0 step needed one dependency moved and turned up two pieces of dead
 code that only Ruby 3.0 can see:
@@ -359,6 +359,16 @@ step: rspec-rails 6 descends from `ActiveSupport::TestCase`, so
 `executor_around_test_case` stops being inert and the Active Record query cache
 starts spanning test cases. That is the tenancy interaction the isolation specs
 were written to catch, and it goes live in the same commit.
+
+Ruby 3.3 cost nothing. No gem moved, the lockfile changed by one line, and the
+suite, the asset build, the server and the worker all came up unchanged. Worth
+recording precisely because the two Ruby steps before it were not like that:
+3.0 needed bootsnap moved, and 3.2 needed capybara and mysql2. Nothing in this
+app reaches for a stdlib method 3.3 changed, and nothing warns about the
+default gems 3.4 will move out.
+
+That closes the interleaved sequence. What is left of this phase is the gem
+work the framework bumps were blocking.
 
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
