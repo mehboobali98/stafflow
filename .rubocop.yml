@@ -8,7 +8,7 @@ require:
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.3
   NewCops: enable
   Exclude:
     - 'bin/**/*'
@@ -41,10 +41,10 @@ Metrics/ClassLength:
 Layout/LineLength:
   Max: 120
 
-# Raising TargetRubyVersion to 3.2 makes this cop ask for Ruby 3.1's hash value
-# omission - `company: company` becomes `company:` - in 225 places. That is a
-# restyle of the whole codebase, not part of running on a newer Ruby, and it
-# would bury the upgrade it rode in on. Both forms are valid 3.2, so both are
+# A TargetRubyVersion of 3.1 or later makes this cop ask for Ruby 3.1's hash
+# value omission - `company: company` becomes `company:` - in 225 places. That
+# is a restyle of the whole codebase, not part of running on a newer Ruby, and
+# it would bury the upgrade it rode in on. Both forms are valid, so both are
 # allowed and new code may use either.
 Style/HashSyntax:
   EnforcedShorthandSyntax: either

@@ -1,4 +1,4 @@
-FROM ruby:3.2.11-bookworm
+FROM ruby:3.3.12-bookworm
 
 ARG NODE_VERSION=14.21.3
 ARG YARN_VERSION=1.22.19
