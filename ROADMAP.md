@@ -171,7 +171,7 @@ underneath it, which is why it comes after Phase 1 rather than before.
       | --- | --- | --- |
       | ✅ | Rails 6.0 → 6.1 | still on Ruby 2.7 |
       | ✅ | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
-      | | Rails 6.1 → 7.0 | |
+      | ✅ | Rails 6.1 → 7.0 | |
       | | Ruby 3.0 → 3.2 | |
       | | Rails 7.0 → 7.1 | |
       | | Ruby 3.2 → 3.3 | |
@@ -219,6 +219,40 @@ steps less current than the check can say.
       regardless. The cookie previously carried no `SameSite` attribute at all,
       which browsers have themselves defaulted to `Lax` since 2020, so this
       writes down behaviour the app already had.
+
+The Rails 7.0 step was a dependency problem rather than an application one.
+Nothing in `app/` had to change, and the suite went from 193 green on 6.1 to
+193 green on 7.0 untouched. Two gems moved, both because a declared bound was
+wrong:
+
+- **devise 4.8.0 killed the app on the first `require`.** It calls
+  `ActiveSupport::Dependencies.reference`, which 7.0 removed, but its gemspec
+  accepts `railties >= 4.1`, so the resolver had no way to know. 4.8.1 is the
+  release that fixed it. Devise 5.0.4 also resolves cleanly and was
+  deliberately not taken — replacing the authentication stack inside a
+  framework bump would make the step unbisectable, and the dependency sweep
+  below is where that belongs.
+- **delayed_job needed a ceiling.** `delayed_job_active_record` was pinned at
+  4.1.6, which caps `activerecord` below 6.2. Lifting that pin let the resolver
+  take `delayed_job` 4.2.0 along with it, whose ActiveJob adapter subclasses
+  `ActiveJob::QueueAdapters::AbstractAdapter` — a class Rails 7.1 introduced —
+  and which shadows the adapter of the same name that 7.0 itself ships. Its
+  gemspec asks only for `activesupport >= 3.0`, so it is now pinned below 4.2
+  in the same way, and for the same reason, as `concurrent-ruby`.
+
+`return` from inside a transaction rolls back as of 7.0 rather than only
+warning; `payroll.rb` was the only place doing it and had already been
+restructured during the 6.1 step.
+
+Of the 7.0 defaults now staged, one is not cosmetic.
+`action_controller.raise_on_open_redirects` rejects a `redirect_to` whose host
+is not the request's, and sign-in reaches a tenant by exactly that route —
+`home_controller.rb:14` redirects from the apex host to
+`new_user_session_url` on the company's subdomain. Enabling it without
+`allow_other_host: true` closes the front door of the application, and that
+redirect has no spec covering it today.
+
+- [ ] Enable the Rails 7.0 framework defaults
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus

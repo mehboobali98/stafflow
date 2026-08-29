@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.0.7'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.7'
+gem 'rails', '~> 7.0.8'
 # 1.3.5 dropped a `require 'logger'` that ActiveSupport < 7.1 depends on. Fails
 # in bin/webpack rather than the suite, so removing this pin looks safe and is
 # not. Comes out at Rails 7.1.
@@ -34,7 +34,13 @@ gem 'devise'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
-gem 'delayed_job_active_record', '4.1.6'
+# delayed_job 4.2.0 ships an ActiveJob adapter that subclasses
+# ActiveJob::QueueAdapters::AbstractAdapter, introduced in Rails 7.1, and it
+# shadows the adapter of the same name that Rails itself ships. The gemspec
+# asks only for activesupport >= 3.0, so nothing but this pin keeps it off 7.0.
+# Remove at Rails 7.1.
+gem 'delayed_job', '< 4.2'
+gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'transitions', '=1.2.1', require: %w[transitions active_model/transitions]
 
 # cron job

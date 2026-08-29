@@ -99,5 +99,5 @@ jobs:
       # than it looks: Brakeman 5.4.1 predates both EOL dates it would report.
       # Its Rails table stops at 6.0, and its Ruby entry for 3.0 reads
       # ['3.0.0', '2.8.99'] - an inverted range no version can satisfy. Ruby 3.0
-      # and Rails 6.1 are both out of support; ROADMAP.md tracks the real state.
+      # and Rails 7.0 are both out of support; ROADMAP.md tracks the real state.
       - run: bundle exec brakeman --no-pager --format plain
