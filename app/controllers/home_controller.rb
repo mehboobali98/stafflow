@@ -11,7 +11,11 @@ class HomeController < ApplicationController
     end
     respond_to do |format|
       if @companies.length == 1
-        return redirect_to new_user_session_url(subdomain: @companies.first.subdomain, email: home_params[:email])       
+        # Deliberately leaves the apex host: the tenant lives on its own
+        # subdomain, and this is the hop that carries sign-in to it.
+        return redirect_to new_user_session_url(subdomain: @companies.first.subdomain,
+                                                email: home_params[:email]),
+                           allow_other_host: true
       else
         format.html { render layout: 'landing' }
       end
