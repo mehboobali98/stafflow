@@ -24,6 +24,16 @@ RSpec.describe Department do
       department.avatar.attach(upload('not-an-image.txt', 'text/plain'))
 
       expect(department).not_to be_valid
+      expect(department.errors.details[:avatar]).to include(a_hash_including(error: :content_type_invalid))
+    end
+  end
+
+  it 'refuses a text file renamed and declared as a PNG' do
+    as_tenant(company) do
+      department.avatar.attach(upload('spoofed.png', 'image/png'))
+
+      expect(department).not_to be_valid
+      expect(department.errors.details[:avatar]).to include(a_hash_including(error: :spoofed_content_type))
     end
   end
 end
