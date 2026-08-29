@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 215 examples, 0 pending |
+| Tests | 222 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
-| Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 22 found, 21 fixed, 1 open |
+| Lines in `app/` | 4,945 across 22 controllers, 30 models, 121 views |
+| Known defects | 22 found, 22 fixed, 0 open |
 
 ---
 
@@ -501,8 +501,17 @@ work the framework bumps were blocking.
       mechanism of the application and the candidate write-up in phase 6, so
       swapping it is a decision rather than a tidy-up. Recorded here so it is a
       choice rather than an unknown.
-- [ ] Search reports a hit count from an Elasticsearch index that is not
-      partitioned by company. See the defect backlog
+- [x] Search reported a hit count from an Elasticsearch index that is not
+      partitioned by company. The query now carries the tenant filter itself,
+      in `TenantSearch`, rather than leaving tenancy to the default scope
+      applied when the ids come back.
+
+      `company_id` was already in the mapping — searchkick indexes
+      `serializable_hash` unless a model overrides `search_data` — so this
+      needed no reindex. A nil tenant filters to documents with no
+      `company_id`, of which there are none, so an unset tenant finds nothing
+      rather than everything, the way the default scope fails closed. See the
+      defect backlog
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
 pinned to a git branch.
@@ -572,12 +581,11 @@ Line numbers current as of 29 Aug 2026.
 
 ### Open
 
-| Location | Problem | Effect | Severity |
-| --- | --- | --- | --- |
-| `app/views/search/search_data.html.erb:1` | `@results.total_count` is the Elasticsearch hit count, and the index is not partitioned by company | Records are correctly isolated — the default scope drops other tenants' rows when ids are loaded — but the count is not. Two people named the same in two companies gives `total_count` 2 and one rendered row. A tenant can learn that matching records exist elsewhere, and the view's empty-state branch tests the wrong number | Medium |
+None.
 
-`payroll.rb` closed during the Rails 6.1 upgrade: the deprecation that forced
-the transaction block to be restructured took the block-local `rescue` with it.
+`payroll.rb` closed during the Rails 6.1 upgrade rather than on its own: the
+deprecation that forced the transaction block to be restructured took the
+block-local `rescue` with it.
 
 ### Fixed
 
@@ -612,6 +620,7 @@ Phase 3, with a regression spec:
 | `app/models/event.rb` | `validate_past_event_date` compared `nil < DateTime.now` when no start was given, the same shape as the applied-leave validators fixed in phase 2. `starts_at` now has a presence validation to report instead |
 | `app/controllers/events_controller.rb` | `set_event` defined twice; the second silently replaced the first, which was dead. `.rubocop_todo.yml` excluded `Lint/DuplicateMethods` for the file rather than removing the duplicate |
 | `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
+| `app/controllers/search_controller.rb`, `app/views/search/search_data.html.erb:1` | The Elasticsearch query was not partitioned by company, so `@results.total_count` counted every tenant's hits. The rows were right — the default scope drops other tenants when the ids are loaded — but the number above them was not, and the empty-state branch tested it: a name only another company had left the view on the results branch with nothing to render. Searchkick also logged the ids it could not load, naming other tenants' records |
 
 ---
 

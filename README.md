@@ -96,6 +96,14 @@ any query on any model
 ensure: Thread.current[:current_company_id] = nil
 ```
 
+Search is the one exception, because it does not begin at Active Record.
+Searchkick asks Elasticsearch for ids, and the default scope only narrows the
+records loaded for them — the hit count, and anything else read from the
+response, would still describe every tenant. `TenantSearch` puts the same
+`company_id` on the Elasticsearch query. An unset tenant there matches
+documents with no `company_id`, of which there are none, so it fails closed the
+way the default scope does.
+
 ### Authorization
 
 Four roles — account owner, HR, department head, employee — implemented with
@@ -140,6 +148,7 @@ app/
   models/
     concerns/         one *_abilities.rb per resource (CanCanCan rules)
     application_record.rb   multi-tenant default scope installation
+    tenant_search.rb        the same scoping for Elasticsearch queries
   views/
 config/
   locales/en.yml      every user-facing string; no hardcoded copy in views
@@ -154,7 +163,7 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 215 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 222 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
@@ -166,10 +175,6 @@ line numbers.
   alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
   force; the 7.1 defaults are staged in
   `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
-- **One known defect remains**, listed with its location in
-  [ROADMAP.md](ROADMAP.md#defect-backlog): search reports a result count taken
-  from an Elasticsearch index that is not partitioned by company. The records
-  themselves are scoped correctly; the number is not.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
