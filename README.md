@@ -170,10 +170,6 @@ line numbers.
   [ROADMAP.md](ROADMAP.md#defect-backlog): search reports a result count taken
   from an Elasticsearch index that is not partitioned by company. The records
   themselves are scoped correctly; the number is not.
-- **Three JavaScript libraries load from public CDNs** rather than the bundle —
-  select2 and its Bootstrap theme in the application layout, AOS on the landing
-  page — while also sitting unused in `package.json`. That is a third-party
-  dependency at runtime and it will not work offline.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
