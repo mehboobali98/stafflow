@@ -60,3 +60,10 @@ RSpec/NestedGroups:
 # single subject, so instance variables and let names read better than subject.
 RSpec/InstanceVariable:
   Enabled: false
+
+# Request specs describe a route rather than a class, and the explicit
+# `type: :request` is what keeps RSpec/DescribeClass quiet about that. Removing
+# it as redundant, which this cop asks for, makes the other one fire instead.
+RSpecRails/InferredSpecType:
+  Exclude:
+    - 'spec/requests/**/*'

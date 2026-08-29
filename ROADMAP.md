@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 191 examples, 0 pending |
+| Tests | 193 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 16 found, 15 fixed, 1 open |
+| Known defects | 17 found, 16 fixed, 1 open |
 
 ---
 
@@ -196,15 +196,29 @@ Brakeman 5.4.1's table writes that range as `['3.0.0', '2.8.99']`, which no
 version satisfies, and its Rails table has no entry past 6.0. The stack is two
 steps less current than the check can say.
 
-- [ ] Enable the Rails 6.1 framework defaults. The app runs on 6.1 but still
-      loads 6.0 defaults, so its behaviour has not moved yet. Two of the flips
-      need checking by hand first:
-      `action_view.form_with_generates_remote_forms` — `users_benefits/new` and
-      `applied_leaves/new_applied_leave_by_hr` call `form_with` without
-      `local: true`, so they submit over XHR and their controllers only answer
-      `format.html`; and `action_dispatch.cookies_same_site_protection` — sign-in
-      crosses from the apex page to a tenant subdomain, and a `:lax` cookie is
-      not sent on a cross-site POST
+- [x] Enable the Rails 6.1 framework defaults. Both flips that were flagged for
+      hand-checking turned out to be safe, and the first one fixed a form that
+      had never worked:
+
+      `action_view.form_with_generates_remote_forms` was expected to affect two
+      forms. Only one exists. `users_benefits/new.html.erb` is dead — routes
+      declare `except: %i[create show new]`, the controller has no `new`, and
+      the view calls `member_users_benefit_mass_create_path`, which is not a
+      route helper this app generates; it has been deleted.
+      `applied_leaves/new_applied_leave_by_hr` was the real one, and it rendered
+      `data-remote="true"` against a controller that only answers `format.html`
+      and redirects, so the XHR followed the redirect, got HTML back, and
+      rails-ujs did nothing with it — the submit button appeared dead. The flip
+      makes it an ordinary POST, and it now redirects and persists.
+
+      `action_dispatch.cookies_same_site_protection` was a false alarm. The
+      sign-in form posts to `/users/sign_in` on the same host it was served
+      from, so nothing crosses an origin; the only apex-to-subdomain hop is the
+      top-level GET link on `display_companies`, which `:lax` permits and which
+      carries no session yet. Subdomains of one registrable domain are same-site
+      regardless. The cookie previously carried no `SameSite` attribute at all,
+      which browsers have themselves defaulted to `Lax` since 2020, so this
+      writes down behaviour the app already had.
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
@@ -278,7 +292,7 @@ spends about ninety seconds here.
 
 ## Defect backlog
 
-Line numbers current as of 28 Aug 2026.
+Line numbers current as of 29 Aug 2026.
 
 ### Open
 
@@ -312,6 +326,12 @@ Phase 2, each with a regression spec:
 | `config/locales/en.yml:217,233` | `applied_leave.headings.leave_type` defined twice; the plural silently won |
 | `app/models/payroll.rb` | `return` inside the transaction block, deprecated in 6.1 and a rollback in 7.0, and a `rescue` referring to a name local to that block |
 | `app/helpers/users_helper.rb:19` | Model error text interpolated into an `html_safe` string |
+
+Phase 3, with a regression spec:
+
+| Location | Problem |
+| --- | --- |
+| `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
 
 ---
 
