@@ -121,7 +121,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 2.7.1 / 6.1.7 |
+| Ruby / Rails | 3.0.7 / 6.1.7 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Background jobs | delayed_job |
@@ -158,10 +158,11 @@ line numbers.
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, leave updates and the
   error paths.
-- **Ruby 2.7 is end-of-life.** Rails is on 6.1 as the first step of the
-  upgrade; 6.1 is also out of support. Ruby cannot move until Rails does,
-  since Rails 6.0 did not support Ruby 3.x, so the two are being raised
-  alternately. [ROADMAP.md](ROADMAP.md) has the order.
+- **Ruby 3.0 and Rails 6.1 are both end-of-life.** Two steps of the upgrade
+  are done — Rails 6.0 → 6.1, then Ruby 2.7 → 3.0. Neither could go further on
+  its own: Rails 6.0 did not support Ruby 3.x, and Ruby 3.2 needs Rails 7. They
+  are being raised alternately, and [ROADMAP.md](ROADMAP.md) has the remaining
+  order.
 - **Rails 6.1 runs with 6.0 framework defaults**, so its behaviour has not
   moved yet. [ROADMAP.md](ROADMAP.md) lists the two flips that need checking by
   hand first.
@@ -171,10 +172,9 @@ line numbers.
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
   no static counterpart and render normally.
-- Two known defects remain, both recorded with locations in
-  [ROADMAP.md](ROADMAP.md#defect-backlog). Neither is reachable from ordinary
-  use: one is an error path that has no spec, the other a missing association
-  the default scope currently papers over.
+- One known defect remains, recorded with its location in
+  [ROADMAP.md](ROADMAP.md#defect-backlog). It is not reachable from ordinary
+  use: a missing association the default scope currently papers over.
 
 ## Contributors
 
