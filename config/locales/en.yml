@@ -29,6 +29,14 @@
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 en:
+  # Overrides for active_storage_validations, whose own copy reads like library
+  # internals. Only the three the two attachment validators can actually raise
+  # are listed; the gem's defaults still cover the rest.
+  errors:
+    messages:
+      content_type_invalid: "must be one of: %{authorized_types}"
+      spoofed_content_type: "does not look like the image type it claims to be"
+      file_size_not_less_than: "must be smaller than %{max_size}"
   user_roles:
     admin: "Admin"
     hr: "HR"

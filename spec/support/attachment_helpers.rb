@@ -3,7 +3,9 @@
 # Uploads for the Active Storage specs. The oversized file is a real PNG with
 # padding after it: the size validator has to see something over the limit, and
 # the content type validator has to still recognise it, or the example would
-# pass for the wrong reason.
+# pass for the wrong reason. `spoofed.png` is a text file under a PNG name for
+# the same kind of reason - replacing it with a real image would leave the
+# spoofing example asserting nothing.
 module AttachmentHelpers
   def upload(name, type)
     Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files', name), type)
