@@ -17,7 +17,7 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 209 examples, 0 pending |
+| Tests | 215 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
 | Known defects | 22 found, 21 fixed, 1 open |
@@ -377,8 +377,38 @@ default gems 3.4 will move out.
 That closes the interleaved sequence. What is left of this phase is the gem
 work the framework bumps were blocking.
 
-- [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
-      a data migration for existing attachments
+- [x] Paperclip → Active Storage. Two attachments, `User#image` and
+      `Department#avatar`, and the eight metadata columns they kept. Paperclip's
+      `styles:` become Rails 7 named variants, so the sizes stay declared on the
+      model rather than spreading into the three views that render them.
+
+      The 7.0 framework defaults select the vips variant processor, so the image
+      now installs `libvips42` explicitly. ImageMagick had been present all
+      along but only transitively — nothing declared it, and variants would have
+      depended on that accident.
+
+      Declaring it in the Dockerfile was not enough: CI never builds that image,
+      it runs on the runner, so the variant specs raised `LoadError` there while
+      passing locally. The workflow installs it too, and cannot copy the
+      Dockerfile's spelling — the image is Debian bookworm, where the package is
+      `libvips42`, and the runner is Ubuntu noble, whose 64-bit `time_t`
+      transition renamed the same package `libvips42t64`.
+
+      No backfill task ships with it. The columns are dropped in a migration
+      that says in its body why a deployment holding real uploads has to copy
+      them out first: the file names live in those columns and nowhere else.
+      This repository has none, so writing an untested backfill would have been
+      worse than saying that plainly.
+
+      One thing worth knowing rather than assuming: `active_storage_validations`
+      checks the **declared** content type, not the analysed bytes. A text file
+      renamed `.png` and sent as `image/png` passes. That matches what Paperclip
+      did — it trusted the declared type and the file extension — so this is
+      parity, not a regression, but it is not the guarantee the validation looks
+      like it gives.
+- [ ] Reject uploads by analysed content type rather than declared. Both the
+      Paperclip validators and their Active Storage replacements trust what the
+      client says the file is
 - [x] Webpacker 5 → `jsbundling-rails` with esbuild. Sprockets was already
       compiling the stylesheets, so this collapses two pipelines into one:
       esbuild writes to `app/assets/builds` and Sprockets fingerprints and
