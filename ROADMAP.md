@@ -428,6 +428,21 @@ work the framework bumps were blocking.
       smaller than 3 MB". The specs assert the rendered strings as well as the
       error types, because `errors.details` does not interpolate — a broken
       `%{}` would pass a type-only assertion and raise on the page instead.
+- [x] Stop the attachment specs writing libvips warnings into the CI log. The
+      suspected cause was the oversized-upload example, which padded a real PNG
+      with nulls to clear the 3 MB limit. It was not.
+
+      `spec/fixtures/files/avatar.png` was itself corrupt: its `IDAT` chunk
+      stored a CRC of `c32e5d45` against an actual `c8454b42`, and carried more
+      image data than its 8×8 header declares. libvips repaired it on every
+      read and logged `IDAT: Too much image data` and `IDAT: CRC error` each
+      time — so every example touching the fixture was noisy, not just the
+      padded one. Regenerated valid, 289 bytes, all four chunks checking out.
+
+      The oversized upload is now a genuine 1200-square PNG of random pixels
+      rather than a padded file. PNG cannot compress noise, so it encodes to
+      about 4 MB in roughly a tenth of a second, and nothing has to reason
+      about whether a decoder tolerates trailing bytes.
 - [x] Webpacker 5 → `jsbundling-rails` with esbuild. Sprockets was already
       compiling the stylesheets, so this collapses two pipelines into one:
       esbuild writes to `app/assets/builds` and Sprockets fingerprints and
