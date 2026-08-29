@@ -26,7 +26,7 @@ gem 'paperclip', '=6.0.0'
 gem 'will_paginate', '=3.3.0'
 # additional gems
 gem 'cancancan'
-gem 'devise'
+gem 'devise', '~> 5.0'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
