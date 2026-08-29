@@ -21,9 +21,12 @@ class User < ApplicationRecord
   scope :role_id, ->(role_id) { where(role_id: role_id) }
   scope :department_id, ->(department_id) { where(department_id: department_id) }
   scope :match_users_name, ->(fname) { where('first_name like ? or last_name like ?', "%#{fname}%", "%#{fname}%") }
-  has_attached_file :image, styles: { medium: '300x300>', thumb: '100x100>' }
-  validates_attachment_file_name :image, matches: [/png\z/, /jpe?g\z/]
-  validates_with AttachmentSizeValidator, attributes: :image, less_than: 3.megabytes
+  has_one_attached :image do |attachable|
+    attachable.variant :medium, resize_to_limit: [300, 300]
+    attachable.variant :thumb,  resize_to_limit: [100, 100]
+  end
+  validates :image, content_type: %w[image/png image/jpeg],
+                    size: { less_than: 3.megabytes }
 
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true
   validates_uniqueness_of :email, scope: :company_id, case_sensitive: false
