@@ -1,3 +1,8 @@
+// font-awesome-sprockets must come first: it points the icon font path at
+// Sprockets' font-path helper, so the URLs carry digests.
+@import "font-awesome-sprockets";
+@import "font-awesome";
+
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -13,7 +18,6 @@
  *= require_tree .
  *= require_self
  */
-@import "@fortawesome/fontawesome-free/css/all.css";
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
 
