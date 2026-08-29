@@ -172,7 +172,7 @@ underneath it, which is why it comes after Phase 1 rather than before.
       | ✅ | Rails 6.0 → 6.1 | still on Ruby 2.7 |
       | ✅ | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
       | ✅ | Rails 6.1 → 7.0 | |
-      | | Ruby 3.0 → 3.2 | |
+      | ✅ | Ruby 3.0 → 3.2 | 3.1 skipped; nothing needs it as a stop |
       | | Rails 7.0 → 7.1 | |
       | | Ruby 3.2 → 3.3 | |
 
@@ -279,6 +279,40 @@ redirect has no spec covering it today.
       digest defaults rotate the key generator to SHA256 and invalidate every
       signed and encrypted cookie, which costs nothing while there is no
       deployment to sign anyone out of.
+The Ruby 3.2 step cost two gems and a base image, and both gem failures were
+of the kind a build check waves through:
+
+- **capybara 3.35.3 required `matrix`,** which Ruby 3.1 moved out of the
+  default gems and which capybara did not declare until 3.36. Every spec file
+  died at load with `cannot load such file -- matrix`, before a single example
+  ran. Nothing in the suite uses capybara — there are no system specs — it is
+  simply in the `:test` group, so `Bundler.require` loads it.
+- **mysql2 0.5.3 compiled cleanly and then died on the first query** with
+  `undefined symbol: rb_tainted_str_new2`. Ruby 3.2 removed taint, and the
+  symbol only has to exist when the extension is actually called, so the gem
+  installs, the image builds, and the failure waits for the first database
+  round trip. 0.5.7 fixes it.
+
+The base image moved from Debian bullseye to bookworm, because the `ruby:3.2`
+images do not ship a bullseye variant. That is a happy forcing function:
+bullseye's LTS ended two days after this commit, and the Dockerfile carried a
+workaround repointing apt at the Debian archive to survive it. Bookworm is
+supported to 2028, so the workaround is gone rather than extended.
+`ruby:3.2-bookworm` was taken over the default `ruby:3.2`, which is now Debian
+13 — one OS step at a time, and Node 14 still has to run on it.
+
+Brakeman still reports zero, and the reason has changed shape: its Ruby table
+ends at 3.0 outright, so the inverted `['3.0.0', '2.8.99']` range described
+above is no longer even what is hiding the EOL. Ruby 3.2 and Rails 7.0 are both
+out of support and Brakeman 5.4.1 cannot say so about either, however old they
+get.
+
+RuboCop's `TargetRubyVersion` went to 3.2 with it, which turns on Ruby 3.1's
+hash value omission and asks for `company: company` to become `company:` in 225
+places. That is a restyle of the codebase rather than part of running on a
+newer Ruby, so `Style/HashSyntax` is configured to accept both forms and the
+sweep is left as its own decision.
+
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus

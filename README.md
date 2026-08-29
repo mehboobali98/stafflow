@@ -121,7 +121,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 3.0.7 / 7.0.10 |
+| Ruby / Rails | 3.2.11 / 7.0.10 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Background jobs | delayed_job |
@@ -158,11 +158,12 @@ line numbers.
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
   leave updates, the HR leave form and the error paths.
-- **Ruby 3.0 is end-of-life, and so is Rails 7.0.** Three steps of the upgrade
-  are done — Rails 6.0 → 6.1, Ruby 2.7 → 3.0, then Rails 6.1 → 7.0. None could
-  go further on its own: Rails 6.0 did not support Ruby 3.x, and Ruby 3.2 needs
-  Rails 7. They are being raised alternately, and [ROADMAP.md](ROADMAP.md) has
-  the remaining order. The 7.0 framework defaults are enabled.
+- **Ruby 3.2 and Rails 7.0 are both end-of-life.** Four steps of the upgrade
+  are done — Rails 6.0 → 6.1, Ruby 2.7 → 3.0, Rails 6.1 → 7.0, then Ruby
+  3.0 → 3.2. None could go further on its own: Rails 6.0 did not support
+  Ruby 3.x, and Ruby 3.2 needs Rails 7. They are being raised alternately, and
+  [ROADMAP.md](ROADMAP.md) has the remaining order. Rails 7.1 and Ruby 3.3 are
+  what is left. The 7.0 framework defaults are enabled.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router
