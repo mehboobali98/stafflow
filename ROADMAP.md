@@ -438,11 +438,27 @@ work the framework bumps were blocking.
       `@import "@fortawesome/fontawesome-free/css/all.css"`, which Sprockets
       could not resolve and emitted as a literal CSS `@import` to a path that
       404s. It had never worked; the icons were coming from webpack. Removed.
-- [ ] Bundle select2, its Bootstrap theme, and AOS instead of loading them from
-      public CDNs. All three sit in `package.json` unused while the layout and
-      landing page fetch them from jsdelivr, cdnjs and unpkg — a third-party
-      runtime dependency for an HR application, and the AOS versions do not
-      even match between the pin and the CDN URL
+- [x] Bundle select2 and AOS instead of loading them from public CDNs. All
+      three sat in `package.json` unused while the layout and landing page
+      fetched them from jsdelivr, cdnjs and unpkg — a third-party runtime
+      dependency for an HR application, and the AOS versions did not even match
+      between the pin and the CDN URL. AOS now serves the 2.3.4 that was
+      pinned, rather than the 2.3.1 the URL asked for.
+
+      The JavaScript goes through esbuild, the CSS through Sprockets as a plain
+      `@import` — `node_modules` is already on the asset load path and
+      `bootstrap/scss/bootstrap` was importing from it the same way. Importing
+      the CSS from JavaScript instead would have had esbuild emit
+      `app/assets/builds/application.css`, giving Sprockets two candidates for
+      one logical path, since `manifest.js` links both that tree and the
+      stylesheets directory.
+
+      The Bootstrap theme was dropped rather than bundled, and removed from
+      `package.json`. It only defines `.select2-container--bootstrap`, and the
+      single `.select2()` call asks for `theme: "classic"`, whose 38 rules ship
+      in select2's own stylesheet. Nothing has ever carried the `--bootstrap`
+      class, so the CDN was fetching a stylesheet that could not apply and
+      bundling it would only have moved unreachable CSS into `application.css`.
 - [x] Clear the three gems that blocked Rails 7.2. searchkick 4.6 → 5.5, devise
       4.9 → 5.0 and rspec-rails 5.1 → 6.1 each called something 7.1 deprecates
       and 7.2 removes. The suite now runs with no deprecation warnings at all.
