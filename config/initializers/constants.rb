@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/i.freeze
-PASSWORD_LENGTH = (6..128).freeze
+EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/i
+PASSWORD_LENGTH = (6..128)
 MIN_LEAVE_COUNT = 0
 MAX_LEAVE_COUNT = 40
 LEAVE_COUNT_SCALE = 0.5
