@@ -25,7 +25,7 @@ class User < ApplicationRecord
     attachable.variant :medium, resize_to_limit: [300, 300]
     attachable.variant :thumb,  resize_to_limit: [100, 100]
   end
-  validates :image, content_type: %w[image/png image/jpeg],
+  validates :image, content_type: { in: %w[image/png image/jpeg], spoofing_protection: true },
                     size: { less_than: 3.megabytes }
 
   validates :first_name, :last_name, :date_of_birth, :role_id, presence: true

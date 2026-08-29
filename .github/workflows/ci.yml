@@ -48,8 +48,9 @@ jobs:
       # ImageMagick. The Dockerfile installs it as libvips42, the Debian name;
       # noble's 64-bit time_t transition renamed the same library, so the two
       # spellings here and there are the same package and neither is a typo.
+      # file is what active_storage_validations runs to read an upload's bytes.
       - name: Install system libraries
-        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev libvips42t64
+        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev libvips42t64 file
 
       - uses: ruby/setup-ruby@v1
         with:

@@ -27,7 +27,18 @@ RSpec.describe User do
       user.image.attach(upload('not-an-image.txt', 'text/plain'))
 
       expect(user).not_to be_valid
-      expect(user.errors[:image]).to be_present
+      expect(user.errors.details[:image]).to include(a_hash_including(error: :content_type_invalid))
+      expect(user.errors[:image].join).to match(/must be one of: /)
+    end
+  end
+
+  it 'refuses a text file renamed and declared as a PNG' do
+    as_tenant(company) do
+      user.image.attach(upload('spoofed.png', 'image/png'))
+
+      expect(user).not_to be_valid
+      expect(user.errors.details[:image]).to include(a_hash_including(error: :spoofed_content_type))
+      expect(user.errors[:image].join).to include('does not look like the image type it claims to be')
     end
   end
 
@@ -36,7 +47,8 @@ RSpec.describe User do
       user.image.attach(oversized_png)
 
       expect(user).not_to be_valid
-      expect(user.errors[:image].join).to match(/size|large|big/i)
+      expect(user.errors.details[:image]).to include(a_hash_including(error: :file_size_not_less_than))
+      expect(user.errors[:image].join).to match(/must be smaller than /)
     end
   end
 
