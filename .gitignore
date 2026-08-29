@@ -32,8 +32,6 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-/public/packs
-/public/packs-test
 /node_modules
 /yarn-error.log
 yarn-debug.log*
@@ -41,3 +39,7 @@ yarn-debug.log*
 
 # Local environment overrides; .env.example is the tracked template.
 .env
+
+# Built by esbuild from app/javascript; not source.
+/app/assets/builds/*
+!/app/assets/builds/.keep

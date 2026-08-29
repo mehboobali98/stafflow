@@ -1,4 +1,4 @@
-<%= javascript_pack_tag "show_applied_leaves" %>
+<%= javascript_include_tag "show_applied_leaves" %>
 <div class="container py-4">
   <h1><%= t('applied_leave.headings.add_user_leave') %></h1>
   <%= form_with scope: :applied_leave, url: :create_applied_leave_by_hr_applied_leaves, method: :post  do |form| %>
