@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 201 examples, 0 pending |
+| Tests | 209 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 20 found, 18 fixed, 2 open |
+| Known defects | 22 found, 21 fixed, 1 open |
 
 ---
 
@@ -400,9 +400,31 @@ work the framework bumps were blocking.
       to the current tenant — with none set it indexes nothing and silently
       swaps in an empty index. Reindex inside each company in turn.
 - [ ] Clear the remaining Dependabot backlog
-- [ ] Revisit the `TracePoint` multi-tenancy hook against modern Rails
-      autoloading. `event.rb` in the defect backlog belongs with this, since
-      both turn on how the hook injects `company_id`
+- [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
+      autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
+      unscoped, every other model carries the `company_id` condition, and an
+      unset tenant produces `company_id IS NULL` rather than an unscoped query,
+      so it fails closed. Nothing about autoloading needed changing.
+
+      The review did turn up that the `TracePoint` is no longer *necessary*.
+      It exists to defer the `default_scope` until the end of the class body,
+      because `inherited` runs before `set_not_multitenant` has had a chance
+      to. A `default_scope` block is evaluated per query rather than at
+      definition, so moving the test inside the block does the same job:
+
+      ```ruby
+      subclass.instance_eval do
+        default_scope { subclass.multitenant? ? where(company_id: Company.current_company_id) : all }
+      end
+      ```
+
+      Tried, and behaviourally identical — same SQL for scoped, unscoped and
+      no-tenant cases, whole suite green. Not applied: this is the load-bearing
+      mechanism of the application and the candidate write-up in phase 6, so
+      swapping it is a decision rather than a tidy-up. Recorded here so it is a
+      choice rather than an unknown.
+- [ ] Search reports a hit count from an Elasticsearch index that is not
+      partitioned by company. See the defect backlog
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
 pinned to a git branch.
@@ -475,12 +497,9 @@ Line numbers current as of 29 Aug 2026.
 | Location | Problem | Effect | Severity |
 | --- | --- | --- | --- |
 | `app/views/search/search_data.html.erb:1` | `@results.total_count` is the Elasticsearch hit count, and the index is not partitioned by company | Records are correctly isolated — the default scope drops other tenants' rows when ids are loaded — but the count is not. Two people named the same in two companies gives `total_count` 2 and one rendered row. A tenant can learn that matching records exist elsewhere, and the view's empty-state branch tests the wrong number | Medium |
-| `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
 
-`event.rb` is worth doing alongside the `TracePoint` review in phase 3, since
-both turn on how the tenancy hook injects the company id. `payroll.rb` closed
-during the Rails 6.1 upgrade: the deprecation that forced the transaction
-block to be restructured took the block-local `rescue` with it.
+`payroll.rb` closed during the Rails 6.1 upgrade: the deprecation that forced
+the transaction block to be restructured took the block-local `rescue` with it.
 
 ### Fixed
 
@@ -510,6 +529,10 @@ Phase 3, with a regression spec:
 | --- | --- |
 | `app/views/shared/_sidebar.html.erb` | The Logout link was `destroy_user_session_url(subdomain: nil)`, sending sign-out to the apex host. The session cookie is host-only, so that request never carried it: devise found nobody signed in, said so, and left the session running. Signing out did not sign you out |
 | `app/controllers/search_controller.rb` | No `authenticate_user!` and no `load_and_authorize_resource` — the only controller with neither. An anonymous request ran a real Elasticsearch query across every tenant's records, then 500d on the layout where its siblings answer 403 |
+| `app/models/event.rb` | `rescue Type::Error` names a class that does not exist. Ruby evaluates rescue clauses in order and only when something is raised, so this one raised `NameError` before the working `Date::Error` clause beneath it could be reached — every unparseable event date 500d, not just a missing one |
+| `app/models/event.rb` | No `belongs_to :company`, alone among tenant-owned models, so `Event.new(company:)` raised `UnknownAttributeError` and the factory set the id by hand |
+| `app/models/event.rb` | `validate_past_event_date` compared `nil < DateTime.now` when no start was given, the same shape as the applied-leave validators fixed in phase 2. `starts_at` now has a presence validation to report instead |
+| `app/controllers/events_controller.rb` | `set_event` defined twice; the second silently replaced the first, which was dead. `.rubocop_todo.yml` excluded `Lint/DuplicateMethods` for the file rather than removing the duplicate |
 | `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
 
 ---
