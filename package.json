@@ -1,46 +1,26 @@
 {
   "name": "stafflow",
   "private": true,
+  "version": "0.1.0",
   "dependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@fortawesome/fontawesome-free": "5.15.4",
     "@popperjs/core": "2.9.3",
     "@rails/actioncable": "6.0.0",
     "@rails/activestorage": "6.0.0",
     "@rails/ujs": "6.0.0",
-    "@rails/webpacker": "5.4.2",
     "aos": "2.3.4",
-    "babel-loader": "^8.2.2",
     "bootstrap": "5.0",
     "chart.js": "3.5.1",
     "chartkick": "4.0.5",
-    "compression-webpack-plugin": "^4.0.1",
-    "css-loader": "^3.6.0",
-    "file-loader": "^6.2.0",
+    "esbuild": "^0.25.0",
     "jquery": "3.6.0",
-    "mini-css-extract-plugin": "^0.9.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.8",
-    "postcss-loader": "^3.0.0",
-    "rails-erb-loader": "5.5.2",
-    "sass-loader": "10.1.1",
     "select2": "4.1.0-rc.0",
     "select2-bootstrap-theme": "0.1.0-beta.10",
-    "style-loader": "^1.3.0",
-    "turbolinks": "5.2.0",
-    "webpack": "4.46.0",
-    "webpack-assets-manifest": "^3.1.1",
-    "webpack-cli": "3.3.12"
+    "turbolinks": "5.2.0"
   },
-  "version": "0.1.0",
-  "devDependencies": {
-    "webpack-dev-server": "4.0.0"
-  },
-  "resolutions": {
-    "date-fns": "2.29.3",
-    "sass": "1.49.11"
+  "scripts": {
+    "build": "rm -f app/assets/builds/*.js app/assets/builds/*.css app/assets/builds/*.map && esbuild app/javascript/*.js --bundle --minify --sourcemap --outdir=app/assets/builds --public-path=/assets"
   },
   "engines": {
-    "node": ">=14 <15"
+    "node": ">=20"
   }
 }
