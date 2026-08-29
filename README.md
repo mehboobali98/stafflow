@@ -127,7 +127,7 @@ a background email.
 | Background jobs | delayed_job |
 | Auth | Devise |
 | Authorization | CanCanCan |
-| Assets | Webpacker 5, Bootstrap 5 |
+| Assets | esbuild + Sprockets, Bootstrap 5 |
 | Charts | Chartkick |
 | Scheduling | whenever |
 
@@ -171,6 +171,10 @@ line numbers.
   themselves are scoped correctly; the number is not.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
+- **Three JavaScript libraries load from public CDNs** rather than the bundle —
+  select2 and its Bootstrap theme in the application layout, AOS on the landing
+  page — while also sitting unused in `package.json`. That is a third-party
+  dependency at runtime and it will not work offline.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have

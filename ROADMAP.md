@@ -379,8 +379,40 @@ work the framework bumps were blocking.
 
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
-- [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
-      importmaps
+- [x] Webpacker 5 → `jsbundling-rails` with esbuild. Sprockets was already
+      compiling the stylesheets, so this collapses two pipelines into one:
+      esbuild writes to `app/assets/builds` and Sprockets fingerprints and
+      serves it. Propshaft plus importmaps was the alternative and was not
+      taken — select2 and Bootstrap's JS are npm-shaped dependencies that
+      importmaps would have meant vendoring by hand, which is a rewrite rather
+      than a bundler swap.
+
+      What it bought: Node 14 → 24 and webpack 4 → esbuild, so `yarn audit`
+      goes from **76 vulnerabilities, 2 critical and 42 high** to a supported
+      toolchain. The chain of workarounds propping up Node 14 is gone with it —
+      the sass pin in `package.json`, the `--ignore-engines` flag, and the
+      comment explaining why the Node tarball had to be fetched by hand.
+      `application.js` is 592 KB minified against webpack's 782 KB.
+
+      Two things surfaced while doing it, both only visible in production:
+
+      Font Awesome came through the JS bundle as a CSS import. esbuild
+      content-hashes the font files, Sprockets then fingerprints them again,
+      and the URLs esbuild wrote point at names that only exist undigested — so
+      every icon 404s once assets are precompiled, while looking correct in
+      development. It now comes from `font-awesome-sass`, which uses Sprockets'
+      `font-path` helper, so the digests match. Checked by precompiling for
+      production and confirming every referenced file exists.
+
+      `application.scss` already carried
+      `@import "@fortawesome/fontawesome-free/css/all.css"`, which Sprockets
+      could not resolve and emitted as a literal CSS `@import` to a path that
+      404s. It had never worked; the icons were coming from webpack. Removed.
+- [ ] Bundle select2, its Bootstrap theme, and AOS instead of loading them from
+      public CDNs. All three sit in `package.json` unused while the layout and
+      landing page fetch them from jsdelivr, cdnjs and unpkg — a third-party
+      runtime dependency for an HR application, and the AOS versions do not
+      even match between the pin and the CDN URL
 - [x] Clear the three gems that blocked Rails 7.2. searchkick 4.6 → 5.5, devise
       4.9 → 5.0 and rspec-rails 5.1 → 6.1 each called something 7.1 deprecates
       and 7.2 removes. The suite now runs with no deprecation warnings at all.
