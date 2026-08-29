@@ -91,10 +91,6 @@ Lint/ConstantDefinitionInBlock:
     - 'spec/models/tenant_isolation_spec.rb'
 
 # Offense count: 1
-Lint/DuplicateMethods:
-  Exclude:
-    - 'app/controllers/events_controller.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AutoCorrect, IgnoreEmptyBlocks, AllowUnusedKeywordArguments.

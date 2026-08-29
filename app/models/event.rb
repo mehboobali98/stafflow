@@ -2,7 +2,10 @@
 
 # event model
 class Event < ApplicationRecord
+  belongs_to :company
+
   validates :name, presence: true
+  validates :starts_at, presence: true
   validate :validate_past_event_date, on: :create
 
   def self.events_in_a_month(date)
@@ -14,7 +17,7 @@ class Event < ApplicationRecord
 
     errors.add(:event_year, I18n.t('event.messages.error.event_year'))
     false
-  rescue Type::Error
+  rescue TypeError
     errors.add(:event_date, I18n.t('event.messages.error.nil_date_input'))
     false
   rescue Date::Error
@@ -31,6 +34,7 @@ class Event < ApplicationRecord
   private
 
   def validate_past_event_date
+    return true if starts_at.blank?
     return true unless starts_at < DateTime.now
 
     errors.add(:event_date, I18n.t('event.messages.error.event_date'))
