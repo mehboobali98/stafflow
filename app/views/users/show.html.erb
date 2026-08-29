@@ -4,8 +4,8 @@
     <div class="col-md-4">
       <div class="profile-img pt-4">
         <div class="file btn btn-lg btn-primary">
-          <% if @user.image.present? %>
-            <%= image_tag @user.image.url(:medium) %>
+          <% if @user.image.attached? %>
+            <%= image_tag @user.image.variant(:medium) %>
           <% else %>
             <%= image_tag('default_user') %>
           <% end %>

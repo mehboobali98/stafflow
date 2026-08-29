@@ -25,6 +25,7 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include TenantHelpers
+  config.include AttachmentHelpers
 
   # Every tenant-owned model carries a default scope keyed on
   # Company.current_company_id. Leaving it set between examples would leak

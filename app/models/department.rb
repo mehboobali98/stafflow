@@ -8,10 +8,12 @@ class Department < ApplicationRecord
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id, case_sensitive: false
 
-  has_attached_file :avatar, styles: { medium: '350x350>', thumb: '100x100>' }
-  validates_attachment_content_type :avatar, content_type: %r{\Aimage/.*\z}
-  validates_attachment_file_name :avatar, matches: [/png\z/, /jpe?g\z/]
-  validates_with AttachmentSizeValidator, attributes: :avatar, less_than: 3.megabytes
+  has_one_attached :avatar do |attachable|
+    attachable.variant :medium, resize_to_limit: [350, 350]
+    attachable.variant :thumb,  resize_to_limit: [100, 100]
+  end
+  validates :avatar, content_type: %w[image/png image/jpeg],
+                     size: { less_than: 3.megabytes }
 
   def department_head
     users.find_by(role_id: User::ROLES[:department_head])
