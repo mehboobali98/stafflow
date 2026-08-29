@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 198 examples, 0 pending |
+| Tests | 206 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 20 found, 16 fixed, 4 open |
+| Known defects | 22 found, 19 fixed, 3 open |
 
 ---
 
@@ -477,12 +477,9 @@ Line numbers current as of 29 Aug 2026.
 | `app/views/shared/_sidebar.html.erb:87` | The Logout link is `destroy_user_session_url(subdomain: nil)`, so the sign-out request goes to the apex host | **Signing out does not sign you out.** The session cookie is host-only, so the apex request never carries the tenant's cookie and no tenant can be resolved; devise finds nobody signed in, flashes "already signed out" and redirects, leaving the real session intact. Verified: sign out through the link, then the dashboard still answers 200 | High |
 | `app/controllers/search_controller.rb` | The only controller with neither `authenticate_user!` nor `load_and_authorize_resource` | An anonymous request runs a real Elasticsearch query across every tenant's indexed records before the layout fails on `current_user` being nil. Sibling controllers answer 403; this one answers 500, which is the only thing hiding it | High |
 | `app/views/search/search_data.html.erb:1` | `@results.total_count` is the Elasticsearch hit count, and the index is not partitioned by company | Records are correctly isolated — the default scope drops other tenants' rows when ids are loaded — but the count is not. Two people named the same in two companies gives `total_count` 2 and one rendered row. A tenant can learn that matching records exist elsewhere, and the view's empty-state branch tests the wrong number | Medium |
-| `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
 
-`event.rb` is worth doing alongside the `TracePoint` review in phase 3, since
-both turn on how the tenancy hook injects the company id. `payroll.rb` closed
-during the Rails 6.1 upgrade: the deprecation that forced the transaction
-block to be restructured took the block-local `rescue` with it.
+`payroll.rb` closed during the Rails 6.1 upgrade: the deprecation that forced
+the transaction block to be restructured took the block-local `rescue` with it.
 
 ### Fixed
 
@@ -510,6 +507,10 @@ Phase 3, with a regression spec:
 
 | Location | Problem |
 | --- | --- |
+| `app/models/event.rb` | `rescue Type::Error` names a class that does not exist. Ruby evaluates rescue clauses in order and only when something is raised, so this one raised `NameError` before the working `Date::Error` clause beneath it could be reached — every unparseable event date 500d, not just a missing one |
+| `app/models/event.rb` | No `belongs_to :company`, alone among tenant-owned models, so `Event.new(company:)` raised `UnknownAttributeError` and the factory set the id by hand |
+| `app/models/event.rb` | `validate_past_event_date` compared `nil < DateTime.now` when no start was given, the same shape as the applied-leave validators fixed in phase 2. `starts_at` now has a presence validation to report instead |
+| `app/controllers/events_controller.rb` | `set_event` defined twice; the second silently replaced the first, which was dead. `.rubocop_todo.yml` excluded `Lint/DuplicateMethods` for the file rather than removing the duplicate |
 | `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
 
 ---
