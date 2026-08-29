@@ -400,9 +400,31 @@ work the framework bumps were blocking.
       to the current tenant — with none set it indexes nothing and silently
       swaps in an empty index. Reindex inside each company in turn.
 - [ ] Clear the remaining Dependabot backlog
-- [ ] Revisit the `TracePoint` multi-tenancy hook against modern Rails
-      autoloading. `event.rb` in the defect backlog belongs with this, since
-      both turn on how the hook injects `company_id`
+- [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
+      autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
+      unscoped, every other model carries the `company_id` condition, and an
+      unset tenant produces `company_id IS NULL` rather than an unscoped query,
+      so it fails closed. Nothing about autoloading needed changing.
+
+      The review did turn up that the `TracePoint` is no longer *necessary*.
+      It exists to defer the `default_scope` until the end of the class body,
+      because `inherited` runs before `set_not_multitenant` has had a chance
+      to. A `default_scope` block is evaluated per query rather than at
+      definition, so moving the test inside the block does the same job:
+
+      ```ruby
+      subclass.instance_eval do
+        default_scope { subclass.multitenant? ? where(company_id: Company.current_company_id) : all }
+      end
+      ```
+
+      Tried, and behaviourally identical — same SQL for scoped, unscoped and
+      no-tenant cases, whole suite green. Not applied: this is the load-bearing
+      mechanism of the application and the candidate write-up in phase 6, so
+      swapping it is a decision rather than a tidy-up. Recorded here so it is a
+      choice rather than an unknown.
+- [ ] Search reports a hit count from an Elasticsearch index that is not
+      partitioned by company. See the defect backlog
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
 pinned to a git branch.
