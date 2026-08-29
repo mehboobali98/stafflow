@@ -387,6 +387,13 @@ work the framework bumps were blocking.
       along but only transitively — nothing declared it, and variants would have
       depended on that accident.
 
+      Declaring it in the Dockerfile was not enough: CI never builds that image,
+      it runs on the runner, so the variant specs raised `LoadError` there while
+      passing locally. The workflow installs it too, and cannot copy the
+      Dockerfile's spelling — the image is Debian bookworm, where the package is
+      `libvips42`, and the runner is Ubuntu noble, whose 64-bit `time_t`
+      transition renamed the same package `libvips42t64`.
+
       No backfill task ships with it. The columns are dropped in a migration
       that says in its body why a deployment holding real uploads has to copy
       them out first: the file names live in those columns and nowhere else.
