@@ -121,7 +121,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 3.2.11 / 7.1.6 |
+| Ruby / Rails | 3.3.12 / 7.1.6 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Background jobs | delayed_job |
@@ -158,11 +158,10 @@ line numbers.
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
   leave updates, the HR leave form and the error paths.
-- **Ruby 3.2 is end-of-life.** Five steps of the upgrade are done — Rails
-  6.0 → 6.1, Ruby 2.7 → 3.0, Rails 6.1 → 7.0, Ruby 3.0 → 3.2, then Rails
-  7.0 → 7.1. None could go further on its own: Rails 6.0 did not support
-  Ruby 3.x, and Ruby 3.2 needs Rails 7. Ruby 3.3 is what is left of the
-  sequence. The app runs on Rails 7.1 with 7.0 framework defaults still in
+- **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
+  7.1: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1, then
+  Ruby 3.2 → 3.3. None could go further on its own, so the two were raised
+  alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
   force; the 7.1 defaults are staged in
   `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
 - **Three gems block Rails 7.2** — searchkick, devise and rspec-rails each
