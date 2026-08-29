@@ -12,8 +12,14 @@ gem 'mysql2', '>= 0.4.4'
 gem 'puma', '~> 6.4'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 5.4.2'
+# esbuild builds into app/assets/builds; Sprockets fingerprints and serves it.
+gem 'jsbundling-rails', '~> 1.3'
+# Font Awesome through Sprockets rather than the bundler. The npm package ships
+# plain CSS whose font URLs esbuild rewrites at build time, which Sprockets then
+# fingerprints a second time - so the URLs in the stylesheet point at names that
+# only exist undigested, and every icon 404s once assets are precompiled. This
+# gem uses the asset helpers, so the digests match.
+gem 'font-awesome-sass', '~> 5.15.1'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder

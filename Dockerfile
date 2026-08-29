@@ -1,6 +1,6 @@
 FROM ruby:3.3.12-bookworm
 
-ARG NODE_VERSION=14.21.3
+ARG NODE_VERSION=24.20.0
 ARG YARN_VERSION=1.22.19
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
@@ -11,8 +11,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
       xz-utils curl git tzdata \
  && rm -rf /var/lib/apt/lists/*
 
-# Node from the official tarball; the NodeSource apt repo does not serve a
-# release this old.
+# Node from the official tarball rather than an apt repo, so the version is
+# pinned here and not by whatever the distro happens to ship.
 RUN set -eux; \
     case "$(dpkg --print-architecture)" in \
       amd64) NODE_ARCH=x64 ;; \
@@ -34,10 +34,7 @@ RUN gem install bundler:2.4.22 \
  && bundle install --jobs 4 --retry 3
 
 COPY package.json yarn.lock* ./
-# Transitive deps published since 2021 advertise newer Node engines than this
-# 2021-era toolchain uses. They run fine; sass is pinned in package.json
-# because its newer releases genuinely will not run on Node 14.
-RUN yarn install --check-files --ignore-engines
+RUN yarn install --check-files
 
 COPY . .
 
