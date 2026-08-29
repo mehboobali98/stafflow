@@ -132,7 +132,7 @@ a background email.
 | Ruby / Rails | 3.3.12 / 7.1.6 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
-| Attachments | Active Storage, variants via libvips |
+| Attachments | Active Storage, variants via libvips, declared type checked against bytes with `file` |
 | Background jobs | delayed_job |
 | Auth | Devise |
 | Authorization | CanCanCan |
@@ -163,7 +163,7 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 222 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 224 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
