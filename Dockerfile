@@ -3,12 +3,17 @@ FROM ruby:3.3.12-bookworm
 ARG NODE_VERSION=24.20.0
 ARG YARN_VERSION=1.22.19
 
+# `file` already ships in the base image. It is listed because
+# active_storage_validations shells out to it to check an upload's bytes
+# against its declared content type, which makes it a runtime dependency
+# rather than something to inherit by luck.
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
       build-essential \
       default-libmysqlclient-dev \
       default-mysql-client \
       libxml2-dev libxslt1-dev zlib1g-dev \
       libvips42 \
+      file \
       xz-utils curl git tzdata \
  && rm -rf /var/lib/apt/lists/*
 

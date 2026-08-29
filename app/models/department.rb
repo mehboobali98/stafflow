@@ -12,7 +12,7 @@ class Department < ApplicationRecord
     attachable.variant :medium, resize_to_limit: [350, 350]
     attachable.variant :thumb,  resize_to_limit: [100, 100]
   end
-  validates :avatar, content_type: %w[image/png image/jpeg],
+  validates :avatar, content_type: { in: %w[image/png image/jpeg], spoofing_protection: true },
                      size: { less_than: 3.megabytes }
 
   def department_head

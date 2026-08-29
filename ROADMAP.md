@@ -17,7 +17,7 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 222 examples, 0 pending |
+| Tests | 224 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,945 across 22 controllers, 30 models, 121 views |
 | Known defects | 22 found, 22 fixed, 0 open |
@@ -400,15 +400,34 @@ work the framework bumps were blocking.
       This repository has none, so writing an untested backfill would have been
       worse than saying that plainly.
 
-      One thing worth knowing rather than assuming: `active_storage_validations`
-      checks the **declared** content type, not the analysed bytes. A text file
-      renamed `.png` and sent as `image/png` passes. That matches what Paperclip
-      did — it trusted the declared type and the file extension — so this is
-      parity, not a regression, but it is not the guarantee the validation looks
-      like it gives.
-- [ ] Reject uploads by analysed content type rather than declared. Both the
-      Paperclip validators and their Active Storage replacements trust what the
-      client says the file is
+      One thing worth knowing rather than assuming: as shipped here,
+      `active_storage_validations` checked the **declared** content type, not
+      the analysed bytes. A text file renamed `.png` and sent as `image/png`
+      passed. That matched what Paperclip did — it trusted the declared type
+      and the file extension — so it was parity, not a regression, but it was
+      not the guarantee the validation looks like it gives. The next item
+      closes it.
+- [x] Reject uploads by analysed content type rather than declared. `User#image`
+      and `Department#avatar` now pass `spoofing_protection: true` to the
+      content type validator, which runs `file -b --mime-type` over the
+      upload's bytes and rejects it when the answer is neither the declared
+      type nor one of its Marcel parents.
+
+      That makes `file` a runtime dependency, and it had been arriving by
+      accident: present in `ruby:3.3.12-bookworm`, declared in neither the
+      Dockerfile nor the workflow. Both name it now — the same lesson as
+      `libvips` one item above, applied before it could be learned twice.
+
+      The check reads the whole upload into memory, which is what the gem warns
+      about for large files. Bounded here by the 3 MB size validator both
+      attachments already carry.
+
+      The gem's copy for the three errors these attachments can raise read like
+      library internals, so `en.yml` overrides them: "must be one of: PNG,
+      JPG", "does not look like the image type it claims to be", "must be
+      smaller than 3 MB". The specs assert the rendered strings as well as the
+      error types, because `errors.details` does not interpolate — a broken
+      `%{}` would pass a type-only assertion and raise on the page instead.
 - [x] Webpacker 5 → `jsbundling-rails` with esbuild. Sprockets was already
       compiling the stylesheets, so this collapses two pipelines into one:
       esbuild writes to `app/assets/builds` and Sprockets fingerprints and
