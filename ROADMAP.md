@@ -167,14 +167,34 @@ underneath it, which is why it comes after Phase 1 rather than before.
       did, so raising Ruby first leaves the app unable to boot. The suite runs
       at every stop:
 
-      | | |
-      | --- | --- |
-      | Rails 6.0 → 6.1 | still on Ruby 2.7 |
-      | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
-      | Rails 6.1 → 7.0 | |
-      | Ruby 3.0 → 3.2 | |
-      | Rails 7.0 → 7.1 | |
-      | Ruby 3.2 → 3.3 | |
+      | | | |
+      | --- | --- | --- |
+      | ✅ | Rails 6.0 → 6.1 | still on Ruby 2.7 |
+      | ✅ | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
+      | | Rails 6.1 → 7.0 | |
+      | | Ruby 3.0 → 3.2 | |
+      | | Rails 7.0 → 7.1 | |
+      | | Ruby 3.2 → 3.3 | |
+
+The Ruby 3.0 step needed one dependency moved and turned up two pieces of dead
+code that only Ruby 3.0 can see:
+
+- **Every Rails command crashed at boot** under bootsnap 1.9.1. Ruby
+  [Bug #18250] makes `RubyVM::InstructionSequence#to_binary` raise on a method
+  that takes an anonymous splat and forwards it through a bare `super` inside a
+  block — `thor/base.rb` defines three. bootsnap caches compiled iseqs, so it
+  hit the bug on the first `require`. bootsnap 1.9.2 detects the bug and skips
+  the files it affects — the lockfile sat exactly one patch release behind the
+  fix, on a gem the Gemfile never pinned.
+- `.freeze` on the `EMAIL_REGEX` and `PASSWORD_LENGTH` literals, and `.sort` on
+  the `Dir[]` glob in `rails_helper`, are all no-ops as of Ruby 3.0, which
+  froze Regexp and Range literals and made glob results sorted by default.
+
+Brakeman now reports zero warnings, which is worth reading carefully rather
+than as a clean bill of health: Ruby 3.0 went out of support in March 2024, but
+Brakeman 5.4.1's table writes that range as `['3.0.0', '2.8.99']`, which no
+version satisfies, and its Rails table has no entry past 6.0. The stack is two
+steps less current than the check can say.
 
 - [ ] Enable the Rails 6.1 framework defaults. The app runs on 6.1 but still
       loads 6.0 defaults, so its behaviour has not moved yet. Two of the flips
