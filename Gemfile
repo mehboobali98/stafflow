@@ -49,7 +49,12 @@ gem 'simple_calendar', '=2.4.3'
 gem 'chartkick', '=4.0.5'
 
 # elastic search
-gem 'searchkick', '=4.6.0'
+gem 'searchkick', '~> 5.3'
+# searchkick 5 dropped its dependency on a client gem so it can drive either
+# Elasticsearch or OpenSearch. The client is ours to choose and ours to keep in
+# step with the server: this tracks the Elasticsearch 7 that docker-compose and
+# CI run, and has to move with them.
+gem 'elasticsearch', '~> 7.17'
 
 # faker gem to seed database
 gem 'faker', '=2.19.0'
