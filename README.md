@@ -153,18 +153,16 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 193 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 196 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
-  request specs for authentication, tenant routing, leave updates, the HR
-  leave form and the error paths.
+  request specs for authentication, tenant routing, the apex company lookup,
+  leave updates, the HR leave form and the error paths.
 - **Ruby 3.0 is end-of-life, and so is Rails 7.0.** Three steps of the upgrade
   are done — Rails 6.0 → 6.1, Ruby 2.7 → 3.0, then Rails 6.1 → 7.0. None could
   go further on its own: Rails 6.0 did not support Ruby 3.x, and Ruby 3.2 needs
   Rails 7. They are being raised alternately, and [ROADMAP.md](ROADMAP.md) has
-  the remaining order. The app runs on 7.0 but still loads 6.1 framework
-  defaults; the 7.0 defaults are staged in
-  `config/initializers/new_framework_defaults_7_0.rb` and enabled separately.
+  the remaining order. The 7.0 framework defaults are enabled.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router
