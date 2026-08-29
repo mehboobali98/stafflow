@@ -49,7 +49,7 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.1'
+          ruby-version: '3.0.7'
           bundler-cache: true
 
       # Request specs render real views, and the test environment compiles
@@ -80,7 +80,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.1'
+          ruby-version: '3.0.7'
           bundler-cache: true
       - run: bundle exec rubocop --format github
 
@@ -93,11 +93,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.1'
+          ruby-version: '3.0.7'
           bundler-cache: true
-      # Brakeman reports one warning: end-of-life Ruby 2.7, which is the next
-      # step of the phase 3 upgrade. The Rails 6.1 bump cleared the other two -
-      # end-of-life Rails 6.0, and CVE-2022-32209 in rails-html-sanitizer,
-      # which moved 1.4.2 -> 1.7.1 with the framework. Drop --no-exit-on-warn
-      # once Ruby is raised and the count reaches zero.
-      - run: bundle exec brakeman --no-pager --format plain --no-exit-on-warn
+      # The count is zero, so a warning now fails the build. Zero is narrower
+      # than it looks: Brakeman 5.4.1 predates both EOL dates it would report.
+      # Its Rails table stops at 6.0, and its Ruby entry for 3.0 reads
+      # ['3.0.0', '2.8.99'] - an inverted range no version can satisfy. Ruby 3.0
+      # and Rails 6.1 are both out of support; ROADMAP.md tracks the real state.
+      - run: bundle exec brakeman --no-pager --format plain
