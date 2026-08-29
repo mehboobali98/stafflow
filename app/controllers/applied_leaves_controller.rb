@@ -6,7 +6,8 @@ class AppliedLeavesController < ApplicationController
   load_resource :applied_leave, through: :current_company, only: :all_applied_leaves
   before_action :set_available_leaves, only: %i[new edit]
   authorize_resource
-  add_breadcrumb I18n.t('applied_leave.breadcrumbs.home'), :member_applied_leaves_path, except: :all_applied_leaves
+  add_breadcrumb I18n.t('applied_leave.breadcrumbs.home'), :member_applied_leaves_path,
+                 except: %i[all_applied_leaves new_applied_leave_by_hr]
 
   # GET /members/:member_id/applied_leaves
   def index

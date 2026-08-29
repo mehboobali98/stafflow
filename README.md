@@ -121,7 +121,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 2.7.1 / 6.0.4 |
+| Ruby / Rails | 3.0.7 / 6.1.7 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Background jobs | delayed_job |
@@ -153,24 +153,25 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 160 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 193 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
-  request specs for authentication, tenant routing, leave updates and the
-  error paths.
-- **Ruby 2.7 and Rails 6.0 are both end-of-life.** The Docker setup pins the
-  contemporary toolchain so the app runs today, but upgrading is outstanding
-  work.
+  request specs for authentication, tenant routing, leave updates, the HR
+  leave form and the error paths.
+- **Ruby 3.0 and Rails 6.1 are both end-of-life.** Two steps of the upgrade
+  are done — Rails 6.0 → 6.1, then Ruby 2.7 → 3.0. Neither could go further on
+  its own: Rails 6.0 did not support Ruby 3.x, and Ruby 3.2 needs Rails 7. They
+  are being raised alternately, and [ROADMAP.md](ROADMAP.md) has the remaining
+  order.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
   no static counterpart and render normally.
-- Two known defects remain, both recorded with locations in
-  [ROADMAP.md](ROADMAP.md#defect-backlog). Neither is reachable from ordinary
-  use: one is an error path that has no spec, the other a missing association
-  the default scope currently papers over.
+- One known defect remains, recorded with its location in
+  [ROADMAP.md](ROADMAP.md#defect-backlog). It is not reachable from ordinary
+  use: a missing association the default scope currently papers over.
 
 ## Contributors
 

@@ -28,6 +28,17 @@ RSpec.describe User do
       expect(duplicate).not_to be_valid
     end
 
+    # Rails 6.1 flipped the uniqueness validator's default from case-sensitive
+    # to case-insensitive. Pinned here so a later framework bump cannot move it
+    # again without a failing spec.
+    it 'is unique within a company regardless of case' do
+      create(:user, :employee, company: company, department: department, email: 'Person@example.com')
+      duplicate = build(:user, :employee, company: company, department: department,
+                                          designation: designation, email: 'person@example.com')
+
+      expect(duplicate).not_to be_valid
+    end
+
     it 'may be reused in a different company' do
       other = create(:company)
       create(:user, :employee, company: company, department: department, email: 'shared@example.com')
