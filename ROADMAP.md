@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 196 examples, 0 pending |
+| Tests | 198 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 17 found, 16 fixed, 1 open |
+| Known defects | 20 found, 16 fixed, 4 open |
 
 ---
 
@@ -273,8 +273,13 @@ redirect has no spec covering it today.
       it reaches only classes descending from `ActiveSupport::TestCase`.
       rspec-rails 5.1.2 does not, and never reads the flag — the config is true
       and the query cache is still off inside an example. The interaction is
-      untested rather than safe, and goes live if the suite moves to
-      rspec-rails 6.
+      untested rather than safe. *(Expected here to go live on rspec-rails 6.
+      It does not: 6.1.5 never mentions the executor, and
+      `RSpec::Rails::RailsExampleGroup` includes selected Active Support test
+      modules rather than inheriting from `ActiveSupport::TestCase`, so the
+      load hook never reaches it. The query cache is still off inside an
+      example. Corrected during the gem sweep, by probe rather than by
+      reading.)*
 
       The rest are inert: no `button_to`, no scoped associations, no Active
       Storage, and `wrap_parameters_by_default` matches what
@@ -354,11 +359,13 @@ searchkick is the loud one — it warns once per query, which is several hundred
 lines a suite run. That noise is left in place deliberately: silencing it would
 hide the only signal saying the gem has to be replaced before 7.2.
 
-The rspec-rails bump carries a consequence recorded during the 7.0 defaults
-step: rspec-rails 6 descends from `ActiveSupport::TestCase`, so
-`executor_around_test_case` stops being inert and the Active Record query cache
-starts spanning test cases. That is the tenancy interaction the isolation specs
-were written to catch, and it goes live in the same commit.
+The rspec-rails bump was expected to carry a consequence recorded during the
+7.0 defaults step — that rspec-rails 6 would descend from
+`ActiveSupport::TestCase` and make `executor_around_test_case` live. It does
+not, and the expectation was wrong: rspec-rails builds its own example groups
+and includes Active Support's test modules rather than inheriting the class, so
+the load hook that installs the executor never reaches them. The query cache
+stays off inside an example, and the tenancy interaction remains untested.
 
 Ruby 3.3 cost nothing. No gem moved, the lockfile changed by one line, and the
 suite, the asset build, the server and the worker all came up unchanged. Worth
@@ -374,7 +381,25 @@ work the framework bumps were blocking.
       a data migration for existing attachments
 - [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
       importmaps
-- [ ] Clear the Dependabot backlog once the framework bumps land
+- [x] Clear the three gems that blocked Rails 7.2. searchkick 4.6 → 5.5, devise
+      4.9 → 5.0 and rspec-rails 5.1 → 6.1 each called something 7.1 deprecates
+      and 7.2 removes. The suite now runs with no deprecation warnings at all.
+
+      searchkick 5 dropped its dependency on a client gem, so `elasticsearch`
+      is now declared here and pinned to the 7.x line the compose file and CI
+      run — the fear that this forced an Elasticsearch 8 server was unfounded.
+      Search reaches Elasticsearch before Active Record, so it is the one read
+      path where tenancy rests entirely on the default scope applied when ids
+      are loaded; it now has a spec saying so, written before the bump.
+
+      **Upgrading an existing deployment needs a reindex.** searchkick 5 changes
+      the index mapping and refuses one written by 4 with `Bad mapping - run
+      reindex`. A fresh clone is fine, because seeding creates records and the
+      save callbacks index them. Note the trap when reindexing here: a bare
+      `Model.reindex` runs `Model.all`, which the tenancy default scope narrows
+      to the current tenant — with none set it indexes nothing and silently
+      swaps in an empty index. Reindex inside each company in turn.
+- [ ] Clear the remaining Dependabot backlog
 - [ ] Revisit the `TracePoint` multi-tenancy hook against modern Rails
       autoloading. `event.rb` in the defect backlog belongs with this, since
       both turn on how the hook injects `company_id`
@@ -449,6 +474,9 @@ Line numbers current as of 29 Aug 2026.
 
 | Location | Problem | Effect | Severity |
 | --- | --- | --- | --- |
+| `app/views/shared/_sidebar.html.erb:87` | The Logout link is `destroy_user_session_url(subdomain: nil)`, so the sign-out request goes to the apex host | **Signing out does not sign you out.** The session cookie is host-only, so the apex request never carries the tenant's cookie and no tenant can be resolved; devise finds nobody signed in, flashes "already signed out" and redirects, leaving the real session intact. Verified: sign out through the link, then the dashboard still answers 200 | High |
+| `app/controllers/search_controller.rb` | The only controller with neither `authenticate_user!` nor `load_and_authorize_resource` | An anonymous request runs a real Elasticsearch query across every tenant's indexed records before the layout fails on `current_user` being nil. Sibling controllers answer 403; this one answers 500, which is the only thing hiding it | High |
+| `app/views/search/search_data.html.erb:1` | `@results.total_count` is the Elasticsearch hit count, and the index is not partitioned by company | Records are correctly isolated — the default scope drops other tenants' rows when ids are loaded — but the count is not. Two people named the same in two companies gives `total_count` 2 and one rendered row. A tenant can learn that matching records exist elsewhere, and the view's empty-state branch tests the wrong number | Medium |
 | `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
 
 `event.rb` is worth doing alongside the `TracePoint` review in phase 3, since

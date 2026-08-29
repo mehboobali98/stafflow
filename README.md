@@ -153,20 +153,21 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 196 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 198 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
-  leave updates, the HR leave form and the error paths.
+  search, leave updates, the HR leave form and the error paths.
 - **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
   7.1: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1, then
   Ruby 3.2 → 3.3. None could go further on its own, so the two were raised
   alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
   force; the 7.1 defaults are staged in
   `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
-- **Three gems block Rails 7.2** — searchkick, devise and rspec-rails each
-  call something 7.1 deprecates and 7.2 removes.
-  [ROADMAP.md](ROADMAP.md) lists them with the versions that fix each.
+- **Three known defects remain**, listed with locations in
+  [ROADMAP.md](ROADMAP.md#defect-backlog). One is serious: the Logout link
+  posts to the apex host, where the tenant's session cookie is never sent, so
+  signing out does not end the session.
 - **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
   outstanding.
 - `public/404.html` and `public/500.html` are served ahead of the router

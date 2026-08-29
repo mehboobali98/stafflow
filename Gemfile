@@ -26,7 +26,7 @@ gem 'paperclip', '=6.0.0'
 gem 'will_paginate', '=3.3.0'
 # additional gems
 gem 'cancancan'
-gem 'devise'
+gem 'devise', '~> 5.0'
 gem 'has_scope', '0.8.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
@@ -49,7 +49,12 @@ gem 'simple_calendar', '=2.4.3'
 gem 'chartkick', '=4.0.5'
 
 # elastic search
-gem 'searchkick', '=4.6.0'
+gem 'searchkick', '~> 5.3'
+# searchkick 5 dropped its dependency on a client gem so it can drive either
+# Elasticsearch or OpenSearch. The client is ours to choose and ours to keep in
+# step with the server: this tracks the Elasticsearch 7 that docker-compose and
+# CI run, and has to move with them.
+gem 'elasticsearch', '~> 7.17'
 
 # faker gem to seed database
 gem 'faker', '=2.19.0'
@@ -68,7 +73,7 @@ group :development, :test do
   gem 'brakeman', '~> 5.2', require: false
   gem 'factory_bot', '~> 6.4'
   gem 'factory_bot_rails', '~> 6.4'
-  gem 'rspec-rails', '~> 5.1'
+  gem 'rspec-rails', '~> 6.1'
   gem 'rubocop', '~> 1.28', require: false
   gem 'rubocop-rails', '~> 2.14', require: false
   gem 'rubocop-rspec', '~> 2.10', require: false
