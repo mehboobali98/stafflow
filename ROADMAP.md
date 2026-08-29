@@ -173,7 +173,7 @@ underneath it, which is why it comes after Phase 1 rather than before.
       | ✅ | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
       | ✅ | Rails 6.1 → 7.0 | |
       | ✅ | Ruby 3.0 → 3.2 | 3.1 skipped; nothing needs it as a stop |
-      | | Rails 7.0 → 7.1 | |
+      | ✅ | Rails 7.0 → 7.1 | |
       | | Ruby 3.2 → 3.3 | |
 
 The Ruby 3.0 step needed one dependency moved and turned up two pieces of dead
@@ -235,10 +235,13 @@ wrong:
 - **delayed_job needed a ceiling.** `delayed_job_active_record` was pinned at
   4.1.6, which caps `activerecord` below 6.2. Lifting that pin let the resolver
   take `delayed_job` 4.2.0 along with it, whose ActiveJob adapter subclasses
-  `ActiveJob::QueueAdapters::AbstractAdapter` — a class Rails 7.1 introduced —
-  and which shadows the adapter of the same name that 7.0 itself ships. Its
-  gemspec asks only for `activesupport >= 3.0`, so it is now pinned below 4.2
-  in the same way, and for the same reason, as `concurrent-ruby`.
+  `ActiveJob::QueueAdapters::AbstractAdapter` and which shadows the adapter of
+  the same name that 7.0 itself ships. Its gemspec asks only for
+  `activesupport >= 3.0`, so it is now pinned below 4.2 in the same way, and
+  for the same reason, as `concurrent-ruby`. *(Recorded here at the time as a
+  class Rails 7.1 introduced. That was wrong: 7.1 does not ship it either, as
+  the 7.1 step found out by removing the pin. It arrives in 7.2, and the pin
+  says so now.)*
 
 `return` from inside a transaction rolls back as of 7.0 rather than only
 warning; `payroll.rb` was the only place doing it and had already been
@@ -312,6 +315,50 @@ hash value omission and asks for `company: company` to become `company:` in 225
 places. That is a restyle of the codebase rather than part of running on a
 newer Ruby, so `Style/HashSyntax` is configured to accept both forms and the
 sweep is left as its own decision.
+
+The Rails 7.1 step took two gem bumps, released one pin, kept another, and
+turned up the wall that stops the next one.
+
+- **`concurrent-ruby` is unpinned, and the claim it carried held.** 1.3.5
+  dropped a `require 'logger'` that ActiveSupport before 7.1 relied on, and
+  7.1 requires it itself. Proved on the path that used to fail rather than
+  from the changelog: `bin/webpack` run directly, from wiped volumes, on
+  concurrent-ruby 1.3.8.
+- **`delayed_job` stays pinned below 4.2, and the pin's reason was wrong.**
+  Recorded during the 7.0 step as waiting on a class Rails 7.1 introduces.
+  Removing the pin here proved otherwise — `AbstractAdapter` is not in 7.1
+  either, and the suite failed to load exactly as it had on 7.0. It arrives in
+  7.2. Rails ships its own delayed_job adapter meanwhile, and that is the one
+  7.1 resolves.
+- **puma 4.3.8 could not start the server.** Rails 7.1 brings Rack 3, which
+  moved `Rack::Handler` out to the `rackup` gem; puma 4 registers itself
+  against the old constant, so `rails server` answered "Could not find a server
+  gem" with puma right there in the Gemfile. puma 6.6.1 is what 7.1 expects.
+  Nothing in the suite touches puma, so only booting the app finds this.
+- **devise 4.8.1 → 4.9.4,** which is the release that stops it reaching for
+  `ActiveSupport::Dependencies` through a deprecated constant accessor.
+
+### What now blocks Rails 7.2
+
+The suite is green and silent about none of it: three gems still call APIs that
+7.1 deprecates and 7.2 removes, so each is a prerequisite rather than a
+nice-to-have.
+
+| Gem | Call | Fixed in |
+| --- | --- | --- |
+| searchkick 4.6.0 | `color(name, YELLOW, true)` — bolding a log tag with a positional boolean | searchkick 5, which is also an Elasticsearch client migration |
+| devise 4.9.4 | `Rails.application.secrets` in `secret_key_finder.rb` | devise 5 |
+| rspec-rails 5.1.2 | `TestFixtures.fixture_path=` | rspec-rails 6.1 |
+
+searchkick is the loud one — it warns once per query, which is several hundred
+lines a suite run. That noise is left in place deliberately: silencing it would
+hide the only signal saying the gem has to be replaced before 7.2.
+
+The rspec-rails bump carries a consequence recorded during the 7.0 defaults
+step: rspec-rails 6 descends from `ActiveSupport::TestCase`, so
+`executor_around_test_case` stops being inert and the Active Record query cache
+starts spanning test cases. That is the tenancy interaction the isolation specs
+were written to catch, and it goes live in the same commit.
 
 - [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
       a data migration for existing attachments
