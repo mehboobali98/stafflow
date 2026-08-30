@@ -1,4 +1,4 @@
-<% if @results.total_count == 0 %>
+<% if @results.empty? %>
   <div class='d-flex justify-content-around'>
     <div class='card w-50 p-5 mt-5'>
       <div class='row px-5'>
@@ -23,8 +23,8 @@
           <div class="row col-md-12">
             <% if result.instance_of? User %>
               <div class="col-2">
-                <% if result.image.present? %>
-                  <%= image_tag result.image.url(:medium), class:"card-img-top" %>
+                <% if result.image.attached? %>
+                  <%= image_tag result.image.variant(:medium), class:"card-img-top" %>
                 <% else %>
                   <%= image_tag 'default_user', class:"card-img-top" %>
                 <% end %>
@@ -39,8 +39,8 @@
               <%= link_to :details, member_path(result), class:"btn btn-primary w-100 text-center search-btn" %>
             <% elsif result.instance_of? Department %>
               <div class="col-2">
-                <% if result.avatar.present? %>
-                  <%= image_tag result.avatar.url(:medium), class:"card-img-top" %>
+                <% if result.avatar.attached? %>
+                  <%= image_tag result.avatar.variant(:medium), class:"card-img-top" %>
                 <% else %>
                   <%= image_tag 'department', class:"card-img-top" %>
                 <% end %>

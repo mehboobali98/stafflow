@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 193 examples, 0 pending |
+| Tests | 224 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
-| Lines in `app/` | 5,224 across 23 controllers, 29 models, 121 views |
-| Known defects | 17 found, 16 fixed, 1 open |
+| Lines in `app/` | 4,945 across 22 controllers, 30 models, 121 views |
+| Known defects | 22 found, 22 fixed, 0 open |
 
 ---
 
@@ -162,7 +162,7 @@ underneath it, which is why it comes after Phase 1 rather than before.
       third-party fork — if that branch disappeared the app stopped building.
       Done first, since it patched ActiveRecord STI internals and would have
       been an unknown in every step below
-- [ ] Ruby and Rails, interleaved. **The two cannot be done in sequence:**
+- [x] Ruby and Rails, interleaved. **The two cannot be done in sequence:**
       Rails 6.0 does not support Ruby 3.x, and 6.1 was the first release that
       did, so raising Ruby first leaves the app unable to boot. The suite runs
       at every stop:
@@ -171,10 +171,10 @@ underneath it, which is why it comes after Phase 1 rather than before.
       | --- | --- | --- |
       | ✅ | Rails 6.0 → 6.1 | still on Ruby 2.7 |
       | ✅ | Ruby 2.7 → 3.0 | 6.1 is the first Rails that supports 3.x |
-      | | Rails 6.1 → 7.0 | |
-      | | Ruby 3.0 → 3.2 | |
-      | | Rails 7.0 → 7.1 | |
-      | | Ruby 3.2 → 3.3 | |
+      | ✅ | Rails 6.1 → 7.0 | |
+      | ✅ | Ruby 3.0 → 3.2 | 3.1 skipped; nothing needs it as a stop |
+      | ✅ | Rails 7.0 → 7.1 | |
+      | ✅ | Ruby 3.2 → 3.3 | |
 
 The Ruby 3.0 step needed one dependency moved and turned up two pieces of dead
 code that only Ruby 3.0 can see:
@@ -219,14 +219,360 @@ steps less current than the check can say.
       regardless. The cookie previously carried no `SameSite` attribute at all,
       which browsers have themselves defaulted to `Lax` since 2020, so this
       writes down behaviour the app already had.
-- [ ] Paperclip → ActiveStorage. Paperclip was retired upstream in 2018; needs
-      a data migration for existing attachments
-- [ ] Webpacker 5 → `jsbundling-rails` with esbuild, or Propshaft plus
-      importmaps
-- [ ] Clear the Dependabot backlog once the framework bumps land
-- [ ] Revisit the `TracePoint` multi-tenancy hook against modern Rails
-      autoloading. `event.rb` in the defect backlog belongs with this, since
-      both turn on how the hook injects `company_id`
+
+The Rails 7.0 step was a dependency problem rather than an application one.
+Nothing in `app/` had to change, and the suite went from 193 green on 6.1 to
+193 green on 7.0 untouched. Two gems moved, both because a declared bound was
+wrong:
+
+- **devise 4.8.0 killed the app on the first `require`.** It calls
+  `ActiveSupport::Dependencies.reference`, which 7.0 removed, but its gemspec
+  accepts `railties >= 4.1`, so the resolver had no way to know. 4.8.1 is the
+  release that fixed it. Devise 5.0.4 also resolves cleanly and was
+  deliberately not taken — replacing the authentication stack inside a
+  framework bump would make the step unbisectable, and the dependency sweep
+  below is where that belongs.
+- **delayed_job needed a ceiling.** `delayed_job_active_record` was pinned at
+  4.1.6, which caps `activerecord` below 6.2. Lifting that pin let the resolver
+  take `delayed_job` 4.2.0 along with it, whose ActiveJob adapter subclasses
+  `ActiveJob::QueueAdapters::AbstractAdapter` and which shadows the adapter of
+  the same name that 7.0 itself ships. Its gemspec asks only for
+  `activesupport >= 3.0`, so it is now pinned below 4.2 in the same way, and
+  for the same reason, as `concurrent-ruby`. *(Recorded here at the time as a
+  class Rails 7.1 introduced. That was wrong: 7.1 does not ship it either, as
+  the 7.1 step found out by removing the pin. It arrives in 7.2, and the pin
+  says so now.)*
+
+`return` from inside a transaction rolls back as of 7.0 rather than only
+warning; `payroll.rb` was the only place doing it and had already been
+restructured during the 6.1 step.
+
+Of the 7.0 defaults now staged, one is not cosmetic.
+`action_controller.raise_on_open_redirects` rejects a `redirect_to` whose host
+is not the request's, and sign-in reaches a tenant by exactly that route —
+`home_controller.rb:14` redirects from the apex host to
+`new_user_session_url` on the company's subdomain. Enabling it without
+`allow_other_host: true` closes the front door of the application, and that
+redirect has no spec covering it today.
+
+- [x] Enable the Rails 7.0 framework defaults. Of the two flagged for
+      hand-checking, one was real and one turned out to be unreachable:
+
+      `action_controller.raise_on_open_redirects` was the real one.
+      `home_controller.rb` hands a visitor from the apex host to
+      `new_user_session_url` on their company's subdomain, which is the only
+      cross-host redirect the app makes and the way every session starts. It
+      now says `allow_other_host: true`, and the path has a request spec, which
+      it did not before.
+
+      `active_support.executor_around_test_case` was raised because a query
+      cache spanning a test case could serve one tenant's rows to another
+      through the thread-local default scope. It changes nothing here, for a
+      reason worth recording rather than treating as reassurance: Rails
+      installs the executor through an `active_support_test_case` load hook, so
+      it reaches only classes descending from `ActiveSupport::TestCase`.
+      rspec-rails 5.1.2 does not, and never reads the flag — the config is true
+      and the query cache is still off inside an example. The interaction is
+      untested rather than safe. *(Expected here to go live on rspec-rails 6.
+      It does not: 6.1.5 never mentions the executor, and
+      `RSpec::Rails::RailsExampleGroup` includes selected Active Support test
+      modules rather than inheriting from `ActiveSupport::TestCase`, so the
+      load hook never reaches it. The query cache is still off inside an
+      example. Corrected during the gem sweep, by probe rather than by
+      reading.)*
+
+      The rest are inert: no `button_to`, no scoped associations, no Active
+      Storage, and `wrap_parameters_by_default` matches what
+      `config/initializers/wrap_parameters.rb` already sets by hand. The two
+      digest defaults rotate the key generator to SHA256 and invalidate every
+      signed and encrypted cookie, which costs nothing while there is no
+      deployment to sign anyone out of.
+The Ruby 3.2 step cost two gems and a base image, and both gem failures were
+of the kind a build check waves through:
+
+- **capybara 3.35.3 required `matrix`,** which Ruby 3.1 moved out of the
+  default gems and which capybara did not declare until 3.36. Every spec file
+  died at load with `cannot load such file -- matrix`, before a single example
+  ran. Nothing in the suite uses capybara — there are no system specs — it is
+  simply in the `:test` group, so `Bundler.require` loads it.
+- **mysql2 0.5.3 compiled cleanly and then died on the first query** with
+  `undefined symbol: rb_tainted_str_new2`. Ruby 3.2 removed taint, and the
+  symbol only has to exist when the extension is actually called, so the gem
+  installs, the image builds, and the failure waits for the first database
+  round trip. 0.5.7 fixes it.
+
+The base image moved from Debian bullseye to bookworm, because the `ruby:3.2`
+images do not ship a bullseye variant. That is a happy forcing function:
+bullseye's LTS ended two days after this commit, and the Dockerfile carried a
+workaround repointing apt at the Debian archive to survive it. Bookworm is
+supported to 2028, so the workaround is gone rather than extended.
+`ruby:3.2-bookworm` was taken over the default `ruby:3.2`, which is now Debian
+13 — one OS step at a time, and Node 14 still has to run on it.
+
+Brakeman still reports zero, and the reason has changed shape: its Ruby table
+ends at 3.0 outright, so the inverted `['3.0.0', '2.8.99']` range described
+above is no longer even what is hiding the EOL. Ruby 3.2 and Rails 7.0 are both
+out of support and Brakeman 5.4.1 cannot say so about either, however old they
+get.
+
+RuboCop's `TargetRubyVersion` went to 3.2 with it, which turns on Ruby 3.1's
+hash value omission and asks for `company: company` to become `company:` in 225
+places. That is a restyle of the codebase rather than part of running on a
+newer Ruby, so `Style/HashSyntax` is configured to accept both forms and the
+sweep is left as its own decision.
+
+The Rails 7.1 step took two gem bumps, released one pin, kept another, and
+turned up the wall that stops the next one.
+
+- **`concurrent-ruby` is unpinned, and the claim it carried held.** 1.3.5
+  dropped a `require 'logger'` that ActiveSupport before 7.1 relied on, and
+  7.1 requires it itself. Proved on the path that used to fail rather than
+  from the changelog: `bin/webpack` run directly, from wiped volumes, on
+  concurrent-ruby 1.3.8.
+- **`delayed_job` stays pinned below 4.2, and the pin's reason was wrong.**
+  Recorded during the 7.0 step as waiting on a class Rails 7.1 introduces.
+  Removing the pin here proved otherwise — `AbstractAdapter` is not in 7.1
+  either, and the suite failed to load exactly as it had on 7.0. It arrives in
+  7.2. Rails ships its own delayed_job adapter meanwhile, and that is the one
+  7.1 resolves.
+- **puma 4.3.8 could not start the server.** Rails 7.1 brings Rack 3, which
+  moved `Rack::Handler` out to the `rackup` gem; puma 4 registers itself
+  against the old constant, so `rails server` answered "Could not find a server
+  gem" with puma right there in the Gemfile. puma 6.6.1 is what 7.1 expects.
+  Nothing in the suite touches puma, so only booting the app finds this.
+- **devise 4.8.1 → 4.9.4,** which is the release that stops it reaching for
+  `ActiveSupport::Dependencies` through a deprecated constant accessor.
+
+### What now blocks Rails 7.2
+
+The suite is green and silent about none of it: three gems still call APIs that
+7.1 deprecates and 7.2 removes, so each is a prerequisite rather than a
+nice-to-have.
+
+| Gem | Call | Fixed in |
+| --- | --- | --- |
+| searchkick 4.6.0 | `color(name, YELLOW, true)` — bolding a log tag with a positional boolean | searchkick 5, which is also an Elasticsearch client migration |
+| devise 4.9.4 | `Rails.application.secrets` in `secret_key_finder.rb` | devise 5 |
+| rspec-rails 5.1.2 | `TestFixtures.fixture_path=` | rspec-rails 6.1 |
+
+searchkick is the loud one — it warns once per query, which is several hundred
+lines a suite run. That noise is left in place deliberately: silencing it would
+hide the only signal saying the gem has to be replaced before 7.2.
+
+The rspec-rails bump was expected to carry a consequence recorded during the
+7.0 defaults step — that rspec-rails 6 would descend from
+`ActiveSupport::TestCase` and make `executor_around_test_case` live. It does
+not, and the expectation was wrong: rspec-rails builds its own example groups
+and includes Active Support's test modules rather than inheriting the class, so
+the load hook that installs the executor never reaches them. The query cache
+stays off inside an example, and the tenancy interaction remains untested.
+
+Ruby 3.3 cost nothing. No gem moved, the lockfile changed by one line, and the
+suite, the asset build, the server and the worker all came up unchanged. Worth
+recording precisely because the two Ruby steps before it were not like that:
+3.0 needed bootsnap moved, and 3.2 needed capybara and mysql2. Nothing in this
+app reaches for a stdlib method 3.3 changed, and nothing warns about the
+default gems 3.4 will move out.
+
+That closes the interleaved sequence. What is left of this phase is the gem
+work the framework bumps were blocking.
+
+- [x] Paperclip → Active Storage. Two attachments, `User#image` and
+      `Department#avatar`, and the eight metadata columns they kept. Paperclip's
+      `styles:` become Rails 7 named variants, so the sizes stay declared on the
+      model rather than spreading into the three views that render them.
+
+      The 7.0 framework defaults select the vips variant processor, so the image
+      now installs `libvips42` explicitly. ImageMagick had been present all
+      along but only transitively — nothing declared it, and variants would have
+      depended on that accident.
+
+      Declaring it in the Dockerfile was not enough: CI never builds that image,
+      it runs on the runner, so the variant specs raised `LoadError` there while
+      passing locally. The workflow installs it too, and cannot copy the
+      Dockerfile's spelling — the image is Debian bookworm, where the package is
+      `libvips42`, and the runner is Ubuntu noble, whose 64-bit `time_t`
+      transition renamed the same package `libvips42t64`.
+
+      No backfill task ships with it. The columns are dropped in a migration
+      that says in its body why a deployment holding real uploads has to copy
+      them out first: the file names live in those columns and nowhere else.
+      This repository has none, so writing an untested backfill would have been
+      worse than saying that plainly.
+
+      One thing worth knowing rather than assuming: as shipped here,
+      `active_storage_validations` checked the **declared** content type, not
+      the analysed bytes. A text file renamed `.png` and sent as `image/png`
+      passed. That matched what Paperclip did — it trusted the declared type
+      and the file extension — so it was parity, not a regression, but it was
+      not the guarantee the validation looks like it gives. The next item
+      closes it.
+- [x] Reject uploads by analysed content type rather than declared. `User#image`
+      and `Department#avatar` now pass `spoofing_protection: true` to the
+      content type validator, which runs `file -b --mime-type` over the
+      upload's bytes and rejects it when the answer is neither the declared
+      type nor one of its Marcel parents.
+
+      That makes `file` a runtime dependency, and it had been arriving by
+      accident: present in `ruby:3.3.12-bookworm`, declared in neither the
+      Dockerfile nor the workflow. Both name it now — the same lesson as
+      `libvips` one item above, applied before it could be learned twice.
+
+      The check reads the whole upload into memory, which is what the gem warns
+      about for large files. Bounded here by the 3 MB size validator both
+      attachments already carry.
+
+      The gem's copy for the three errors these attachments can raise read like
+      library internals, so `en.yml` overrides them: "must be one of: PNG,
+      JPG", "does not look like the image type it claims to be", "must be
+      smaller than 3 MB". The specs assert the rendered strings as well as the
+      error types, because `errors.details` does not interpolate — a broken
+      `%{}` would pass a type-only assertion and raise on the page instead.
+- [x] Stop the attachment specs writing libvips warnings into the CI log. The
+      suspected cause was the oversized-upload example, which padded a real PNG
+      with nulls to clear the 3 MB limit. It was not.
+
+      `spec/fixtures/files/avatar.png` was itself corrupt: its `IDAT` chunk
+      stored a CRC of `c32e5d45` against an actual `c8454b42`, and carried more
+      image data than its 8×8 header declares. libvips repaired it on every
+      read and logged `IDAT: Too much image data` and `IDAT: CRC error` each
+      time — so every example touching the fixture was noisy, not just the
+      padded one. Regenerated valid, 289 bytes, all four chunks checking out.
+
+      The oversized upload is now a genuine 1200-square PNG of random pixels
+      rather than a padded file. PNG cannot compress noise, so it encodes to
+      about 4 MB in roughly a tenth of a second, and nothing has to reason
+      about whether a decoder tolerates trailing bytes.
+- [x] Webpacker 5 → `jsbundling-rails` with esbuild. Sprockets was already
+      compiling the stylesheets, so this collapses two pipelines into one:
+      esbuild writes to `app/assets/builds` and Sprockets fingerprints and
+      serves it. Propshaft plus importmaps was the alternative and was not
+      taken — select2 and Bootstrap's JS are npm-shaped dependencies that
+      importmaps would have meant vendoring by hand, which is a rewrite rather
+      than a bundler swap.
+
+      What it bought: Node 14 → 24 and webpack 4 → esbuild, so `yarn audit`
+      goes from **76 vulnerabilities, 2 critical and 42 high** to a supported
+      toolchain. The chain of workarounds propping up Node 14 is gone with it —
+      the sass pin in `package.json`, the `--ignore-engines` flag, and the
+      comment explaining why the Node tarball had to be fetched by hand.
+      `application.js` is 592 KB minified against webpack's 782 KB.
+
+      Two things surfaced while doing it, both only visible in production:
+
+      Font Awesome came through the JS bundle as a CSS import. esbuild
+      content-hashes the font files, Sprockets then fingerprints them again,
+      and the URLs esbuild wrote point at names that only exist undigested — so
+      every icon 404s once assets are precompiled, while looking correct in
+      development. It now comes from `font-awesome-sass`, which uses Sprockets'
+      `font-path` helper, so the digests match. Checked by precompiling for
+      production and confirming every referenced file exists.
+
+      `application.scss` already carried
+      `@import "@fortawesome/fontawesome-free/css/all.css"`, which Sprockets
+      could not resolve and emitted as a literal CSS `@import` to a path that
+      404s. It had never worked; the icons were coming from webpack. Removed.
+- [x] Bundle select2 and AOS instead of loading them from public CDNs. All
+      three sat in `package.json` unused while the layout and landing page
+      fetched them from jsdelivr, cdnjs and unpkg — a third-party runtime
+      dependency for an HR application, and the AOS versions did not even match
+      between the pin and the CDN URL. AOS now serves the 2.3.4 that was
+      pinned, rather than the 2.3.1 the URL asked for.
+
+      The JavaScript goes through esbuild, the CSS through Sprockets as a plain
+      `@import` — `node_modules` is already on the asset load path and
+      `bootstrap/scss/bootstrap` was importing from it the same way. Importing
+      the CSS from JavaScript instead would have had esbuild emit
+      `app/assets/builds/application.css`, giving Sprockets two candidates for
+      one logical path, since `manifest.js` links both that tree and the
+      stylesheets directory.
+
+      The Bootstrap theme was dropped rather than bundled, and removed from
+      `package.json`. It only defines `.select2-container--bootstrap`, and the
+      single `.select2()` call asks for `theme: "classic"`, whose 38 rules ship
+      in select2's own stylesheet. Nothing has ever carried the `--bootstrap`
+      class, so the CDN was fetching a stylesheet that could not apply and
+      bundling it would only have moved unreachable CSS into `application.css`.
+- [x] Clear the three gems that blocked Rails 7.2. searchkick 4.6 → 5.5, devise
+      4.9 → 5.0 and rspec-rails 5.1 → 6.1 each called something 7.1 deprecates
+      and 7.2 removes. The suite now runs with no deprecation warnings at all.
+
+      searchkick 5 dropped its dependency on a client gem, so `elasticsearch`
+      is now declared here and pinned to the 7.x line the compose file and CI
+      run — the fear that this forced an Elasticsearch 8 server was unfounded.
+      Search reaches Elasticsearch before Active Record, so it is the one read
+      path where tenancy rests entirely on the default scope applied when ids
+      are loaded; it now has a spec saying so, written before the bump.
+
+      **Upgrading an existing deployment needs a reindex.** searchkick 5 changes
+      the index mapping and refuses one written by 4 with `Bad mapping - run
+      reindex`. A fresh clone is fine, because seeding creates records and the
+      save callbacks index them. Note the trap when reindexing here: a bare
+      `Model.reindex` runs `Model.all`, which the tenancy default scope narrows
+      to the current tenant — with none set it indexes nothing and silently
+      swaps in an empty index. Reindex inside each company in turn.
+- [ ] Clear the remaining Dependabot backlog, which is one advisory rather than
+      the 92 the repository reports.
+
+      Alerts are computed against the default branch, and `main` is 49 commits
+      behind `develop` — still Rails 6.1.7.10, puma 4.3.8 and Webpacker 5.
+      Checked every alert against `develop`'s lockfiles instead: ten packages
+      are not there at all, having left with webpack; ten are already at or
+      above the patched version; and of the ten whose ranges still cover
+      `develop`, nine need a configuration this app does not have — direct
+      uploads, proxy mode, user input used as blob keys, or number helpers over
+      user strings.
+
+      The one that lands is
+      [GHSA-xr9x-r78c-5hrm](https://github.com/advisories/GHSA-xr9x-r78c-5hrm),
+      CVSS 9.5: arbitrary file read and remote code execution through Active
+      Storage variant processing. It affects any application on the vips
+      variant processor that accepts image uploads from untrusted users, and
+      states that generating variants is not a separate requirement.
+      `config.load_defaults 7.0` selects vips and nothing overrides it, so this
+      is the shape of this app exactly.
+
+      There is no fix on the 7.1 line — 7.1.6 is its last release and the
+      patches shipped as 7.2.3.1 and 7.2.3.2 — and `activestorage` cannot be
+      raised on its own. **The remedy is Rails 7.2, which the gem sweep above
+      was done to unblock.** It gates phase 4 rather than this one: nothing is
+      deployed, so nobody outside a local checkout can upload anything today.
+      libvips in the image is 8.14.1, above the 8.13 the fix requires, so that
+      will not stand in the way.
+- [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
+      autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
+      unscoped, every other model carries the `company_id` condition, and an
+      unset tenant produces `company_id IS NULL` rather than an unscoped query,
+      so it fails closed. Nothing about autoloading needed changing.
+
+      The review did turn up that the `TracePoint` is no longer *necessary*.
+      It exists to defer the `default_scope` until the end of the class body,
+      because `inherited` runs before `set_not_multitenant` has had a chance
+      to. A `default_scope` block is evaluated per query rather than at
+      definition, so moving the test inside the block does the same job:
+
+      ```ruby
+      subclass.instance_eval do
+        default_scope { subclass.multitenant? ? where(company_id: Company.current_company_id) : all }
+      end
+      ```
+
+      Tried, and behaviourally identical — same SQL for scoped, unscoped and
+      no-tenant cases, whole suite green. Not applied: this is the load-bearing
+      mechanism of the application and the candidate write-up in phase 6, so
+      swapping it is a decision rather than a tidy-up. Recorded here so it is a
+      choice rather than an unknown.
+- [x] Search reported a hit count from an Elasticsearch index that is not
+      partitioned by company. The query now carries the tenant filter itself,
+      in `TenantSearch`, rather than leaving tenancy to the default scope
+      applied when the ids come back.
+
+      `company_id` was already in the mapping — searchkick indexes
+      `serializable_hash` unless a model overrides `search_data` — so this
+      needed no reindex. A nil tenant filters to documents with no
+      `company_id`, of which there are none, so an unset tenant finds nothing
+      rather than everything, the way the default scope fails closed. See the
+      defect backlog
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
 pinned to a git branch.
@@ -241,6 +587,10 @@ Most people who open the repo will never run it. A URL they can click, sign
 into as four different roles, and poke at is worth more than any amount of
 README prose.
 
+- [ ] **Rails 7.2 before anything here.** Deploying is what supplies the
+      precondition for the Active Storage advisory recorded in phase 3 —
+      untrusted users able to upload an image — and this phase ends by printing
+      sign-in credentials on the landing page
 - [ ] Deploy to Fly.io or Render with managed MySQL
 - [ ] **Wildcard subdomain routing and a wildcard TLS certificate.**
       Non-negotiable — without `*.domain` the multi-tenancy cannot be
@@ -296,14 +646,11 @@ Line numbers current as of 29 Aug 2026.
 
 ### Open
 
-| Location | Problem | Effect | Severity |
-| --- | --- | --- | --- |
-| `app/models/event.rb` | Tenant-scoped by the default scope but declares no `belongs_to :company`, unlike every other tenant model | Works only because the default scope injects the id; `Event.new(company:)` fails. `event.rb:17` also rescues `Type::Error`, which is not a class that exists | Tidy |
+None.
 
-`event.rb` is worth doing alongside the `TracePoint` review in phase 3, since
-both turn on how the tenancy hook injects the company id. `payroll.rb` closed
-during the Rails 6.1 upgrade: the deprecation that forced the transaction
-block to be restructured took the block-local `rescue` with it.
+`payroll.rb` closed during the Rails 6.1 upgrade rather than on its own: the
+deprecation that forced the transaction block to be restructured took the
+block-local `rescue` with it.
 
 ### Fixed
 
@@ -331,7 +678,14 @@ Phase 3, with a regression spec:
 
 | Location | Problem |
 | --- | --- |
+| `app/views/shared/_sidebar.html.erb` | The Logout link was `destroy_user_session_url(subdomain: nil)`, sending sign-out to the apex host. The session cookie is host-only, so that request never carried it: devise found nobody signed in, said so, and left the session running. Signing out did not sign you out |
+| `app/controllers/search_controller.rb` | No `authenticate_user!` and no `load_and_authorize_resource` — the only controller with neither. An anonymous request ran a real Elasticsearch query across every tenant's records, then 500d on the layout where its siblings answer 403 |
+| `app/models/event.rb` | `rescue Type::Error` names a class that does not exist. Ruby evaluates rescue clauses in order and only when something is raised, so this one raised `NameError` before the working `Date::Error` clause beneath it could be reached — every unparseable event date 500d, not just a missing one |
+| `app/models/event.rb` | No `belongs_to :company`, alone among tenant-owned models, so `Event.new(company:)` raised `UnknownAttributeError` and the factory set the id by hand |
+| `app/models/event.rb` | `validate_past_event_date` compared `nil < DateTime.now` when no start was given, the same shape as the applied-leave validators fixed in phase 2. `starts_at` now has a presence validation to report instead |
+| `app/controllers/events_controller.rb` | `set_event` defined twice; the second silently replaced the first, which was dead. `.rubocop_todo.yml` excluded `Lint/DuplicateMethods` for the file rather than removing the duplicate |
 | `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
+| `app/controllers/search_controller.rb`, `app/views/search/search_data.html.erb:1` | The Elasticsearch query was not partitioned by company, so `@results.total_count` counted every tenant's hits. The rows were right — the default scope drops other tenants when the ids are loaded — but the number above them was not, and the empty-state branch tested it: a name only another company had left the view on the results branch with nothing to render. Searchkick also logged the ids it could not load, naming other tenants' records |
 
 ---
 

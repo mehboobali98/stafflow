@@ -103,13 +103,6 @@ class EventsController < ApplicationController
 
   private
 
-  def set_event
-    @event = Event.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t('event.messages.error.event_not_found')
-    redirect_to events_path
-  end
-
   def set_event(event)
     event.name = event_params[:name]
     event.starts_at = "#{event_params[:event_date]} #{event_params[:event_time]}"

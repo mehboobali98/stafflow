@@ -19,13 +19,13 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  config.fixture_path = Rails.root.join('spec/fixtures').to_s
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
   config.include FactoryBot::Syntax::Methods
   config.include TenantHelpers
+  config.include AttachmentHelpers
 
   # Every tenant-owned model carries a default scope keyed on
   # Company.current_company_id. Leaving it set between examples would leak
