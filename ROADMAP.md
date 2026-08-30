@@ -10,8 +10,8 @@ reads; everything after is depth.
 
 ## Where it stands
 
-The app runs from a clean clone in three commands, with a suite in front of it
-and the known defects cleared. What it still lacks is a modern stack and
+The app runs from a clean clone in three commands, on a current stack, with a
+suite in front of it and the known defects cleared. What it still lacks is
 somewhere to run.
 
 | | |
@@ -19,7 +19,7 @@ somewhere to run.
 | Commands to run from a clean clone | 3 |
 | Tests | 228 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
-| Lines in `app/` | 4,945 across 22 controllers, 30 models, 121 views |
+| Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 22 found, 22 fixed, 0 open |
 
 ---
@@ -149,9 +149,9 @@ than absorbing them; they are described where they sit.
 
 ---
 
-## Phase 3 — Modernise the stack
+## Phase 3 — Modernise the stack ✅
 
-**In progress.** Estimated 3–5 weeks.
+*Shipped.*
 
 Ruby 2.7 and Rails 6.0 are both past end of life, and the original repo reports
 132 dependency vulnerabilities. This is the largest phase, and it is also the
@@ -604,6 +604,25 @@ work the framework bumps were blocking.
       `dom_testing_default_html_version` `:html5`, `message_serializer`
       `:json_allow_marshal`, and `X-Download-Options` gone from the default
       headers.
+- [x] Enable the Rails 7.2 framework defaults. Four settings against the 7.1
+      set's twenty-three, and only one of them does anything here.
+
+      `postgresql_adapter_decode_dates` cannot apply — this is MySQL.
+      `validate_migration_timestamps` governs migrations written from now on
+      and does not revisit the 41 already committed.
+      `active_job.enqueue_after_transaction_commit` has nothing to act on:
+      nothing calls `perform_later`, and all five enqueues go through
+      delayed_job's own `.delay`.
+
+      `active_storage.web_image_content_types` gains `image/webp`, and it is
+      inert for a reason worth stating rather than assuming: the attachment
+      validators on `User#image` and `Department#avatar` accept `image/png` and
+      `image/jpeg` only, and they reject before Active Storage decides how to
+      treat the bytes. Nothing webp can ever be attached to widen.
+
+      `yjit = true` is the one with runtime effect, and it is real rather than
+      a silently unavailable flag: YJIT is compiled into the `ruby:3.3.12`
+      image and `RubyVM::YJIT.enabled?` reports true once the app has booted.
 - [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
       autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
       unscoped, every other model carries the `company_id` condition, and an
@@ -671,7 +690,9 @@ work the framework bumps were blocking.
       defect backlog
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
-pinned to a git branch.
+pinned to a git branch. Both hold, and the framework went one further than the
+line called for — 7.1 could not stay, because 7.1.6 is the end of its line and
+the Active Storage advisory has no fix there.
 
 ---
 
