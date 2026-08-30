@@ -82,21 +82,32 @@ The current tenant lives in `Thread.current`, set by an `around_action` in
 `ensure` block, so a thread cannot leak tenant context into the next request it
 serves.
 
+```mermaid
+flowchart LR
+    REQ["GET acme.localhost/members"] --> SUB{"config/routes.rb<br/>constraints subdomain:"}
+    SUB -->|"none"| PUBLIC["home#index<br/>public marketing page"]
+    SUB -->|"acme"| SET["around_action :set_current_company<br/>Company.find_company_by_subdomain!('acme')<br/>Thread.current[:current_company_id] = 5"]
+
+    SET -->|"unknown subdomain"| NOTFOUND["RecordNotFound rescued — 404"]
+    SET --> SCOPE{"any model query<br/>default_scope from ApplicationRecord.inherited"}
+
+    SCOPE -->|"multitenant?, tenant set"| SCOPED["WHERE company_id = 5"]
+    SCOPE -->|"multitenant?, tenant nil"| CLOSED["WHERE company_id IS NULL<br/>matches nothing — fails closed"]
+    SCOPE -->|"set_not_multitenant<br/>Company only"| ALL["all — no condition added"]
+
+    SCOPED --> ENSURE["ensure<br/>Thread.current[:current_company_id] = nil"]
+    CLOSED --> ENSURE
+    ALL --> ENSURE
 ```
-request to acme.localhost
-        │
-        ▼
-ApplicationController#set_current_company
-  Company.find_company_by_subdomain!("acme")
-  Thread.current[:current_company_id] = company.id
-        │
-        ▼
-any query on any model
-  ... WHERE company_id = 5      ← injected by the default scope
-        │
-        ▼
-ensure: Thread.current[:current_company_id] = nil
-```
+
+The scope is a block, not a fixed condition, so both branches are decided on
+every query rather than once at boot. That is what makes the unset case safe:
+`where(company_id: nil)` compiles to `company_id IS NULL` and matches no
+tenant-owned row, so a missing tenant returns nothing instead of everything.
+
+Getting there took two attempts. The first used a `TracePoint`, passed review,
+and turned out to carry three faults — one of which failed open. That is
+written up in [docs/tenant-isolation.md](docs/tenant-isolation.md).
 
 Search is the one exception, because it does not begin at Active Record.
 Searchkick asks Elasticsearch for ids, and the default scope only narrows the
@@ -157,6 +168,8 @@ config/
 db/
   migrate/            41 migrations
   seeds.rb            builds one complete demo tenant
+docs/
+  tenant-isolation.md how the scoping works, and the hook it replaced
 ```
 
 ## Known gaps
