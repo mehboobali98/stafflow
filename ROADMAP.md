@@ -791,11 +791,19 @@ Optional. Estimated 2–3 days.
 The engineering is only half of it. Someone deciding whether to interview you
 spends about ninety seconds here.
 
-- [ ] Architecture diagram in the README showing subdomain → tenant scope →
-      query
+- [x] Architecture diagram in the README showing subdomain → tenant scope →
+      query. A mermaid flowchart, which GitHub renders natively, replacing the
+      ASCII sketch that was there. It carries two things the sketch could not:
+      the branch where an unset tenant compiles to `company_id IS NULL` and
+      matches nothing, and the opt-out branch `Company` takes
 - [ ] Screenshots or a short capture of the leave approval flow
-- [ ] A short write-up of one hard problem and how it was solved — the
-      `TracePoint` tenancy hook is the obvious candidate
+- [x] A short write-up of one hard problem and how it was solved —
+      [docs/tenant-isolation.md](docs/tenant-isolation.md). The `TracePoint`
+      hook, the three faults it carried, and why a green suite and a close
+      review both missed them: every fault was in a path nothing exercised —
+      opting out, an environment variable nobody sets, and a model defined with
+      `Class.new`. The SQL comparison in it was run against the app rather than
+      recalled
 - [ ] Keep the README's "Known gaps" section honest as items get closed
 
 ---
