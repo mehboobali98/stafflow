@@ -45,10 +45,11 @@ $(document).on('change', '#department_select', function() {
   $.ajax({
     type: 'GET',
     url: url,
-    dataType: 'script',
-    success: function(response) {
+    // fetch_designations answers format.json only. See show_applied_leaves.js
+    // for why asking for a script stopped working at jQuery 4.
+    dataType: 'json',
+    success: function(designations) {
       designationSelectBox.html("");
-      designations = JSON.parse(response);
       designations.forEach(function(designation) {
         designationSelectBox.append(`<option value=${designation.id}> ${designation.name} </option>`)
       });
