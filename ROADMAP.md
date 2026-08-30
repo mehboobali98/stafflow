@@ -17,7 +17,7 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 250 examples, 0 pending |
+| Tests | 253 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 27 found, 27 fixed, 0 open |
@@ -660,6 +660,25 @@ work the framework bumps were blocking.
       specs reach three pages, and a major of any of the four can break a
       fourth page they never load. Taking them means extending the specs to
       whatever each one touches, which is work per PR rather than a rerun.
+
+      **select2 taken**, `4.1.0-rc.0` to `4.1.0` — a release candidate that had
+      been pinned since 2021 going to the release of the same number. Extending
+      the specs first is what the sentence above asked for, and it turned up
+      that the HR leave form is the only place select2 is attached to a real
+      element. Three examples now drive it: the control replaces the select,
+      typing in its search field appends what the request finds, and picking a
+      result fires `select2:select`, which is select2's own event rather than a
+      DOM one and only reaches its handler if the library is driving the
+      element. Getting those right took two attempts — the first raced the
+      per-keystroke AJAX against select2's re-render and passed or failed on
+      timing. A test that green-lights a dependency bump by accident is worse
+      than no test, so it waits for the append and types once more.
+
+      **`@rails/activestorage` taken**, `6.0.0` to `7.2.302`, matching the Rails
+      it ships beside. **`@rails/ujs` went with it**, `6.0.0` to `7.1.600`,
+      which Dependabot did not raise: 7.1.600 is the last release, because
+      Rails 8 removes the package. Holding it at 6.0.0 while its sibling moved
+      to 7.2 widens a mismatch rather than leaving one alone.
 
       `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
       reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
