@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "dependencies": {
     "@popperjs/core": "2.9.3",
-    "@rails/activestorage": "6.0.0",
+    "@rails/activestorage": "7.2.302",
     "@rails/ujs": "6.0.0",
     "aos": "2.3.4",
     "bootstrap": "5.0",
