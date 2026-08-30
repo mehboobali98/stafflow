@@ -995,11 +995,24 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### The work
 
-- [ ] **Tokens before anything else.** A colour ramp, type scale, spacing,
-      radius and shadow in one file, with Bootstrap's SCSS variables set *from*
-      them rather than patched after them. 5.0.2 → 5.3.8 belongs in this step:
-      5.3 is where CSS custom properties and colour modes arrive, which is what
-      makes dark mode a token change rather than a second stylesheet
+- [x] **Tokens before anything else.** `_tokens.scss` holds the ramps, type
+      scale, spacing, radius and shadow, and `_bootstrap_theme.scss` sets
+      Bootstrap's variables *from* them — imported before the framework,
+      because every one of those variables is `!default` and the first
+      assignment wins. Importing it afterwards would have changed nothing
+      while looking like it configured everything, which is roughly what the
+      app was doing already.
+
+      Bootstrap 5.0.2 → 5.3.8 rode along, and the pipeline turned out not to
+      need touching: `sassc` is libsass, dead since 2021, but it compiles 5.3
+      fine — 449 `--bs-` custom properties and the colour-mode blocks all
+      present in the output. Replacing it with dart-sass is worth doing and is
+      not blocking, so it is not done here.
+
+      All twenty-two colours are gone from the stylesheets, including the
+      separate palette the landing page kept — a cyan, a navy and two greys
+      that appeared nowhere else. Mapping it onto the shared ramps is the point
+      of the step: a second palette is a second system
 - [ ] **ViewComponent, and Lookbook in front of it.** The set the views are
       already asking for: `Button`, `Card`, `Table`, `FormField`, `Badge`,
       `Modal`, `EmptyState`, `PageHeader`. The preview page matters as much as
@@ -1039,9 +1052,23 @@ rewriting as components land. The right fix is for components to expose stable
 hooks so specs stop coupling to Bootstrap's vocabulary; doing that as each
 component arrives is part of the work, not a tax on it.
 
-And nothing here covers appearance. A behaviour suite stays green against a
-layout that has collapsed. Either screenshot comparison gets added or this is
-reviewed by eye, and pretending otherwise is how a redesign ships broken.
+And nothing in the behaviour suite covers appearance. This was demonstrated
+rather than argued: appending one plausible token mistake to `application.scss`
+— body text landing on the body background — rendered the payslip page
+completely blank, and all 21 system specs passed against it, including the
+three assertions on the currency figures a human could no longer see.
+
+So appearance is reviewed by eye at every step, and the screenshots are read
+rather than glanced at. Pixel comparison was considered and left out: on a
+design that changes every PR it produces diffs that are almost all intended,
+and a check people learn to click through is worse than no check.
+
+The one part of appearance that *is* measurable is colour, and that is
+enforced. `spec/system/colour_contrast_spec.rb` reads what the browser
+computed — walking up for the painted background, flattening any alpha — and
+fails anything under WCAG AA. It exists because the first token pass shipped a
+hero subtitle at 2.81:1 against a 3:1 floor, and nothing else would have
+caught it.
 
 **Done when:** no view hand-writes `btn btn-*`, tokens are the only source of a
 colour, the component previews are reachable, and jQuery and turbolinks are
