@@ -210,12 +210,13 @@ line numbers.
   7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
   Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
   two were raised alternately.
-- **The interface has tokens but no components yet.** Colour, type, spacing,
-  radius and shadow live in `_tokens.scss`, and Bootstrap 5.3 is themed from
-  them, so nothing outside that file names a colour. What is still missing is
-  the component layer: 49 views hand-write `btn btn-*`, 20 hand-write `.card`
-  and 18 build a `<table>` from scratch. [ROADMAP.md](ROADMAP.md) phase 7 has
-  the rest — ViewComponent, Turbo and Stimulus — and runs before the live demo.
+- **The component layer covers one page of 121.** Colour, type, spacing,
+  radius and shadow live in `_tokens.scss` and Bootstrap 5.3 is themed from
+  them, so nothing outside that file names a colour. `Button`, `Badge`, `Card`,
+  `Table`, `PageHeader` and `EmptyState` exist with a Lookbook preview each,
+  and the HR leave queue is built from them. Everything else still hand-writes
+  its markup. [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining
+  views, `FormField`, Turbo and Stimulus — and runs before the live demo.
 - **Appearance is reviewed by eye, not asserted.** The system specs assert
   behaviour, so they stay green against a layout that has collapsed — that is
   demonstrated in the roadmap rather than assumed. The exception is colour:
