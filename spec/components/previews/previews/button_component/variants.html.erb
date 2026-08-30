@@ -1,0 +1,5 @@
+<div class="d-flex gap-2 flex-wrap">
+  <% ButtonComponent::VARIANTS.each_key do |variant| %>
+    <%= render(ButtonComponent.new(variant: variant)) { variant.to_s.humanize } %>
+  <% end %>
+</div>

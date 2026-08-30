@@ -1,0 +1,78 @@
+@import 'tokens';
+
+// The header the layout used to fake with a coloured bar and three <br>s.
+.page-header {
+  padding: $space-6 0 $space-5;
+  border-bottom: 1px solid $border-subtle;
+  margin-bottom: $space-6;
+
+  &__bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-4;
+  }
+
+  &__title {
+    font-size: $text-3xl;
+    font-weight: $weight-semibold;
+    line-height: $leading-tight;
+    margin: 0;
+  }
+
+  &__subtitle {
+    color: $text-secondary;
+    margin: $space-1 0 0;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-4;
+    margin-top: $space-4;
+
+    a {
+      color: $text-secondary;
+      text-decoration: none;
+      font-size: $text-sm;
+      font-weight: $weight-medium;
+
+      &:hover {
+        color: $accent;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.table-head {
+  th {
+    background-color: $surface-sunken;
+    color: $text-secondary;
+    font-size: $text-xs;
+    font-weight: $weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid $border-subtle;
+    white-space: nowrap;
+  }
+}
+
+// The layout used three <br>s to clear the navbar and gave the breadcrumb no
+// styling at all, so it sat against the bar unreadably.
+.page-shell {
+  padding: 0 $space-6 $space-7;
+}
+
+.breadcrumbs {
+  padding-top: $space-4;
+  font-size: $text-sm;
+  color: $text-secondary;
+
+  a {
+    color: $text-secondary;
+    text-decoration: none;
+
+    &:hover { color: $accent; }
+  }
+}
