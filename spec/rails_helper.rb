@@ -27,6 +27,7 @@ RSpec.configure do |config|
   config.include TenantHelpers
   config.include AttachmentHelpers
   config.include SystemHelpers, type: :system
+  config.include ContrastHelpers, type: :system
 
   # rspec-rails drives an unset system spec with :selenium. CUPRITE_OPTIONS and
   # the reason they are passed here rather than registered are in
