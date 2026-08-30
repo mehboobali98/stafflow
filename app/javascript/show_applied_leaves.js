@@ -76,14 +76,17 @@ $(document).ready(function() {
     $.ajax({
       type: "GET",
       url: "/applied_leaves/get_available_user_leaves",
-      dataType: 'script',
+      // The endpoint answers format.json only. Asking for a script worked
+      // until jQuery 4 because jQuery 3 sent */* alongside text/javascript,
+      // which Rails fell back to JSON on; jQuery 4 dropped it and the request
+      // 404s.
+      dataType: 'json',
       data: {
         member_id
       },
-      success: function(response) {
+      success: function(leaves) {
         leavesSelectBox = $('#leaves_select');
         leavesSelectBox.html("");
-        leaves = JSON.parse(response);
         leaves.forEach(function(leave) {
           leavesSelectBox.append(`<option value=${leave.id}> ${leave.name} </option>`)
         });
@@ -96,13 +99,12 @@ $(document).ready(function() {
     $.ajax({
       type: "GET",
       url: "/applied_leaves/search_users",
-      dataType: 'script',
+      dataType: 'json',
       data: {
         query
       },
-      success: function(response) {
+      success: function(users) {
         employeesSelectBox = $('#applied_leave_member_id');
-        users = JSON.parse(response);
         users.forEach(function(user) {
           if ($(`#applied_leave_member_id option[value=${user.id}]`).length == 0) {
             employeesSelectBox.append(`<option value=${user.id}> ${user.email} </option>`);
