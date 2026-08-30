@@ -7,6 +7,10 @@ ARG YARN_VERSION=1.22.19
 # active_storage_validations shells out to it to check an upload's bytes
 # against its declared content type, which makes it a runtime dependency
 # rather than something to inherit by luck.
+#
+# chromium is what the system specs drive. CI installs no browser of its own -
+# the GitHub runner image already carries Chrome - so this line is the only
+# place the browser is provisioned, and `bundle exec rspec` is red without it.
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
       build-essential \
       default-libmysqlclient-dev \
@@ -14,6 +18,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
       libxml2-dev libxslt1-dev zlib1g-dev \
       libvips42 \
       file \
+      chromium fonts-liberation \
       xz-utils curl git tzdata \
  && rm -rf /var/lib/apt/lists/*
 

@@ -3,7 +3,7 @@
     <td><%= applied_leave.leave.name %></td>
     <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
-    <td><%= t("applied_leave.links.#{applied_leave.state}") %></td>
+    <td><%= t("applied_leave.labels.#{applied_leave.state}") %></td>
     <td>
       <% if applied_leave.pending? && can?(:edit, applied_leave) %>
         <%= link_to edit_member_applied_leave_path(@user, applied_leave) do %>
