@@ -29,6 +29,7 @@ RSpec.configure do |config|
   config.include AttachmentHelpers
   config.include SystemHelpers, type: :system
   config.include ContrastHelpers, type: :system
+  config.include AccessibilityHelpers, type: :system
   config.include ViewComponent::TestHelpers, type: :component
 
   # rspec-rails drives an unset system spec with :selenium. CUPRITE_OPTIONS and

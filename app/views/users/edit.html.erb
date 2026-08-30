@@ -25,12 +25,12 @@
         </div>
 
         <div class='field mb-2'>
-          <%= form.label t('forms.labels.gender') %>
+          <%= form.label :gender, t('forms.labels.gender') %>
           <%= form.select :gender, options_for_select(genders), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
         </div>
         
         <div class='field mb-2'>
-          <%= form.label t('forms.labels.country') %><br />
+          <%= form.label :country, t('forms.labels.country') %><br />
           <%= form.select :country, options_for_select(COUNTRIES_LIST), { prompt: t('forms.labels.country')  }, class: 'form-control' %>
         </div>
         <% if !@user.account_owner? %>

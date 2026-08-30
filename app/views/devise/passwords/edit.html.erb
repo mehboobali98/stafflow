@@ -5,7 +5,7 @@
 
   <div class="row mb-3">
     <div class="col-3 mt-2">
-      <%= form.label t('forms.labels.password') %><br />
+      <%= form.label :password, t('forms.labels.password') %><br />
       <% if @minimum_password_length %>
         <em>(<%= @minimum_password_length %> characters minimum)</em><br />
       <% end %>
@@ -17,7 +17,7 @@
 
   <div class="row mb-3">
     <div class="col-3 mt-2">
-      <%= form.label t('forms.labels.confirm_password') %><br />
+      <%= form.label :password_confirmation, t('forms.labels.confirm_password') %><br />
     </div>
     <div class='col-9'>
       <%= form.password_field :password_confirmation, class: 'form-control pl-5 pr-5', required: true %>
