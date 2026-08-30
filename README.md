@@ -65,15 +65,17 @@ marketing page and `acme.localhost:3000` is the Acme tenant. Browsers resolve
 Every tenant-owned table carries a `company_id`, and the scoping is applied
 automatically rather than being left to individual queries.
 
-`ApplicationRecord.inherited` installs a `TracePoint` that fires when a model
-class finishes being defined, and gives it a default scope:
+`ApplicationRecord.inherited` gives every model a default scope:
 
 ```ruby
-default_scope { where(company_id: Company.current_company_id) }
+default_scope { multitenant? ? where(company_id: Company.current_company_id) : all }
 ```
 
-A model opts out by calling `set_not_multitenant` in its body — `Company`
-itself is the only one that does.
+The block is evaluated per query rather than when the class is defined, and
+that is what lets the opt-out be read at all: `inherited` runs before the class
+body, so `set_not_multitenant` has not been called yet at that point. A model
+opts out by calling it in its body — `Company` itself is the only one that
+does.
 
 The current tenant lives in `Thread.current`, set by an `around_action` in
 `ApplicationController` that resolves the subdomain and clears the value in an
@@ -163,7 +165,7 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 224 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 228 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,

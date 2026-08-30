@@ -17,7 +17,7 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 224 examples, 0 pending |
+| Tests | 228 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,945 across 22 controllers, 30 models, 121 views |
 | Known defects | 22 found, 22 fixed, 0 open |
@@ -572,6 +572,37 @@ work the framework bumps were blocking.
       mechanism of the application and the candidate write-up in phase 6, so
       swapping it is a decision rather than a tidy-up. Recorded here so it is a
       choice rather than an unknown.
+
+      **Applied afterwards, and "it is sound" above was wrong.** Returning to it
+      with the hook itself under test turned up three faults. None changes a
+      query, which is why nothing had noticed:
+
+      - `trace.disable` sits inside the branch that installs the scope, so a
+        model calling `set_not_multitenant` never disables its own hook.
+        `Company` has leaked one enabled process-wide `:end` TracePoint per
+        boot and one more per code reload — 2 rising to 7 across five reloads.
+        There is no runtime cost to point at: 2,000 class bodies took 0.014s
+        with none enabled and 0.015s with one.
+      - `return if ENV['skip_default_scope'].present?` returns *before*
+        defining `set_not_multitenant` on the subclass, so setting the variable
+        does not skip the scope, it stops boot with `undefined local variable
+        or method 'set_not_multitenant' for class Company`. Referenced nowhere
+        else, and it can never have worked. Removed rather than repaired:
+        `unscoped` already covers the need, and a process-wide switch that
+        silently disables tenant isolation is the wrong thing for this
+        application to own.
+      - `:end` is only emitted by a `class ... end` body. A model built with
+        `Class.new(ApplicationRecord)` was handed no default scope at all —
+        `SELECT * FROM departments`, no condition. Nothing here is defined that
+        way so nothing was exposed, but in that case the mechanism failed
+        **open**, in the same paragraph that claims it fails closed.
+
+      The replacement is the block above. Same SQL for the scoped, unscoped,
+      no-tenant and opted-out cases, compared side by side. One difference worth
+      knowing: `Company` now carries a default scope that evaluates to `all`
+      where it previously carried none, so `Company.default_scopes` is 1 rather
+      than 0. Its SQL is unchanged and `Company.new` still sets no attributes,
+      tenant set or not.
 - [x] Search reported a hit count from an Elasticsearch index that is not
       partitioned by company. The query now carries the tenant filter itself,
       in `TenantSearch`, rather than leaving tenancy to the default scope
