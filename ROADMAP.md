@@ -11,8 +11,9 @@ reads; everything after is depth.
 ## Where it stands
 
 The app runs from a clean clone in three commands, on a current stack, with a
-suite in front of it and the known defects cleared. What it still lacks is
-somewhere to run.
+suite in front of it and the known defects cleared. What it still lacks is an
+interface worth showing, and somewhere to show it — in that order, which is a
+reversal of the sequence this file was written with and is argued at the end.
 
 | | |
 | --- | --- |
@@ -883,7 +884,8 @@ the Active Storage advisory has no fix there.
 
 ## Phase 4 — Live demo
 
-Estimated 3–5 days.
+Estimated 3–5 days. **Now sequenced after phase 7** — see the note at the end
+of this file, which reverses the argument this document opens with.
 
 Most people who open the repo will never run it. A URL they can click, sign
 into as four different roles, and poke at is worth more than any amount of
@@ -952,6 +954,98 @@ spends about ninety seconds here.
       `Class.new`. The SQL comparison in it was run against the app rather than
       recalled
 - [ ] Keep the README's "Known gaps" section honest as items get closed
+
+---
+
+## Phase 7 — Rebuild the interface
+
+Estimated 2–3 weeks. Runs before phase 4.
+
+Every other phase has touched something. This one has not been touched at all:
+the interface is the 2021 original, and it is the first thing anybody sees.
+
+The problem is not that Bootstrap is the wrong framework. It is that Bootstrap
+was never configured. `@import 'bootstrap/scss/bootstrap'` pulls the whole
+default theme in and nothing overrides a single variable, so the app looks like
+the framework's documentation. Underneath that sit 693 lines of SCSS holding
+**22 hex colours picked one at a time**, one SCSS variable, and no scale of any
+kind. There is no component layer either: **49 views hand-write `btn btn-*`,
+20 hand-write `.card`, and 18 hand-write a `<table>` from scratch**.
+
+### What was considered
+
+Four options, decided on 31 Aug 2026.
+
+| | Approach | Why not |
+| --- | --- | --- |
+| A | **Hotwire + ViewComponent + Bootstrap 5.3, themed** | *Chosen* |
+| B | Hotwire + ViewComponent + Tailwind | Roughly double A for a similar result: a utility rewrite across 121 views, a select2 replacement, and restyling what simple_calendar, chartkick and will_paginate emit |
+| C | Inertia + React | Rewrites all 121 views including devise's 16, moves the 22 views that call `can?` into serialized props, and replaces will_paginate, simple_calendar, breadcrumbs and the chartkick helpers |
+| D | Full SPA on a JSON API | Needs the API phase 5 lists as unbuilt, plus devise moved to token auth. Stops being a restoration |
+
+One thing the table does not capture: A is the only option that ends with
+jQuery gone. Under it select2 is replaced rather than carried, which is what
+lets `jquery` leave `package.json` entirely — see the item below.
+
+The deciding argument is that **the design system is the ViewComponent layer,
+not the CSS framework**. Tokens, a component set, and a preview page are the
+same work under A or B; picking Bootstrap 5.3 underneath only makes it cheaper
+and keeps five ERB-coupled gems alive — devise, will_paginate, simple_calendar,
+breadcrumbs_on_rails and chartkick's helpers.
+
+### The work
+
+- [ ] **Tokens before anything else.** A colour ramp, type scale, spacing,
+      radius and shadow in one file, with Bootstrap's SCSS variables set *from*
+      them rather than patched after them. 5.0.2 → 5.3.8 belongs in this step:
+      5.3 is where CSS custom properties and colour modes arrive, which is what
+      makes dark mode a token change rather than a second stylesheet
+- [ ] **ViewComponent, and Lookbook in front of it.** The set the views are
+      already asking for: `Button`, `Card`, `Table`, `FormField`, `Badge`,
+      `Modal`, `EmptyState`, `PageHeader`. The preview page matters as much as
+      the components — it is the one part of a design system a reviewer can
+      click
+- [ ] **Turbo replaces turbolinks.** The gem and the npm package both go;
+      24 references, mostly `data-turbolinks-track` becoming `data-turbo-track`
+- [ ] **Stimulus replaces jQuery.** Ten bundles, roughly 300 lines, one
+      controller each
+- [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
+      leaving it in place would have kept jQuery in `package.json` for one
+      control. It attaches to exactly one element in the whole app — the member
+      select on the HR leave form — and everything it earns there is a search
+      box, a remote lookup on keyup and a `select2:select` event, all of which a
+      Stimulus controller does directly. Removing it also drops
+      `@import "select2/dist/css/select2"` and the override sitting under it in
+      `application.scss`.
+
+      Two costs, neither hidden. The three system specs on that form key off
+      `.select2-container`, `.select2-search__field` and
+      `.select2-results__option`, so all three are rewritten against the new
+      control. And select2 ships the accessibility a combobox needs — roles,
+      `aria-expanded`, `aria-activedescendant`, focus handling and keyboard
+      navigation — which becomes ours to write rather than ours to inherit.
+      That is the actual work in this item; the dropdown itself is an afternoon
+- [ ] **Page by page**, layouts first, then the screens behind the sign-in
+- [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
+      so inline SVG is a live option and drops a gem
+
+### Two things to be honest about going in
+
+The 21 system specs are what makes this safe, and they are also going to get in
+the way. They assert behaviour rather than appearance, so a re-skin cannot
+silently break the app — but several key off framework classes
+(`.select2-container`, `.card`, `#read-button[disabled]`) and will need
+rewriting as components land. The right fix is for components to expose stable
+hooks so specs stop coupling to Bootstrap's vocabulary; doing that as each
+component arrives is part of the work, not a tax on it.
+
+And nothing here covers appearance. A behaviour suite stays green against a
+layout that has collapsed. Either screenshot comparison gets added or this is
+reviewed by eye, and pretending otherwise is how a redesign ships broken.
+
+**Done when:** no view hand-writes `btn btn-*`, tokens are the only source of a
+colour, the component previews are reachable, and jQuery and turbolinks are
+both out of `package.json`.
 
 ---
 
@@ -1043,3 +1137,15 @@ explore does more for the project than a fifth module nobody can reach.
 modern, deployed, honestly-documented multi-tenant Rails application. That is
 already a strong piece of work. Only continue into Phase 5 if you want the
 project to be yours rather than the team's.
+
+**Reversed on the demo, 31 Aug 2026.** "The demo comes before new features"
+was written against phase 5 — a fifth module nobody can reach — and phase 7 is
+not that. It is the interface the demo would be showing. Deploying first would
+have put a URL in the README pointing at the one part of this project nobody
+has touched since 2021, and every argument above for shipping early assumes
+what ships is worth looking at.
+
+The cost is real and worth naming: the deploy work stays unvalidated for
+another two or three weeks, and phase 4 carries the unknowns — wildcard TLS,
+managed Elasticsearch, searchkick reindexing per tenant — that are easier to
+find early. Phase 7 runs first anyway.
