@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 228 examples, 0 pending |
+| Tests | 233 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 22 found, 22 fixed, 0 open |
+| Known defects | 23 found, 23 fixed, 0 open |
 
 ---
 
@@ -553,6 +553,49 @@ work the framework bumps were blocking.
       v1 issues ranged `>= 5.5.0, < 7.2.1`, the protocol is opt-in, and nothing
       here enables it — clearing them means a major version of the application
       server for something that cannot fire.
+
+      **Reversed, and taken anyway.** The reasoning above still holds on its
+      own terms — neither advisory can fire here — but it priced the two
+      sides wrong. Phase 4 puts this application on the public internet, and
+      the process facing it is the last one to leave two majors behind on a
+      technicality. Taken to puma 8.0.2, which neither range covers.
+
+      Verified by booting it rather than by a green suite, because the suite
+      never starts puma: 8.0.2 boots under Ruby 3.3.12 with YJIT, and a
+      cold `curl` sign-in as `owner@example.com` reaches an authenticated
+      dashboard scoped to Acme Corporation. That exercises the server, the
+      session cookie and subdomain tenant resolution together, which is the
+      part a version bump could plausibly break.
+
+      7.2.1 was the smaller option — it is the patch release both ranges end
+      at, published a day after 8.0.2 — and it would have cleared the alerts
+      just as well. It crosses a major either way, so it buys nothing except
+      a shorter distance to the next one.
+
+      Releasing phase 3 produced twelve fresh Dependabot PRs, the first run
+      against `develop` under the configuration added earlier in this phase.
+      Eleven were green, which is worth less than it reads: there are no
+      system or browser specs here, so a passing run is evidence only about
+      what CI reaches. They were split on that line: the four CI genuinely
+      exercises were taken, puma was taken and verified by booting it, the one
+      that proposed raising a gem nothing uses was answered by deleting the
+      gem instead, and the five front-end updates were held for verification
+      that can see them. The twelfth is Rails 8.1, which is a phase and not
+      a bump.
+
+      One of the five closed itself shortly afterwards. `@rails/actioncable`
+      went with the Webpack channels entry recorded in the defect backlog
+      below, leaving four.
+
+      `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
+      reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
+      and no `.jbuilder` template exists. The system-test trio arrived with
+      `rails new` in 2021 and was never used; `webdrivers` has had no
+      upstream commit since January 2024 and pinned `selenium-webdriver` below
+      4.0. Removing them takes ten gems out of the lockfile, four direct and
+      six pulled in behind them. If system specs are written, they will want
+      a current Capybara and a driver strategy chosen then, not a 2019
+      Selenium held in place by a Gemfile.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
@@ -803,6 +846,13 @@ Phase 3, with a regression spec:
 | `app/controllers/events_controller.rb` | `set_event` defined twice; the second silently replaced the first, which was dead. `.rubocop_todo.yml` excluded `Lint/DuplicateMethods` for the file rather than removing the duplicate |
 | `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
 | `app/controllers/search_controller.rb`, `app/views/search/search_data.html.erb:1` | The Elasticsearch query was not partitioned by company, so `@results.total_count` counted every tenant's hits. The rows were right — the default scope drops other tenants when the ids are loaded — but the number above them was not, and the empty-state branch tested it: a name only another company had left the view on the results branch with nothing to render. Searchkick also logged the ids it could not load, naming other tenants' records |
+
+Found after phase 3 shipped, by opening the page rather than by any check the
+repository runs:
+
+| Location | Problem |
+| --- | --- |
+| `app/javascript/channels/index.js` | `require.context`, a Webpack API with no esbuild equivalent. The esbuild migration added `require("./channels")` to `application.js` and carried this file over unconverted. esbuild resolves `require.context` to a property on its own require shim rather than rejecting it, so the build stayed green and the bundle threw `Zh.context is not a function` on line 4 — taking every line below it with it, on every page. No jQuery global, no Bootstrap, no select2, no Chartkick, no tooltip or pagination handlers. The landing page rendered as an empty blue block because AOS never initialised and its elements hold `opacity: 0`. Nothing here has any channels: no `*_channel.js` file existed, nothing imported `consumer.js`, and the glob matched nothing even under Webpack |
 
 ---
 
