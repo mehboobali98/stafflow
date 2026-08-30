@@ -162,7 +162,7 @@ underneath it, which is why it comes after Phase 1 rather than before.
       third-party fork — if that branch disappeared the app stopped building.
       Done first, since it patched ActiveRecord STI internals and would have
       been an unknown in every step below
-- [ ] Ruby and Rails, interleaved. **The two cannot be done in sequence:**
+- [x] Ruby and Rails, interleaved. **The two cannot be done in sequence:**
       Rails 6.0 does not support Ruby 3.x, and 6.1 was the first release that
       did, so raising Ruby first leaves the app unable to boot. The suite runs
       at every stop:
@@ -511,7 +511,34 @@ work the framework bumps were blocking.
       `Model.reindex` runs `Model.all`, which the tenancy default scope narrows
       to the current tenant — with none set it indexes nothing and silently
       swaps in an empty index. Reindex inside each company in turn.
-- [ ] Clear the remaining Dependabot backlog
+- [ ] Clear the remaining Dependabot backlog, which is one advisory rather than
+      the 92 the repository reports.
+
+      Alerts are computed against the default branch, and `main` is 49 commits
+      behind `develop` — still Rails 6.1.7.10, puma 4.3.8 and Webpacker 5.
+      Checked every alert against `develop`'s lockfiles instead: ten packages
+      are not there at all, having left with webpack; ten are already at or
+      above the patched version; and of the ten whose ranges still cover
+      `develop`, nine need a configuration this app does not have — direct
+      uploads, proxy mode, user input used as blob keys, or number helpers over
+      user strings.
+
+      The one that lands is
+      [GHSA-xr9x-r78c-5hrm](https://github.com/advisories/GHSA-xr9x-r78c-5hrm),
+      CVSS 9.5: arbitrary file read and remote code execution through Active
+      Storage variant processing. It affects any application on the vips
+      variant processor that accepts image uploads from untrusted users, and
+      states that generating variants is not a separate requirement.
+      `config.load_defaults 7.0` selects vips and nothing overrides it, so this
+      is the shape of this app exactly.
+
+      There is no fix on the 7.1 line — 7.1.6 is its last release and the
+      patches shipped as 7.2.3.1 and 7.2.3.2 — and `activestorage` cannot be
+      raised on its own. **The remedy is Rails 7.2, which the gem sweep above
+      was done to unblock.** It gates phase 4 rather than this one: nothing is
+      deployed, so nobody outside a local checkout can upload anything today.
+      libvips in the image is 8.14.1, above the 8.13 the fix requires, so that
+      will not stand in the way.
 - [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
       autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
       unscoped, every other model carries the `company_id` condition, and an
@@ -560,6 +587,10 @@ Most people who open the repo will never run it. A URL they can click, sign
 into as four different roles, and poke at is worth more than any amount of
 README prose.
 
+- [ ] **Rails 7.2 before anything here.** Deploying is what supplies the
+      precondition for the Active Storage advisory recorded in phase 3 —
+      untrusted users able to upload an image — and this phase ends by printing
+      sign-in credentials on the landing page
 - [ ] Deploy to Fly.io or Render with managed MySQL
 - [ ] **Wildcard subdomain routing and a wildcard TLS certificate.**
       Non-negotiable — without `*.domain` the multi-tenancy cannot be
