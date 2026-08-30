@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 262 examples, 0 pending |
+| Tests | 292 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 28 found, 28 fixed, 0 open |
+| Known defects | 29 found, 29 fixed, 0 open |
 
 ---
 
@@ -1029,6 +1029,15 @@ breadcrumbs_on_rails and chartkick's helpers.
       chrome; forcing a column API onto them would be a rewrite wearing a
       component's name.
 
+      `FormField` is in, and it earned itself immediately. 34 labels across 12
+      views called `form.label t('forms.labels.x')`, which Rails reads as the
+      attribute name: every one wrote `for="user_Email"` against an input with
+      id `user_email`. The text was right and the association was not, so the
+      label focused nothing and a screen reader announced the field unlabelled.
+      The component takes the attribute and the text separately, so the mistake
+      is not expressible through it — and the eleven views not yet converted had
+      the association fixed in place rather than waiting for the migration.
+
       Two things worth knowing. Previews render inside the app's default layout,
       which reaches for `current_user` — every one of them 500s until a bare
       preview layout is configured, and that was found by opening Lookbook
@@ -1156,6 +1165,12 @@ Found by the first run of the first system spec, both fixed alongside it:
 | `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
 | `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
 | `app/javascript/show_applied_leaves.js:83,102`, `app/javascript/user.js:50` | Three `$.ajax` calls asked for `dataType: 'script'` from endpoints answering `format.json`, then ran `JSON.parse` over the result. jQuery 3 sent `*/*` alongside `text/javascript` in the Accept header, Rails fell back to JSON on it, and the text parsed cleanly — so it worked by negotiation accident. jQuery 4 dropped the wildcard, leaving Rails nothing to match, and all three 404. Nothing throws: the employee search, the leave-type cascade on the HR leave form and the department-to-designation cascade on the employee form each just leave a select empty, which is why no console error and no green suite would have found it. Found by specs written for the jquery 4 bump before taking it |
+
+Found while building the component that made it impossible:
+
+| Location | Problem |
+| --- | --- |
+| 34 labels across 12 views, including all six devise forms | `form.label t('forms.labels.email')` passes the translated string where Rails expects the attribute name, so the label was rendered as `for="user_Email"` against an input with id `user_email`. Nothing looks wrong — the text is correct — but the label is associated with no field: clicking it focuses nothing and a screen reader announces the input unlabelled. Two views moved to `FormFieldComponent`, which takes the attribute and the text separately; the other eleven had the association fixed where they stand |
 
 Found by measuring what the column stores rather than by reading the schema:
 

@@ -213,9 +213,9 @@ line numbers.
 - **The component layer covers one page of 121.** Colour, type, spacing,
   radius and shadow live in `_tokens.scss` and Bootstrap 5.3 is themed from
   them, so nothing outside that file names a colour. `Button`, `Badge`, `Card`,
-  `Table`, `PageHeader` and `EmptyState` exist with a Lookbook preview each,
-  and the HR leave queue is built from them. Everything else still hand-writes
-  its markup. [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining
+  `Table`, `PageHeader`, `EmptyState` and `FormField` exist with a Lookbook
+  preview each, and the HR leave queue, the employee form and settings are
+  built from them. Everything else still hand-writes its markup. [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining
   views, `FormField`, Turbo and Stimulus — and runs before the live demo.
 - **Appearance is reviewed by eye, not asserted.** The system specs assert
   behaviour, so they stay green against a layout that has collapsed — that is
