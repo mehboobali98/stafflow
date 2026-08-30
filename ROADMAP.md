@@ -512,16 +512,26 @@ work the framework bumps were blocking.
       to the current tenant — with none set it indexes nothing and silently
       swaps in an empty index. Reindex inside each company in turn.
 - [ ] Clear the remaining Dependabot backlog, which is one advisory rather than
-      the 92 the repository reports.
+      the twelve the repository reports.
 
-      Alerts are computed against the default branch, and `main` is 49 commits
-      behind `develop` — still Rails 6.1.7.10, puma 4.3.8 and Webpacker 5.
-      Checked every alert against `develop`'s lockfiles instead: ten packages
-      are not there at all, having left with webpack; ten are already at or
-      above the patched version; and of the ten whose ranges still cover
-      `develop`, nine need a configuration this app does not have — direct
-      uploads, proxy mode, user input used as blob keys, or number helpers over
-      user strings.
+      It read 92 before phase 3 was released. Alerts are computed against the
+      default branch, and `main` was 49 commits behind — still Rails 6.1.7.10,
+      puma 4.3.8 and Webpacker 5 — so most of them described code that had
+      already been deleted. Releasing dropped the count to twelve.
+
+      **A stale default branch hides as much as it invents.** Dependabot
+      matches advisories against the version in the manifest, so while `main`
+      said puma 4.3.8 it reported the 4.x advisories and said nothing about the
+      6.6.1 that `develop` was actually running. Two alerts ranged
+      `>= 5.5.0, < 7.2.1` appeared within hours of the release, masked until
+      the manifest caught up with the code. Neither applies — both are PROXY
+      protocol v1 issues, the protocol is opt-in in puma, and nothing here
+      enables it.
+
+      Eleven of the twelve need a configuration this app does not have: direct
+      uploads, proxy mode, PROXY protocol, user input used as blob keys, or
+      number helpers over user strings. `number_to_currency` here runs only
+      over numeric payroll columns.
 
       The one that lands is
       [GHSA-xr9x-r78c-5hrm](https://github.com/advisories/GHSA-xr9x-r78c-5hrm),
