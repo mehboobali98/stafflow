@@ -80,10 +80,13 @@ RSpecRails/InferredSpecType:
 
 # The bundling guard describes the JavaScript build rather than a Ruby class,
 # so there is no constant to hand RSpec/DescribeClass. Unlike the request specs
-# above there is no spec type that would satisfy it either.
+# above there is no spec type that would satisfy it either. The money precision
+# spec has the opposite problem: the behaviour it describes is a column type
+# shared by eight models, so any one of them named here would be arbitrary.
 RSpec/DescribeClass:
   inherit_mode:
     merge:
       - Exclude
   Exclude:
     - 'spec/javascript/**/*'
+    - 'spec/models/money_precision_spec.rb'
