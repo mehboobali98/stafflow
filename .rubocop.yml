@@ -75,3 +75,13 @@ RSpec/InstanceVariable:
 RSpecRails/InferredSpecType:
   Exclude:
     - 'spec/requests/**/*'
+
+# The bundling guard describes the JavaScript build rather than a Ruby class,
+# so there is no constant to hand RSpec/DescribeClass. Unlike the request specs
+# above there is no spec type that would satisfy it either.
+RSpec/DescribeClass:
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - 'spec/javascript/**/*'
