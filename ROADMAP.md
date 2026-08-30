@@ -571,6 +571,31 @@ work the framework bumps were blocking.
       at, published a day after 8.0.2 — and it would have cleared the alerts
       just as well. It crosses a major either way, so it buys nothing except
       a shorter distance to the next one.
+
+      Releasing phase 3 produced twelve fresh Dependabot PRs, the first run
+      against `develop` under the configuration added earlier in this phase.
+      Eleven were green, which is worth less than it reads: there are no
+      system or browser specs here, so a passing run is evidence only about
+      what CI reaches. They were split on that line: the four CI genuinely
+      exercises were taken, puma was taken and verified by booting it, the one
+      that proposed raising a gem nothing uses was answered by deleting the
+      gem instead, and the five front-end updates were held for verification
+      that can see them. The twelfth is Rails 8.1, which is a phase and not
+      a bump.
+
+      One of the five closed itself shortly afterwards. `@rails/actioncable`
+      went with the Webpack channels entry recorded in the defect backlog
+      below, leaving four.
+
+      `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
+      reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
+      and no `.jbuilder` template exists. The system-test trio arrived with
+      `rails new` in 2021 and was never used; `webdrivers` has had no
+      upstream commit since January 2024 and pinned `selenium-webdriver` below
+      4.0. Removing them takes ten gems out of the lockfile, four direct and
+      six pulled in behind them. If system specs are written, they will want
+      a current Capybara and a driver strategy chosen then, not a 2019
+      Selenium held in place by a Gemfile.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
