@@ -553,6 +553,24 @@ work the framework bumps were blocking.
       v1 issues ranged `>= 5.5.0, < 7.2.1`, the protocol is opt-in, and nothing
       here enables it — clearing them means a major version of the application
       server for something that cannot fire.
+
+      **Reversed, and taken anyway.** The reasoning above still holds on its
+      own terms — neither advisory can fire here — but it priced the two
+      sides wrong. Phase 4 puts this application on the public internet, and
+      the process facing it is the last one to leave two majors behind on a
+      technicality. Taken to puma 8.0.2, which neither range covers.
+
+      Verified by booting it rather than by a green suite, because the suite
+      never starts puma: 8.0.2 boots under Ruby 3.3.12 with YJIT, and a
+      cold `curl` sign-in as `owner@example.com` reaches an authenticated
+      dashboard scoped to Acme Corporation. That exercises the server, the
+      session cookie and subdomain tenant resolution together, which is the
+      part a version bump could plausibly break.
+
+      7.2.1 was the smaller option — it is the patch release both ranges end
+      at, published a day after 8.0.2 — and it would have cleared the alerts
+      just as well. It crosses a major either way, so it buys nothing except
+      a shorter distance to the next one.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
