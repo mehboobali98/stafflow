@@ -10,16 +10,16 @@ reads; everything after is depth.
 
 ## Where it stands
 
-The app runs from a clean clone in three commands, with a suite in front of it
-and the known defects cleared. What it still lacks is a modern stack and
+The app runs from a clean clone in three commands, on a current stack, with a
+suite in front of it and the known defects cleared. What it still lacks is
 somewhere to run.
 
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 224 examples, 0 pending |
+| Tests | 228 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
-| Lines in `app/` | 4,945 across 22 controllers, 30 models, 121 views |
+| Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 22 found, 22 fixed, 0 open |
 
 ---
@@ -149,9 +149,9 @@ than absorbing them; they are described where they sit.
 
 ---
 
-## Phase 3 — Modernise the stack
+## Phase 3 — Modernise the stack ✅
 
-**In progress.** Estimated 3–5 weeks.
+*Shipped.*
 
 Ruby 2.7 and Rails 6.0 are both past end of life, and the original repo reports
 132 dependency vulnerabilities. This is the largest phase, and it is also the
@@ -511,17 +511,27 @@ work the framework bumps were blocking.
       `Model.reindex` runs `Model.all`, which the tenancy default scope narrows
       to the current tenant — with none set it indexes nothing and silently
       swaps in an empty index. Reindex inside each company in turn.
-- [ ] Clear the remaining Dependabot backlog, which is one advisory rather than
-      the 92 the repository reports.
+- [x] Clear the remaining Dependabot backlog, which was one advisory rather
+      than the twelve the repository reported.
 
-      Alerts are computed against the default branch, and `main` is 49 commits
-      behind `develop` — still Rails 6.1.7.10, puma 4.3.8 and Webpacker 5.
-      Checked every alert against `develop`'s lockfiles instead: ten packages
-      are not there at all, having left with webpack; ten are already at or
-      above the patched version; and of the ten whose ranges still cover
-      `develop`, nine need a configuration this app does not have — direct
-      uploads, proxy mode, user input used as blob keys, or number helpers over
-      user strings.
+      It read 92 before phase 3 was released. Alerts are computed against the
+      default branch, and `main` was 49 commits behind — still Rails 6.1.7.10,
+      puma 4.3.8 and Webpacker 5 — so most of them described code that had
+      already been deleted. Releasing dropped the count to twelve.
+
+      **A stale default branch hides as much as it invents.** Dependabot
+      matches advisories against the version in the manifest, so while `main`
+      said puma 4.3.8 it reported the 4.x advisories and said nothing about the
+      6.6.1 that `develop` was actually running. Two alerts ranged
+      `>= 5.5.0, < 7.2.1` appeared within hours of the release, masked until
+      the manifest caught up with the code. Neither applies — both are PROXY
+      protocol v1 issues, the protocol is opt-in in puma, and nothing here
+      enables it.
+
+      Eleven of the twelve need a configuration this app does not have: direct
+      uploads, proxy mode, PROXY protocol, user input used as blob keys, or
+      number helpers over user strings. `number_to_currency` here runs only
+      over numeric payroll columns.
 
       The one that lands is
       [GHSA-xr9x-r78c-5hrm](https://github.com/advisories/GHSA-xr9x-r78c-5hrm),
@@ -532,13 +542,87 @@ work the framework bumps were blocking.
       `config.load_defaults 7.0` selects vips and nothing overrides it, so this
       is the shape of this app exactly.
 
-      There is no fix on the 7.1 line — 7.1.6 is its last release and the
+      There was no fix on the 7.1 line — 7.1.6 is its last release and the
       patches shipped as 7.2.3.1 and 7.2.3.2 — and `activestorage` cannot be
-      raised on its own. **The remedy is Rails 7.2, which the gem sweep above
-      was done to unblock.** It gates phase 4 rather than this one: nothing is
-      deployed, so nobody outside a local checkout can upload anything today.
-      libvips in the image is 8.14.1, above the 8.13 the fix requires, so that
-      will not stand in the way.
+      raised on its own. The remedy was Rails 7.2, which the gem sweep above
+      was done to unblock. Done in the item below; all ten Rails advisories
+      were ranged `< 7.2.3.1` or `< 7.2.3.2`, so the one bump closes every one
+      of them rather than only the critical.
+
+      The two puma alerts are left open deliberately. Both are PROXY protocol
+      v1 issues ranged `>= 5.5.0, < 7.2.1`, the protocol is opt-in, and nothing
+      here enables it — clearing them means a major version of the application
+      server for something that cannot fire.
+- [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
+      the framework defaults are separate steps, because the defaults are where
+      behaviour changes and the bump is what carries the security fix.
+
+      Pinned `'~> 7.2.3', '>= 7.2.3.2'`. The lower bound is not decoration —
+      `~> 7.2.3` on its own resolves to 7.2.3, which is below the patch.
+
+      The `delayed_job < 4.2` pin came off, as its own comment said it should.
+      Nothing in the app calls `perform_later`, so the suite passing proved
+      nothing about it; checked directly instead. 4.2.0's adapter does shadow
+      the one Rails ships, exactly as the pin described, and it now subclasses
+      `ActiveJob::QueueAdapters::AbstractAdapter`, which 7.2 added — so the
+      shadowing is harmless and enqueueing works.
+
+      7.2 also surfaced one new deprecation, `ActiveSupport::ProxyObject` from
+      jbuilder 2.11.2, removed in Rails 8. jbuilder 2.15.1 uses `BasicObject`
+      and the suite is back to no deprecation warnings at all. Worth noting
+      that jbuilder is unused here — no `.jbuilder` template and no reference
+      to it anywhere in `app/`.
+- [x] Enable the Rails 7.1 framework defaults. `config.load_defaults 7.1`
+      replaces `new_framework_defaults_7_1.rb`, which is deleted. No failures
+      and no deprecations.
+
+      The staged file's own annotations were checked rather than taken on
+      trust. Its list of flips that cannot reach this app holds: no `serialize`d
+      column, no `attr_readonly`, no `has_secure_token` and no `after_commit`
+      anywhere in the Ruby or ERB source.
+
+      One annotation was wrong. It singles out
+      `active_job.use_big_decimal_serializer` as "the one job-serialisation
+      flip with something to bite here", because payroll works in BigDecimal
+      and enqueues through delayed_job. Payroll's money columns are `t.float`,
+      not `t.decimal`, so they arrive as `Float`; all five `.delay` calls pass
+      integer ids and nothing else; and `.delay` is delayed_job's own API
+      rather than Active Job, so the setting would not reach them regardless.
+      It has nothing to land on.
+
+      `commit_transaction_on_non_local_return` is no longer a setting to
+      enable. Rails 7.2 deprecates it and 8.0 removes it, having made the 7.1
+      behaviour unconditional, so reading it now emits a deprecation. Taking
+      the version bump first turned one of this file's options into a no-op
+      before it was ever switched on.
+
+      Confirmed applied rather than inferred from a green suite, which covers
+      no views: `ActiveSupport::Cache.format_version` and
+      `marshalling_format_version` both 7.1, `raise_on_assign_to_attr_readonly`
+      true, `belongs_to_required_validates_foreign_key` false,
+      `generate_secure_token_on` `:initialize`,
+      `dom_testing_default_html_version` `:html5`, `message_serializer`
+      `:json_allow_marshal`, and `X-Download-Options` gone from the default
+      headers.
+- [x] Enable the Rails 7.2 framework defaults. Four settings against the 7.1
+      set's twenty-three, and only one of them does anything here.
+
+      `postgresql_adapter_decode_dates` cannot apply — this is MySQL.
+      `validate_migration_timestamps` governs migrations written from now on
+      and does not revisit the 41 already committed.
+      `active_job.enqueue_after_transaction_commit` has nothing to act on:
+      nothing calls `perform_later`, and all five enqueues go through
+      delayed_job's own `.delay`.
+
+      `active_storage.web_image_content_types` gains `image/webp`, and it is
+      inert for a reason worth stating rather than assuming: the attachment
+      validators on `User#image` and `Department#avatar` accept `image/png` and
+      `image/jpeg` only, and they reject before Active Storage decides how to
+      treat the bytes. Nothing webp can ever be attached to widen.
+
+      `yjit = true` is the one with runtime effect, and it is real rather than
+      a silently unavailable flag: YJIT is compiled into the `ruby:3.3.12`
+      image and `RubyVM::YJIT.enabled?` reports true once the app has booted.
 - [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
       autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
       unscoped, every other model carries the `company_id` condition, and an
@@ -562,6 +646,37 @@ work the framework bumps were blocking.
       mechanism of the application and the candidate write-up in phase 6, so
       swapping it is a decision rather than a tidy-up. Recorded here so it is a
       choice rather than an unknown.
+
+      **Applied afterwards, and "it is sound" above was wrong.** Returning to it
+      with the hook itself under test turned up three faults. None changes a
+      query, which is why nothing had noticed:
+
+      - `trace.disable` sits inside the branch that installs the scope, so a
+        model calling `set_not_multitenant` never disables its own hook.
+        `Company` has leaked one enabled process-wide `:end` TracePoint per
+        boot and one more per code reload — 2 rising to 7 across five reloads.
+        There is no runtime cost to point at: 2,000 class bodies took 0.014s
+        with none enabled and 0.015s with one.
+      - `return if ENV['skip_default_scope'].present?` returns *before*
+        defining `set_not_multitenant` on the subclass, so setting the variable
+        does not skip the scope, it stops boot with `undefined local variable
+        or method 'set_not_multitenant' for class Company`. Referenced nowhere
+        else, and it can never have worked. Removed rather than repaired:
+        `unscoped` already covers the need, and a process-wide switch that
+        silently disables tenant isolation is the wrong thing for this
+        application to own.
+      - `:end` is only emitted by a `class ... end` body. A model built with
+        `Class.new(ApplicationRecord)` was handed no default scope at all —
+        `SELECT * FROM departments`, no condition. Nothing here is defined that
+        way so nothing was exposed, but in that case the mechanism failed
+        **open**, in the same paragraph that claims it fails closed.
+
+      The replacement is the block above. Same SQL for the scoped, unscoped,
+      no-tenant and opted-out cases, compared side by side. One difference worth
+      knowing: `Company` now carries a default scope that evaluates to `all`
+      where it previously carried none, so `Company.default_scopes` is 1 rather
+      than 0. Its SQL is unchanged and `Company.new` still sets no attributes,
+      tenant set or not.
 - [x] Search reported a hit count from an Elasticsearch index that is not
       partitioned by company. The query now carries the tenant filter itself,
       in `TenantSearch`, rather than leaving tenancy to the default scope
@@ -575,7 +690,9 @@ work the framework bumps were blocking.
       defect backlog
 
 **Done when:** the suite passes on Rails 7.1 and Ruby 3.3, and no dependency is
-pinned to a git branch.
+pinned to a git branch. Both hold, and the framework went one further than the
+line called for — 7.1 could not stay, because 7.1.6 is the end of its line and
+the Active Storage advisory has no fix there.
 
 ---
 
@@ -587,10 +704,10 @@ Most people who open the repo will never run it. A URL they can click, sign
 into as four different roles, and poke at is worth more than any amount of
 README prose.
 
-- [ ] **Rails 7.2 before anything here.** Deploying is what supplies the
+- [x] **Rails 7.2 before anything here.** Deploying is what supplies the
       precondition for the Active Storage advisory recorded in phase 3 —
       untrusted users able to upload an image — and this phase ends by printing
-      sign-in credentials on the landing page
+      sign-in credentials on the landing page. Done in phase 3
 - [ ] Deploy to Fly.io or Render with managed MySQL
 - [ ] **Wildcard subdomain routing and a wildcard TLS certificate.**
       Non-negotiable — without `*.domain` the multi-tenancy cannot be
