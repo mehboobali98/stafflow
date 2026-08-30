@@ -2,10 +2,11 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 window.$ = window.jQuery = require("jquery")
-// Registers itself on the jQuery above. Nothing here calls it - the
-// .select2() call is in show_applied_leaves.js, a separate bundle that
-// reads jQuery off window, so dropping this breaks that page and not this one.
-require("select2")
+// Under CommonJS select2's UMD wrapper exports a factory rather than
+// registering itself, so the call is what puts .select2() on the jQuery above.
+// The only caller is show_applied_leaves.js, a separate bundle that reads
+// jQuery back off window.
+require("select2")()
 require("./settings")
 require('./user')
 require("bootstrap")
