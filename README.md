@@ -131,7 +131,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 3.3.12 / 7.1.6 |
+| Ruby / Rails | 3.3.12 / 7.2.3.2 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Attachments | Active Storage, variants via libvips, declared type checked against bytes with `file` |
@@ -172,16 +172,15 @@ line numbers.
   search and its authorization, sign-out, leave updates, the HR leave
   form and the error paths.
 - **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
-  7.1: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1, then
-  Ruby 3.2 → 3.3. None could go further on its own, so the two were raised
-  alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
-  force; the 7.1 defaults are staged in
-  `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
-- **Rails 7.1 is the end of its line.** 7.1.6 is its last release, so the
-  Active Storage advisory recorded in [ROADMAP.md](ROADMAP.md) has no fix
-  available on this series and `activestorage` cannot be raised on its own.
-  Nothing is deployed, so nobody outside a local checkout can reach it — but
-  Rails 7.2 comes before the demo does.
+  7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
+  Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
+  two were raised alternately.
+- **Framework defaults lag the framework by two versions.** The app runs on
+  Rails 7.2 with `load_defaults 7.0` still in force. The 7.1 defaults are
+  staged in `config/initializers/new_framework_defaults_7_1.rb` with all 23
+  settings still commented out, and the 7.2 set comes after them. Each is
+  enabled separately, because that is where behaviour changes hide rather than
+  in the version bump itself.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
