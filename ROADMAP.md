@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 243 examples, 0 pending |
+| Tests | 250 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 26 found, 26 fixed, 0 open |
+| Known defects | 27 found, 27 fixed, 0 open |
 
 ---
 
@@ -173,6 +173,41 @@ static file server is on. It always is in test, and in production whenever
 `/403` have no static counterpart and render normally. Deleting the static
 files would fix it but costs the fallback that works when the app cannot boot,
 so it is a deployment decision rather than a defect.
+
+### Added after the phase shipped — the float columns
+
+Eleven columns held money and leave balances as `t.float`, and the note against
+them was always the same: flagged repeatedly, never filed, because nobody had
+demonstrated a failing case. Measuring the column produced one immediately.
+
+`t.float` on MySQL is `FLOAT(24)` — single precision, roughly seven significant
+decimal digits — not the `double` the name suggests. A salary needs more than
+seven. Read back from the column, `1234567.89` is `1234570.0` and `100000.10`
+is `100000.0`, and a payroll generated from a base of `100000.10` at 10% came
+out `$87.74` short on the gross. That is not a rounding artefact to argue
+about; it is a wrong payslip, and it was wrong for every salary carrying cents.
+
+All eleven moved to `decimal`. Money is `decimal(15, 2)`, the tax rate
+`decimal(6, 3)`, and leave counts `decimal(6, 2)`. Two things are worth being
+plain about:
+
+- **Leave counts were never demonstrably broken.** Three significant digits sit
+  well inside what a float holds, and `12.4`, `18.3` and forty half-days off a
+  balance of `20.0` all round-trip exactly. They moved anyway, because a leave
+  balance is a countable quantity compared for equality rather than a
+  measurement — but the justification is consistency, not a failure.
+- **The migration fixes writes, not history.** Whatever the float already
+  rounded away is gone from the table. Rows written before it carry the loss.
+
+Two findings came out of the same work and are recorded rather than counted as
+defects, neither having a demonstrated failure behind it. `only_float: true`,
+on four validations, does nothing at all — it is not an option Rails'
+numericality validator recognises, so it is carried and ignored, and an
+`Integer` or a `BigDecimal` validates exactly as a `Float` does. It is removed,
+and the seed comment that cited it is gone. And `FLOAT_MAX`, the bound those
+validations used, was `1e23` — above what `decimal(15, 2)` can hold, so a value
+between the two would have reached MySQL and raised out-of-range instead of
+failing validation. It is now `AMOUNT_MAX`, set to what the column takes.
 
 Two rows are left in the backlog below. Neither was in this phase's checklist
 and neither is reachable from ordinary use, so the phase closes here rather
@@ -677,6 +712,11 @@ work the framework bumps were blocking.
       rather than Active Job, so the setting would not reach them regardless.
       It has nothing to land on.
 
+      One leg of that has since gone: the money columns are `decimal` now, so
+      payroll does arrive as `BigDecimal`. The conclusion is unchanged — the
+      `.delay` calls still pass integer ids and `.delay` is still not Active
+      Job — but the first reason no longer holds.
+
       `commit_transaction_on_non_local_return` is no longer a setting to
       enable. Rails 7.2 deprecates it and 8.0 removes it, having made the 7.1
       behaviour unconditional, so reading it now emits a deprecation. Taking
@@ -918,6 +958,12 @@ Found by the first run of the first system spec, both fixed alongside it:
 | --- | --- |
 | `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
 | `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
+
+Found by measuring what the column stores rather than by reading the schema:
+
+| Location | Problem |
+| --- | --- |
+| Eleven columns across `applied_benefits`, `benefits`, `leaves`, `payrolls`, `settings`, `user_leaves`, `users` and `users_benefits` | Money and leave balances declared `t.float`, which on MySQL is `FLOAT(24)` — single precision, about seven significant decimal digits, not the `double` the name suggests. Salaries need more. `1234567.89` read back as `1234570.0` and `100000.10` as `100000.0`, so a payroll generated from a base of `100000.10` at a 10% rate came out `$87.74` short on the gross, with the cents gone from every derived figure and from the rendered payslip. Now `decimal`: `(15, 2)` for money, `(6, 3)` for the tax rate, `(6, 2)` for leave counts. The leave columns were not demonstrably broken at their magnitudes and moved for consistency. What the float already rounded away stays rounded away — the migration fixes what is written from here on |
 
 ---
 

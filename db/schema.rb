@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_30_164056) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
   end
 
   create_table "applied_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "amount", null: false
+    t.decimal "amount", precision: 15, scale: 2, null: false
     t.bigint "users_benefit_id"
     t.bigint "payroll_id", null: false
     t.bigint "benefit_id", null: false
@@ -74,7 +74,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
 
   create_table "benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
-    t.float "default_amount", null: false
+    t.decimal "default_amount", precision: 15, scale: 2, null: false
     t.bigint "company_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -134,7 +134,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
 
   create_table "leaves", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
-    t.float "default_count", null: false
+    t.decimal "default_count", precision: 6, scale: 2, null: false
     t.bigint "company_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -155,9 +155,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
   end
 
   create_table "payrolls", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "gross_salary", null: false
-    t.float "salary_after_tax", null: false
-    t.float "base_salary", null: false
+    t.decimal "gross_salary", precision: 15, scale: 2, null: false
+    t.decimal "salary_after_tax", precision: 15, scale: 2, null: false
+    t.decimal "base_salary", precision: 15, scale: 2, null: false
     t.bigint "user_id", null: false
     t.bigint "company_id", null: false
     t.datetime "created_at", null: false
@@ -172,15 +172,15 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
   create_table "settings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "tax_rate"
+    t.decimal "tax_rate", precision: 6, scale: 3
     t.bigint "company_id"
     t.datetime "leave_resets_at", precision: nil
     t.index ["company_id"], name: "index_settings_on_company_id"
   end
 
   create_table "user_leaves", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "total_count", null: false
-    t.float "remaining_count", null: false
+    t.decimal "total_count", precision: 6, scale: 2, null: false
+    t.decimal "remaining_count", precision: 6, scale: 2, null: false
     t.bigint "leave_id"
     t.bigint "user_id", null: false
     t.bigint "company_id", null: false
@@ -209,7 +209,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
     t.string "first_name"
     t.string "last_name"
     t.date "date_of_birth"
-    t.float "base_salary"
+    t.decimal "base_salary", precision: 15, scale: 2
     t.integer "role_id"
     t.bigint "designation_id"
     t.string "gender"
@@ -225,7 +225,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_29_160500) do
   end
 
   create_table "users_benefits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.float "amount", null: false
+    t.decimal "amount", precision: 15, scale: 2, null: false
     t.bigint "benefit_id", null: false
     t.bigint "user_id", null: false
     t.bigint "company_id", null: false
