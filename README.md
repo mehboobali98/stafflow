@@ -210,13 +210,17 @@ line numbers.
   7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
   Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
   two were raised alternately.
-- **The interface is the 2021 original.** Bootstrap 5.0 is imported with no
-  variable overridden, so the app wears the framework's default theme, and the
-  693 lines of SCSS behind it hold 22 hex colours picked one at a time. There is
-  no component layer: 49 views hand-write `btn btn-*`, 20 hand-write `.card`,
-  18 build a `<table>` from scratch. [ROADMAP.md](ROADMAP.md) phase 7 is the
-  rebuild — design tokens, ViewComponent, Turbo and Stimulus — and it runs
-  before the live demo rather than after it.
+- **The interface has tokens but no components yet.** Colour, type, spacing,
+  radius and shadow live in `_tokens.scss`, and Bootstrap 5.3 is themed from
+  them, so nothing outside that file names a colour. What is still missing is
+  the component layer: 49 views hand-write `btn btn-*`, 20 hand-write `.card`
+  and 18 build a `<table>` from scratch. [ROADMAP.md](ROADMAP.md) phase 7 has
+  the rest — ViewComponent, Turbo and Stimulus — and runs before the live demo.
+- **Appearance is reviewed by eye, not asserted.** The system specs assert
+  behaviour, so they stay green against a layout that has collapsed — that is
+  demonstrated in the roadmap rather than assumed. The exception is colour:
+  `spec/system/colour_contrast_spec.rb` measures what the browser computed and
+  fails anything under WCAG AA.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
