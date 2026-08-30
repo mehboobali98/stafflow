@@ -38,7 +38,7 @@ class User < ApplicationRecord
   validates_presence_of :department_id, :designation_id, :base_salary, unless: -> { account_owner? }
   validate :department_designation_valid?, unless: -> { account_owner? }
   validate :gender_valid?, unless: -> { account_owner? }
-  validates :base_salary, numericality: { greater_than: 0, less_than: FLOAT_MAX }, unless: -> { account_owner? }
+  validates :base_salary, numericality: { greater_than: 0, less_than: AMOUNT_MAX }, unless: -> { account_owner? }
   after_create :deliver_password_email
 
   ROLES = { account_owner: 1, hr: 2, department_head: 3, employee: 4 }.freeze
