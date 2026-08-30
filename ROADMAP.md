@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 255 examples, 0 pending |
+| Tests | 262 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 27 found, 27 fixed, 0 open |
+| Known defects | 28 found, 28 fixed, 0 open |
 
 ---
 
@@ -698,6 +698,27 @@ work the framework bumps were blocking.
       chart being on it: the stacked column, the line with its currency prefix
       and rotated month labels, and the dashboard's two all render.
 
+      **jquery taken**, 3.6.0 to 4.0.0, and it is the one that found something.
+      Six pages load a bundle of their own and none of them were covered, so
+      they were specced first — each asserting the one thing its bundle does,
+      rather than that the page still renders. That surfaced three `$.ajax`
+      calls asking for `dataType: 'script'` from endpoints that answer
+      `format.json` and then running `JSON.parse` over the result: the employee
+      search and the leave-type cascade on the HR leave form, and the
+      department-to-designation cascade on the employee form.
+
+      They were never right. jQuery 3 sent `*/*` alongside `text/javascript`
+      in the Accept header, Rails fell back to JSON on it, and the response
+      came back as text that `JSON.parse` was happy with. jQuery 4 dropped the
+      wildcard, so Rails has nothing to negotiate and the request 404s. No
+      exception is thrown anywhere — the failure is a select that stays empty,
+      which is why nothing had noticed and why `js_errors` alone would not
+      have caught it either. All three now ask for JSON and read what they are
+      given.
+
+      The seven remaining `dataType: 'script'` calls are correct: those
+      endpoints render `.js.erb` templates and answer `format.js`.
+
       `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
       reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
       and no `.jbuilder` template exists. The system-test trio arrived with
@@ -995,6 +1016,7 @@ Found by the first run of the first system spec, both fixed alongside it:
 | --- | --- |
 | `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
 | `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
+| `app/javascript/show_applied_leaves.js:83,102`, `app/javascript/user.js:50` | Three `$.ajax` calls asked for `dataType: 'script'` from endpoints answering `format.json`, then ran `JSON.parse` over the result. jQuery 3 sent `*/*` alongside `text/javascript` in the Accept header, Rails fell back to JSON on it, and the text parsed cleanly — so it worked by negotiation accident. jQuery 4 dropped the wildcard, leaving Rails nothing to match, and all three 404. Nothing throws: the employee search, the leave-type cascade on the HR leave form and the department-to-designation cascade on the employee form each just leave a select empty, which is why no console error and no green suite would have found it. Found by specs written for the jquery 4 bump before taking it |
 
 Found by measuring what the column stores rather than by reading the schema:
 
