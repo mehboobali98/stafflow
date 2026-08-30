@@ -511,8 +511,8 @@ work the framework bumps were blocking.
       `Model.reindex` runs `Model.all`, which the tenancy default scope narrows
       to the current tenant — with none set it indexes nothing and silently
       swaps in an empty index. Reindex inside each company in turn.
-- [ ] Clear the remaining Dependabot backlog, which is one advisory rather than
-      the twelve the repository reports.
+- [x] Clear the remaining Dependabot backlog, which was one advisory rather
+      than the twelve the repository reported.
 
       It read 92 before phase 3 was released. Alerts are computed against the
       default branch, and `main` was 49 commits behind — still Rails 6.1.7.10,
@@ -542,13 +542,36 @@ work the framework bumps were blocking.
       `config.load_defaults 7.0` selects vips and nothing overrides it, so this
       is the shape of this app exactly.
 
-      There is no fix on the 7.1 line — 7.1.6 is its last release and the
+      There was no fix on the 7.1 line — 7.1.6 is its last release and the
       patches shipped as 7.2.3.1 and 7.2.3.2 — and `activestorage` cannot be
-      raised on its own. **The remedy is Rails 7.2, which the gem sweep above
-      was done to unblock.** It gates phase 4 rather than this one: nothing is
-      deployed, so nobody outside a local checkout can upload anything today.
-      libvips in the image is 8.14.1, above the 8.13 the fix requires, so that
-      will not stand in the way.
+      raised on its own. The remedy was Rails 7.2, which the gem sweep above
+      was done to unblock. Done in the item below; all ten Rails advisories
+      were ranged `< 7.2.3.1` or `< 7.2.3.2`, so the one bump closes every one
+      of them rather than only the critical.
+
+      The two puma alerts are left open deliberately. Both are PROXY protocol
+      v1 issues ranged `>= 5.5.0, < 7.2.1`, the protocol is opt-in, and nothing
+      here enables it — clearing them means a major version of the application
+      server for something that cannot fire.
+- [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
+      the framework defaults are separate steps, because the defaults are where
+      behaviour changes and the bump is what carries the security fix.
+
+      Pinned `'~> 7.2.3', '>= 7.2.3.2'`. The lower bound is not decoration —
+      `~> 7.2.3` on its own resolves to 7.2.3, which is below the patch.
+
+      The `delayed_job < 4.2` pin came off, as its own comment said it should.
+      Nothing in the app calls `perform_later`, so the suite passing proved
+      nothing about it; checked directly instead. 4.2.0's adapter does shadow
+      the one Rails ships, exactly as the pin described, and it now subclasses
+      `ActiveJob::QueueAdapters::AbstractAdapter`, which 7.2 added — so the
+      shadowing is harmless and enqueueing works.
+
+      7.2 also surfaced one new deprecation, `ActiveSupport::ProxyObject` from
+      jbuilder 2.11.2, removed in Rails 8. jbuilder 2.15.1 uses `BasicObject`
+      and the suite is back to no deprecation warnings at all. Worth noting
+      that jbuilder is unused here — no `.jbuilder` template and no reference
+      to it anywhere in `app/`.
 - [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
       autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
       unscoped, every other model carries the `company_id` condition, and an
@@ -628,10 +651,10 @@ Most people who open the repo will never run it. A URL they can click, sign
 into as four different roles, and poke at is worth more than any amount of
 README prose.
 
-- [ ] **Rails 7.2 before anything here.** Deploying is what supplies the
+- [x] **Rails 7.2 before anything here.** Deploying is what supplies the
       precondition for the Active Storage advisory recorded in phase 3 —
       untrusted users able to upload an image — and this phase ends by printing
-      sign-in credentials on the landing page
+      sign-in credentials on the landing page. Done in phase 3
 - [ ] Deploy to Fly.io or Render with managed MySQL
 - [ ] **Wildcard subdomain routing and a wildcard TLS certificate.**
       Non-negotiable — without `*.domain` the multi-tenancy cannot be
