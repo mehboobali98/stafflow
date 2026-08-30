@@ -1,11 +1,14 @@
+@import 'tokens';
+
 .card-body p {
   text-align: center;
-  font-size: 3em;
-  font-weight: bold;
+  font-size: $text-4xl;
+  font-weight: $weight-bold;
+  color: $text-primary;
 }
 
 .card {
-  border-radius: 10px;
+  border-radius: $radius-lg;
 }
 
 .announcement-card {

@@ -1,3 +1,5 @@
+@import 'tokens';
+
 // font-awesome-sprockets must come first: it points the icon font path at
 // Sprockets' font-path helper, so the URLs carry digests.
 @import "font-awesome-sprockets";
@@ -18,11 +20,14 @@
  *= require_tree .
  *= require_self
  */
+// Order matters and is not decoration. Every Bootstrap variable is `!default`,
+// so the theme has to be set before the framework is imported or none of it
+// applies. simple_calendar and select2 come after, so their defaults lose to
+// ours rather than the other way round.
+@import 'bootstrap_theme';
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
 @import "select2/dist/css/select2";
-
-$sky_blue_app_color: #AFDBF5;
 
 .body-wrapper {
   height: 100%;
@@ -33,27 +38,28 @@ $sky_blue_app_color: #AFDBF5;
 }
 
 .stafflow-table-header {
-  background-color: $sky_blue_app_color;
-  font-size: large;
-  border: none;
+  background-color: $surface-sunken;
+  color: $text-secondary;
+  font-size: $text-sm;
+  font-weight: $weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid $border-subtle;
 }
 
 .stafflow-heading {
-  background-color: $sky_blue_app_color;
-  padding: 15px 0px;
-  max-width: 96vw;
-  border-width: thin;
-  border-color: royalblue;
-  border-style: solid;
+  background-color: $surface;
+  padding: $space-5 $space-4;
+  border-bottom: 1px solid $border-subtle;
 }
 
 // side bar custom class for toggling. It is added when the sidebar is active
 .sidebar-toggle {
   position: absolute;
   height: 100%;
-  left: 240px;
-  width: calc(100% - 240px);
-  transition: all 0.5s ease;
+  left: $sidebar-width-expanded;
+  width: calc(100% - #{$sidebar-width-expanded});
+  transition: all $transition-base;
 }
 
 .notification-scrollable-container {
@@ -76,7 +82,7 @@ $sky_blue_app_color: #AFDBF5;
 }
 
 .notification {
-  color: white;
+  color: $text-on-brand;
   text-decoration: none;
   padding: 5px 10px;
   position: relative;
@@ -90,8 +96,8 @@ $sky_blue_app_color: #AFDBF5;
     right: -10px;
     padding: 5px 10px;
     border-radius: 50%;
-    background: red;
-    color: white;
+    background: $danger-600;
+    color: $text-on-brand;
   }
 }
 
@@ -99,10 +105,10 @@ $sky_blue_app_color: #AFDBF5;
   width: 3em;
 }
 .company-show:hover {
-  border: 1px solid #0275d8;
+  border: 1px solid $accent;
 }
 .company-show {
-  border: 1px solid lightgray;
+  border: 1px solid $border-default;
 }
 .illustration {
   width: 10em;
@@ -110,10 +116,10 @@ $sky_blue_app_color: #AFDBF5;
 
 // model: event
 .event-link {
-  background-color: #0275d8;
+  background-color: $accent;
   display: inline-block;
   width: 100%;
-  color: white;
+  color: $text-on-brand;
   margin-top: 1%;
 }
 
@@ -139,14 +145,12 @@ $sky_blue_app_color: #AFDBF5;
 
 //dashboard navbar: start
 .dashboard-navbar {
-  background-color: #006fc8;
+  background-color: $accent;
   .navbar-brand {
-    color: white;
-    padding-left: 20px;
-    text-shadow: 2px 2px 5px white;
-    font-weight: bold;
-    font-size: 1.5em;
-    font-family: sans-serif;
+    color: $text-on-brand;
+    padding-left: $space-5;
+    font-weight: $weight-semibold;
+    font-size: $text-xl;
   }
   .notification-container
     a {
