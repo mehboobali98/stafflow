@@ -131,6 +131,11 @@ per type. Applying draws against the remaining balance; HR and department heads
 approve or reject, individually or in bulk. Balances reset on a schedule driven
 by `whenever` (`lib/tasks/leave.rake`).
 
+[![HR review queue](docs/screenshots/3-hr-review-queue.png)](docs/leave-approval-flow.md)
+
+The whole flow, from an employee applying to HR approving, is walked through in
+[docs/leave-approval-flow.md](docs/leave-approval-flow.md).
+
 ### Payroll
 
 `Payroll.generate_payroll` runs in a transaction: it applies the company tax
@@ -170,6 +175,7 @@ db/
   seeds.rb            builds one complete demo tenant
 docs/
   tenant-isolation.md how the scoping works, and the hook it replaced
+  leave-approval-flow.md  the flow end to end, with screenshots
 ```
 
 ## Known gaps
