@@ -1,7 +1,6 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
-require("./channels")
 window.$ = window.jQuery = require("jquery")
 // Registers itself on the jQuery above. Nothing here calls it - the
 // .select2() call is in show_applied_leaves.js, a separate bundle that
