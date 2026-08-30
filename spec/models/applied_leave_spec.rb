@@ -57,6 +57,26 @@ RSpec.describe AppliedLeave do
       expect(apply).to be_valid
     end
 
+    it 'rejects a duration type that is not one of the two offered' do
+      record = build(:applied_leave, company: company, user_leave: balance,
+                                     user: employee, leave: leave,
+                                     leave_duration_type: 99)
+
+      expect(record).not_to be_valid
+      expect(record.errors[:leave_duration_type]).to be_present
+    end
+
+    # Asserting the validation alone would not show why it matters: the bare
+    # key resolves to the whole subtree, and the view prints that hash.
+    it 'would otherwise translate the bare key into a hash' do
+      record = build(:applied_leave, company: company, user_leave: balance,
+                                     user: employee, leave: leave,
+                                     leave_duration_type: 99)
+
+      expect(record.leave_duration_name).to be_nil
+      expect(I18n.t("applied_leave.links.#{record.leave_duration_name}")).to be_a(Hash)
+    end
+
     # Rails runs custom validators alongside the presence validator rather than
     # after it, so a cleared field reaches these comparisons as nil.
     %i[applied_from applied_till].each do |field|
