@@ -796,7 +796,12 @@ spends about ninety seconds here.
       ASCII sketch that was there. It carries two things the sketch could not:
       the branch where an unset tenant compiles to `company_id IS NULL` and
       matches nothing, and the opt-out branch `Company` takes
-- [ ] Screenshots or a short capture of the leave approval flow
+- [x] Screenshots or a short capture of the leave approval flow —
+      [docs/leave-approval-flow.md](docs/leave-approval-flow.md). Four screens
+      in order: an employee applying, the request landing as pending, the
+      company-wide queue HR sees, and the same queue after approval. Captured
+      by driving a real browser and signing in as each role, which is how the
+      twenty-fourth defect turned up
 - [x] A short write-up of one hard problem and how it was solved —
       [docs/tenant-isolation.md](docs/tenant-isolation.md). The `TracePoint`
       hook, the three faults it carried, and why a green suite and a close
