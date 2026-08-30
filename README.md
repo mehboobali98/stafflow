@@ -65,15 +65,17 @@ marketing page and `acme.localhost:3000` is the Acme tenant. Browsers resolve
 Every tenant-owned table carries a `company_id`, and the scoping is applied
 automatically rather than being left to individual queries.
 
-`ApplicationRecord.inherited` installs a `TracePoint` that fires when a model
-class finishes being defined, and gives it a default scope:
+`ApplicationRecord.inherited` gives every model a default scope:
 
 ```ruby
-default_scope { where(company_id: Company.current_company_id) }
+default_scope { multitenant? ? where(company_id: Company.current_company_id) : all }
 ```
 
-A model opts out by calling `set_not_multitenant` in its body — `Company`
-itself is the only one that does.
+The block is evaluated per query rather than when the class is defined, and
+that is what lets the opt-out be read at all: `inherited` runs before the class
+body, so `set_not_multitenant` has not been called yet at that point. A model
+opts out by calling it in its body — `Company` itself is the only one that
+does.
 
 The current tenant lives in `Thread.current`, set by an `around_action` in
 `ApplicationController` that resolves the subdomain and clears the value in an
@@ -129,7 +131,7 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 3.3.12 / 7.1.6 |
+| Ruby / Rails | 3.3.12 with YJIT / 7.2.3.2, `load_defaults 7.2` |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
 | Attachments | Active Storage, variants via libvips, declared type checked against bytes with `file` |
@@ -163,23 +165,16 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 224 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 228 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
   request specs for authentication, tenant routing, the apex company lookup,
   search and its authorization, sign-out, leave updates, the HR leave
   form and the error paths.
 - **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
-  7.1: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1, then
-  Ruby 3.2 → 3.3. None could go further on its own, so the two were raised
-  alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
-  force; the 7.1 defaults are staged in
-  `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
-- **Rails 7.1 is the end of its line.** 7.1.6 is its last release, so the
-  Active Storage advisory recorded in [ROADMAP.md](ROADMAP.md) has no fix
-  available on this series and `activestorage` cannot be raised on its own.
-  Nothing is deployed, so nobody outside a local checkout can reach it — but
-  Rails 7.2 comes before the demo does.
+  7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
+  Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
+  two were raised alternately.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
