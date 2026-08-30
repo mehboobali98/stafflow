@@ -1013,11 +1013,29 @@ breadcrumbs_on_rails and chartkick's helpers.
       separate palette the landing page kept — a cyan, a navy and two greys
       that appeared nowhere else. Mapping it onto the shared ramps is the point
       of the step: a second palette is a second system
-- [ ] **ViewComponent, and Lookbook in front of it.** The set the views are
-      already asking for: `Button`, `Card`, `Table`, `FormField`, `Badge`,
-      `Modal`, `EmptyState`, `PageHeader`. The preview page matters as much as
-      the components — it is the one part of a design system a reviewer can
-      click
+- [ ] **ViewComponent, and Lookbook in front of it.** Started: `Button`,
+      `Badge`, `Card`, `Table`, `PageHeader` and `EmptyState` exist with a
+      preview each, and the HR leave queue is converted as the proof. `FormField`
+      and `Modal` are still to come, along with the other 120 views.
+
+      Every component stamps `data-component` into its markup, and the system
+      specs key off that rather than off Bootstrap's class names — so restyling
+      a component cannot break a spec that was only ever asking whether the
+      thing is on the page. That was recorded as a cost of this phase; doing it
+      per component as they land is what stops it becoming one.
+
+      `TableComponent` wraps the shell and not the data. Eighteen views build a
+      table by hand and every one has a different row, so what they share is the
+      chrome; forcing a column API onto them would be a rewrite wearing a
+      component's name.
+
+      Two things worth knowing. Previews render inside the app's default layout,
+      which reaches for `current_user` — every one of them 500s until a bare
+      preview layout is configured, and that was found by opening Lookbook
+      rather than by any check. `spec/components/previews_spec.rb` renders every
+      scenario now and does catch it: removing the layout config fails all ten.
+      And Lookbook is development-only, so whether the demo exposes the previews
+      is a phase 4 question, not settled here
 - [ ] **Turbo replaces turbolinks.** The gem and the npm package both go;
       24 references, mostly `data-turbolinks-track` becoming `data-turbo-track`
 - [ ] **Stimulus replaces jQuery.** Ten bundles, roughly 300 lines, one

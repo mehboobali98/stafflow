@@ -1,6 +1,5 @@
-<!-- for approving/rejecting leaves-->
-<table class="table table-hover">
-  <thead class="stafflow-table-header">
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
     <tr>
       <th></th>
       <th><%= t('applied_leave.headings.applicant_email') %></th>
@@ -9,10 +8,10 @@
       <th><%= t('applied_leave.headings.leave_from') %></th>
       <th><%= t('applied_leave.headings.leave_to') %></th>
       <th><%= t('applied_leave.headings.leave_status') %></th>
-      <th class="text-center" colspan="2"><%= t('applied_leave.headings.options') %></th>
+      <th class="text-end"><%= t('applied_leave.headings.options') %></th>
     </tr>
-  </thead>
-  <tbody>
+  <% end %>
+  <% table.with_body do %>
     <% applied_leaves.each do |applied_leave| %>
       <tr>
         <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, class: 'js-selected-applied-leave', disabled: !(applied_leave.pending?) %></td>
@@ -21,13 +20,29 @@
         <td><%= t("applied_leave.labels.#{applied_leave.leave_duration_name}") %></td>
         <td><%= applied_leave.applied_from %></td>
         <td><%= applied_leave.applied_till %></td>
-        <td><%= t("applied_leave.labels.#{applied_leave.state}") %></td>
-        <td><%= link_to t('applied_leave.links.approve'), approve_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-success' if can?(:approve_leave, applied_leave) %></td>
-        <td><%= link_to t('applied_leave.links.reject'), reject_applied_leave_path(applied_leave), method: :patch, class: 'btn btn-danger' if can?(:reject_leave, applied_leave) %></td>
+        <td>
+          <%= render(BadgeComponent.new(variant: applied_leave.state)) do %>
+            <%= t("applied_leave.labels.#{applied_leave.state}") %>
+          <% end %>
+        </td>
+        <td class="text-end text-nowrap">
+          <% if can?(:approve_leave, applied_leave) %>
+            <%= render(ButtonComponent.new(variant: :success, size: :sm, method: :patch,
+                                           href: approve_applied_leave_path(applied_leave))) do %>
+              <%= t('applied_leave.links.approve') %>
+            <% end %>
+          <% end %>
+          <% if can?(:reject_leave, applied_leave) %>
+            <%= render(ButtonComponent.new(variant: :danger, size: :sm, method: :patch,
+                                           href: reject_applied_leave_path(applied_leave))) do %>
+              <%= t('applied_leave.links.reject') %>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+  <% end %>
+<% end %>
 <div class='js-applied-leaves-pagination pagination-wrapper'>
   <%= will_paginate applied_leaves, container: false %>
 </div>

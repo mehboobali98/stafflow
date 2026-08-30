@@ -7,6 +7,7 @@ require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 
 require 'rspec/rails'
+require 'view_component/test_helpers'
 require 'shoulda/matchers'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
@@ -28,6 +29,7 @@ RSpec.configure do |config|
   config.include AttachmentHelpers
   config.include SystemHelpers, type: :system
   config.include ContrastHelpers, type: :system
+  config.include ViewComponent::TestHelpers, type: :component
 
   # rspec-rails drives an unset system spec with :selenium. CUPRITE_OPTIONS and
   # the reason they are passed here rather than registered are in
