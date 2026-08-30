@@ -74,6 +74,9 @@ jobs:
       - name: Prepare the database
         run: bundle exec rails db:test:prepare
 
+      # The system specs drive Chrome over CDP. The runner image already carries
+      # google-chrome, one of the names Ferrum searches PATH for, so nothing
+      # installs a browser here - unlike the Dockerfile, which has to.
       - name: Run the suite
         run: bundle exec rspec --format progress
 

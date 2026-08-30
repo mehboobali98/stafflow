@@ -95,6 +95,13 @@ end
 
 group :test do
   gem 'shoulda-matchers', '~> 5.0'
+  gem 'capybara', '~> 3.40'
+  # Cuprite drives Chrome over CDP, so there is no chromedriver to keep in step
+  # with the browser - the coupling that left `webdrivers` pinning selenium
+  # below 4.0 until both were deleted. It is also what makes `js_errors: true`
+  # possible: an uncaught exception in the page raises in the example rather
+  # than being left in a log for the spec to go looking for.
+  gem 'cuprite', '~> 0.17'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

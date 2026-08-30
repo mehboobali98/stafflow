@@ -69,12 +69,14 @@ RSpec/NestedGroups:
 RSpec/InstanceVariable:
   Enabled: false
 
-# Request specs describe a route rather than a class, and the explicit
-# `type: :request` is what keeps RSpec/DescribeClass quiet about that. Removing
-# it as redundant, which this cop asks for, makes the other one fire instead.
+# Request and system specs describe a route or a page rather than a class, and
+# the explicit `type:` is what keeps RSpec/DescribeClass quiet about that.
+# Removing it as redundant, which this cop asks for, makes the other one fire
+# instead.
 RSpecRails/InferredSpecType:
   Exclude:
     - 'spec/requests/**/*'
+    - 'spec/system/**/*'
 
 # The bundling guard describes the JavaScript build rather than a Ruby class,
 # so there is no constant to hand RSpec/DescribeClass. Unlike the request specs

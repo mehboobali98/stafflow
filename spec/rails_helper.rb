@@ -26,6 +26,19 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include TenantHelpers
   config.include AttachmentHelpers
+  config.include SystemHelpers, type: :system
+
+  # rspec-rails drives an unset system spec with :selenium. CUPRITE_OPTIONS and
+  # the reason they are passed here rather than registered are in
+  # spec/support/capybara.rb. It is duped because driven_by deletes a key from
+  # what it is handed, and raises on the frozen original.
+  config.before(:each, type: :system) do
+    driven_by :cuprite, screen_size: [1400, 1400], options: CUPRITE_OPTIONS.dup
+  end
+
+  # app_host is global to Capybara, so a spec that finished on a subdomain
+  # would hand it to whichever spec ran next.
+  config.after(:each, type: :system) { Capybara.app_host = nil }
 
   # Every tenant-owned model carries a default scope keyed on
   # Company.current_company_id. Leaving it set between examples would leak
