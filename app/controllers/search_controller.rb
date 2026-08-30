@@ -1,6 +1,8 @@
 class SearchController < ApplicationController
+  before_action :authenticate_user!
+
   def search_data
-    @results = Searchkick.search params[:search_query], models: [User, Department, Designation]
+    @results = TenantSearch.call(params[:search_query])
     respond_to do |format|
       format.html
     end

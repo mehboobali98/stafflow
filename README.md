@@ -96,6 +96,14 @@ any query on any model
 ensure: Thread.current[:current_company_id] = nil
 ```
 
+Search is the one exception, because it does not begin at Active Record.
+Searchkick asks Elasticsearch for ids, and the default scope only narrows the
+records loaded for them — the hit count, and anything else read from the
+response, would still describe every tenant. `TenantSearch` puts the same
+`company_id` on the Elasticsearch query. An unset tenant there matches
+documents with no `company_id`, of which there are none, so it fails closed the
+way the default scope does.
+
 ### Authorization
 
 Four roles — account owner, HR, department head, employee — implemented with
@@ -121,13 +129,14 @@ a background email.
 
 | | |
 | --- | --- |
-| Ruby / Rails | 3.0.7 / 6.1.7 |
+| Ruby / Rails | 3.3.12 / 7.1.6 |
 | Database | MySQL 8 |
 | Search | Elasticsearch 7 via Searchkick |
+| Attachments | Active Storage, variants via libvips, declared type checked against bytes with `file` |
 | Background jobs | delayed_job |
 | Auth | Devise |
 | Authorization | CanCanCan |
-| Assets | Webpacker 5, Bootstrap 5 |
+| Assets | esbuild + Sprockets, Bootstrap 5 |
 | Charts | Chartkick |
 | Scheduling | whenever |
 
@@ -139,6 +148,7 @@ app/
   models/
     concerns/         one *_abilities.rb per resource (CanCanCan rules)
     application_record.rb   multi-tenant default scope installation
+    tenant_search.rb        the same scoping for Elasticsearch queries
   views/
 config/
   locales/en.yml      every user-facing string; no hardcoded copy in views
@@ -153,25 +163,27 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 193 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 224 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are not covered, and controllers only through
-  request specs for authentication, tenant routing, leave updates, the HR
-  leave form and the error paths.
-- **Ruby 3.0 and Rails 6.1 are both end-of-life.** Two steps of the upgrade
-  are done — Rails 6.0 → 6.1, then Ruby 2.7 → 3.0. Neither could go further on
-  its own: Rails 6.0 did not support Ruby 3.x, and Ruby 3.2 needs Rails 7. They
-  are being raised alternately, and [ROADMAP.md](ROADMAP.md) has the remaining
-  order.
-- **Paperclip** was retired upstream in 2018; migrating to ActiveStorage is
-  outstanding.
+  request specs for authentication, tenant routing, the apex company lookup,
+  search and its authorization, sign-out, leave updates, the HR leave
+  form and the error paths.
+- **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
+  7.1: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1, then
+  Ruby 3.2 → 3.3. None could go further on its own, so the two were raised
+  alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
+  force; the 7.1 defaults are staged in
+  `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
+- **Rails 7.1 is the end of its line.** 7.1.6 is its last release, so the
+  Active Storage advisory recorded in [ROADMAP.md](ROADMAP.md) has no fix
+  available on this series and `activestorage` cannot be raised on its own.
+  Nothing is deployed, so nobody outside a local checkout can reach it — but
+  Rails 7.2 comes before the demo does.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
   no static counterpart and render normally.
-- One known defect remains, recorded with its location in
-  [ROADMAP.md](ROADMAP.md#defect-backlog). It is not reachable from ordinary
-  use: a missing association the default scope currently papers over.
 
 ## Contributors
 

@@ -44,26 +44,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install MySQL client libraries
-        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
+      # The variant specs need libvips, which the 7.0 defaults select over
+      # ImageMagick. The Dockerfile installs it as libvips42, the Debian name;
+      # noble's 64-bit time_t transition renamed the same library, so the two
+      # spellings here and there are the same package and neither is a typo.
+      # file is what active_storage_validations runs to read an upload's bytes.
+      - name: Install system libraries
+        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev libvips42t64 file
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0.7'
+          ruby-version: '3.3.12'
           bundler-cache: true
 
-      # Request specs render real views, and the test environment compiles
-      # webpack packs on demand, so the JS toolchain has to be present or every
-      # request spec fails on a missing pack rather than on its own assertion.
+      # Request specs render real views, and Sprockets serves whatever esbuild
+      # wrote into app/assets/builds. Nothing compiles that on demand, so the
+      # bundle has to be built here or every request spec fails on a missing
+      # asset rather than on its own assertion.
       - uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '24'
 
       - name: Install JavaScript dependencies
-        run: yarn install --frozen-lockfile --ignore-engines
+        run: yarn install --frozen-lockfile
 
-      - name: Compile packs
-        run: bundle exec rails webpacker:compile
+      - name: Build the JavaScript bundle
+        run: yarn build
 
       - name: Prepare the database
         run: bundle exec rails db:test:prepare
@@ -80,7 +86,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0.7'
+          ruby-version: '3.3.12'
           bundler-cache: true
       - run: bundle exec rubocop --format github
 
@@ -93,11 +99,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0.7'
+          ruby-version: '3.3.12'
           bundler-cache: true
       # The count is zero, so a warning now fails the build. Zero is narrower
-      # than it looks: Brakeman 5.4.1 predates both EOL dates it would report.
-      # Its Rails table stops at 6.0, and its Ruby entry for 3.0 reads
-      # ['3.0.0', '2.8.99'] - an inverted range no version can satisfy. Ruby 3.0
-      # and Rails 6.1 are both out of support; ROADMAP.md tracks the real state.
+      # than it looks: Brakeman 5.4.1's EOL tables end before the versions this
+      # app runs. Its Rails table stops at 6.0 and its Ruby table stops at 3.0,
+      # so neither Ruby 3.2 nor Rails 7.0 can be reported however old they get.
+      # ROADMAP.md tracks the real state.
       - run: bundle exec brakeman --no-pager --format plain
