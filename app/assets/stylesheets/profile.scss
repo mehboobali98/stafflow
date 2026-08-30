@@ -1,8 +1,10 @@
+@import 'tokens';
+
 .emp-profile {
   padding: 3%;
   margin-top: 10%;
   margin-bottom: 3%;
-  border-radius: 0.5rem;
+  border-radius: $radius-lg;
   .profile-img {
     text-align: center;
     img {
@@ -17,7 +19,7 @@
       border: none;
       border-radius: 0;
       font-size: 15px;
-      background: #212529b8;
+      background: rgba($neutral-900, 0.72);
     }
   }
   .edit_button {
@@ -31,10 +33,10 @@
 .profile-head {
   margin-top: -8%;
   h5 {
-    color: #333;
+    color: $text-primary;
   }
   h6 {
-    color: #0062cc;
+    color: $accent;
   }
   .nav-tabs {
     margin-bottom: 5%;
@@ -44,17 +46,17 @@
     }
     .nav-link.active {
       border: none;
-      border-bottom: 2px solid #0062cc;
+      border-bottom: 2px solid $accent;
     }
   }
 }
 .profile-edit-btn {
   border: none;
-  border-radius: 1.5rem;
+  border-radius: $radius-pill;
   width: 70%;
   padding: 2%;
   font-weight: 700;
-  color: #6c757d;
+  color: $text-secondary;
   cursor: pointer;
 }
 .profile-work {
@@ -62,12 +64,12 @@
   margin-top: -15%;
   p {
     font-size: 12px;
-    color: #818182;
+    color: $text-secondary;
     font-weight: 600;
     margin-top: 10%;
   }
   a {
-    color: #495057;
+    color: $neutral-700;
     font-weight: 600;
     font-size: 14px;
     margin-left: 3%;
@@ -80,6 +82,6 @@
   font-weight: 600;
   p {
     font-weight: 600;
-    color: #0062cc;
+    color: $accent;
   }
 }

@@ -1,0 +1,73 @@
+// Bootstrap, set from the tokens.
+//
+// This has to be imported before Bootstrap itself: every variable below is
+// declared `!default` upstream, so whichever assignment lands first wins. That
+// ordering is the whole mechanism — moving this import after the framework
+// silently changes nothing, which is exactly what it looked like before, when
+// the app imported the default theme and overrode it with twenty-two hex
+// codes further down the file.
+
+@import 'tokens';
+
+// ── Palette ──────────────────────────────────────────────────────────────
+$primary:   $accent;
+$secondary: $neutral-500;
+$success:   $success-600;
+$info:      $brand-500;
+$warning:   $warning-600;
+$danger:    $danger-600;
+$light:     $neutral-100;
+$dark:      $neutral-800;
+
+$body-bg:    $surface;
+$body-color: $text-primary;
+
+// ── Type ─────────────────────────────────────────────────────────────────
+$font-family-sans-serif: $font-sans;
+$font-size-base:         $text-base;
+$line-height-base:       $leading-normal;
+
+$h1-font-size: $text-4xl;
+$h2-font-size: $text-3xl;
+$h3-font-size: $text-2xl;
+$h4-font-size: $text-xl;
+$h5-font-size: $text-lg;
+$h6-font-size: $text-base;
+
+$headings-font-weight:  $weight-semibold;
+$headings-line-height:  $leading-tight;
+
+// ── Space ────────────────────────────────────────────────────────────────
+// Bootstrap derives its whole m-*/p-* scale from this one value.
+$spacer: $space-4;
+
+// ── Shape ────────────────────────────────────────────────────────────────
+$border-radius:    $radius-md;
+$border-radius-sm: $radius-sm;
+$border-radius-lg: $radius-lg;
+$border-radius-pill: $radius-pill;
+
+$border-color: $border-subtle;
+
+$box-shadow-sm: $shadow-sm;
+$box-shadow:    $shadow-md;
+$box-shadow-lg: $shadow-lg;
+
+// ── Components ───────────────────────────────────────────────────────────
+$card-border-color:    $border-subtle;
+$card-border-radius:   $radius-lg;
+$card-cap-bg:          $surface-sunken;
+$card-box-shadow:      $shadow-sm;
+
+$table-border-color:   $border-subtle;
+$table-th-font-weight: $weight-semibold;
+
+$input-border-color:   $border-default;
+$input-focus-border-color: $brand-400;
+
+$navbar-padding-y:     $space-3;
+
+// Bootstrap 5.3 generates a dark colour mode from these. It costs nothing to
+// leave on and is what makes dark mode a token change rather than a second
+// stylesheet, once the components are in place to use it.
+$enable-dark-mode: true;
