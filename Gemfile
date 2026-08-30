@@ -12,7 +12,7 @@ gem 'rails', '~> 7.2.3', '>= 7.2.3.2'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'
 # Use Puma as the app server
-gem 'puma', '~> 6.4'
+gem 'puma', '~> 8.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # esbuild builds into app/assets/builds; Sprockets fingerprints and serves it.
