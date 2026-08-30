@@ -171,6 +171,11 @@ line numbers.
   request specs for authentication, tenant routing, the apex company lookup,
   search and its authorization, sign-out, leave updates, the HR leave
   form and the error paths.
+- **Nothing exercises the browser.** There are no system or feature specs, so
+  the JavaScript — jQuery, select2, Bootstrap, Chartkick and the Active Storage
+  bundle — is covered by nothing at all. A green suite is evidence about the
+  server and silent about the front end. Front-end dependency updates are held
+  here until something can actually look at them.
 - **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
   7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
   Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
