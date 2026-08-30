@@ -175,12 +175,10 @@ line numbers.
   7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
   Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
   two were raised alternately.
-- **Framework defaults lag the framework by two versions.** The app runs on
-  Rails 7.2 with `load_defaults 7.0` still in force. The 7.1 defaults are
-  staged in `config/initializers/new_framework_defaults_7_1.rb` with all 23
-  settings still commented out, and the 7.2 set comes after them. Each is
-  enabled separately, because that is where behaviour changes hide rather than
-  in the version bump itself.
+- **Framework defaults lag the framework by one version.** The app runs on
+  Rails 7.2 with `load_defaults 7.1`. The 7.2 set is enabled separately, as
+  every set before it has been, because that is where behaviour changes hide
+  rather than in the version bump itself.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
