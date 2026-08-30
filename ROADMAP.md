@@ -17,7 +17,7 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 253 examples, 0 pending |
+| Tests | 255 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 27 found, 27 fixed, 0 open |
@@ -679,6 +679,24 @@ work the framework bumps were blocking.
       which Dependabot did not raise: 7.1.600 is the last release, because
       Rails 8 removes the package. Holding it at 6.0.0 while its sibling moved
       to 7.2 widens a mismatch rather than leaving one alone.
+
+      **chartkick taken**, and it is the one that was never a bump. chartkick.js
+      5 declares `chart.js: "4"` as a peer, so Chart.js crosses a major with it
+      and `chartjs-adapter-date-fns` and `date-fns` arrive behind it. The gem
+      moves too — it was pinned `= 4.0.5`, and the gem renders the tag the npm
+      package draws into, so a gem that predates the drawing code is the same
+      class of mismatch as holding `@rails/ujs` back. Four npm packages and one
+      gem in one step, because splitting them leaves a commit that cannot run.
+
+      The analytics page is what made this checkable. It is the only page
+      carrying both shapes chartkick offers — one chart handed its data inline
+      by the view, one given a path and left to fetch it — and it had no spec,
+      so the dashboard's two remote charts were the whole of the coverage. It
+      has one now, asserting both canvases and the absence of the message
+      chartkick writes into the container when it cannot draw. Both pages were
+      also looked at, because a canvas element existing is not the same as a
+      chart being on it: the stacked column, the line with its currency prefix
+      and rotated month labels, and the dashboard's two all render.
 
       `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
       reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,

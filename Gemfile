@@ -54,7 +54,10 @@ gem 'whenever', '=1.0.0', require: false
 gem 'simple_calendar', '=2.4.3'
 
 # graphs
-gem 'chartkick', '=4.0.5'
+# The gem renders the tag and the npm package draws into it, so the two move
+# together: chartkick.js 5 is what wants Chart.js 4, and the gem below is what
+# knows how to talk to it.
+gem 'chartkick', '~> 5.2'
 
 # elastic search
 gem 'searchkick', '~> 5.3'
