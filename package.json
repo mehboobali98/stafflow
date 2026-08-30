@@ -4,15 +4,15 @@
   "version": "0.1.0",
   "dependencies": {
     "@popperjs/core": "2.9.3",
-    "@rails/activestorage": "6.0.0",
-    "@rails/ujs": "6.0.0",
+    "@rails/activestorage": "7.2.302",
+    "@rails/ujs": "7.1.600",
     "aos": "2.3.4",
     "bootstrap": "5.0",
     "chart.js": "3.5.1",
     "chartkick": "4.0.5",
     "esbuild": "^0.25.0",
     "jquery": "3.6.0",
-    "select2": "4.1.0-rc.0",
+    "select2": "4.1.0",
     "turbolinks": "5.2.0"
   },
   "scripts": {
