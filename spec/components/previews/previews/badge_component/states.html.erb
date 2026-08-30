@@ -1,0 +1,5 @@
+<div class="d-flex gap-2">
+  <% BadgeComponent::VARIANTS.each_key do |variant| %>
+    <%= render(BadgeComponent.new(variant: variant)) { variant.to_s.humanize } %>
+  <% end %>
+</div>

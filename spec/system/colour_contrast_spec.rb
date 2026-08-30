@@ -57,7 +57,11 @@ RSpec.describe 'colour contrast', type: :system do
   end
 
   describe 'the signed-in chrome' do
-    let(:selectors) { ['.navbar-brand', '.sidebar a', 'body', '.stafflow-table-header th'] }
+    let(:selectors) do
+      ['.navbar-brand', '.sidebar a', 'body', '.table-head th', '.breadcrumbs',
+       '[data-component=badge]', '[data-component=button]',
+       '[data-component=page-header] .page-header__links a']
+    end
 
     before do
       as_tenant(company) { create(:applied_leave, company: company) }

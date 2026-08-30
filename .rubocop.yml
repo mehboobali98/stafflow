@@ -82,7 +82,9 @@ RSpecRails/InferredSpecType:
 # so there is no constant to hand RSpec/DescribeClass. Unlike the request specs
 # above there is no spec type that would satisfy it either. The money precision
 # spec has the opposite problem: the behaviour it describes is a column type
-# shared by eight models, so any one of them named here would be arbitrary.
+# shared by eight models, so any one of them named here would be arbitrary, and
+# the preview spec enumerates every preview class there is rather than naming
+# one.
 RSpec/DescribeClass:
   inherit_mode:
     merge:
@@ -90,3 +92,4 @@ RSpec/DescribeClass:
   Exclude:
     - 'spec/javascript/**/*'
     - 'spec/models/money_precision_spec.rb'
+    - 'spec/components/previews_spec.rb'
