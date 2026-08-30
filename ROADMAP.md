@@ -572,6 +572,38 @@ work the framework bumps were blocking.
       and the suite is back to no deprecation warnings at all. Worth noting
       that jbuilder is unused here — no `.jbuilder` template and no reference
       to it anywhere in `app/`.
+- [x] Enable the Rails 7.1 framework defaults. `config.load_defaults 7.1`
+      replaces `new_framework_defaults_7_1.rb`, which is deleted. No failures
+      and no deprecations.
+
+      The staged file's own annotations were checked rather than taken on
+      trust. Its list of flips that cannot reach this app holds: no `serialize`d
+      column, no `attr_readonly`, no `has_secure_token` and no `after_commit`
+      anywhere in the Ruby or ERB source.
+
+      One annotation was wrong. It singles out
+      `active_job.use_big_decimal_serializer` as "the one job-serialisation
+      flip with something to bite here", because payroll works in BigDecimal
+      and enqueues through delayed_job. Payroll's money columns are `t.float`,
+      not `t.decimal`, so they arrive as `Float`; all five `.delay` calls pass
+      integer ids and nothing else; and `.delay` is delayed_job's own API
+      rather than Active Job, so the setting would not reach them regardless.
+      It has nothing to land on.
+
+      `commit_transaction_on_non_local_return` is no longer a setting to
+      enable. Rails 7.2 deprecates it and 8.0 removes it, having made the 7.1
+      behaviour unconditional, so reading it now emits a deprecation. Taking
+      the version bump first turned one of this file's options into a no-op
+      before it was ever switched on.
+
+      Confirmed applied rather than inferred from a green suite, which covers
+      no views: `ActiveSupport::Cache.format_version` and
+      `marshalling_format_version` both 7.1, `raise_on_assign_to_attr_readonly`
+      true, `belongs_to_required_validates_foreign_key` false,
+      `generate_secure_token_on` `:initialize`,
+      `dom_testing_default_html_version` `:html5`, `message_serializer`
+      `:json_allow_marshal`, and `X-Download-Options` gone from the default
+      headers.
 - [x] Revisit the `TracePoint` multi-tenancy hook against modern Rails
       autoloading. It is sound on Rails 7.1 under Zeitwerk: `Company` stays
       unscoped, every other model carries the `company_id` condition, and an
