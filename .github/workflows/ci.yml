@@ -61,7 +61,7 @@ jobs:
       # wrote into app/assets/builds. Nothing compiles that on demand, so the
       # bundle has to be built here or every request spec fails on a missing
       # asset rather than on its own assertion.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
 
