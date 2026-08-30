@@ -983,6 +983,10 @@ Four options, decided on 31 Aug 2026.
 | C | Inertia + React | Rewrites all 121 views including devise's 16, moves the 22 views that call `can?` into serialized props, and replaces will_paginate, simple_calendar, breadcrumbs and the chartkick helpers |
 | D | Full SPA on a JSON API | Needs the API phase 5 lists as unbuilt, plus devise moved to token auth. Stops being a restoration |
 
+One thing the table does not capture: A is the only option that ends with
+jQuery gone. Under it select2 is replaced rather than carried, which is what
+lets `jquery` leave `package.json` entirely — see the item below.
+
 The deciding argument is that **the design system is the ViewComponent layer,
 not the CSS framework**. Tokens, a component set, and a preview page are the
 same work under A or B; picking Bootstrap 5.3 underneath only makes it cheaper
@@ -1004,9 +1008,23 @@ breadcrumbs_on_rails and chartkick's helpers.
 - [ ] **Turbo replaces turbolinks.** The gem and the npm package both go;
       24 references, mostly `data-turbolinks-track` becoming `data-turbo-track`
 - [ ] **Stimulus replaces jQuery.** Ten bundles, roughly 300 lines, one
-      controller each. select2 is the one that resists — it *is* a jQuery
-      plugin — so either it stays until last or it is replaced by a Stimulus
-      combobox, and that choice decides whether jQuery can leave at all
+      controller each
+- [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
+      leaving it in place would have kept jQuery in `package.json` for one
+      control. It attaches to exactly one element in the whole app — the member
+      select on the HR leave form — and everything it earns there is a search
+      box, a remote lookup on keyup and a `select2:select` event, all of which a
+      Stimulus controller does directly. Removing it also drops
+      `@import "select2/dist/css/select2"` and the override sitting under it in
+      `application.scss`.
+
+      Two costs, neither hidden. The three system specs on that form key off
+      `.select2-container`, `.select2-search__field` and
+      `.select2-results__option`, so all three are rewritten against the new
+      control. And select2 ships the accessibility a combobox needs — roles,
+      `aria-expanded`, `aria-activedescendant`, focus handling and keyboard
+      navigation — which becomes ours to write rather than ours to inherit.
+      That is the actual work in this item; the dropdown itself is an afternoon
 - [ ] **Page by page**, layouts first, then the screens behind the sign-in
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
