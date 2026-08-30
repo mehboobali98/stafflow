@@ -1,0 +1,5 @@
+<% user = User.new.tap { |u| u.errors.add(:email, 'is not a valid address') } %>
+<%= form_with model: user, url: '#' do |form| %>
+  <%= render(FormFieldComponent.new(form: form, attribute: :email, as: :email_field,
+                                    label: 'Email')) %>
+<% end %>
