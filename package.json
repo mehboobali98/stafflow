@@ -13,7 +13,7 @@
     "chartkick": "5.0.1",
     "date-fns": "4.1.0",
     "esbuild": "^0.25.0",
-    "jquery": "3.6.0",
+    "jquery": "4.0.0",
     "select2": "4.1.0",
     "turbolinks": "5.2.0"
   },
