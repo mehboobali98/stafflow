@@ -175,6 +175,11 @@ line numbers.
   alternately. The app runs on Rails 7.1 with 7.0 framework defaults still in
   force; the 7.1 defaults are staged in
   `config/initializers/new_framework_defaults_7_1.rb` and enabled separately.
+- **Rails 7.1 is the end of its line.** 7.1.6 is its last release, so the
+  Active Storage advisory recorded in [ROADMAP.md](ROADMAP.md) has no fix
+  available on this series and `activestorage` cannot be raised on its own.
+  Nothing is deployed, so nobody outside a local checkout can reach it — but
+  Rails 7.2 comes before the demo does.
 - `public/404.html` and `public/500.html` are served ahead of the router
   whenever the static file server is on, so the styled error pages behind
   `/404` and `/500` are only reachable when it is off. `/401` and `/403` have
