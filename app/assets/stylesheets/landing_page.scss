@@ -1,9 +1,13 @@
 @import "aos/dist/aos";
+@import 'tokens';
 
-$header_image_background_color: #00BFFF;
-$body_text_color: #444444;
-$headings_color: #fff;
-$sections_background_color: #f3f5fa;
+// The marketing page carried its own palette - a cyan, a navy and two greys
+// that appear nowhere else in the app. They are mapped onto the shared ramps
+// here rather than kept beside them: a second palette is a second system.
+$header_image_background_color: $accent;
+$body_text_color: $neutral-700;
+$headings_color: $text-on-brand;
+$sections_background_color: $surface-sunken;
 
 body {
   overflow: scroll;
@@ -21,7 +25,10 @@ body {
     color: $headings_color;
   }
   h2 {
-    color: rgba(255, 255, 255, 0.6);
+    // Was rgba(255, 255, 255, 0.6), which measures 2.81:1 on the hero blue -
+    // under the 3:1 that 24px text needs. The token is a deliberate step down
+    // from the heading rather than a transparency that happens to look softer.
+    color: $brand-100;
     margin-bottom: 50px;
     font-size: 24px;
   }
@@ -48,7 +55,7 @@ section {
       margin-bottom: 20px;
       padding-bottom: 20px;
       position: relative;
-      color: #37517e;
+      color: $brand-900;
     }
     p {
       margin-bottom: 0;
@@ -58,10 +65,10 @@ section {
 .team-section {
   .member {
     position: relative;
-    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-lg;
     padding: 30px;
     border-radius: 5px;
-    background: #fff;
+    background: $surface;
     transition: 0.5s;
     .pic {
       flex-shrink: 0;
@@ -72,7 +79,7 @@ section {
         width: 110px;
         height: 110px;
         border-radius: 50%;
-        color: #fff;
+        color: $text-on-brand;
         font-size: 34px;
         font-weight: 700;
         letter-spacing: 1px;
@@ -87,7 +94,7 @@ section {
       font-weight: 700;
       margin-bottom: 5px;
       font-size: 20px;
-      color: #37517e;
+      color: $brand-900;
     }
     span {
       display: block;
@@ -107,14 +114,14 @@ section {
 }
 .service-section {
   .icon-box {
-    box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-lg;
     padding: 50px 30px;
     transition: all ease-in-out 0.4s;
-    background: #fff;
+    background: $surface;
     .icon {
       margin-bottom: 10px;
       i {
-        color: #47b2e4;
+        color: $accent;
         font-size: 36px;
         transition: 0.3s;
       }
@@ -124,7 +131,7 @@ section {
       margin-bottom: 15px;
       font-size: 24px;
       a {
-        color: #37517e;
+        color: $brand-900;
         transition: ease-in-out 0.3s;
       }
     }
@@ -138,7 +145,7 @@ section {
     transform: translateY(-10px);
   }
   .icon-box:hover h4 a {
-    color: #47b2e4;
+    color: $accent;
   }
 }
 .about-section {
@@ -161,7 +168,7 @@ section {
     left: 0;
     top: 2px;
     font-size: 20px;
-    color: #47b2e4;
+    color: $accent;
     line-height: 1;
   }
   .btn-learn-more {
@@ -174,23 +181,23 @@ section {
     border-radius: 4px;
     transition: 0.3s;
     line-height: 1;
-    color: #47b2e4;
+    color: $accent;
     animation-delay: 0.8s;
     margin-top: 6px;
-    border: 2px solid #47b2e4;
+    border: 2px solid $accent;
   }
   .btn-learn-more:hover {
-    background: #47b2e4;
-    color: #fff;
+    background: $accent;
+    color: $text-on-brand;
     text-decoration: none;
   }
 }
 a {
-  color: #47b2e4;
+  color: $accent;
   text-decoration: none;
 }
 a:hover {
-  color: #73c5eb;
+  color: $brand-400;
   text-decoration: none;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -201,7 +208,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 997;
   padding: 15px 0;
   position: fixed;
-  background: #00BFFF;
+  background: $accent;
   .logo {
     font-size: 30px;
     margin: 0;
@@ -211,7 +218,7 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 2px;
     text-transform: uppercase;
     a {
-      color: #fff;
+      color: $text-on-brand;
     }
     img {
       max-height: 40px;
@@ -233,9 +240,9 @@ h1, h2, h3, h4, h5, h6 {
       padding: 10px 20px;
       border-radius: 30px;
       color: $header_image_background_color;
-      background: white;
+      background: $surface;
       font-size: 15px;
-      border: 2px solid #47b2e4;
+      border: 2px solid $accent;
       font-weight: 600;
     }
     .sign-in-up:hover {
@@ -249,7 +256,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px 0 10px 30px;
     font-size: 20px;
     font-weight: 500;
-    color: #fff;
+    color: $text-on-brand;
     transition: 0.3s;
     i{
       font-size: 12px;
@@ -258,7 +265,7 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
   a:hover,.active,.active:focus,li:hover {
-    color: white;
+    color: $text-on-brand;
     font-weight:  bold;
   }
 }

@@ -1,0 +1,112 @@
+// Design tokens. Raw values only — nothing here knows about Bootstrap, and
+// nothing outside here is allowed to name a colour.
+//
+// The ramps are anchored on what the app already was rather than replacing it:
+// brand-600 is #006fc8, the navbar blue, so the product stays recognisable
+// while the twenty-two colours that were picked one at a time become a scale.
+//
+// Sass variables do not cross Sprockets' require boundaries, so every
+// stylesheet that reads a token imports this file itself. It defines nothing
+// but variables, so importing it repeatedly costs nothing.
+
+// ── Brand ────────────────────────────────────────────────────────────────
+$brand-50:  #eff8ff;
+$brand-100: #dbeefe;
+$brand-200: #b8ddfd;
+$brand-300: #7cc3fb;
+$brand-400: #36a5f5;
+$brand-500: #0d8ae6;
+$brand-600: #006fc8;
+$brand-700: #0159a2;
+$brand-800: #064b85;
+$brand-900: #0b3f6e;
+
+// ── Neutral ──────────────────────────────────────────────────────────────
+$neutral-0:   #ffffff;
+$neutral-50:  #f8fafc;
+$neutral-100: #f1f5f9;
+$neutral-200: #e2e8f0;
+$neutral-300: #cbd5e1;
+$neutral-400: #94a3b8;
+$neutral-500: #64748b;
+$neutral-600: #475569;
+$neutral-700: #334155;
+$neutral-800: #1e293b;
+$neutral-900: #0f172a;
+
+// ── Status ───────────────────────────────────────────────────────────────
+// Chosen at the darkness that clears 4.5:1 on $surface, because every one of
+// these is used as text on a light background somewhere in the app.
+$success-600: #15803d;
+$warning-600: #b45309;
+$danger-600:  #b91c1c;
+
+// ── Semantic roles ───────────────────────────────────────────────────────
+// What the stylesheets should reach for. The ramps above are the palette;
+// these are the decisions made from it.
+$surface:          $neutral-0;
+$surface-sunken:   $neutral-50;
+$surface-raised:   $neutral-0;
+$surface-inverse:  $neutral-800;
+
+$text-primary:     $neutral-900;
+$text-secondary:   $neutral-500;
+$text-on-brand:    $neutral-0;
+$text-on-inverse:  $neutral-100;
+
+$border-subtle:    $neutral-200;
+$border-default:   $neutral-300;
+
+$accent:           $brand-600;
+$accent-hover:     $brand-700;
+$accent-subtle:    $brand-50;
+
+// ── Type ─────────────────────────────────────────────────────────────────
+$font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+            Arial, sans-serif;
+
+$text-xs:   0.75rem;
+$text-sm:   0.875rem;
+$text-base: 1rem;
+$text-lg:   1.125rem;
+$text-xl:   1.25rem;
+$text-2xl:  1.5rem;
+$text-3xl:  1.875rem;
+$text-4xl:  2.25rem;
+
+$leading-tight:  1.25;
+$leading-normal: 1.5;
+
+$weight-normal:   400;
+$weight-medium:   500;
+$weight-semibold: 600;
+$weight-bold:     700;
+
+// ── Space ────────────────────────────────────────────────────────────────
+// A 4px base. Bootstrap's own spacing utilities are generated from $space-4.
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.5rem;
+$space-6: 2rem;
+$space-7: 3rem;
+$space-8: 4rem;
+
+// ── Radius ───────────────────────────────────────────────────────────────
+$radius-sm:   0.25rem;
+$radius-md:   0.5rem;
+$radius-lg:   0.75rem;
+$radius-pill: 50rem;
+
+// ── Elevation ────────────────────────────────────────────────────────────
+$shadow-sm: 0 1px 2px rgba($neutral-900, 0.05);
+$shadow-md: 0 1px 3px rgba($neutral-900, 0.1), 0 1px 2px rgba($neutral-900, 0.06);
+$shadow-lg: 0 10px 15px rgba($neutral-900, 0.08), 0 4px 6px rgba($neutral-900, 0.04);
+
+// ── Layout ───────────────────────────────────────────────────────────────
+// The sidebar widths were repeated as literals in three files and had to agree
+// with each other or the content sat under the rail.
+$sidebar-width:          75px;
+$sidebar-width-expanded: 240px;
+$transition-base:        0.3s ease;
