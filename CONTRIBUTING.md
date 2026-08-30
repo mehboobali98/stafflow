@@ -39,7 +39,8 @@ Avoid vague names such as `feature/changings` or `feature/ui_changings`.
 
 Open a pull request into `develop`. Merge with a merge commit (`--no-ff`) so the
 feature's commits stay grouped and the branch point is visible in history.
-The branch is deleted automatically once the PR is merged.
+Branches are kept after merging rather than deleted, so the history a
+released commit came through stays reachable by name.
 
 Releasing is a pull request from `develop` into `main`.
 
