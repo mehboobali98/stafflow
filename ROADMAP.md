@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 235 examples, 0 pending |
+| Tests | 243 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 24 found, 24 fixed, 0 open |
+| Known defects | 26 found, 26 fixed, 0 open |
 
 ---
 
@@ -86,6 +86,37 @@ all fixed here because each one blocked the specs that found it:
 
 Three more were found and left recorded as pending specs rather than fixed
 here: see the backlog below.
+
+### Added after the phase shipped — browser coverage
+
+The phase shipped with nothing in front of the pages, and the README said so.
+What changed the calculation was two defects in one day, both found by a human
+opening a page and neither reachable by anything CI ran: `require.context`
+surviving the esbuild migration, and an I18n subtree printed into a table cell.
+
+- [x] **System specs driving a real browser.** Capybara 3.40 with Cuprite,
+      which speaks CDP to Chrome directly. No chromedriver, so none of the
+      version coupling that left `webdrivers` pinning `selenium-webdriver`
+      below 4.0 until both were deleted in phase 3. `js_errors: true` is the
+      part that earns its place: an uncaught exception in the page raises in
+      the example rather than sitting in a console nothing reads
+- [x] Eight examples over the three pages carrying the most JavaScript — the
+      landing page, sign-in through a subdomain to the dashboard, and the HR
+      leave queue. `chromium` is installed in the Dockerfile; CI installs no
+      browser, because the runner image already carries `google-chrome`
+
+Two things are worth recording about how this fits the rest of the suite.
+`driven_by :cuprite` does not look a driver up — Rails registers it itself and
+overwrites anything registered under that name first, so a
+`Capybara.register_driver(:cuprite)` block would have looked like configuration
+and silently done nothing. And a browser has no equivalent of `host!`: the
+tenant is steered by moving `Capybara.app_host` between the apex and a
+subdomain of it, which works because Chromium routes any `*.localhost` name to
+loopback without consulting DNS.
+
+The first run of the first browser spec found two defects. Both are fixed here,
+on the same reasoning as the three above: each one blocked the spec that found
+it. Both are in the backlog.
 
 ---
 
@@ -587,6 +618,14 @@ work the framework bumps were blocking.
       went with the Webpack channels entry recorded in the defect backlog
       below, leaving four.
 
+      The verification those four were waiting on now exists — the system
+      specs in the phase 1 amendment assert the globals jquery, select2,
+      bootstrap and chartkick each leave on `window`, and fail on an uncaught
+      exception in the page. That is not the same as having verified them. The
+      specs reach three pages, and a major of any of the four can break a
+      fourth page they never load. Taking them means extending the specs to
+      whatever each one touches, which is work per PR rather than a rerun.
+
       `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
       reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
       and no `.jbuilder` template exists. The system-test trio arrived with
@@ -596,6 +635,11 @@ work the framework bumps were blocking.
       six pulled in behind them. If system specs are written, they will want
       a current Capybara and a driver strategy chosen then, not a 2019
       Selenium held in place by a Gemfile.
+
+      They were, in the phase 1 amendment above: capybara 3.40 and cuprite,
+      eight gems back into the lockfile against the ten that came out. The
+      driver strategy chosen then was CDP rather than a driver binary, which
+      is the coupling `webdrivers` had been pinning around.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
@@ -867,6 +911,13 @@ repository runs:
 | --- | --- |
 | `app/javascript/channels/index.js` | `require.context`, a Webpack API with no esbuild equivalent. The esbuild migration added `require("./channels")` to `application.js` and carried this file over unconverted. esbuild resolves `require.context` to a property on its own require shim rather than rejecting it, so the build stayed green and the bundle threw `Zh.context is not a function` on line 4 — taking every line below it with it, on every page. No jQuery global, no Bootstrap, no select2, no Chartkick, no tooltip or pagination handlers. The landing page rendered as an empty blue block because AOS never initialised and its elements hold `opacity: 0`. Nothing here has any channels: no `*_channel.js` file existed, nothing imported `consumer.js`, and the glob matched nothing even under Webpack |
 | `app/models/applied_leave.rb` | No validation on `leave_duration_type`, which is permitted straight from params, so any integer reached the column. The views render `t("applied_leave.links.#{leave_duration_name}")`, and `leave_duration_name` looks the value up in `LEAVE_DURATION.invert` — an unlisted value gives `nil`, the key interpolates to the bare `applied_leave.links.`, and I18n answers a bare key with the whole subtree. The HR review queue printed the entire `links` hash into the leave-duration cell, for every user of that tenant, from one crafted request by any employee. Found by taking a screenshot of the page for the phase 6 capture |
+
+Found by the first run of the first system spec, both fixed alongside it:
+
+| Location | Problem |
+| --- | --- |
+| `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
+| `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
 
 ---
 
