@@ -579,9 +579,13 @@ work the framework bumps were blocking.
       what CI reaches. They were split on that line: the four CI genuinely
       exercises were taken, puma was taken and verified by booting it, the one
       that proposed raising a gem nothing uses was answered by deleting the
-      gem instead, and the five front-end updates are held for verification
+      gem instead, and the five front-end updates were held for verification
       that can see them. The twelfth is Rails 8.1, which is a phase and not
       a bump.
+
+      One of the five closed itself shortly afterwards. `@rails/actioncable`
+      went with the Webpack channels entry recorded in the defect backlog
+      below, leaving four.
 
       `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
       reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
