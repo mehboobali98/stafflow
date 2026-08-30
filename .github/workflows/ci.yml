@@ -42,7 +42,7 @@ jobs:
       ELASTICSEARCH_URL: http://localhost:9200
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The variant specs need libvips, which the 7.0 defaults select over
       # ImageMagick. The Dockerfile installs it as libvips42, the Debian name;
@@ -81,7 +81,7 @@ jobs:
     name: RuboCop
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install MySQL client libraries
         run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
       - uses: ruby/setup-ruby@v1
@@ -94,7 +94,7 @@ jobs:
     name: Brakeman
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install MySQL client libraries
         run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
       - uses: ruby/setup-ruby@v1
