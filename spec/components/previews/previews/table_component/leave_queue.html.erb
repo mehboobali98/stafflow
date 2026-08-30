@@ -1,0 +1,15 @@
+<%= render(TableComponent.new) do |table| %>
+  <% table.with_head do %>
+    <tr><th>Applicant</th><th>Type</th><th>Status</th><th></th></tr>
+  <% end %>
+  <% table.with_body do %>
+    <tr>
+      <td>employee@example.com</td>
+      <td>Annual</td>
+      <td><%= render(BadgeComponent.new(variant: :pending)) { 'Pending' } %></td>
+      <td class="text-end">
+        <%= render(ButtonComponent.new(variant: :success, size: :sm)) { 'Approve' } %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>

@@ -1,0 +1,9 @@
+<%= tag.div(**options) do %>
+  <% if header? %>
+    <div class="card-header"><%= header %></div>
+  <% end %>
+  <div class="card-body"><%= content %></div>
+  <% if footer? %>
+    <div class="card-footer"><%= footer %></div>
+  <% end %>
+<% end %>

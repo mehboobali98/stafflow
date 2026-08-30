@@ -1,0 +1,5 @@
+<div class="d-flex gap-2 align-items-center">
+  <% ButtonComponent::SIZES.each_key do |size| %>
+    <%= render(ButtonComponent.new(size: size)) { "Size #{size}" } %>
+  <% end %>
+</div>
