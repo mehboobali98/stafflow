@@ -2,6 +2,7 @@ class AppliedLeave < ApplicationRecord
   include ActiveModel::Transitions
   LEAVE_DURATION = HashWithIndifferentAccess.new({ full_day: 1, half_day: 2 }).freeze
   validates :applied_from, :applied_till, presence: true
+  validates :leave_duration_type, inclusion: { in: LEAVE_DURATION.values }
   validate :validate_past_leave_date, on: :create
   validate :validate_leave_dates
   belongs_to :user_leave
