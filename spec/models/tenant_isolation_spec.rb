@@ -3,13 +3,14 @@
 require 'rails_helper'
 
 # The application is multi-tenant by default scope rather than by discipline:
-# ApplicationRecord.inherited installs a TracePoint that gives every subclass
+# ApplicationRecord.inherited gives every subclass
 #
-#   default_scope { where(company_id: Company.current_company_id) }
+#   default_scope { multitenant? ? where(company_id: ...) : all }
 #
-# unless the model opts out with set_not_multitenant. These specs exist to fail
-# loudly if that mechanism is ever weakened, because nothing else in the code
-# would notice — queries would simply start returning other companies' rows.
+# evaluated per query, so a model opting out with set_not_multitenant is read
+# correctly wherever in the body the call sits. These specs exist to fail loudly
+# if that mechanism is ever weakened, because nothing else in the code would
+# notice — queries would simply start returning other companies' rows.
 RSpec.describe 'tenant isolation' do
   let(:acme)   { create(:company, name: 'Acme',   subdomain: 'acme') }
   let(:globex) { create(:company, name: 'Globex', subdomain: 'globex') }
@@ -37,6 +38,48 @@ RSpec.describe 'tenant isolation' do
                                       "#{model} query carries no company_id condition"
         end
       end
+    end
+
+    def enabled_tracepoints
+      ObjectSpace.each_object(TracePoint).count(&:enabled?)
+    end
+
+    # There is nothing else to assert this against: a hook left enabled changes
+    # no query and raises nothing, it just accumulates. The scoping mechanism
+    # has no business installing process-wide hooks at all, so the count simply
+    # must not move.
+    it 'installs no process-wide hook when a model is defined' do
+      expect { Class.new(ApplicationRecord) { self.table_name = 'departments' } }
+        .not_to(change { enabled_tracepoints })
+    end
+
+    it 'installs no process-wide hook when a model opts out either' do
+      expect do
+        Class.new(ApplicationRecord) do
+          self.table_name = 'companies'
+          set_not_multitenant
+        end
+      end.not_to(change { enabled_tracepoints })
+    end
+
+    # The property the whole mechanism turns on: `inherited` runs before the
+    # class body, so the opt-out cannot be read when the scope is installed.
+    # Deciding it per query gives the same answer wherever the call sits.
+    it 'honours set_not_multitenant declared at the end of a class body' do
+      model = Class.new(ApplicationRecord) do
+        self.table_name = 'companies'
+        def self.something_else = nil
+        set_not_multitenant
+      end
+
+      expect(model).not_to be_multitenant
+      expect(model.all.to_sql).not_to include('company_id')
+    end
+
+    it 'scopes a model that never opts out, wherever its body ends' do
+      model = Class.new(ApplicationRecord) { self.table_name = 'departments' }
+
+      as_tenant(acme) { expect(model.all.to_sql).to include('company_id') }
     end
   end
 
