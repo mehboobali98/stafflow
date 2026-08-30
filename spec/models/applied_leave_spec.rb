@@ -74,7 +74,7 @@ RSpec.describe AppliedLeave do
                                      leave_duration_type: 99)
 
       expect(record.leave_duration_name).to be_nil
-      expect(I18n.t("applied_leave.links.#{record.leave_duration_name}")).to be_a(Hash)
+      expect(I18n.t("applied_leave.labels.#{record.leave_duration_name}")).to be_a(Hash)
     end
 
     # Rails runs custom validators alongside the presence validator rather than
