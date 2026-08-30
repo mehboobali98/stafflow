@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 233 examples, 0 pending |
+| Tests | 235 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 23 found, 23 fixed, 0 open |
+| Known defects | 24 found, 24 fixed, 0 open |
 
 ---
 
@@ -866,6 +866,7 @@ repository runs:
 | Location | Problem |
 | --- | --- |
 | `app/javascript/channels/index.js` | `require.context`, a Webpack API with no esbuild equivalent. The esbuild migration added `require("./channels")` to `application.js` and carried this file over unconverted. esbuild resolves `require.context` to a property on its own require shim rather than rejecting it, so the build stayed green and the bundle threw `Zh.context is not a function` on line 4 — taking every line below it with it, on every page. No jQuery global, no Bootstrap, no select2, no Chartkick, no tooltip or pagination handlers. The landing page rendered as an empty blue block because AOS never initialised and its elements hold `opacity: 0`. Nothing here has any channels: no `*_channel.js` file existed, nothing imported `consumer.js`, and the glob matched nothing even under Webpack |
+| `app/models/applied_leave.rb` | No validation on `leave_duration_type`, which is permitted straight from params, so any integer reached the column. The views render `t("applied_leave.links.#{leave_duration_name}")`, and `leave_duration_name` looks the value up in `LEAVE_DURATION.invert` — an unlisted value gives `nil`, the key interpolates to the bare `applied_leave.links.`, and I18n answers a bare key with the whole subtree. The HR review queue printed the entire `links` hash into the leave-duration cell, for every user of that tenant, from one crafted request by any employee. Found by taking a screenshot of the page for the phase 6 capture |
 
 ---
 
