@@ -17,10 +17,10 @@ somewhere to run.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 228 examples, 0 pending |
+| Tests | 233 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 22 found, 22 fixed, 0 open |
+| Known defects | 23 found, 23 fixed, 0 open |
 
 ---
 
@@ -842,6 +842,13 @@ Phase 3, with a regression spec:
 | `app/controllers/events_controller.rb` | `set_event` defined twice; the second silently replaced the first, which was dead. `.rubocop_todo.yml` excluded `Lint/DuplicateMethods` for the file rather than removing the duplicate |
 | `app/controllers/applied_leaves_controller.rb:9` | The controller-wide breadcrumb points at `member_applied_leaves_path`, which needs a member id. `new_applied_leave_by_hr` is reached from the company-wide list and carries none, so the layout raised and the page 500d for HR, the only role that can reach it |
 | `app/controllers/search_controller.rb`, `app/views/search/search_data.html.erb:1` | The Elasticsearch query was not partitioned by company, so `@results.total_count` counted every tenant's hits. The rows were right — the default scope drops other tenants when the ids are loaded — but the number above them was not, and the empty-state branch tested it: a name only another company had left the view on the results branch with nothing to render. Searchkick also logged the ids it could not load, naming other tenants' records |
+
+Found after phase 3 shipped, by opening the page rather than by any check the
+repository runs:
+
+| Location | Problem |
+| --- | --- |
+| `app/javascript/channels/index.js` | `require.context`, a Webpack API with no esbuild equivalent. The esbuild migration added `require("./channels")` to `application.js` and carried this file over unconverted. esbuild resolves `require.context` to a property on its own require shim rather than rejecting it, so the build stayed green and the bundle threw `Zh.context is not a function` on line 4 — taking every line below it with it, on every page. No jQuery global, no Bootstrap, no select2, no Chartkick, no tooltip or pagination handlers. The landing page rendered as an empty blue block because AOS never initialised and its elements hold `opacity: 0`. Nothing here has any channels: no `*_channel.js` file existed, nothing imported `consumer.js`, and the glob matched nothing even under Webpack |
 
 ---
 
