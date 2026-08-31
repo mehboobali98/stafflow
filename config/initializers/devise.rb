@@ -296,12 +296,29 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  # ==> Turbolinks configuration
-  # If your app is using Turbolinks, Turbolinks::Controller needs to be included to make redirection work correctly:
+  # ==> Turbo configuration
+  # Devise still defaults these to the pre-Turbo :ok and :found, so an app whose
+  # initializer predates Turbo - this one is from 2021 - is on them.
   #
-  # ActiveSupport.on_load(:devise_failure_app) do
-  #   include Turbolinks::Controller
-  # end
+  # error_status is the one with something to lose today. Turbo Drive discards
+  # a 200 answer to a form submission without rendering it, so on the default a
+  # wrong password would leave the sign-in page sitting there having apparently
+  # done nothing.
+  #
+  # redirect_status is precaution rather than a fix for anything here, and the
+  # distinction is worth writing down because the usual explanation is wrong.
+  # Turbo follows a redirect with fetch, which downgrades 302 to GET only when
+  # the request was a POST - so a genuine PATCH answered with 302 would arrive
+  # back as a PATCH. No Rails form can produce that: form_with method: :patch
+  # renders method="post" with a hidden _method, which is what the settings
+  # form does. It becomes reachable the moment a link carries
+  # data-turbo-method, because Turbo puts that method on the wire literally.
+  #
+  # :unprocessable_content, not the :unprocessable_entity every guide writes:
+  # Rack 3.2 deprecated that spelling and warns on it, and this suite has no
+  # deprecation warnings in it.
+  config.responder.error_status = :unprocessable_content
+  config.responder.redirect_status = :see_other
 
   # ==> Configuration for :registerable
 

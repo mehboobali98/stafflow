@@ -27,7 +27,7 @@ class UsersController < ApplicationController
       else
         format.html do
           flash.now[:error] = @user.errors.full_messages
-          render :new
+          render :new, status: :unprocessable_content
         end
       end
     end
@@ -50,7 +50,7 @@ class UsersController < ApplicationController
       else
         format.html do
           flash.now[:error] = @user.errors.full_messages
-          render :edit
+          render :edit, status: :unprocessable_content
         end
       end
     end
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
       else
         flash.now[:error] = current_user.errors.full_messages
         @user = current_user
-        format.html { render :edit_password }
+        format.html { render :edit_password, status: :unprocessable_content }
       end
     end
   end
