@@ -106,6 +106,35 @@ RSpec.describe 'Turbo Drive', type: :system do
     end
   end
 
+  # Turbo caches a snapshot of the page it is leaving and restores it on a back
+  # navigation, which is a new hazard for anything that injects DOM of its own:
+  # the injected markup is in the snapshot, and the script that injected it
+  # runs again on restore. select2 is the one thing here that does that, and it
+  # produced two controls over one select. Measured against turbolinks before
+  # blaming Turbo for it - turbolinks gave one container either way.
+  describe 'a cached page carrying a select2 control' do
+    let!(:hr) do
+      as_tenant(company) do
+        create(:user, :hr, company: company, department: department, email: 'hr@example.com')
+      end
+    end
+
+    before { sign_in_as(company, hr) }
+
+    it 'has one control per select after going away and coming back' do
+      visit_tenant(company, new_applied_leave_by_hr_applied_leaves_path)
+      expect(page).to have_css('.select2-container')
+
+      click_on I18n.t('sidebar.departments')
+      expect(page).to have_current_path(departments_path)
+      page.go_back
+
+      expect(page).to have_current_path(new_applied_leave_by_hr_applied_leaves_path)
+      expect(page).to have_css('#applied_leave_member_id', visible: :all, count: 1)
+      expect(page).to have_css('.select2-container', count: 1)
+    end
+  end
+
   # rails-ujs is still here - it is what drives the `.js.erb` responses and the
   # data-method links, and it leaves with jQuery in the Stimulus step rather
   # than here. Both libraries want the same clicks, and the arrangement that
