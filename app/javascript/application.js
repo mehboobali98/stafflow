@@ -1,5 +1,5 @@
 require("@rails/ujs").start()
-require("turbolinks").start()
+import "@hotwired/turbo"
 require("@rails/activestorage").start()
 window.$ = window.jQuery = require("jquery")
 // Under CommonJS select2's UMD wrapper exports a factory rather than
@@ -11,7 +11,7 @@ require("./settings")
 require('./user')
 require("bootstrap")
 import "chartkick/chart.js"
-document.addEventListener("turbolinks:load", function() {
+document.addEventListener("turbo:load", function() {
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $('[data-toggle="popover"]').popover();
