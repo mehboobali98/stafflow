@@ -159,6 +159,7 @@ a background email.
 | Auth | Devise |
 | Authorization | CanCanCan |
 | Assets | esbuild + Sprockets, Bootstrap 5 |
+| Navigation | Turbo Drive; rails-ujs still drives the `data-method` links and `.js.erb` responses |
 | Charts | Chartkick |
 | Scheduling | whenever |
 
@@ -188,14 +189,14 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 262 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 299 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are covered only where the system specs below
   reach them, and controllers only through request specs for authentication,
   tenant routing, the apex company lookup, search and its authorization,
   sign-out, leave updates, the HR leave form and the error paths.
 - **The browser is covered where the JavaScript is, not across the app.**
-  Twenty-one system specs drive headless Chromium through Capybara and Cuprite,
+  Forty-six system specs drive headless Chromium through Capybara and Cuprite,
   and every page carrying a bundle of its own is now loaded by one that asserts
   what that bundle does: the landing page, sign-up, sign-in through a tenant
   subdomain to the dashboard, the HR leave queue, the HR leave form and its
@@ -215,8 +216,10 @@ line numbers.
   them, so nothing outside that file names a colour. `Button`, `Badge`, `Card`,
   `Table`, `PageHeader`, `EmptyState` and `FormField` exist with a Lookbook
   preview each, and the HR leave queue, the employee form and settings are
-  built from them. Everything else still hand-writes its markup. [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining
-  views, `FormField`, Turbo and Stimulus — and runs before the live demo.
+  built from them. Everything else still hand-writes its markup.
+  [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining views, a modal,
+  Stimulus replacing jQuery and the select2 control it is the last caller of —
+  and runs before the live demo.
 - **Appearance is reviewed by eye, not asserted.** The system specs assert
   behaviour, so they stay green against a layout that has collapsed — that is
   demonstrated in the roadmap rather than assumed. The exception is colour:
