@@ -3,7 +3,7 @@
   <%= render "devise/shared/error_messages", resource: resource %>
   <div class="row mb-3">
     <div class='col-3 mt-2'>
-      <%= f.label t('forms.labels.email') %>
+      <%= f.label :email, t('forms.labels.email') %>
     </div>
     <div class='col-9'>
       <%= f.email_field :email, class: "form-control pl-5 pr-5" %>

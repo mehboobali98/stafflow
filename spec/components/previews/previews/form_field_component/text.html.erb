@@ -1,0 +1,4 @@
+<%= form_with model: User.new, url: '#' do |form| %>
+  <%= render(FormFieldComponent.new(form: form, attribute: :email, as: :email_field,
+                                    label: 'Email', hint: 'They sign in with this.')) %>
+<% end %>

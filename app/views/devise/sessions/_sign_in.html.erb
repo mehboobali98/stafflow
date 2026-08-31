@@ -2,7 +2,7 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |form| %>
   <div class="row mb-2">
     <div class='col-3 mt-2'>
-      <%= form.label t('forms.labels.email'), class: 'form-label' %><br />
+      <%= form.label :email, t('forms.labels.email'), class: 'form-label' %><br />
     </div>
     <div class='col-9'>
       <%= form.email_field :email, required: true, class: 'form-control', value: params.dig(:email) %>
@@ -11,7 +11,7 @@
   </div>
   <div class="row mb-2">
     <div class='col-3 mt-2'>
-      <%= form.label t('forms.labels.password') %>
+      <%= form.label :password, t('forms.labels.password') %>
     </div>
     <div class='col-9'>
       <%= form.password_field :password, required: true, class: 'form-control' %>
@@ -21,7 +21,7 @@
   <% if devise_mapping.rememberable? %>
     <div class="mt-4 mb-2">
       <%= form.check_box :remember_me, class: 'form-check-input' %>
-      <%= form.label t('forms.labels.remember_me')%>
+      <%= form.label :remember_me, t('forms.labels.remember_me') %>
     </div>
   <% end %>
   <div class="mb-2">

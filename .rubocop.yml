@@ -49,6 +49,12 @@ Layout/LineLength:
 Style/HashSyntax:
   EnforcedShorthandSyntax: either
 
+# Component initializers take a keyword per option, which is the API. The cop
+# guards against callers having to remember positional order, and keyword
+# arguments do not have that problem.
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
