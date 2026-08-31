@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', function () {
+$(document).on('turbo:load', function () {
   $('#sidebar_toggle_btn').on('click', function () {
     $('.sidebar').toggleClass('active');
     if ($('.sidebar').hasClass('active')) {
