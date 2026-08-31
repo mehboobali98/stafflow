@@ -2,7 +2,7 @@
 <%= form_for(resource, as: resource_name, url: display_companies_home_index_url, method: :get) do |form| %>
   <div class='row mb-2 mt-4'>
     <div class='col-4 mt-1'>
-      <%= form.label t('forms.labels.email'), class: 'form-label' %>
+      <%= form.label :email, t('forms.labels.email'), class: 'form-label' %>
     </div>
     <div class='col-8'>
       <%= form.email_field :email, required: true, class: 'form-control pl-5 pr-5' %>
