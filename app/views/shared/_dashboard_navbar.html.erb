@@ -1,4 +1,3 @@
-<%= javascript_include_tag 'navbar' %>
 <nav class="navbar navbar-expand-lg navbar-light dashboard-navbar">
 <div class="container-fluid">
   <div class="navbar-brand"><%= @current_company&.name %></div>
@@ -10,7 +9,9 @@
       <div class="notification-container">
         <%= link_to notifications_path, class: 'nav-item text-white' do %>
           <i class='fa fa-bell fa-lg'>
-          </i><span class='counter counter-lg border border-danger p-1 ms-1 bg-danger ps-2 pe-2' id='notifications_count'></span>
+          </i><span class='counter counter-lg border border-danger p-1 ms-1 bg-danger ps-2 pe-2' id='notifications_count'
+                    data-controller='notification-count'
+                    data-notification-count-url-value='<%= count_notifications_path %>'></span>
         <% end %>
       </div>
     </div>
