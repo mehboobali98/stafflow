@@ -8,12 +8,11 @@
     <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
     <%= stylesheet_link_tag 'sidebar' %>
     <%= stylesheet_link_tag 'dashboard' %>
-    <%= javascript_include_tag 'sidebar', 'data-turbo-track': 'reload' %>
   </head>
-  <body>
+  <body data-controller="sidebar">
     <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
     <%= render partial: "shared/sidebar" %>
-    <div class="home-content">
+    <div class="home-content" data-sidebar-target="content">
       <%= render partial: "shared/dashboard_navbar" %>
       <%= render partial: "shared/flash_message" %>
       <div class="page-shell">
