@@ -19,7 +19,7 @@ class SettingsController < ApplicationController
       else
         format.html do
           flash.now[:alert] = @setting.errors.full_messages
-          render :settings
+          render :settings, status: :unprocessable_content
         end
       end
     end

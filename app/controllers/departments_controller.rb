@@ -26,7 +26,7 @@ class DepartmentsController < ApplicationController
           redirect_to departments_path, notice: t('department.created')
         else
           flash[:error] = @department.errors.full_messages
-          render :new
+          render :new, status: :unprocessable_content
         end
       end
     end
