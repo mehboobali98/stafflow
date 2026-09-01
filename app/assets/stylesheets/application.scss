@@ -54,15 +54,6 @@
   border-bottom: 1px solid $border-subtle;
 }
 
-// side bar custom class for toggling. It is added when the sidebar is active
-.sidebar-toggle {
-  position: absolute;
-  height: 100%;
-  left: $sidebar-width-expanded;
-  width: calc(100% - #{$sidebar-width-expanded});
-  transition: all $transition-base;
-}
-
 .notification-scrollable-container {
   max-height: 50vh;
   overflow-y: scroll;

@@ -1,13 +1,13 @@
-<%= javascript_include_tag 'settings' %>
-
 <%= render(PageHeaderComponent.new(title: t('settings.title'))) %>
 
-<%= form_with scope: :setting, url: setting_path(setting), method: :patch, local: true, id: 'setting_form' do |form| %>
+<%= form_with scope: :setting, url: setting_path(setting), method: :patch, local: true, id: 'setting_form',
+              data: { controller: 'dirty-form', action: 'change->dirty-form#enable input->dirty-form#enable' } do |form| %>
   <%= render(CardComponent.new(class: 'w-75')) do %>
     <%= render(FormFieldComponent.new(form: form, attribute: :tax_rate, as: :number_field,
                                       in: MIN_TAX_RATE..MAX_TAX_RATE, step: 0.1, required: true)) %>
     <%= render(FormFieldComponent.new(form: form, attribute: :leave_resets_at, as: :date_field,
                                       required: true)) %>
-    <%= form.submit disabled: true, class: 'btn btn-primary', id: 'submit_button' %>
+    <%= form.submit disabled: true, class: 'btn btn-primary', id: 'submit_button',
+                    data: { 'dirty-form-target': 'submit' } %>
   <% end %>
 <% end %>

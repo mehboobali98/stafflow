@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 299 examples, 0 pending |
+| Tests | 301 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 30 found, 30 fixed, 0 open |
@@ -1126,8 +1126,72 @@ breadcrumbs_on_rails and chartkick's helpers.
       Two stacked dropdowns over one select. Attributed rather than assumed: the
       same probe against develop under turbolinks reports one container either
       way, so it arrived with Turbo
-- [ ] **Stimulus replaces jQuery.** Ten bundles, roughly 300 lines, one
-      controller each
+- [ ] **Stimulus replaces jQuery.** Twelve entry points, roughly 360 lines.
+      Started: the seven with no AJAX in them are six controllers, and jQuery
+      is still here for the five that have.
+
+      Six rather than seven because two pairs were the same behaviour written
+      twice. `user_leaves.js` and `users_benefit_creation.js` both enabled the
+      field beside a ticked checkbox, and found that field differently — one
+      kept a CSS selector in a data attribute, the other an element id, and
+      neither could be read off the markup. And `signup.js` was character for
+      character the top of `user.js`, which is bundled into `application.js`
+      and therefore ran on every page: on the one page with a `#company` field
+      the slug was computed twice and written to the same two elements, which
+      is why neither copy was ever noticed. "One controller each" was the wrong
+      unit — the right one is one controller per behaviour.
+
+      Registrations are written out by hand in `controllers/index.js` rather
+      than swept up from the directory. The helpers that do the sweeping read
+      an importmap or a webpack `require.context`, and the second of those is
+      the defect that threw on every page of this application for two releases
+      after the esbuild migration. esbuild resolves imports statically, so a
+      name that is wrong here fails the build.
+
+      What this buys beyond the framework swap is that the per-page bundle goes
+      away: seven `javascript_include_tag` calls are gone from views, and with
+      them the arrangement recorded during the Turbo work where a body bundle
+      is re-executed on every visit and its document-level handlers accumulate
+      one copy per navigation.
+
+      The controllers set no initial state on connect. The disabled fields and
+      the disabled submit are rendered disabled, so a browser that never runs
+      the JavaScript still gets what the server meant; `toggle-field`'s
+      `connect` only re-syncs, which is what a Turbo cache restore needs.
+
+      Three dead things fell out of auditing what the bundles touched. Nothing
+      in this application carries `data-toggle="tooltip"` or
+      `data-toggle="popover"`, so the initialiser `application.js` ran on every
+      page load selected nothing — removed rather than converted. The one
+      `data-toggle` that does exist is a tab in Bootstrap 4's spelling, which 5
+      has not read since the framework moved, on a one-item strip with no pane
+      behind it, so renaming it would point Bootstrap at something that is not
+      there; it is a heading styled as a tab and is a `span` now. And
+      `layouts/_navbar.html.erb` is rendered by nothing — only
+      `shared/_dashboard_navbar` is, and the two had drifted apart.
+
+      The sidebar collapse was rewritten rather than transcribed, because it
+      did not toggle a class, it swapped one: `home-content` came off and
+      `sidebar-toggle` went on, so after a click the class the stylesheet keyed
+      off had left the document, and the two rules behind them repeated four of
+      their six declarations. One `expanded` modifier on each half replaces
+      both. Reviewed as screenshots in both states, which is also how a
+      font-load race was told apart from a regression — the first capture had
+      no icons in it because Sprockets was still compiling the webfonts.
+
+      `spec/javascript/bundling_spec.rb` strips comments before scanning. It
+      greps source text for `require.context`, and `controllers/index.js` is
+      exactly the file with a reason to name that defect in the comment
+      explaining itself. Checked that it still fails on a planted call.
+- [ ] **The `.js.erb` responses become Turbo Streams.** What is left of the
+      jQuery is five entry points that fetch a `.js.erb` and eval it, and nine
+      templates that answer them. Every one of those templates is the same
+      shape — replace one container's contents with a re-rendered partial —
+      which is what a Turbo Stream does, so this is a translation rather than a
+      redesign. It is what `remote: true`, `dataType: 'script'` and rails-ujs
+      all leave with, and it is where the `turbo-rails` gem comes back: the
+      Turbo step took it out on the grounds that it would return when something
+      here renders a `turbo_stream`
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
@@ -1150,7 +1214,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 46 system specs are what makes this safe, and they are also going to get in
+The 48 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need

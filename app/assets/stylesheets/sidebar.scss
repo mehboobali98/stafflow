@@ -87,7 +87,7 @@ body {
   }
 }
 
-.sidebar.active {
+.sidebar.expanded {
   width: $sidebar-width-expanded;
   .logo-content .logo {
     opacity: 1;
@@ -108,4 +108,12 @@ body {
   left: $sidebar-width;
   width: calc(100% - #{$sidebar-width});
   transition: all $transition-base;
+
+  // The expanded panel is wider, so the content beside it starts further over.
+  // Only the two declarations that differ live here; the pair of near-identical
+  // rules this replaces is described in sidebar_controller.js.
+  &.expanded {
+    left: $sidebar-width-expanded;
+    width: calc(100% - #{$sidebar-width-expanded});
+  }
 }
