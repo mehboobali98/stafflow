@@ -1,5 +1,6 @@
 require("@rails/ujs").start()
 import "@hotwired/turbo"
+import "./controllers"
 require("@rails/activestorage").start()
 window.$ = window.jQuery = require("jquery")
 // Under CommonJS select2's UMD wrapper exports a factory rather than
@@ -23,16 +24,9 @@ require("select2")()
 document.addEventListener("turbo:before-cache", function () {
   $("#applied_leave_member_id.select2-hidden-accessible").select2("destroy")
 })
-require("./settings")
 require('./user')
 require("bootstrap")
 import "chartkick/chart.js"
-document.addEventListener("turbo:load", function() {
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-    $('[data-toggle="popover"]').popover();
-  })
-})
 
 $(document).on('click', '.leave-pagination-wrapper a', function(event) {
   event.preventDefault();

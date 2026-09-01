@@ -1,11 +1,11 @@
-<%= javascript_include_tag 'signup' %>
 <div class='row vh-100 w-100'>
   <div class='col-lg-6 col-md-12 d-flex align-items-center justify-content-center'>
     <div class='w-75'>
       <h2><%= t('headings.signup') %></h2>
       <hr>
       <div>
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+                     html: { data: { controller: 'subdomain' } }) do |f| %>
           <%= error_messages(:first_name) %>
           <div class="form-floating mb-2">
             <%= f.text_field :first_name, required: true, class: 'form-control', placeholder: t('forms.labels.fname') %>
@@ -38,12 +38,14 @@
           </div>
           <%= f.fields_for :company_attributes do |form| %>
             <div class="form-floating mb-2">
-              <%= form.text_field :name, required: true, id: "company", class: 'form-control', placeholder: 'Company' %>
+              <%= form.text_field :name, required: true, id: "company", class: 'form-control', placeholder: 'Company',
+                                  data: { 'subdomain-target': 'source', action: 'input->subdomain#update' } %>
               <%= form.label :name, t('company.label') + '*', for: 'company' %>
             </div>
             <%= error_messages(:"company.subdomain") %>
             <div class="field">
-              <%= form.text_field :subdomain, required: true, readonly: true, id: "subdomain", class: 'form-control d-none' %>
+              <%= form.text_field :subdomain, required: true, readonly: true, id: "subdomain", class: 'form-control d-none',
+                                  data: { 'subdomain-target': 'field' } %>
             </div>
           <%end%>
           <div class='card mb-2 p-2 bg-light' id='subdomain_area'>

@@ -492,6 +492,7 @@ en:
         delete_failure: 'Unable to delete event'
       error:
         event_year: 'cannot have more than 4 digits'
+        invalid_year_alert: 'Event date cannot have a year of more than 4 digits'
         event_date: 'cannot be in the past'
         nil_date_input: 'date cannot be empty'
         invalid_date: 'is invalid'
