@@ -1,4 +1,4 @@
-<%= javascript_include_tag 'users_benefit_creation', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'users_benefit_creation' %>
 
 <%= form_with model: [@user, @users_benefits], url: mass_create_member_users_benefits_path(@user), local: true do |form| %>
   <div class='p-3'>

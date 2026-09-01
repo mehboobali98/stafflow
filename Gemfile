@@ -23,8 +23,6 @@ gem 'jsbundling-rails', '~> 1.3'
 # only exist undigested, and every icon 404s once assets are precompiled. This
 # gem uses the asset helpers, so the digests match.
 gem 'font-awesome-sass', '~> 5.15.1'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password

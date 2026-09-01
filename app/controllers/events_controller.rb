@@ -43,7 +43,7 @@ class EventsController < ApplicationController
           redirect_to events_path, notice: t('event.messages.success.create_success')
         else
           flash.now[:error] = @event.errors.full_messages
-          render :new
+          render :new, status: :unprocessable_content
         end
       end
     end
@@ -69,7 +69,7 @@ class EventsController < ApplicationController
           redirect_to events_path, notice: t('event.messages.success.update_success')
         else
           flash.now[:error] = @event.errors.full_messages
-          render :edit
+          render :edit, status: :unprocessable_content
         end
       end
     end

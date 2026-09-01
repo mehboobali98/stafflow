@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 292 examples, 0 pending |
+| Tests | 299 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 29 found, 29 fixed, 0 open |
+| Known defects | 30 found, 30 fixed, 0 open |
 
 ---
 
@@ -1045,8 +1045,87 @@ breadcrumbs_on_rails and chartkick's helpers.
       scenario now and does catch it: removing the layout config fails all ten.
       And Lookbook is development-only, so whether the demo exposes the previews
       is a phase 4 question, not settled here
-- [ ] **Turbo replaces turbolinks.** The gem and the npm package both go;
-      24 references, mostly `data-turbolinks-track` becoming `data-turbo-track`
+- [x] **Turbo replaces turbolinks.** The line above priced this as a rename,
+      and the renames were the smallest part of it. `turbolinks:load` becomes
+      `turbo:load` in two files, and `data-turbolinks-track` becomes
+      `data-turbo-track` in the seven places it sits in a `<head>` — it is
+      dropped from the seven where it does not, because Turbo compares tracked
+      elements between head snapshots only, so the attribute on a body script
+      was configuring nothing while looking like it configured something.
+
+      What the rename does not cover is that **Turbo Drive intercepts form
+      submissions and turbolinks did not**, and it throws away a 200 answer to
+      one without rendering it. Nine actions re-render a form with its errors
+      and every one answered 200 — including, a layer down, Devise, which still
+      defaults `error_status` to `:ok` for apps predating Turbo and whose
+      initializer here is from 2021. Left alone, a wrong password would have
+      answered with a body the browser never draws: the sign-in page sitting
+      unchanged, no message, nothing in the console either. All nine now say
+      `:unprocessable_content` — not the `:unprocessable_entity` every Rails
+      guide writes, which Rack 3.2 deprecates and warns on.
+
+      `redirect_status` goes to `:see_other` beside it, as precaution rather
+      than a fix, and the distinction is worth recording because the usual
+      explanation of this setting is wrong. fetch downgrades a redirect to GET
+      only when the request was a POST, so a genuine PATCH answered with 302
+      would come back as a PATCH — but no Rails form can produce that.
+      `form_with method: :patch` renders `method="post"` with a hidden
+      `_method`, which is what the settings form does when you read it off the
+      page. It becomes reachable only when a link carries `data-turbo-method`,
+      which Turbo does put on the wire literally.
+
+      **No `turbo-rails` gem.** It was taken first, on the assumption its Ruby
+      side was carrying something — a 303 default on redirects, or the mime
+      type registration that keeps the `Accept` header Turbo sends on every
+      form submission out of trouble. Neither holds: the gem has no redirect
+      patching in it at all, and with it removed the whole system and request
+      suite still passes, Turbo form submissions included, because Rails reads
+      past an unregistered type in `Accept` and answers the `text/html` behind
+      it. It goes back in when something here renders a `turbo_stream`, which
+      is the Stimulus step. The JavaScript comes from npm through esbuild like
+      everything else in the bundle.
+
+      **rails-ujs stays**, and keeps driving the `data-method` links and the
+      `.js.erb` responses until jQuery leaves. Both libraries want the same
+      clicks, and what keeps them apart is structural rather than lucky: ujs
+      delegates on `document` while Turbo's link observer is on `window`, so
+      ujs sees a click first and stops it propagating; and Turbo's form
+      observer ignores any submit whose default was already prevented, which is
+      what ujs does to a remote form. A system spec deletes a department
+      through a `data-method` link so that stops being an argument.
+
+      Two things this turned up that no amount of reading would have.
+
+      **The suite was green before any of it was true.** All 292 examples
+      passed with turbolinks swapped for Turbo underneath them and would have
+      passed with neither, because every system spec `visit`s rather than
+      navigates, and a `visit` is a full page load whichever library is on the
+      page. The seven examples in `spec/system/turbo_spec.rb` exist to make the
+      swap falsifiable, and each was checked by breaking the thing it covers:
+      without the Turbo import both navigation examples go red, with
+      `settings#update` back at 200 the error render vanishes with no message
+      anywhere, with Devise back on `:ok` the sign-in page answers a wrong
+      password with nothing at all. One drafted example asserted the form was
+      still on the page after a failed submission — it passed against the bug,
+      so it is not in the file.
+
+      **`sign_in_as` had to learn to wait, and the whole system suite runs on
+      it.** A native form submission blocks the browser until the next document
+      exists; Turbo submits with fetch, so `click_on` returns while the visit it
+      started is still in flight, and the `visit` after it raced Turbo — which
+      landed afterwards and replaced the page the example was about to work on.
+      It failed about one run in three, on whichever example got there first,
+      and it read as `fill_in` failing to find a field that is plainly on the
+      page it asked for. Found by running the new file eight times rather than
+      once, which is now the habit for anything that navigates.
+
+      One defect, in the backlog below: Turbo caches a snapshot of the page it
+      is leaving and restores it on a back navigation, and select2 injects its
+      control as a sibling of the select it wraps — so the snapshot carried the
+      control and the bundle re-running on restore built a second one beside it.
+      Two stacked dropdowns over one select. Attributed rather than assumed: the
+      same probe against develop under turbolinks reports one container either
+      way, so it arrived with Turbo
 - [ ] **Stimulus replaces jQuery.** Ten bundles, roughly 300 lines, one
       controller each
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
@@ -1071,7 +1150,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 21 system specs are what makes this safe, and they are also going to get in
+The 46 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need
@@ -1171,6 +1250,13 @@ Found while building the component that made it impossible:
 | Location | Problem |
 | --- | --- |
 | 34 labels across 12 views, including all six devise forms | `form.label t('forms.labels.email')` passes the translated string where Rails expects the attribute name, so the label was rendered as `for="user_Email"` against an input with id `user_email`. Nothing looks wrong — the text is correct — but the label is associated with no field: clicking it focuses nothing and a screen reader announces the input unlabelled. Two views moved to `FormFieldComponent`, which takes the attribute and the text separately; the other eleven had the association fixed where they stand |
+
+Found by navigating away from a page and pressing back, which is the first
+thing the Turbo swap made possible to get wrong:
+
+| Location | Problem |
+| --- | --- |
+| `app/javascript/application.js` | Turbo snapshots the page it is leaving and restores that snapshot on a back navigation, and select2 builds its control as a sibling of the select it wraps. So the snapshot carried the control, the body bundle re-ran on restore and built a second one, and the HR leave form came back with two dropdowns stacked over one select. turbolinks did not do this — the same probe on `develop` reports one container before and after — so it arrived with Turbo rather than being something Turbo exposed. Torn down on `turbo:before-cache`, from the bundle the layout loads in `<head>` rather than from the body bundle beside the `.select2()` call, because body bundles are re-executed on every visit and a listener added there accumulates one copy per navigation |
 
 Found by measuring what the column stores rather than by reading the schema:
 
