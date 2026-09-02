@@ -27,12 +27,3 @@ document.addEventListener("turbo:before-cache", function () {
 require('./user')
 require("bootstrap")
 import "chartkick/chart.js"
-
-$(document).on('click', '.leave-pagination-wrapper a', function(event) {
-  event.preventDefault();
-  $.ajax({
-    type: 'GET',
-    url: this.href,
-    dataType: 'script'
-  });
-});

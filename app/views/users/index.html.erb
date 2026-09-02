@@ -10,23 +10,36 @@
 </div>
 <div class='me-3 ms-2'>
   <br><br>
-  <div class='mb-3'>
-    
-    <%= form_tag members_path, format: :js, method: :get, remote: true, id: 'filter_form' do %>
-      <div class='row ms-3'>
+  <%= turbo_frame_tag 'users_table', data: { turbo_action: 'advance' } do %>
+    <div class='mb-3'>
+      <%= form_tag members_path, method: :get, id: 'filter_form',
+                                 data: { controller: 'auto-submit' } do %>
+        <div class='row ms-3'>
           <div class='col-10'>
-            <%= select_tag :department_id, options_from_collection_for_select(@departments, 'id', 'name'), prompt: t('forms.labels.department'), class: 'form-control w-25 d-inline m-1 js-filter-select' %>
-            <%= text_field_tag :match_users_name, '', class: 'form-control w-25 d-inline m-1 js-filter-select', placeholder: t('forms.labels.name') %>
-            <%= select_tag :role_id, options_for_select(user_roles), prompt: t('forms.labels.role'), class: 'form-control w-25 d-inline m-1 js-filter-select' %>
+            <%= select_tag :department_id,
+                           options_from_collection_for_select(@departments, 'id', 'name', params[:department_id]),
+                           prompt: t('forms.labels.department'),
+                           class: 'form-control w-25 d-inline m-1 js-filter-select',
+                           data: { action: 'change->auto-submit#submit' } %>
+            <%= text_field_tag :match_users_name, params[:match_users_name],
+                               class: 'form-control w-25 d-inline m-1 js-filter-select',
+                               placeholder: t('forms.labels.name'),
+                               data: { action: 'input->auto-submit#submit' } %>
+            <%= select_tag :role_id, options_for_select(user_roles, params[:role_id]),
+                           prompt: t('forms.labels.role'),
+                           class: 'form-control w-25 d-inline m-1 js-filter-select',
+                           data: { action: 'change->auto-submit#submit' } %>
           </div>
           <div class='col-2'>
-            <%= submit_tag t('forms.buttons.reset_filters'), id: 'reset_filter_btn', remote: true, class: 'btn btn-primary d-inline ms-5' %>
+            <%= link_to t('forms.buttons.reset_filters'), members_path,
+                        id: 'reset_filter_btn', class: 'btn btn-primary d-inline ms-5' %>
           </div>
-      </div>
-    <% end %>
-  </div>
-  <br>
-  <div id='users_table'>
-    <%= render partial: 'users_list', locals: { users: @users } %>
-  </div>
+        </div>
+      <% end %>
+    </div>
+    <br>
+    <div id='users_table_rows'>
+      <%= render partial: 'users_list', locals: { users: @users } %>
+    </div>
+  <% end %>
 </div>
