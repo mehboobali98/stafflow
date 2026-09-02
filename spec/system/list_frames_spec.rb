@@ -91,6 +91,65 @@ RSpec.describe 'the list pages', type: :system do
     end
   end
 
+  describe 'the notification list' do
+    let!(:unread) do
+      as_tenant(company) do
+        create(:notification, company: company, recipient: owner, body: 'Leave approved', status: false)
+      end
+    end
+    let!(:already_read) do
+      as_tenant(company) do
+        create(:notification, company: company, recipient: owner, body: 'Payslip ready', status: true)
+      end
+    end
+
+    it 'opens on the unread ones' do
+      visit_tenant(company, notifications_path)
+
+      expect(page).to have_content(unread.body)
+      expect(page).to have_no_content(already_read.body)
+    end
+
+    it 'filters to the read ones without disturbing the page around it' do
+      visit_tenant(company, notifications_path)
+      page.execute_script("document.querySelector('.sidebar').dataset.probe = 'kept'")
+
+      select 'read', from: 'notification_status'
+
+      expect(page).to have_content(already_read.body)
+      expect(page).to have_no_content(unread.body)
+      expect(page.evaluate_script("document.querySelector('.sidebar').dataset.probe")).to eq 'kept'
+    end
+
+    it 'enables the mark-as-read button once something is selected' do
+      visit_tenant(company, notifications_path)
+      expect(page).to have_css('#read-button[disabled]')
+
+      check "notification_#{unread.id}"
+
+      expect(page).to have_no_css('#read-button[disabled]')
+    end
+
+    it 'selects every row from the header checkbox' do
+      visit_tenant(company, notifications_path)
+
+      check 'select_all'
+
+      expect(page).to have_checked_field("notification_#{unread.id}")
+      expect(page).to have_no_css('#read-button[disabled]')
+    end
+
+    it 'shows the list without the notification once it is marked read' do
+      visit_tenant(company, notifications_path)
+      check "notification_#{unread.id}"
+
+      click_on I18n.t('notifications.markread')
+
+      expect(page).to have_no_content(unread.body)
+      expect(unread.reload.status).to be true
+    end
+  end
+
   describe 'the event list' do
     it 'renders its empty state rather than failing' do
       visit_tenant(company, events_path)

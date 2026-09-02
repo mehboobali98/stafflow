@@ -2,6 +2,7 @@ import { Application } from "@hotwired/stimulus"
 
 import AnimateOnScrollController from "./animate_on_scroll_controller"
 import AutoSubmitController from "./auto_submit_controller"
+import CheckboxGroupController from "./checkbox_group_controller"
 import DirtyFormController from "./dirty_form_controller"
 import EventDateController from "./event_date_controller"
 import NotificationCountController from "./notification_count_controller"
@@ -18,6 +19,7 @@ const application = Application.start()
 
 application.register("animate-on-scroll", AnimateOnScrollController)
 application.register("auto-submit", AutoSubmitController)
+application.register("checkbox-group", CheckboxGroupController)
 application.register("dirty-form", DirtyFormController)
 application.register("event-date", EventDateController)
 application.register("notification-count", NotificationCountController)
