@@ -1,32 +1,43 @@
-<%= javascript_include_tag 'notifications' %>
 <div class='stafflow-heading p-2'>
   <h1><%= t('notifications.title') %></h1>
 </div>
-<div class='p-2'>
+<div class='p-2' data-controller='checkbox-group'>
   <br><br>
   <div class='card p-3 bg-light me-3'>
     <div class='d-flex bd-highlight'>
       <div class='flex-grow-1 bd-highlight'>
-        <%= select_tag :status, options_for_select(Notification::STATUS), prompt: t('common.all'), class: 'form-control w-25', id: 'notification_status' %>
+        <%= form_tag notifications_path, method: :get, id: 'status_filter',
+                                         data: { controller: 'auto-submit',
+                                                 turbo_frame: 'notifications_list' } do %>
+          <%= select_tag :status, options_for_select(Notification::STATUS, @status),
+                         prompt: t('common.all'), class: 'form-control w-25',
+                         id: 'notification_status',
+                         data: { action: 'change->auto-submit#submit' } %>
+        <% end %>
       </div>
       <div class='bd-highlight me-5'>
-        <button class='btn btn-primary' id='read-button' disabled=true><%= t('notifications.markread') %></button>
+        <button class='btn btn-primary' id='read-button' form='mark_read_form' disabled
+                data-checkbox-group-target='submit'><%= t('notifications.markread') %></button>
       </div>
     </div>
   </div>
   <br><br>
   <div class='me-3'>
-    <label class="list-group-item stafflow-heading p-2">
-      <input class="form-check-input me-1" type="checkbox" value="" id='select_all'>
-      <%= t('notifications.selectall') %>
-    </label>
-    <div id='notifications_list'>
-      <%= render partial: 'notifications', locals: { notifications: @notifications } %>
-    </div>
-    <% if @notifications.empty? %>
-      <div class="d-flex justify-content-md-center align-items-center mt-5">
-        <h1 class='text-muted'><%= t('nonotis') %></h1>
-      </div>
+    <%= turbo_frame_tag 'notifications_list', data: { turbo_action: 'advance' } do %>
+      <%= form_tag mark_as_read_notifications_path, method: :post, id: 'mark_read_form' do %>
+        <label class="list-group-item stafflow-heading p-2">
+          <%= check_box_tag 'select_all', '1', false, class: 'form-check-input me-1', id: 'select_all',
+                                                      data: { 'checkbox-group-target': 'toggle',
+                                                              action: 'change->checkbox-group#toggleAll' } %>
+          <%= t('notifications.selectall') %>
+        </label>
+        <%= render partial: 'notifications', locals: { notifications: @notifications } %>
+      <% end %>
+      <% if @notifications.empty? %>
+        <div class="d-flex justify-content-md-center align-items-center mt-5">
+          <h1 class='text-muted'><%= t('nonotis') %></h1>
+        </div>
+      <% end %>
     <% end %>
   </div>
-</div> 
+</div>
