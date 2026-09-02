@@ -14,7 +14,7 @@
     <%= render partial: "shared/sidebar" %>
     <div class="home-content" data-sidebar-target="content">
       <%= render partial: "shared/dashboard_navbar" %>
-      <%= render partial: "shared/flash_message" %>
+      <div id="flash_message"><%= render partial: "shared/flash_message" %></div>
       <div class="page-shell">
         <nav class="breadcrumbs"><%= render_breadcrumbs separator: ' / ' %></nav>
         <%= yield %>

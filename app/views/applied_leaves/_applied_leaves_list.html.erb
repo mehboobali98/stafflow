@@ -14,7 +14,12 @@
   <% table.with_body do %>
     <% applied_leaves.each do |applied_leave| %>
       <tr>
-        <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false, class: 'js-selected-applied-leave', disabled: !(applied_leave.pending?) %></td>
+        <td><%= check_box_tag "applied_leave_ids[]", applied_leave.id, false,
+                              id: "applied_leave_#{applied_leave.id}",
+                              class: 'js-selected-applied-leave',
+                              disabled: !applied_leave.pending?,
+                              data: { 'checkbox-group-target': 'item',
+                                      action: 'change->checkbox-group#refresh' } %></td>
         <td><%= applied_leave.user.email %></td>
         <td><%= applied_leave.leave.name %></td>
         <td><%= t("applied_leave.labels.#{applied_leave.leave_duration_name}") %></td>
@@ -43,6 +48,6 @@
     <% end %>
   <% end %>
 <% end %>
-<div class='js-applied-leaves-pagination pagination-wrapper'>
+<div class='pagination-wrapper'>
   <%= will_paginate applied_leaves, container: false %>
 </div>

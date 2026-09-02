@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 334 examples, 0 pending |
+| Tests | 338 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 35 found, 35 fixed, 0 open |
+| Known defects | 36 found, 36 fixed, 0 open |
 
 ---
 
@@ -1257,11 +1257,35 @@ breadcrumbs_on_rails and chartkick's helpers.
       answered with reloads the list. Confirmed by answering `head :ok` instead
       and watching the original behaviour come back.
 
-      Left: the HR leave queue's mass approve and reject, which update the
-      flash and the table together off a POST, so they are the genuine Turbo
-      Stream in the set; the leave-allocation modal; and the calendar's month
-      links. `remote: true`, `dataType: 'script'`, rails-ujs and jQuery all
-      leave with those
+      **The HR leave queue is the one place a stream is the right answer.**
+      Filtering and pagination are a frame like the others. Mass approve and
+      reject are not: they change the table and the flash message, the flash
+      sits outside the frame the click came from, and the request is a PATCH.
+      Two targets off a non-GET is exactly what a stream is for, and it is
+      worth having one case that earns it rather than reaching for streams
+      everywhere.
+
+      The confirmation had never been shown. `approve_leaves.js.erb` wrote the
+      flash into `$("#flash_message")`, and no element with that id exists
+      anywhere in this application — so the message counting how many of the
+      selected requests actually changed state, which is the one that matters
+      when some of them fail, went into an empty selection every time. The
+      layout carries the container now, and it is what the stream updates.
+
+      `filter_applied_leaves` is gone, action and route: filtering is
+      `all_applied_leaves` with a `filter_type` param, which is what the frame
+      navigates to, so the separate endpoint had nothing left to do.
+
+      Two behaviour changes rather than defects. The buttons were behind
+      `d-none` and revealed only when *more than one* row was checked, so
+      checking exactly one left the page looking inert; they are visible and
+      disabled until something is selected, matching the notification list.
+      And the queue keeps its filter across a mass update through a hidden
+      field rather than by reading the select back out of the DOM.
+
+      Left: the leave-allocation modal and the calendar's month links.
+      `remote: true`, `dataType: 'script'`, rails-ujs and jQuery all leave with
+      those, and jQuery's last caller after them is select2
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
@@ -1284,7 +1308,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 61 system specs are what makes this safe, and they are also going to get in
+The 65 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need
@@ -1394,6 +1418,7 @@ suite rendered nowhere — 301 examples passed while three of them answered 500:
 | `app/views/events/index.html.erb` | `render partial: 'no_events.html.erb'` names a partial `no_events.html.erb`, not the file of that name, so Rails looked for `_no_events.html.erb.html.erb` and raised. The events page 500d for any company with no events, which is the first thing a new tenant sees on it |
 | `app/views/leaves/index.html.erb` | The controller paginates to `PAGE_SIZE`, which is 5, and the view rendered no pagination control at all, so a company's sixth leave type could not be reached from the page. `_leaves_list.html.erb` does carry one, but was rendered by nothing except the dead `index.js.erb` beside it and had drifted to an older style — a dark header and text buttons against the themed icons the index uses |
 | `app/javascript/application.js`, `app/views/leaves/index.js.erb`, `app/views/events/index.js.erb` | Three pieces of machinery for a thing that could not happen. `events#index` answers `format.html` only, so its `.js.erb` was a template for a request the action rejects; both `.js.erb` files targeted ids no page has ever contained; and the `.leave-pagination-wrapper` handler was bound on every page load against a class no view carries |
+| `app/views/applied_leaves/approve_leaves.js.erb` | The mass approve and reject confirmation was written into `$("#flash_message")`, and no element with that id exists anywhere in the application. The message reports how many of the selected requests actually changed state — the number that matters when some of them cannot — and it went into an empty selection on every bulk action the application has ever processed |
 | `app/javascript/notifications.js` | Marking notifications as read gave no feedback. The button fired an `$.ajax` POST with no success handler, so the rows were marked read in the database and stayed on screen until something else reloaded the page — the click looked like it had done nothing |
 
 Found by navigating away from a page and pressing back, which is the first

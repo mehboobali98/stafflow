@@ -104,7 +104,6 @@ class AppliedLeavesController < ApplicationController
     get_filtered_records
     respond_to do |format|
       format.html
-      format.js
     end
   end
 
@@ -140,34 +139,16 @@ class AppliedLeavesController < ApplicationController
 
   # PATCH /applied_leaves/approve_leaves
   def approve_leaves
-    count_approved = AppliedLeave.approve_mass_leaves(params[:applied_leave_ids])
-    get_filtered_records
-    respond_to do |format|
-      format.js do
-        flash.now[:notice] =
-          t('applied_leave.messages.mass_approve', total: total_request_count, actual: count_approved)
-      end
-    end
+    count = AppliedLeave.approve_mass_leaves(params[:applied_leave_ids])
+    flash.now[:notice] = t('applied_leave.messages.mass_approve', total: total_request_count, actual: count)
+    render_mass_update
   end
 
   # PATCH /applied_leaves/reject_leaves
   def reject_leaves
-    count_rejected = AppliedLeave.reject_mass_leaves(params[:applied_leave_ids])
-    get_filtered_records
-    respond_to do |format|
-      format.js do
-        flash.now[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count_rejected)
-        render 'approve_leaves'
-      end
-    end
-  end
-
-  # GET /applied_leaves/filter_applied_leaves
-  def filter_applied_leaves
-    get_filtered_records
-    respond_to do |format|
-      format.js { render 'approve_leaves' }
-    end
+    count = AppliedLeave.reject_mass_leaves(params[:applied_leave_ids])
+    flash.now[:notice] = t('applied_leave.messages.mass_reject', total: total_request_count, actual: count)
+    render_mass_update
   end
 
   # GET /applied_leaves/new_applied_leave_by_hr
@@ -216,6 +197,16 @@ class AppliedLeavesController < ApplicationController
 
   def set_available_leaves
     @available_user_leaves = @user.get_available_leaves
+  end
+
+  # The list and the flash are two places on the page and only one of them is
+  # where the request came from, which is what a stream is for.
+  def render_mass_update
+    get_filtered_records
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to all_applied_leaves_path(filter_type: params[:filter_type]) }
+    end
   end
 
   def get_filtered_records

@@ -19,11 +19,12 @@ export default class extends Controller {
   }
 
   refresh() {
-    if (!this.hasToggleTarget) return
-
     const checked = this.itemTargets.filter((item) => item.checked)
 
-    this.toggleTarget.checked = checked.length > 0 && checked.length === this.itemTargets.length
+    if (this.hasToggleTarget) {
+      this.toggleTarget.checked = checked.length > 0 && checked.length === this.itemTargets.length
+    }
+
     this.submitTargets.forEach((button) => {
       button.disabled = checked.length === 0
     })
