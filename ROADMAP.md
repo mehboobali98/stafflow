@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 301 examples, 0 pending |
+| Tests | 329 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 30 found, 30 fixed, 0 open |
+| Known defects | 34 found, 34 fixed, 0 open |
 
 ---
 
@@ -1183,15 +1183,71 @@ breadcrumbs_on_rails and chartkick's helpers.
       greps source text for `require.context`, and `controllers/index.js` is
       exactly the file with a reason to name that defect in the comment
       explaining itself. Checked that it still fails on a planted call.
-- [ ] **The `.js.erb` responses become Turbo Streams.** What is left of the
-      jQuery is five entry points that fetch a `.js.erb` and eval it, and nine
-      templates that answer them. Every one of those templates is the same
-      shape — replace one container's contents with a re-rendered partial —
-      which is what a Turbo Stream does, so this is a translation rather than a
-      redesign. It is what `remote: true`, `dataType: 'script'` and rails-ujs
-      all leave with, and it is where the `turbo-rails` gem comes back: the
-      Turbo step took it out on the grounds that it would return when something
-      here renders a `turbo_stream`
+- [ ] **The `.js.erb` responses go.** Nine templates and five entry points that
+      fetch one and eval it. Started: the employee, leave and event lists are on
+      Turbo Frames, which is four of the nine gone.
+
+      **Frames rather than Streams for a list.** A Stream is for updating
+      something the request did not come from, or more than one thing at once.
+      A filter or a page link is neither: the list is where the click came from
+      and the list is what changes, so wrapping it in a frame means the server
+      answers with the ordinary HTML page it already renders and Turbo takes the
+      part that matters. No template per response, and `format.js` comes off the
+      action.
+
+      Turbo Drive alone would satisfy most of this, and it is worth being exact
+      about what the frame adds rather than taking it on faith. It replaces only
+      the list: the sidebar, navbar and notification badge around it are left
+      alone, where a Drive visit re-renders the whole body and re-runs the count
+      request on every keystroke. That is the one thing the specs assert about
+      the frame specifically — the other three employee-list examples pass
+      without it, which is correct, because filtering and linking and resetting
+      are behaviour rather than mechanism.
+
+      The filter form moves inside the frame so a navigation re-renders it and
+      the fields echo their params. That is what lets the reset link point at
+      the unfiltered URL instead of clearing inputs by hand, and it makes a
+      filtered list a URL you can send someone. Filtering is debounced: the old
+      handler fired one request per keystroke, which under
+      `data-turbo-action="advance"` would be one history entry per keystroke.
+
+      `turbo-rails` comes back for `turbo_frame_tag`, which is the condition the
+      Turbo step set when it took the gem out.
+
+      **Four defects, and the reason none of them was caught.** Nothing in the
+      suite rendered `/members`, `/leaves` or `/events`. All 301 examples passed
+      while three of the application's main pages answered 500 mid-change, and
+      that is also why the four below survived. `spec/requests/index_pages_spec.rb`
+      now GETs all ten index pages, empty and populated, which is twenty cheap
+      examples that would have caught every one of them.
+
+      The events index nested the whole table inside the link to the calendar.
+      An anchor cannot contain another, so the parser split it into six, and the
+      page rendered as four empty pill outlines with the table squeezed into a
+      column beside them. It also called
+      `render partial: 'no_events.html.erb'`, which Rails reads as a partial
+      *named* `no_events.html.erb`, so the page 500d for any company with no
+      events — the first thing a new tenant sees there.
+
+      The leave index rendered no pagination while the controller paginated to
+      `PAGE_SIZE`, which is 5, so a sixth leave type could not be reached. Its
+      `_leaves_list` partial does carry pagination but was rendered by nothing
+      except the dead `.js.erb` beside it, and had drifted to an older style, so
+      the index keeps its own table and gains the control.
+
+      `leaves/index.js.erb` and `events/index.js.erb` were both dead —
+      `events#index` answers html only, and both targeted ids no page has ever
+      contained — and the `.leave-pagination-wrapper` handler in
+      `application.js` was the same story in JavaScript, bound on every page
+      against a class no view carries.
+
+      Left: the notification list, whose `format.html` and `format.js` branches
+      disagree about the default filter and which has to be settled before it
+      can be one path; the HR leave queue's mass approve and reject, which
+      update the flash and the table together and are a POST, so they are the
+      genuine Turbo Stream in the set; the leave-allocation modal; and the
+      calendar's month links. `remote: true`, `dataType: 'script'`, rails-ujs
+      and jQuery all leave with those
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
@@ -1214,7 +1270,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 48 system specs are what makes this safe, and they are also going to get in
+The 56 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need
@@ -1314,6 +1370,16 @@ Found while building the component that made it impossible:
 | Location | Problem |
 | --- | --- |
 | 34 labels across 12 views, including all six devise forms | `form.label t('forms.labels.email')` passes the translated string where Rails expects the attribute name, so the label was rendered as `for="user_Email"` against an input with id `user_email`. Nothing looks wrong — the text is correct — but the label is associated with no field: clicking it focuses nothing and a screen reader announces the input unlabelled. Two views moved to `FormFieldComponent`, which takes the attribute and the text separately; the other eleven had the association fixed where they stand |
+
+Found while moving the list pages onto Turbo Frames, all four on pages the
+suite rendered nowhere — 301 examples passed while three of them answered 500:
+
+| Location | Problem |
+| --- | --- |
+| `app/views/events/index.html.erb` | The events table, its heading, its Create button and every row's edit and delete link were nested inside the `link_to` to the calendar. An anchor cannot contain another, so the parser split it into six anchors and the page rendered as four empty pill outlines with the table squeezed into a column beside them. The `.js.erb` meant to refresh it targeted `#events_table` while the div carried `class="events_table"`, so it could not have repaired the page either |
+| `app/views/events/index.html.erb` | `render partial: 'no_events.html.erb'` names a partial `no_events.html.erb`, not the file of that name, so Rails looked for `_no_events.html.erb.html.erb` and raised. The events page 500d for any company with no events, which is the first thing a new tenant sees on it |
+| `app/views/leaves/index.html.erb` | The controller paginates to `PAGE_SIZE`, which is 5, and the view rendered no pagination control at all, so a company's sixth leave type could not be reached from the page. `_leaves_list.html.erb` does carry one, but was rendered by nothing except the dead `index.js.erb` beside it and had drifted to an older style — a dark header and text buttons against the themed icons the index uses |
+| `app/javascript/application.js`, `app/views/leaves/index.js.erb`, `app/views/events/index.js.erb` | Three pieces of machinery for a thing that could not happen. `events#index` answers `format.html` only, so its `.js.erb` was a template for a request the action rejects; both `.js.erb` files targeted ids no page has ever contained; and the `.leave-pagination-wrapper` handler was bound on every page load against a class no view carries |
 
 Found by navigating away from a page and pressing back, which is the first
 thing the Turbo swap made possible to get wrong:
