@@ -17,8 +17,7 @@ class UserLeavesController < ApplicationController
 
   # GET /members/:member_id/user_leaves
   def index
-    @user_leaves = UserLeave.accessible_by(current_ability, :index).includes(:leave).paginate(page: params[:page],
-                                                                                              per_page: PAGE_SIZE)
+    load_user_leaves
     respond_to do |format|
       format.html
     end
@@ -53,22 +52,19 @@ class UserLeavesController < ApplicationController
   def edit
     add_breadcrumb t('user_leave.breadcrumbs.edit'), :edit_member_user_leave
     respond_to do |format|
-      format.js
+      format.html
     end
   end
 
   # PATCH/PUT /members/:member_id/applied_leaves/:id
   def update
-    is_updated = @user_leave.update(user_leave_update_params)
-    respond_to do |format|
-      format.js do
-        if is_updated
-          flash.now[:notice] = t('user_leave.messages.success.update')
-          render js: "window.location = '#{member_user_leaves_path(@user)}'"
-        else
-          flash.now[:error] = @user_leave.errors.full_messages
-        end
-      end
+    if @user_leave.update(user_leave_update_params)
+      load_user_leaves
+      flash.now[:notice] = t('user_leave.messages.success.update')
+      render :update
+    else
+      flash.now[:error] = @user_leave.errors.full_messages
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -88,6 +84,12 @@ class UserLeavesController < ApplicationController
   end
 
   private
+
+  def load_user_leaves
+    @user_leaves = UserLeave.accessible_by(current_ability, :index)
+                            .includes(:leave)
+                            .paginate(page: params[:page], per_page: PAGE_SIZE)
+  end
 
   def user_leave_update_params
     params.require(:user_leave).permit(:total_count)

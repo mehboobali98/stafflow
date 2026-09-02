@@ -10,7 +10,7 @@
         <% end %>
       <% end %>
       <% if can?(:edit, user_leave) %>
-        <%= link_to edit_member_user_leave_path(@user, user_leave), remote: true do %>
+        <%= link_to edit_member_user_leave_path(@user, user_leave), data: { turbo_frame: 'modal' } do %>
           <i class='fa fa-bars ms-3'></i>
         <% end %>
       <% end %>

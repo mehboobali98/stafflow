@@ -1,0 +1,7 @@
+<%= turbo_stream.update 'flash_message' do %>
+  <%= render partial: 'shared/flash_message' %>
+<% end %>
+<%= turbo_stream.update 'user_leaves_list' do %>
+  <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
+<% end %>
+<%= turbo_stream.update 'modal', '' %>
