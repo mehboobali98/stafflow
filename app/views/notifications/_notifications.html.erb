@@ -2,7 +2,10 @@
   <div class='list-group js-notifications-list'>
     <% notifications.each do |notification| %>
       <label class="list-group-item">
-        <input class="form-check-input me-2" type="checkbox" value="" id= <%= notification.id %>>
+        <%= check_box_tag 'ids[]', notification.id, false, id: "notification_#{notification.id}",
+                                                           class: 'form-check-input me-2',
+                                                           data: { 'checkbox-group-target': 'item',
+                                                                   action: 'change->checkbox-group#refresh' } %>
         <div class="d-inline notification<%= notification.status %>">
           <%= notification.body %>
         </div>

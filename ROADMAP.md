@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 329 examples, 0 pending |
+| Tests | 334 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 34 found, 34 fixed, 0 open |
+| Known defects | 35 found, 35 fixed, 0 open |
 
 ---
 
@@ -1241,13 +1241,27 @@ breadcrumbs_on_rails and chartkick's helpers.
       `application.js` was the same story in JavaScript, bound on every page
       against a class no view carries.
 
-      Left: the notification list, whose `format.html` and `format.js` branches
-      disagree about the default filter and which has to be settled before it
-      can be one path; the HR leave queue's mass approve and reject, which
-      update the flash and the table together and are a POST, so they are the
-      genuine Turbo Stream in the set; the leave-allocation modal; and the
-      calendar's month links. `remote: true`, `dataType: 'script'`, rails-ujs
-      and jQuery all leave with those
+      **The notification list went with them**, and it needed the disagreement
+      between its two branches settled first: `format.html` answered with the
+      unread notifications and `format.js` with whatever `params[:status]`
+      asked for. A frame makes both the same request, so there is one branch
+      now, honouring the parameter and defaulting to unread — which is what the
+      page showed on load before, except that the bundle then had to force the
+      select to match it.
+
+      Marking as read gave no feedback at all. The button fired an `$.ajax`
+      POST with no success handler, so rows were marked read in the database
+      and stayed on screen until something else reloaded the page. It is an
+      ordinary form submission now — associated by id, since the button sits in
+      the header card rather than inside the form — and the redirect it already
+      answered with reloads the list. Confirmed by answering `head :ok` instead
+      and watching the original behaviour come back.
+
+      Left: the HR leave queue's mass approve and reject, which update the
+      flash and the table together off a POST, so they are the genuine Turbo
+      Stream in the set; the leave-allocation modal; and the calendar's month
+      links. `remote: true`, `dataType: 'script'`, rails-ujs and jQuery all
+      leave with those
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
@@ -1270,7 +1284,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 56 system specs are what makes this safe, and they are also going to get in
+The 61 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need
@@ -1380,6 +1394,7 @@ suite rendered nowhere — 301 examples passed while three of them answered 500:
 | `app/views/events/index.html.erb` | `render partial: 'no_events.html.erb'` names a partial `no_events.html.erb`, not the file of that name, so Rails looked for `_no_events.html.erb.html.erb` and raised. The events page 500d for any company with no events, which is the first thing a new tenant sees on it |
 | `app/views/leaves/index.html.erb` | The controller paginates to `PAGE_SIZE`, which is 5, and the view rendered no pagination control at all, so a company's sixth leave type could not be reached from the page. `_leaves_list.html.erb` does carry one, but was rendered by nothing except the dead `index.js.erb` beside it and had drifted to an older style — a dark header and text buttons against the themed icons the index uses |
 | `app/javascript/application.js`, `app/views/leaves/index.js.erb`, `app/views/events/index.js.erb` | Three pieces of machinery for a thing that could not happen. `events#index` answers `format.html` only, so its `.js.erb` was a template for a request the action rejects; both `.js.erb` files targeted ids no page has ever contained; and the `.leave-pagination-wrapper` handler was bound on every page load against a class no view carries |
+| `app/javascript/notifications.js` | Marking notifications as read gave no feedback. The button fired an `$.ajax` POST with no success handler, so the rows were marked read in the database and stayed on screen until something else reloaded the page — the click looked like it had done nothing |
 
 Found by navigating away from a page and pressing back, which is the first
 thing the Turbo swap made possible to get wrong:
