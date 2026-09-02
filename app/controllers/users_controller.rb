@@ -80,7 +80,6 @@ class UsersController < ApplicationController
     @users = apply_scopes(@users).includes(:department).paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
       format.html
-      format.js
     end
   end
 
