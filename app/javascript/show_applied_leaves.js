@@ -1,85 +1,9 @@
 $(document).ready(function() {
-  toggleMassUpdateButtons();
-
-  $(".js-selected-applied-leave").on("change", function() {
-    toggleMassUpdateButtons();
-  });
-
-  function sendMassUpdateRequest(methodType, path, selectedLeaveIds, currentFilter) {
-    $.ajax({
-      type: methodType,
-      url: path,
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      data: {
-        applied_leave_ids: selectedLeaveIds,
-        filter_type: currentFilter
-      }
-    });
-  }
-
-  $("#approve_leaves_btn").on("click", function(event) {
-    event.preventDefault();
-    let appliedLeaveIds = getSelectedLeaveIds();
-    let currentFilter = getCurrentFilter();
-    sendMassUpdateRequest("PATCH", "/applied_leaves/approve_leaves", appliedLeaveIds, currentFilter);
-  });
-
-  $("#reject_leaves_btn").on("click", function(event) {
-    event.preventDefault();
-    let appliedLeaveIds = getSelectedLeaveIds();
-    let currentFilter = getCurrentFilter();
-    sendMassUpdateRequest("PATCH", "/applied_leaves/reject_leaves", appliedLeaveIds, currentFilter);
-  });
-
-  function getSelectedLeaveIds() {
-    let appliedLeaveIds = []
-    $('.js-selected-applied-leave:checkbox:checked').each(function() {
-      appliedLeaveIds.push(this.value)
-    });
-    return appliedLeaveIds;
-  }
-
-  function toggleMassUpdateButtons() {
-    let countChecked = selectedAppliedLeavesCount();
-    if (countChecked > 1) {
-      $("#submit_buttons").removeClass("d-none");
-    } else {
-      $("#submit_buttons").addClass("d-none");
-    }
-  }
-
-  function selectedAppliedLeavesCount() {
-    let countChecked = $('.js-selected-applied-leave:checkbox:checked').length;
-    return countChecked;
-  }
-
-  function getCurrentFilter() {
-    return $("#filter").val();
-  }
-
-  $("#filter").on("change", function(event) {
-    let currentFilter = this.value;
-    $.ajax({
-      type: "GET",
-      url: "/applied_leaves/filter_applied_leaves",
-      dataType: 'script',
-      data: {
-        filter_type: currentFilter
-      }
-    });
-  });
-
   $("body").on('select2:select', '#applied_leave_member_id', function(event) {
     let member_id = this.value;
     $.ajax({
       type: "GET",
       url: "/applied_leaves/get_available_user_leaves",
-      // The endpoint answers format.json only. Asking for a script worked
-      // until jQuery 4 because jQuery 3 sent */* alongside text/javascript,
-      // which Rails fell back to JSON on; jQuery 4 dropped it and the request
-      // 404s.
       dataType: 'json',
       data: {
         member_id
@@ -118,18 +42,5 @@ $(document).ready(function() {
     theme: "classic",
     dropdownCssClass: 'select-dropdown',
     width: '100%'
-  });
-});
-
-
-$(document).on('click', '.js-applied-leaves-pagination a', function(event) {
-  event.preventDefault();
-  $.ajax({
-    type: 'GET',
-    url: this.href,
-    data: {
-      filter_type: $("#filter").val()
-    },
-    dataType: 'script'
   });
 });
