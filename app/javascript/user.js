@@ -1,32 +1,3 @@
-$(document).on('click', '.js-pagination-wrapper a', function(event) {
-  event.preventDefault();
-  $.ajax({
-    type: 'GET',
-    url: this.href,
-    data: $('#filter_form').serialize(),
-    dataType: 'script'
-  });
-});
-
-$(document).on('click', '#reset_filter_btn', function(event) {
-  event.preventDefault();
-  $.ajax({
-    type: 'GET',
-    url: '/members',
-    dataType: 'script'
-  });
-  $('.js-filter-select').val("");
-});
-
-$(document).on('change input', '.js-filter-select', function() {
-  $.ajax({
-    type: 'GET',
-    url: '/members',
-    data: $('#filter_form').serialize(),
-    dataType: 'script'
-  });
-});
-
 $(document).on('change', '#department_select', function() {
   if (this.value === '') return;
   let url = `/departments/${this.value}/fetch_designations`

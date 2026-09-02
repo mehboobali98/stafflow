@@ -414,6 +414,9 @@ GEM
     timeout (0.6.1)
     transitions (1.2.1)
     tsort (0.2.0)
+    turbo-rails (2.0.23)
+      actionpack (>= 7.1.0)
+      railties (>= 7.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
@@ -487,6 +490,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.1.0)
   transitions (= 1.2.1)
+  turbo-rails (~> 2.0)
   tzinfo-data
   view_component (~> 4.0)
   web-console (>= 3.3.0)
