@@ -89,7 +89,6 @@ Rails.application.routes.draw do
     resources :applied_leaves, only: [] do
       collection do
         get 'all_applied_leaves', as: 'all'
-        get 'filter_applied_leaves', as: 'filter'
         patch 'approve_leaves', as: 'approve'
         patch 'reject_leaves', as: 'reject'
         get 'new_applied_leave_by_hr'

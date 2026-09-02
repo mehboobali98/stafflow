@@ -1,0 +1,6 @@
+<%= turbo_stream.update 'flash_message' do %>
+  <%= render partial: 'shared/flash_message' %>
+<% end %>
+<%= turbo_stream.update 'applied_leaves_list' do %>
+  <%= render partial: 'applied_leaves_queue', locals: { applied_leaves: @applied_leaves } %>
+<% end %>
