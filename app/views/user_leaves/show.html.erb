@@ -24,7 +24,7 @@
           </table>
         </div>
         <div class="card-footer">
-          <%= link_to t('user_leave.headings.edit'), edit_member_user_leave_path(@user, @user_leave), class: "btn btn-secondary", remote: true if can?(:show, @user_leave) %>
+          <%= link_to t('user_leave.headings.edit'), edit_member_user_leave_path(@user, @user_leave), class: "btn btn-secondary", data: { turbo_frame: 'modal' } if can?(:show, @user_leave) %>
           <%= link_to t('user_leave.headings.delete'), member_user_leave_path(@user, @user_leave), method: :delete, data: { confirm: t('user_leave.messages.confirmation.delete') }, class: 'btn btn-danger' if can?(:edit, @user_leave) %>
           <%= link_to t('user_leave.headings.back'), :back, class: 'btn btn-outline-primary' if can?(:index, UserLeave) %>
         </div>

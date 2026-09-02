@@ -15,10 +15,12 @@
 </div>
 <br><br>
 <div class='p-2'>
-  <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
-  <% if @user_leaves.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
+  <%= turbo_frame_tag 'user_leaves_list' do %>
+    <%= render partial: 'user_leaves_list', locals: { user_leaves: @user_leaves } %>
+    <% if @user_leaves.empty? %>
+      <div class="d-flex justify-content-md-center align-items-center mt-5">
+        <h1 class='text-muted'><%= t('nodata') %></h1>
+      </div>
+    <% end %>
   <% end %>
 </div>
