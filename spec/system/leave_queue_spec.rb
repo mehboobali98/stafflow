@@ -36,4 +36,48 @@ RSpec.describe 'the HR leave queue', type: :system do
   it 'resolves every key it renders' do
     expect(page).to have_no_css('.translation_missing')
   end
+
+  describe 'approving in bulk' do
+    it 'leaves the buttons disabled until something is selected' do
+      expect(page).to have_css('#approve_leaves_btn[disabled]')
+      expect(page).to have_css('#reject_leaves_btn[disabled]')
+
+      check "applied_leave_#{applied_leave.id}"
+
+      expect(page).to have_no_css('#approve_leaves_btn[disabled]')
+      expect(page).to have_no_css('#reject_leaves_btn[disabled]')
+    end
+
+    it 'approves the selected requests and says how many' do
+      check "applied_leave_#{applied_leave.id}"
+
+      click_on I18n.t('applied_leave.links.approve_leaves')
+
+      expect(page).to have_css('.flash-message',
+                               text: I18n.t('applied_leave.messages.mass_approve', total: 1, actual: 1))
+      expect(applied_leave.reload.state).to eq 'accepted'
+    end
+
+    it 'shows the new state in the table without reloading the page around it' do
+      page.execute_script("document.querySelector('.sidebar').dataset.probe = 'kept'")
+      check "applied_leave_#{applied_leave.id}"
+
+      click_on I18n.t('applied_leave.links.reject_leaves')
+
+      expect(page).to have_css('td', text: I18n.t('applied_leave.labels.rejected'))
+      expect(page.evaluate_script("document.querySelector('.sidebar').dataset.probe")).to eq 'kept'
+    end
+  end
+
+  describe 'filtering' do
+    it 'narrows the queue without disturbing the page around it' do
+      page.execute_script("document.querySelector('.sidebar').dataset.probe = 'kept'")
+      expect(page).to have_content(applied_leave.user.email)
+
+      select I18n.t('applied_leave.labels.accepted'), from: 'filter'
+
+      expect(page).to have_no_content(applied_leave.user.email)
+      expect(page.evaluate_script("document.querySelector('.sidebar').dataset.probe")).to eq 'kept'
+    end
+  end
 end
