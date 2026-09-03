@@ -28,7 +28,7 @@
             <%= link_to edit_designation_path(designation) do %>
               <i class='fa fa-bars ms-3'></i>
             <% end %>
-            <%= link_to designation, method: :delete, data: { confirm: t('designation.sure_message') } do %>
+            <%= link_to designation, data: { turbo_method: :delete, turbo_confirm: t('designation.sure_message') } do %>
               <i class='fa fa-trash ms-3'></i>
             <% end %>
           </td>

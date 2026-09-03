@@ -27,7 +27,7 @@
               <% end %>
             <% end %>
             <% if can?(:destroy, department) %>
-              <%= link_to department, method: :delete, data: { confirm: t('department.sure_message') } do %>
+              <%= link_to department, data: { turbo_method: :delete, turbo_confirm: t('department.sure_message') } do %>
                 <i class='fa fa-trash ms-3'></i>
               <% end %>
             <% end %>

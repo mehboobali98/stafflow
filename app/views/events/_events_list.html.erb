@@ -35,7 +35,7 @@
               <% end %>
             <% end %>
             <% if can?(:delete, event) %>
-              <%= link_to event, method: :delete, data: { confirm: t('event.forms.confirmation.deletion') } do %>
+              <%= link_to event, data: { turbo_method: :delete, turbo_confirm: t('event.forms.confirmation.deletion') } do %>
                 <i class='fa fa-trash ms-3'></i>
               <% end %>
             <% end %>
