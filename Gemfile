@@ -8,7 +8,7 @@ ruby '3.3.12'
 # The lower bound is a security floor rather than a preference. 7.2.3.2 carries
 # the fix for GHSA-xr9x-r78c-5hrm, arbitrary file read through Active Storage
 # variant processing, and `~> 7.2.3` on its own resolves to 7.2.3.
-gem 'rails', '~> 7.2.3', '>= 7.2.3.2'
+gem 'rails', '~> 8.1.3'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'
 # Use Puma as the app server
@@ -36,7 +36,7 @@ gem 'image_processing', '~> 1.12'
 # Active Storage ships no content-type or size validators of its own. Sniffing
 # upload types by hand is where this kind of code goes wrong, so it is left to
 # a gem that validates the analysed type rather than the declared one.
-gem 'active_storage_validations', '~> 1.1'
+gem 'active_storage_validations', '~> 4.1'
 gem 'will_paginate', '=3.3.0'
 # additional gems
 gem 'cancancan'
