@@ -1,4 +1,3 @@
-require("@rails/ujs").start()
 import "@hotwired/turbo"
 import "./controllers"
 require("@rails/activestorage").start()

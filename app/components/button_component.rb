@@ -31,7 +31,7 @@ class ButtonComponent < BaseComponent
   def options
     base = component_attributes(@attributes.except(:type, :class))
     base[:class] = [css_classes, @attributes[:class]].compact.join(' ')
-    base[:method] = @method if @method
+    base[:data] = base[:data].merge(turbo_method: @method) if @method
     base
   end
 
