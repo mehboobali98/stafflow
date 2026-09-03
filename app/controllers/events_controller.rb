@@ -97,7 +97,6 @@ class EventsController < ApplicationController
     @events = @events.events_in_a_month(@start_date)
     respond_to do |format|
       format.html
-      format.js
     end
   end
 

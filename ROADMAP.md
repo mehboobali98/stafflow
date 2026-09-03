@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 338 examples, 0 pending |
+| Tests | 343 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 36 found, 36 fixed, 0 open |
@@ -1283,9 +1283,41 @@ breadcrumbs_on_rails and chartkick's helpers.
       And the queue keeps its filter across a mass update through a hidden
       field rather than by reading the select back out of the DOM.
 
-      Left: the leave-allocation modal and the calendar's month links.
-      `remote: true`, `dataType: 'script'`, rails-ujs and jQuery all leave with
-      those, and jQuery's last caller after them is select2
+      **The modal and the calendar close the item.** Nine templates that
+      returned JavaScript for the browser to eval are zero, and every
+      `remote: true` link and `dataType: 'script'` call in the application went
+      with them.
+
+      The calendar is a frame around the month with the previous and next links
+      naming it. The modal is a frame the edit links target, a stream on success
+      that updates the list, clears the frame and writes the flash, and a 422
+      re-render on failure that puts the errors back in the dialog. It replaces
+      a flow that rendered the dialog with `$("#modal").html(...)`, called
+      `.modal("show")`, and answered a successful save with
+      `render js: "window.location = ..."` — a full page reload written as a
+      string of JavaScript.
+
+      **Bootstrap's Modal is not used, and that is a decision rather than an
+      oversight.** It resolves `.modal-dialog` once, in its constructor, and
+      caches it: built against an empty frame it holds a null dialog for the
+      life of the instance and throws `Illegal invocation` inside
+      `_showElement`. Building it per dialog instead moves the problem rather
+      than solving it — replacing the dialog on a validation error tears the old
+      instance down while the new one is showing, and the teardown strips the
+      backdrop the new one just added, which failed three runs in five. Driving
+      the classes directly is a dozen lines with no instance to cache and no
+      lifecycle to race; the dialog is shown or hidden by whether the frame has
+      children, watched with a MutationObserver, so clearing the frame closes it
+      without the server saying so twice. The two dismiss buttons call the
+      controller rather than `data-bs-dismiss`.
+
+      Found by running the new file six times rather than once, which is the
+      habit the Turbo step started and the second flake it has caught.
+
+      What is still here: `@rails/ujs`, for the `data-method` delete links and
+      their `data-confirm`, which become `data-turbo-method` and
+      `data-turbo-confirm`; and jQuery, whose remaining callers are the
+      department-to-designation cascade on the employee form and select2
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
@@ -1308,7 +1340,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 65 system specs are what makes this safe, and they are also going to get in
+The 70 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need
