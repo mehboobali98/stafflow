@@ -77,4 +77,31 @@ RSpec.describe 'colour contrast', type: :system do
       expect_readable(selectors)
     end
   end
+
+  # The combobox is the one control that paints text on the accent rather than
+  # on a surface, and the highlight only exists while the list is open.
+  describe 'the combobox dropdown' do
+    let(:selectors) { ['.combobox__input', '.combobox__option', '.combobox__option.is-active'] }
+
+    before do
+      as_tenant(company) do
+        create(:user, :employee, company: company, department: department,
+                                 email: 'employee@example.com')
+      end
+      sign_in_as(company, hr)
+      visit_tenant(company, new_applied_leave_by_hr_applied_leaves_path)
+      find_by_id('applied_leave_member_id_search').send_keys('employee')
+      find('[role=option]')
+      find_by_id('applied_leave_member_id_search').send_keys(:down)
+      find('.combobox__option.is-active')
+    end
+
+    it 'has every selector it claims to check' do
+      expect_all_present(selectors)
+    end
+
+    it 'clears AA on the search field and on both option states' do
+      expect_readable(selectors)
+    end
+  end
 end

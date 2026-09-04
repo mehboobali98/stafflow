@@ -179,10 +179,10 @@ class AppliedLeavesController < ApplicationController
 
   # GET /applied_leaves/search_users
   def search_users
-    @users = current_company.users.where('email LIKE?', "#{params[:query]}%")
+    @users = current_company.users.where('email LIKE ?', "#{params[:query]}%")
     respond_to do |format|
       format.json do
-        render json: @users
+        render json: @users.select(:id, :email)
       end
     end
   end
