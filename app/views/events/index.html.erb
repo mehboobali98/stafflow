@@ -1,15 +1,15 @@
 <div class="">
   <% unless @events.present? %>
-    <%= render partial: 'no_events.html.erb' %>
+    <%= render partial: 'no_events' %>
   <% else %>
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-end">
       <%= link_to display_calendar_events_path, class: 'btn btn-outline-dark pt-2 mb-2' do %>
         <i class="fa fa-calendar" aria-hidden="true"></i>
-        <div class="events_table">
-          <%= render partial: 'events_list', locals: { events: @events } %>
-        </div>
         <%= t('event.forms.links.view_calendar') %>
       <% end %>
     </div>
+    <%= turbo_frame_tag 'events_table', data: { turbo_action: 'advance' } do %>
+      <%= render partial: 'events_list', locals: { events: @events } %>
+    <% end %>
   <% end %>
 </div>

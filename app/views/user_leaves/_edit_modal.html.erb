@@ -1,12 +1,12 @@
-<%= javascript_include_tag "user_leaves" %>
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title"><%= t('user_leave.headings.edit_user_leave') %></h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <button type="button" class="btn-close" aria-label="Close" data-action="click->modal#close"></button>
     </div>
-    <div id="modal_flash_message"></div>
-    <%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch, local: false, html: { class: 'card p-3 bg-light' } do |form| %>
+    <div id="modal_flash_message"><%= render partial: 'shared/flash_message' %></div>
+    <%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch,
+                  html: { class: 'card p-3 bg-light' } do |form| %>
       <div class="modal-body">
         <div class="form-group mb-3">
           <%= form.label :leave_name, t('leave.forms.labels.name'), class: 'text-grey-darkest' %>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('user_leave.headings.close') %></button>
+        <button type="button" class="btn btn-secondary" data-action="click->modal#close"><%= t('user_leave.headings.close') %></button>
         <%= form.submit class: 'card-link btn btn-primary' %>
       </div>
     <% end %>

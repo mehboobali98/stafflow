@@ -1,29 +1,39 @@
-<%= javascript_include_tag "show_applied_leaves" %>
 <div class="container py-4">
   <h1><%= t('applied_leave.headings.add_user_leave') %></h1>
-  <%= form_with scope: :applied_leave, url: :create_applied_leave_by_hr_applied_leaves, method: :post  do |form| %>
-    <div class="form-control mb-4">
-      <%= form.select :member_id, {}, prompt: t('applied_leave.messages.select_employees'), class: 'js-select-field select2-container',id: 'employee_select' %> 
-    </div>
+  <%= form_with scope: :applied_leave, url: :create_applied_leave_by_hr_applied_leaves, method: :post,
+                data: { controller: 'dependent-select',
+                        dependent_select_url_value: get_available_user_leaves_applied_leaves_path(member_id: 'VALUE'),
+                        action: 'combobox:select->dependent-select#load' } do |form| %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :member_id,
+                                      label: t('applied_leave.messages.select_employees'),
+                                      id: 'applied_leave_member_id_search')) do %>
+      <%= render(ComboboxComponent.new(form: form, attribute: :member_id,
+                                       url: search_users_applied_leaves_path,
+                                       id: 'applied_leave_member_id_search',
+                                       label_attribute: 'email',
+                                       placeholder: t('applied_leave.messages.search_employees'))) %>
+    <% end %>
 
-    <div class="form mb-4">
-      <%= form.select :user_leave_id, {}, { prompt: t('applied_leave.messages.select_leave_type') },  class: 'form-control', id: 'leaves_select' %>
-    </div>
+    <%= render(FormFieldComponent.new(form: form, attribute: :user_leave_id,
+                                      label: t('applied_leave.messages.select_leave_type'),
+                                      id: 'leaves_select')) do %>
+      <%= form.select :user_leave_id, {}, { prompt: t('applied_leave.messages.select_leave_type') },
+                      class: 'form-select', id: 'leaves_select',
+                      data: { dependent_select_target: 'select' } %>
+    <% end %>
 
-    <div class="form mb-4">
-      <%= form.label :leave_duration_type, t('applied_leave.labels.leave_duration') %>
-      <%= form.select :leave_duration_type, options_for_select(leave_duration_type), {}, class: "form-control" %>
-    </div>
-    <div class="form mb-4">
-      <%= form.label :applied_from, t('applied_leave.labels.leave_from'), class: "form-label" %>
-      <%= form.date_field :applied_from, required: true, class: "form-control" %>
-    </div>
-    <div class="form mb-4">
-      <%= form.label :applied_till, t('applied_leave.labels.leave_to'), class: "form-label" %>
-      <%= form.date_field :applied_till, required: true, class: "form-control" %>
-    </div>
-    <div class="form mb-4">
-      <%= form.submit t('applied_leave.links.submit'), class: 'btn btn-primary' %>
-    </div>
+    <%= render(FormFieldComponent.new(form: form, attribute: :leave_duration_type,
+                                      label: t('applied_leave.labels.leave_duration'))) do %>
+      <%= form.select :leave_duration_type, options_for_select(leave_duration_type), {},
+                      class: 'form-select' %>
+    <% end %>
+
+    <%= render(FormFieldComponent.new(form: form, attribute: :applied_from, as: :date_field,
+                                      label: t('applied_leave.labels.leave_from'), required: true)) %>
+
+    <%= render(FormFieldComponent.new(form: form, attribute: :applied_till, as: :date_field,
+                                      label: t('applied_leave.labels.leave_to'), required: true)) %>
+
+    <%= form.submit t('applied_leave.links.submit'), class: 'btn btn-primary' %>
   <% end %>
 </div>

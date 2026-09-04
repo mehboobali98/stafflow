@@ -27,7 +27,7 @@
           <% end %>
 
           <% if can?(:destroy, user) %>
-            <%= link_to member_path(user), method: :delete, data: { confirm: t('messages.confirmation') } do %>
+            <%= link_to member_path(user), data: { turbo_method: :delete, turbo_confirm: t('messages.confirmation') } do %>
               <i class='fa fa-trash ms-3'></i>
             <% end %>
           <% end %>

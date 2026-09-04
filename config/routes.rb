@@ -3,6 +3,11 @@
 require_relative 'initializers/subdomain_validator'
 
 Rails.application.routes.draw do
+  # The component previews. Outside the subdomain constraints below on purpose:
+  # the design system belongs to no tenant, and mounting it inside them would
+  # make it unreachable on the apex host.
+  mount Lookbook::Engine, at: '/lookbook' if Rails.env.development?
+
   root to: 'home#index'
   resources :search, only: [] do
     collection do
@@ -84,7 +89,6 @@ Rails.application.routes.draw do
     resources :applied_leaves, only: [] do
       collection do
         get 'all_applied_leaves', as: 'all'
-        get 'filter_applied_leaves', as: 'filter'
         patch 'approve_leaves', as: 'approve'
         patch 'reject_leaves', as: 'reject'
         get 'new_applied_leave_by_hr'

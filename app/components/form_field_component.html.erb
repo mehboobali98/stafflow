@@ -1,0 +1,10 @@
+<%= tag.div(**component_attributes(class: 'mb-3')) do %>
+  <%= form.label attribute, label, class: 'form-label', for: label_for %>
+  <%= control %>
+  <% if hint.present? %>
+    <div class="form-text" id="<%= field_id %>_hint"><%= hint %></div>
+  <% end %>
+  <% if errors.any? %>
+    <div class="invalid-feedback d-block" id="<%= field_id %>_error"><%= errors.first %></div>
+  <% end %>
+<% end %>

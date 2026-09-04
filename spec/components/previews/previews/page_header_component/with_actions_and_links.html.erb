@@ -1,0 +1,7 @@
+<%= render(PageHeaderComponent.new(title: 'Applied leaves',
+                                   subtitle: 'Every request across the company')) do |header| %>
+  <% header.with_actions { render(ButtonComponent.new) { 'Apply for leave' } } %>
+  <% header.with_link { link_to 'All leaves', '#' } %>
+  <% header.with_link { link_to 'My applied leaves', '#' } %>
+  <% header.with_link { link_to 'My available leaves', '#' } %>
+<% end %>

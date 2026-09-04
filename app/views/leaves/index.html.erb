@@ -15,6 +15,7 @@
   </div>
 </div>
 <br><br>
+<%= turbo_frame_tag 'leaves_table', data: { turbo_action: 'advance' } do %>
 <div class='p-3'>
   <table class="table table-hover">
     <thead class="stafflow-table-header p-3 table-borderless">
@@ -41,7 +42,7 @@
               <% end %>
             <% end %>
             <% if can?(:destroy, leave) %>
-              <%= link_to leave, method: :delete, data: { confirm: t('leave.messages.delete_confirm') } do %>
+              <%= link_to leave, data: { turbo_method: :delete, turbo_confirm: t('leave.messages.delete_confirm') } do %>
                 <i class='fa fa-trash ms-3'></i>
               <% end %>
             <% end %>
@@ -55,4 +56,6 @@
       <h1 class='text-muted'><%= t('nodata') %></h1>
     </div>
   <% end %>
+  <%= render partial: 'shared/pagination', locals: { resource: @leaves } %>
 </div>
+<% end %>

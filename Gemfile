@@ -23,8 +23,9 @@ gem 'jsbundling-rails', '~> 1.3'
 # only exist undigested, and every icon 404s once assets are precompiled. This
 # gem uses the asset helpers, so the digests match.
 gem 'font-awesome-sass', '~> 5.15.1'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+# Turbo's Ruby side. The JavaScript comes from npm through esbuild; this is here
+# for turbo_frame_tag and the turbo_stream format.
+gem 'turbo-rails', '~> 2.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
@@ -54,7 +55,10 @@ gem 'whenever', '=1.0.0', require: false
 gem 'simple_calendar', '=2.4.3'
 
 # graphs
-gem 'chartkick', '=4.0.5'
+# The gem renders the tag and the npm package draws into it, so the two move
+# together: chartkick.js 5 is what wants Chart.js 4, and the gem below is what
+# knows how to talk to it.
+gem 'chartkick', '~> 5.2'
 
 # elastic search
 gem 'searchkick', '~> 5.3'
@@ -71,6 +75,10 @@ gem 'faker', '=2.19.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'breadcrumbs_on_rails', '=4.1.0'
+
+# The component layer. Views hand-wrote `btn btn-*` in 49 places and a bare
+# `<table>` in 18 before this; the point is one place to change each of them.
+gem 'view_component', '~> 4.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -91,10 +99,20 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.1.0'
+  # Renders the component previews. Development only: it is a build tool, and
+  # whether the demo should expose it is a phase 4 question, not settled here.
+  gem 'lookbook', '~> 2.3'
 end
 
 group :test do
   gem 'shoulda-matchers', '~> 5.0'
+  gem 'capybara', '~> 3.40'
+  # Cuprite drives Chrome over CDP, so there is no chromedriver to keep in step
+  # with the browser - the coupling that left `webdrivers` pinning selenium
+  # below 4.0 until both were deleted. It is also what makes `js_errors: true`
+  # possible: an uncaught exception in the page raises in the example rather
+  # than being left in a log for the spec to go looking for.
+  gem 'cuprite', '~> 0.17'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

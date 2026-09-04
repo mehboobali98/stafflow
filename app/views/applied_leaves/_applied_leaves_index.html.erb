@@ -3,7 +3,7 @@
     <td><%= applied_leave.leave.name %></td>
     <td><%= applied_leave.applied_from %></td>
     <td><%= applied_leave.applied_till %></td>
-    <td><%= t("applied_leave.links.#{applied_leave.state}") %></td>
+    <td><%= t("applied_leave.labels.#{applied_leave.state}") %></td>
     <td>
       <% if applied_leave.pending? && can?(:edit, applied_leave) %>
         <%= link_to edit_member_applied_leave_path(@user, applied_leave) do %>
@@ -11,7 +11,7 @@
         <% end %>
       <% end %>
       <% if applied_leave.pending? && can?(:delete, applied_leave) %>
-        <%= link_to member_applied_leave_path(@user, applied_leave), method: :delete, data: { confirm: t('applied_leave.messages.delete_confirm') } do %>
+        <%= link_to member_applied_leave_path(@user, applied_leave), data: { turbo_method: :delete, turbo_confirm: t('applied_leave.messages.delete_confirm') } do %>
           <i class='fa fa-trash ms-3'></i>
         <% end %>
       <% end %>

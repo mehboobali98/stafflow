@@ -3,17 +3,17 @@
   "private": true,
   "version": "0.1.0",
   "dependencies": {
+    "@hotwired/stimulus": "3.2.2",
+    "@hotwired/turbo": "8.0.23",
     "@popperjs/core": "2.9.3",
-    "@rails/activestorage": "6.0.0",
-    "@rails/ujs": "6.0.0",
+    "@rails/activestorage": "7.2.302",
     "aos": "2.3.4",
-    "bootstrap": "5.0",
-    "chart.js": "3.5.1",
-    "chartkick": "4.0.5",
-    "esbuild": "^0.25.0",
-    "jquery": "3.6.0",
-    "select2": "4.1.0-rc.0",
-    "turbolinks": "5.2.0"
+    "bootstrap": "5.3.8",
+    "chart.js": "4.5.1",
+    "chartjs-adapter-date-fns": "3.0.0",
+    "chartkick": "5.0.1",
+    "date-fns": "4.1.0",
+    "esbuild": "^0.25.0"
   },
   "scripts": {
     "build": "rm -f app/assets/builds/*.js app/assets/builds/*.css app/assets/builds/*.map && esbuild app/javascript/*.js --bundle --minify --sourcemap --outdir=app/assets/builds --public-path=/assets"

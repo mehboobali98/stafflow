@@ -47,6 +47,11 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # Devise mails a confirmation on every user created, and that template builds
+  # a URL. Development sets this and nothing else did, so any spec reaching a
+  # create raised `Missing host to link to!` before it could assert anything.
+  config.action_mailer.default_url_options = { host: 'localhost' }
+
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
