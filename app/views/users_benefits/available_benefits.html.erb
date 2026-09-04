@@ -1,42 +1,36 @@
-<%= form_with model: [@user, @users_benefits], url: mass_create_member_users_benefits_path(@user), local: true do |form| %>
-  <div class='p-3'>
-    <div class="row">
-      <div>
-        <table class="table table-bordered">
-          <thead class="stafflow-table-header">
-            <tr>
-              <th><%= t('users_benefit.table.select') %></th>
-              <th><%= t('users_benefit.table.benefit_name') %></th>
-              <th><%= t('users_benefit.table.amount') %></th>
-            </tr>
-          </thead>
-          <% if @available_benefits.present? %>
-            <tbody>
-              <% @available_benefits.each do |benefit| %>
-                <tr data-controller="toggle-field">
-                  <td>
-                    <div class="custom-control custom-checkbox">
-                      <%= check_box_tag '', nil, false, class: 'new_user_benefit',
-                                        data: { action: 'change->toggle-field#toggle' } %>
-                    </div>
-                  </td>
-                  <td><%= benefit.name %></td>
-                  <td>
-                    <div class="form-group">
-                      <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, disabled: true,
-                                           id: "number_field_#{benefit.id}",
-                                           data: { 'toggle-field-target': 'field' } %>
-                    </div>
-                  </td>
-                </tr>      
-                <% end %>
-            </tbody>
-          </table>
-          <%= submit_tag t('form.button.submit'), class: 'btn btn-primary m-1' %>
-          <% else %>
-            <p class='text-danger'><%= t('users_benefit.validation.all_benefits_alloted') %></p>
-          <% end %>
-      </div>
-    </div>
-  </div>
+<% content_for :title, t('users_benefit.table.new_users_benefit') %>
+<%= render(PageHeaderComponent.new(title: t('users_benefit.table.new_users_benefit'))) %>
+
+<% if @available_benefits.present? %>
+  <%= form_with model: [@user, @users_benefits],
+                url: mass_create_member_users_benefits_path(@user), local: true do |form| %>
+    <%= render(TableComponent.new(class: 'table-bordered')) do |table| %>
+      <% table.with_head do %>
+        <tr>
+          <th><%= t('users_benefit.table.select') %></th>
+          <th><%= t('users_benefit.table.benefit_name') %></th>
+          <th><%= t('users_benefit.table.amount') %></th>
+        </tr>
+      <% end %>
+      <% table.with_body do %>
+        <% @available_benefits.each do |benefit| %>
+          <tr data-controller="toggle-field">
+            <td>
+              <%= check_box_tag '', nil, false, class: 'new_user_benefit',
+                                data: { action: 'change->toggle-field#toggle' } %>
+            </td>
+            <td><%= benefit.name %></td>
+            <td>
+              <%= number_field_tag "users_benefit[#{benefit.id}]", benefit.default_amount, disabled: true,
+                                   id: "number_field_#{benefit.id}", class: 'form-control w-auto',
+                                   data: { 'toggle-field-target': 'field' } %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('form.button.submit') } %>
+  <% end %>
+<% else %>
+  <%= render(EmptyStateComponent.new(title: t('users_benefit.validation.all_benefits_alloted'))) %>
 <% end %>

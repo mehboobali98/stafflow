@@ -1,51 +1,48 @@
-<div class='stafflow-heading p-3'>  
-  <div class='row'>
-    <div class='col-10'>
-      <h2><%= t('users_benefit.headings.users_benefits') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('users_benefit.table.new_users_benefit'), available_benefits_member_users_benefits_path(@user), class: 'btn btn-primary mt-2' %>
-    </div>
-  </div>
-  <%= link_to t('benefits.all'), benefits_path %>
-</div>
-<div class='p-3'>
-  <br>
-  <br>
-  <table class="table table-hover">
-    <thead class="stafflow-table-header">
+<% content_for :title, t('users_benefit.headings.users_benefits') %>
+<%= render(PageHeaderComponent.new(title: t('users_benefit.headings.users_benefits'))) do |header| %>
+  <% header.with_actions do %>
+    <%= render(ButtonComponent.new(href: available_benefits_member_users_benefits_path(@user))) do %>
+      <%= t('users_benefit.table.new_users_benefit') %>
+    <% end %>
+  <% end %>
+  <% header.with_link { link_to t('benefits.all'), benefits_path } %>
+<% end %>
+
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
+    <tr>
       <th><%= t('users_benefit.table.user_name') %></th>
       <th><%= t('users_benefit.table.benefit_name') %></th>
       <th><%= t('users_benefit.table.amount') %></th>
-      <th colspan="2"><%= t('users_benefit.table.options') if can?(:update, UsersBenefit) %></th>
+      <th class="text-end"><%= t('users_benefit.table.options') if can?(:update, UsersBenefit) %></th>
     </tr>
-    </thead>
-    <tbody>
-      <% @users_benefits.each do |users_benefit| %>
-        <tr>  
-          <td><%= users_benefit.user.full_name%></td>
-          <td><%= users_benefit.benefit.name %></td>
-          <td><%= users_benefit.amount %></td>
-          <td>
-            <% if can?(:update, users_benefit) %>
-              <%= link_to edit_member_users_benefit_path(@user, users_benefit) do %>
-                <i class='fa fa-bars ms-3'></i>
-              <% end %>
-            <% end %>
-            <% if can?(:destroy, users_benefit) %>
-              <%= link_to member_users_benefit_path(@user, users_benefit), data: { turbo_method: :delete, turbo_confirm: t('form.message.confirmation') } do %>
-                <i class='fa fa-trash ms-3'></i>
-              <% end %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <% if @users_benefits.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
   <% end %>
-  <%= render partial: 'shared/pagination', locals: { resource: @users_benefits } %>
-</div> 
+  <% table.with_body do %>
+    <% @users_benefits.each do |users_benefit| %>
+      <tr>
+        <td><%= users_benefit.user.full_name %></td>
+        <td><%= users_benefit.benefit.name %></td>
+        <td><%= users_benefit.amount %></td>
+        <td class="text-end text-nowrap">
+          <% if can?(:update, users_benefit) %>
+            <%= link_to edit_member_users_benefit_path(@user, users_benefit),
+                        'aria-label': t('users_benefit.links.edit') do %>
+              <i class='fa fa-bars'></i>
+            <% end %>
+          <% end %>
+          <% if can?(:destroy, users_benefit) %>
+            <%= link_to member_users_benefit_path(@user, users_benefit), class: 'ms-3',
+                        'aria-label': t('users_benefit.links.delete'),
+                        data: { turbo_method: :delete, turbo_confirm: t('form.message.confirmation') } do %>
+              <i class='fa fa-trash'></i>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+<% end %>
+<% if @users_benefits.empty? %>
+  <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
+<% end %>
+<%= render partial: 'shared/pagination', locals: { resource: @users_benefits } %>

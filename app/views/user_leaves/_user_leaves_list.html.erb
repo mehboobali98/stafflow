@@ -1,39 +1,44 @@
-<table class="table table-hover">
-  <thead class="stafflow-table-header">
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
     <tr>
       <th><%= t('user_leave.headings.leave_type') %></th>
       <th><%= t('user_leave.headings.leave_count') %></th>
       <th><%= t('user_leave.headings.leave_remaining_count') %></th>
-      <th><%= t('user_leave.headings.options') %></th>
+      <th class="text-end"><%= t('user_leave.headings.options') %></th>
     </tr>
-  </thead>
-  <tbody>
+  <% end %>
+  <% table.with_body do %>
     <% user_leaves.each do |user_leave| %>
       <tr>
         <td><%= user_leave.leave.name %></td>
         <td><%= user_leave.total_count %></td>
         <td><%= user_leave.remaining_count %></td>
-        <td>
-        <% if can?(:show, user_leave) %>
-          <%= link_to member_user_leave_path(@user, user_leave) do %>
-            <i class='fa fa-eye fa-lg'></i>
+        <td class="text-end text-nowrap">
+          <% if can?(:show, user_leave) %>
+            <%= link_to member_user_leave_path(@user, user_leave),
+                        'aria-label': t('user_leave.links.view') do %>
+              <i class='fa fa-eye fa-lg'></i>
+            <% end %>
           <% end %>
-        <% end %>
-        <% if can?(:edit, user_leave) %>
-          <%= link_to edit_member_user_leave_path(@user, user_leave), data: { turbo_frame: 'modal' } do %>
-            <i class='fa fa-bars ms-3'></i>
+          <% if can?(:edit, user_leave) %>
+            <%= link_to edit_member_user_leave_path(@user, user_leave), class: 'ms-3',
+                        'aria-label': t('user_leave.links.edit'), data: { turbo_frame: 'modal' } do %>
+              <i class='fa fa-bars'></i>
+            <% end %>
           <% end %>
-        <% end %>
-        <% if can?(:destroy, user_leave) %>
-          <%= link_to member_user_leave_path(@user, user_leave), data: { turbo_method: :delete, turbo_confirm: t('user_leave.messages.confirmation.delete') } do %>
-            <i class='fa fa-trash ms-3'></i>
+          <% if can?(:destroy, user_leave) %>
+            <%= link_to member_user_leave_path(@user, user_leave), class: 'ms-3',
+                        'aria-label': t('user_leave.links.delete'),
+                        data: { turbo_method: :delete,
+                                turbo_confirm: t('user_leave.messages.confirmation.delete') } do %>
+              <i class='fa fa-trash'></i>
+            <% end %>
           <% end %>
-        <% end %>
         </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
+  <% end %>
+<% end %>
 <div class='pagination-wrapper'>
   <%= will_paginate @user_leaves, container: false %>
 </div>
