@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 381 examples, 0 pending |
+| Tests | 388 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1480,6 +1480,43 @@ breadcrumbs_on_rails and chartkick's helpers.
       links per row. They carry an `aria-label` here, but the same shape sits in
       every list page in the application, so this is a pattern to carry through
       the remaining views rather than something this page finished.
+
+      **Then the other nine index pages, measured as a set rather than one at
+      a time.** Five scrolled sideways — departments at 459px, designations at
+      498, leaves and events at 410, benefits at 414 — and every one failed on
+      the same `col-10`/`col-2` heading block with a `btn btn-primary` in the
+      narrow column that the employee list had. That is what made it one change
+      rather than five. All ten fit now; the four already passing were not
+      touched.
+
+      Only designations was overflowing on its table too. The other four fit at
+      the row counts a fixture produces and would not have at real ones, so
+      they moved for the same reason rather than waiting to fail — what
+      `.table-responsive` buys is that a table's width stops being the
+      document's problem at any row count.
+
+      Three tables were malformed and the component fixed them as a
+      consequence rather than as an aim: departments and designations put `<th>`
+      straight inside `<thead>` with no `<tr>`, and benefits closed a `<tr>` it
+      had never opened. Browsers repair all three, which is why nothing had
+      noticed in five years.
+
+      `events/_no_events.html.erb` is gone. It was the events empty branch and
+      held its own copies of the create and calendar buttons, so those moved up
+      into the page header where they render either way. It was also styled in
+      `max-wd-md`, `my-10`, `p-12`, `text-indigo-darker` and `text-t2xl` —
+      Tailwind class names, in an application that has never had Tailwind,
+      inherited from whatever template the 2021 build borrowed the page from.
+      Every one of them resolved to nothing.
+
+      One thing found by reading what the list pages render rather than by
+      measuring them: `shared/_pagination` opened with
+      `stylesheet_link_tag 'pagination'`, which put a `<link>` in the middle of
+      the `<body>` on all eight pages that render it. Under turbolinks that was
+      merely wrong; under Turbo Drive the body is replaced on every visit, so
+      the element was being re-inserted on each navigation. It is a layout
+      concern and now sits in the head the layouts pass consolidated, beside
+      sidebar and dashboard.
 
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem

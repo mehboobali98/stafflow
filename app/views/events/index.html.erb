@@ -1,15 +1,19 @@
-<div class="">
-  <% unless @events.present? %>
-    <%= render partial: 'no_events' %>
-  <% else %>
-    <div class="d-flex flex-row justify-content-end">
-      <%= link_to display_calendar_events_path, class: 'btn btn-outline-dark pt-2 mb-2' do %>
-        <i class="fa fa-calendar" aria-hidden="true"></i>
-        <%= t('event.forms.links.view_calendar') %>
-      <% end %>
-    </div>
-    <%= turbo_frame_tag 'events_table', data: { turbo_action: 'advance' } do %>
-      <%= render partial: 'events_list', locals: { events: @events } %>
+<% content_for :title, t('event.forms.headings.event') %>
+<%= render(PageHeaderComponent.new(title: t('event.forms.headings.event'))) do |header| %>
+  <% header.with_actions do %>
+    <%= render(ButtonComponent.new(href: new_event_path)) do %>
+      <%= t('event.forms.links.create') %>
+    <% end %>
+    <%= render(ButtonComponent.new(variant: :secondary, href: display_calendar_events_path, class: 'ms-2')) do %>
+      <i class="fa fa-calendar me-1" aria-hidden="true"></i><%= t('event.forms.links.view_calendar') %>
     <% end %>
   <% end %>
-</div>
+<% end %>
+
+<% if @events.present? %>
+  <%= turbo_frame_tag 'events_table', data: { turbo_action: 'advance' } do %>
+    <%= render partial: 'events_list', locals: { events: @events } %>
+  <% end %>
+<% else %>
+  <%= render(EmptyStateComponent.new(title: t('event.no_events'))) %>
+<% end %>

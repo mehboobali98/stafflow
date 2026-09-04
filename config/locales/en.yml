@@ -114,6 +114,10 @@ en:
     search: "Search"
     all: "All"
   leave:
+    links:
+      view: "View leave"
+      edit: "Edit leave"
+      delete: "Delete leave"
     all: "All Leaves"
     breadcrumbs:
       home: "Leave"
@@ -298,6 +302,10 @@ en:
       payroll_generation: "Are you sure you want to generate new payroll?"
 
   benefit:
+    links:
+      view: "View benefit"
+      edit: "Edit benefit"
+      delete: "Delete benefit"
     breadcrumbs:
       home: "Benefits"
       new: "New"
@@ -417,6 +425,10 @@ en:
       text_two: "Stafflow"
       text_three: ". All Rights Reserved"
   department:
+    links:
+      view: "View department"
+      edit: "Edit department"
+      delete: "Delete department"
     name_lable: "Department Name"
     select_image_lable: "Cover Photo"
     table_heading: "All Departments"
@@ -441,6 +453,10 @@ en:
     sure_message: "Are You Sure?"
 
   designation:
+    links:
+      view: "View designation"
+      edit: "Edit designation"
+      delete: "Delete designation"
     name_lable: "Designation Name"
     select_department: "Select Department"
     table_heading: "All Designations"
@@ -480,6 +496,10 @@ en:
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
   event:
+    links:
+      view: "View event"
+      edit: "Edit event"
+      delete: "Delete event"
     no_events: 'It lookes like you have not scheduled an event yet'
     create_new_event: 'Create a new event'
     breadcrumbs:
