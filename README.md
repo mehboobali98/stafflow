@@ -160,7 +160,7 @@ a background email.
 | Authorization | CanCanCan |
 | Assets | esbuild + Sprockets, Bootstrap 5 |
 | Navigation | Turbo Drive, Frames and Streams |
-| Behaviour | Stimulus controllers, with jQuery left only where a `.js.erb` is fetched |
+| Behaviour | Stimulus controllers; no jQuery |
 | Charts | Chartkick |
 | Scheduling | whenever |
 
@@ -190,37 +190,35 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 345 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 361 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are covered only where the system specs below
   reach them, and controllers only through request specs for authentication,
   tenant routing, the apex company lookup, search and its authorization,
   sign-out, leave updates, the HR leave form and the error paths.
 - **The browser is covered where the JavaScript is, not across the app.**
-  Seventy-two system specs drive headless Chromium through Capybara and Cuprite,
+  Eighty-five system specs drive headless Chromium through Capybara and Cuprite,
   and every page carrying a bundle of its own is now loaded by one that asserts
   what that bundle does: the landing page, sign-up, sign-in through a tenant
   subdomain to the dashboard, the HR leave queue, the HR leave form and its
-  select2 control, the employee form, settings, notifications, the event form,
-  leave allocation, benefit allocation, the analytics charts and a generated
-  payslip. An uncaught JavaScript exception on any of them fails the build, and
-  they assert the globals — jQuery, select2, Bootstrap, Chartkick — that the
-  rest of the front end reads off `window`. The pages with no JavaScript of
-  their own are still reached only by request specs, which render the view but
-  never run it.
+  combobox, the employee form and its department-to-designation cascade,
+  settings, notifications, the event form, leave allocation, benefit
+  allocation, the analytics charts and a generated payslip. An uncaught
+  JavaScript exception on any of them fails the build. The pages with no
+  JavaScript of their own are still reached only by request specs, which render
+  the view but never run it.
 - **The Ruby and Rails upgrade sequence is complete**, at Ruby 3.3 and Rails
   7.2: 6.0 → 6.1, Ruby 2.7 → 3.0, 6.1 → 7.0, Ruby 3.0 → 3.2, 7.0 → 7.1,
   Ruby 3.2 → 3.3, then 7.1 → 7.2. Neither could go further on its own, so the
   two were raised alternately.
-- **The component layer covers one page of 121.** Colour, type, spacing,
+- **The component layer covers four pages of 121.** Colour, type, spacing,
   radius and shadow live in `_tokens.scss` and Bootstrap 5.3 is themed from
   them, so nothing outside that file names a colour. `Button`, `Badge`, `Card`,
-  `Table`, `PageHeader`, `EmptyState` and `FormField` exist with a Lookbook
-  preview each, and the HR leave queue, the employee form and settings are
-  built from them. Everything else still hand-writes its markup.
-  [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining views, a modal,
-  the `.js.erb` responses that still hold jQuery in place, and the select2
-  control it is the last caller of — and runs before the live demo.
+  `Table`, `PageHeader`, `EmptyState`, `FormField` and `Combobox` exist with a
+  Lookbook preview each, and the HR leave queue, the HR leave form, the employee
+  form and settings are built from them. Everything else still hand-writes its
+  markup. [ROADMAP.md](ROADMAP.md) phase 7 has the rest — the remaining views, a
+  modal, and font-awesome — and runs before the live demo.
 - **Appearance is reviewed by eye, not asserted.** The system specs assert
   behaviour, so they stay green against a layout that has collapsed — that is
   demonstrated in the roadmap rather than assumed. The exception is colour:

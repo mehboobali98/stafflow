@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 345 examples, 0 pending |
+| Tests | 361 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 36 found, 36 fixed, 0 open |
+| Known defects | 38 found, 37 fixed, 1 open |
 
 ---
 
@@ -1336,7 +1336,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
       What is still here is jQuery, and its callers are down to two: the
       department-to-designation cascade on the employee form, and select2
-- [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
+- [x] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
       select on the HR leave form — and everything it earns there is a search
@@ -1352,6 +1352,54 @@ breadcrumbs_on_rails and chartkick's helpers.
       `aria-expanded`, `aria-activedescendant`, focus handling and keyboard
       navigation — which becomes ours to write rather than ours to inherit.
       That is the actual work in this item; the dropdown itself is an afternoon
+
+      **Taken, and the estimate held.** `ComboboxComponent` renders the WAI-ARIA
+      combobox-with-listbox pattern — the input owns `role="combobox"`,
+      `aria-expanded` and `aria-controls`, the listbox is a sibling it names,
+      focus never leaves the input and the active option is pointed at with
+      `aria-activedescendant` instead. `combobox_controller.js` drives it:
+      ArrowUp and ArrowDown wrap around the list, Home and End jump to its ends,
+      Enter picks, Escape closes, and a `role="status"` live region says how
+      many matches arrived. The value submits from a hidden field, so the form
+      still posts `applied_leave[member_id]` and the server did not move.
+
+      One thing is better than what it replaced rather than equal to it. The old
+      search fired one request per keystroke and raced its own re-render — the
+      spec for it had to wait for the DOM append and then type once more to
+      re-filter over what landed. The controller debounces and holds an
+      `AbortController`, so a keystroke cancels the request before it; the last
+      answer is the only one rendered and the workaround is gone from the spec.
+
+      The three specs became eleven, and the new ones are the accessibility:
+      picking an employee with the keyboard alone, `aria-activedescendant`
+      tracking the active option, exactly one option marked `aria-selected`,
+      Escape closing without picking, and editing the text after a pick clearing
+      the id — which the old control had no coverage for at all. Each was
+      confirmed by breaking the behaviour and watching only that example fail.
+
+      **The department-to-designation cascade went with it**, because it was
+      jQuery's other caller and `jquery` cannot leave `package.json` while it
+      stands. It is the same controller as the leave-type fill on the HR form —
+      `dependent_select_controller.js`, one select refilled from JSON when the
+      control it depends on changes — so two near-identical `$.ajax` blocks
+      became one controller used twice. The URL carries the literal token
+      `VALUE` where the chosen id goes, which lets both views build it from a
+      path helper whether the id belongs in the path (`fetch_designations`) or
+      in the query string (`get_available_user_leaves`).
+
+      That cascade had no browser coverage whatsoever — it is the third of the
+      three `dataType: 'script'` calls, it 404ed silently from the jquery 4 bump
+      onward, and nothing in 345 examples touched it. It has four specs now, one
+      of which carries a cascade-filled option through to a saved record.
+
+      **`jquery`, `select2`, `show_applied_leaves.js` and `user.js` are gone**,
+      and `app/javascript/` is `application.js` plus `controllers/`. The bundle
+      is one file where it was two: the `javascript_include_tag` the HR form
+      carried went with the second entrypoint. `landing_page_spec.rb` asserted
+      `window.jQuery`, `window.$` and `$.fn.select2` as bundle globals; it now
+      asserts jQuery is *not* on the window, which is the claim worth holding.
+      `$.fn.tooltip` was in that list too and nothing in 114 templates ever
+      called a tooltip
 - [ ] **Page by page**, layouts first, then the screens behind the sign-in
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
@@ -1396,7 +1444,9 @@ Line numbers current as of 29 Aug 2026.
 
 ### Open
 
-None.
+| Location | Problem |
+| --- | --- |
+| `config/environments/production.rb` | `config.action_mailer.default_url_options` is set in `development.rb` and nowhere else. Devise is `:confirmable`, so creating a user mails confirmation instructions, and that template builds a `confirmation_url` — with no host configured it raises `ArgumentError: Missing host to link to!`. **Creating an employee 500s in production.** It has never been covered: nothing in the suite POSTed `/members` until the cascade spec in the select2 item did, and it raised there for the same reason. Test now sets `host: 'localhost'`; production is left open deliberately, because the value is the deployed apex domain that the mailer appends a tenant subdomain to, and that is a phase 4 decision rather than a guess to make here |
 
 `payroll.rb` closed during the Rails 6.1 upgrade rather than on its own: the
 deprecation that forced the transaction block to be restructured took the
@@ -1452,6 +1502,12 @@ Found by the first run of the first system spec, both fixed alongside it:
 | `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
 | `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
 | `app/javascript/show_applied_leaves.js:83,102`, `app/javascript/user.js:50` | Three `$.ajax` calls asked for `dataType: 'script'` from endpoints answering `format.json`, then ran `JSON.parse` over the result. jQuery 3 sent `*/*` alongside `text/javascript` in the Accept header, Rails fell back to JSON on it, and the text parsed cleanly — so it worked by negotiation accident. jQuery 4 dropped the wildcard, leaving Rails nothing to match, and all three 404. Nothing throws: the employee search, the leave-type cascade on the HR leave form and the department-to-designation cascade on the employee form each just leave a select empty, which is why no console error and no green suite would have found it. Found by specs written for the jquery 4 bump before taking it |
+
+Found while replacing select2, in the endpoint the new control reads:
+
+| Location | Problem |
+| --- | --- |
+| `app/controllers/applied_leaves_controller.rb:181` | `render json: @users` over the relation sent every column Devise does not blacklist for serialization — base salary, date of birth, gender, home city, first and last name, and the department, designation and role ids — for every employee whose email matched the query. The control has only ever read `id` and `email` off each record, and the select2 handler that preceded it read the same two, so nothing ever wanted the rest. `.select(:id, :email)` is the fix, with a request spec asserting the key set rather than the values. `email LIKE?` in the same line also lost its missing space |
 
 Found while building the component that made it impossible:
 

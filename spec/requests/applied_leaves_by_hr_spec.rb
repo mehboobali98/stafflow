@@ -47,4 +47,31 @@ RSpec.describe 'applied leaves added by HR', type: :request do
       expect(form).not_to include('data-remote')
     end
   end
+
+  # The combobox reads an id and an email off each record. `render json:` over
+  # the relation sent every column Devise does not blacklist instead - base
+  # salary, date of birth, gender and home city, for every employee matching
+  # the query.
+  describe 'GET /applied_leaves/search_users' do
+    let!(:employee) do
+      as_tenant(company) do
+        create(:user, :employee, company: company, department: department,
+                                 email: 'employee@example.com')
+      end
+    end
+
+    it 'answers the matches' do
+      get '/applied_leaves/search_users', params: { query: 'employee' },
+                                          headers: host.merge('ACCEPT' => 'application/json')
+
+      expect(response.parsed_body.map { |user| user['email'] }).to eq([employee.email])
+    end
+
+    it 'sends nothing but the id and the email' do
+      get '/applied_leaves/search_users', params: { query: 'employee' },
+                                          headers: host.merge('ACCEPT' => 'application/json')
+
+      expect(response.parsed_body.first.keys).to match_array(%w[id email])
+    end
+  end
 end

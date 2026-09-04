@@ -241,11 +241,6 @@ esbuild@^0.25.0:
     "@esbuild/win32-ia32" "0.25.12"
     "@esbuild/win32-x64" "0.25.12"
 
-jquery@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-4.0.0.tgz#95c33ac29005ff72ec444c5ba1cf457e61404fbb"
-  integrity sha512-TXCHVR3Lb6TZdtw1l3RTLf8RBWVGexdxL6AC8/e0xZKEpBflBsjh9/8LXw+dkNFuOyW9B7iB3O1sP7hS0Kiacg==
-
 lodash.debounce@^4.0.6:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
@@ -255,11 +250,6 @@ lodash.throttle@^4.0.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
-
-select2@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/select2/-/select2-4.1.0.tgz#8b037e02a3c025beda07fed7f9ecc7d298036e1a"
-  integrity sha512-i9KalWOP4/LRRGc8+rj2krNm0ZqP14cV+j1TRCEBSsOhCPkKH8rYZ2MCRXcgvqIqN+llqGci0hj9aVkCMvL0+g==
 
 spark-md5@^3.0.1:
   version "3.0.2"

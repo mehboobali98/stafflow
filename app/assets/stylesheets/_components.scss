@@ -76,3 +76,36 @@
     &:hover { color: $accent; }
   }
 }
+
+.combobox {
+  position: relative;
+
+  &__listbox {
+    position: absolute;
+    z-index: 1000;
+    top: calc(100% + #{$space-1});
+    right: 0;
+    left: 0;
+    max-height: 15rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: $space-1 0;
+    list-style: none;
+    background-color: $surface-raised;
+    border: 1px solid $border-default;
+    border-radius: $radius-md;
+    box-shadow: $shadow-lg;
+  }
+
+  &__option {
+    padding: $space-2 $space-3;
+    color: $text-primary;
+    cursor: pointer;
+
+    &:hover,
+    &.is-active {
+      background-color: $accent;
+      color: $text-on-brand;
+    }
+  }
+}

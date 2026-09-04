@@ -22,12 +22,11 @@
  */
 // Order matters and is not decoration. Every Bootstrap variable is `!default`,
 // so the theme has to be set before the framework is imported or none of it
-// applies. simple_calendar and select2 come after, so their defaults lose to
-// ours rather than the other way round.
+// applies. simple_calendar comes after, so its defaults lose to ours rather
+// than the other way round.
 @import 'bootstrap_theme';
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
-@import "select2/dist/css/select2";
 @import 'components';
 
 .body-wrapper {
@@ -124,16 +123,6 @@
   }
 }
 //end
-
-.select-dropdown {
-  width: 100%;
-}
-
-.select2-container {
-  .selection {
-    width: 100%;
-  }
-}
 
 //dashboard navbar: start
 .dashboard-navbar {
