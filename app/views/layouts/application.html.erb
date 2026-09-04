@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
-  <%= render "layouts/head", stylesheets: %w[sidebar dashboard] %>
+  <%= render "layouts/head", stylesheets: %w[sidebar dashboard pagination] %>
   <body data-controller="sidebar">
     <div class="modal fade" tabindex="-1" aria-hidden="true" data-controller="modal">
       <%= turbo_frame_tag 'modal', data: { modal_target: 'content' } %>

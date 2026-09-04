@@ -1,44 +1,42 @@
-<div class='stafflow-heading p-3'>
-  <div class='row'>
-    <div class='col-10'>
-      <h2 class="mt-1"><%= t('department.table_heading') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('department.new_link_name'), new_department_path, class: 'btn btn-primary mt-1' if can?(:create, Department) %>
-    </div>
-  </div>
-</div>
-<div class='me-3 ms-0'>
-  <br>
-  <br>
-  <table class="table table-hover mx-3 me-5">
-    <thead class="stafflow-table-header p-3 table-borderless">
-      <th><%= t('department.name') %></th>
-      <th colspan="2"><%= t('department.options') %></th>
-    </thead>
-    <tbody>
-      <% departments.each do |department| %>
-        <tr>
-          <td><%= department.name %></td>
-          <td>
-            <% if can?(:update, department) %>
-              <%= link_to edit_department_path(department) do %>
-                <i class='fa fa-bars ms-3'></i>
-              <% end %>
-            <% end %>
-            <% if can?(:destroy, department) %>
-              <%= link_to department, data: { turbo_method: :delete, turbo_confirm: t('department.sure_message') } do %>
-                <i class='fa fa-trash ms-3'></i>
-              <% end %>
-            <% end %>
-          </td>
-        </tr>
+<%= render(PageHeaderComponent.new(title: t('department.table_heading'))) do |header| %>
+  <% if can?(:create, Department) %>
+    <% header.with_actions do %>
+      <%= render(ButtonComponent.new(href: new_department_path)) do %>
+        <%= t('department.new_link_name') %>
       <% end %>
-    </tbody>
-  </table>
-  <% if departments.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
+    <% end %>
   <% end %>
-</div>
+<% end %>
+
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
+    <tr>
+      <th><%= t('department.name') %></th>
+      <th class="text-end"><%= t('department.options') %></th>
+    </tr>
+  <% end %>
+  <% table.with_body do %>
+    <% departments.each do |department| %>
+      <tr>
+        <td><%= department.name %></td>
+        <td class="text-end text-nowrap">
+          <% if can?(:update, department) %>
+            <%= link_to edit_department_path(department), 'aria-label': t('department.links.edit') do %>
+              <i class='fa fa-bars'></i>
+            <% end %>
+          <% end %>
+          <% if can?(:destroy, department) %>
+            <%= link_to department, class: 'ms-3', 'aria-label': t('department.links.delete'),
+                                    data: { turbo_method: :delete,
+                                            turbo_confirm: t('department.sure_message') } do %>
+              <i class='fa fa-trash'></i>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+<% end %>
+<% if departments.empty? %>
+  <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
+<% end %>

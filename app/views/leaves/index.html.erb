@@ -1,61 +1,61 @@
-<div class='stafflow-heading p-3'>  
-  <div class='row p-2'>
-    <div class='col-10'>
-      <h2><%= t('leave.headings.leave') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('leave.forms.links.create'), new_leave_path, class: 'btn btn-primary mt-1' if can?(:create, Leave) %>
-    </div>
-  </div>
-  <div class=ps-2>
-    <%= link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user), class: 'card-link' unless current_user.account_owner? %>
-    <%= link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user), class: 'card-link' unless current_user.account_owner? %>
-    <%= link_to t('applied_leave.all'), all_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
-    <%= link_to t('applied_leave.add_user'), new_applied_leave_by_hr_applied_leaves_path, class: 'card-link' if current_user.hr? || current_user.account_owner? %>
-  </div>
-</div>
-<br><br>
+<% content_for :title, t('leave.headings.leave') %>
+<%= render(PageHeaderComponent.new(title: t('leave.headings.leave'))) do |header| %>
+  <% if can?(:create, Leave) %>
+    <% header.with_actions do %>
+      <%= render(ButtonComponent.new(href: new_leave_path)) do %>
+        <%= t('leave.forms.links.create') %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% unless current_user.account_owner? %>
+    <% header.with_link { link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user) } %>
+    <% header.with_link { link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user) } %>
+  <% end %>
+  <% if current_user.hr? || current_user.account_owner? %>
+    <% header.with_link { link_to t('applied_leave.all'), all_applied_leaves_path } %>
+    <% header.with_link { link_to t('applied_leave.add_user'), new_applied_leave_by_hr_applied_leaves_path } %>
+  <% end %>
+<% end %>
+
 <%= turbo_frame_tag 'leaves_table', data: { turbo_action: 'advance' } do %>
-<div class='p-3'>
-  <table class="table table-hover">
-    <thead class="stafflow-table-header p-3 table-borderless">
+  <%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+    <% table.with_head do %>
       <tr>
         <th><%= t('leave.headings.name') %></th>
         <th><%= t('leave.headings.count_allowed') %></th>
-        <th><%= t('leave.headings.options') %></th>
+        <th class="text-end"><%= t('leave.headings.options') %></th>
       </tr>
-    </thead>
-    <tbody>
+    <% end %>
+    <% table.with_body do %>
       <% @leaves.each do |leave| %>
         <tr>
           <td><%= leave.name %></td>
           <td><%= leave.default_count %></td>
-          <td>
+          <td class="text-end text-nowrap">
             <% if can?(:show, leave) %>
-              <%= link_to leave do %>
+              <%= link_to leave, 'aria-label': t('leave.links.view') do %>
                 <i class='fa fa-eye fa-lg'></i>
               <% end %>
             <% end %>
             <% if can?(:edit, leave) %>
-              <%= link_to edit_leave_path(leave) do %>
-                <i class='fa fa-bars ms-3'></i>
+              <%= link_to edit_leave_path(leave), class: 'ms-3', 'aria-label': t('leave.links.edit') do %>
+                <i class='fa fa-bars'></i>
               <% end %>
             <% end %>
             <% if can?(:destroy, leave) %>
-              <%= link_to leave, data: { turbo_method: :delete, turbo_confirm: t('leave.messages.delete_confirm') } do %>
-                <i class='fa fa-trash ms-3'></i>
+              <%= link_to leave, class: 'ms-3', 'aria-label': t('leave.links.delete'),
+                                 data: { turbo_method: :delete,
+                                         turbo_confirm: t('leave.messages.delete_confirm') } do %>
+                <i class='fa fa-trash'></i>
               <% end %>
             <% end %>
           </td>
         </tr>
       <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  <% end %>
   <% if @leaves.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
+    <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
   <% end %>
   <%= render partial: 'shared/pagination', locals: { resource: @leaves } %>
-</div>
 <% end %>

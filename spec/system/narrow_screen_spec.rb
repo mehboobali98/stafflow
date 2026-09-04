@@ -17,9 +17,16 @@ RSpec.describe 'the pages at 390px', type: :system do
     as_tenant(company) { create(:user, :hr, company: company, email: 'hr@example.com') }
   end
 
+  # Populated rather than empty, because an empty table cannot overflow and
+  # would report success for a page that has never been measured.
   before do
     as_tenant(company) do
       department = create(:department, company: company, name: 'Engineering')
+      create(:designation, company: company, department: department, name: 'Staff Engineer')
+      create(:leave, company: company, name: 'Annual')
+      create(:benefit, company: company)
+      create(:event, company: company, name: 'All hands', starts_at: 2.days.from_now)
+      create(:notification, company: company, recipient: owner, body: 'Leave approved')
       create(:user, :employee, company: company, department: department, email: 'ada@example.com')
     end
   end
@@ -41,19 +48,29 @@ RSpec.describe 'the pages at 390px', type: :system do
     find('.page-shell')
   end
 
-  # Each of these was rebuilt from components, and each is the page that item
-  # of phase 7 was the proof for.
   {
-    'the dashboard' => :dashboard_path,
-    'the employee list' => :members_path,
-    'the leave queue' => :all_applied_leaves_path,
-    'the settings page' => :settings_path
-  }.each do |name, helper|
+    'the dashboard' => '/dashboard',
+    'the employee list' => '/members',
+    'the department list' => '/departments',
+    'the designation list' => '/designations',
+    'the leave list' => '/leaves',
+    'the event list' => '/events',
+    'the benefit list' => '/benefits',
+    'the notification list' => '/notifications',
+    'the settings page' => '/settings',
+    'the analytics page' => '/analytics'
+  }.each do |name, path|
     it "renders #{name} without scrolling sideways" do
-      visit_narrow(owner, public_send(helper))
+      visit_narrow(owner, path)
 
       expect(overflows_horizontally?).to be false
     end
+  end
+
+  it 'renders the leave queue without scrolling sideways' do
+    visit_narrow(owner, all_applied_leaves_path)
+
+    expect(overflows_horizontally?).to be false
   end
 
   it 'renders the HR leave form without scrolling sideways' do
