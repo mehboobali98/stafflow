@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="mb-3">
-        <%= form.label t('users_benefit.benefit_amount'), { class: 'form-label m-3' } %>
+        <%= form.label :amount, t('users_benefit.benefit_amount'), { class: 'form-label m-3' } %>
         <%= form.number_field :amount, { class: 'form-control m-3', required: true, placeholder: t('users_benefit.table.benefit_amount') } %>
       </div>
     <div>

@@ -1,67 +1,58 @@
-<div class='d-flex justify-content-around'>
-  <div class='pb-3 w-75 m-4'>
-    <h1 class='mt-3'><%= t('headings.create_employee') %></h1>
-    <hr>
-    <div>
-      <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form', class: 'card bg-light p-4' do |form| %>
-        <div class='row'>
-          <div class='col-6'>
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.email') %><br />
-              <%= form.email_field :email, class: 'form-control', required: true %>
-            </div>
+<%= render(PageHeaderComponent.new(title: t('headings.create_employee'))) %>
 
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.fname') %><br />
-              <%= form.text_field :first_name, required: true, class: 'form-control', id: 'first_name' %>
-            </div>
-
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.lname') %><br />
-              <%= form.text_field :last_name, required: true, class: 'form-control' %>
-            </div>
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.gender') %>
-              <%= form.select :gender, options_for_select(genders), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
-            </div>
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.dob') %><br/>
-              <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
-            </div>
-          </div>
-          <div class='col-6'>
-
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.role') %><br />
-              <%= form.select :role_id, options_for_select(user_roles_except_admin), {}, class: 'form-control' %>
-            </div>
-
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.department') %><br />
-              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
-            </div>
-
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.designation') %><br />
-              <%= form.select :designation_id, {}, { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
-            </div>
-
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.salary') %><br />
-              <%= form.number_field :base_salary, required: true, class: 'form-control', min: 0, step: 0.5 %>
-            </div>
-            <div>
-            <div class='field mb-2'>
-              <%= form.label t('forms.labels.country') %><br />
-              <%= form.select :country, options_for_select(COUNTRIES_LIST), { prompt: t('forms.labels.country')  }, class: 'form-control' %>
-            </div>
-            </div>
-          </div>
-        <div class='actions mt-2'>
-          <%= form.submit t('forms.buttons.create'), class: 'card-link btn btn-primary w-100' %>
-        </div>
+<%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form',
+              data: { controller: 'dependent-select',
+                      dependent_select_url_value: fetch_designations_department_path('VALUE') } do |form| %>
+  <%= render(CardComponent.new) do %>
+    <div class='row'>
+      <div class='col-md-6'>
+        <%= render(FormFieldComponent.new(form: form, attribute: :email, as: :email_field,
+                                          label: t('forms.labels.email'), required: true)) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :first_name,
+                                          label: t('forms.labels.fname'), required: true,
+                                          id: 'first_name')) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :last_name,
+                                          label: t('forms.labels.lname'), required: true)) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :gender,
+                                          label: t('forms.labels.gender'))) do %>
+          <%= form.select :gender, options_for_select(genders),
+                          { prompt: t('forms.labels.gender') }, class: 'form-select' %>
+        <% end %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :date_of_birth, as: :date_field,
+                                          label: t('forms.labels.dob'), required: true)) %>
       </div>
-      <% end %>
+      <div class='col-md-6'>
+        <%= render(FormFieldComponent.new(form: form, attribute: :role_id,
+                                          label: t('forms.labels.role'))) do %>
+          <%= form.select :role_id, options_for_select(user_roles_except_admin), {},
+                          class: 'form-select' %>
+        <% end %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :department_id,
+                                          label: t('forms.labels.department'),
+                                          id: 'department_select')) do %>
+          <%= form.select :department_id,
+                          options_from_collection_for_select(@departments, 'id', 'name'),
+                          { prompt: t('forms.labels.department') },
+                          class: 'form-select', id: 'department_select',
+                          data: { action: 'change->dependent-select#load' } %>
+        <% end %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :designation_id,
+                                          label: t('forms.labels.designation'),
+                                          id: 'designation_select')) do %>
+          <%= form.select :designation_id, {}, { prompt: t('forms.labels.designation') },
+                          class: 'form-select', id: 'designation_select',
+                          data: { dependent_select_target: 'select' } %>
+        <% end %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :base_salary, as: :number_field,
+                                          label: t('forms.labels.salary'), required: true,
+                                          min: 0, step: 0.5)) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :country,
+                                          label: t('forms.labels.country'))) do %>
+          <%= form.select :country, options_for_select(COUNTRIES_LIST),
+                          { prompt: t('forms.labels.country') }, class: 'form-select' %>
+        <% end %>
+      </div>
     </div>
-  </div>
-</div>
+    <%= form.submit t('forms.buttons.create'), class: 'btn btn-primary w-100 mt-2' %>
+  <% end %>
+<% end %>

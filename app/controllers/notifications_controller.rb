@@ -5,14 +5,11 @@ class NotificationsController < ApplicationController
 
   # GET /notifications
   def index
+    @status = params.fetch(:status, Notification::STATUS[:unread]).to_s
+    @notifications = @notifications.read_status(@status).order(created_at: :desc)
+                                   .paginate(page: params[:page], per_page: PAGE_SIZE)
     respond_to do |format|
-      format.js do
-        @notifications = @notifications.read_status(params[:status]).order(created_at: :desc)
-                                       .paginate(page: params[:page], per_page: PAGE_SIZE)
-      end
-      format.html do
-        @notifications = @notifications.unread.order(created_at: :desc).paginate(page: params[:page], per_page: PAGE_SIZE)
-      end
+      format.html
     end
   end
 

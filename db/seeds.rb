@@ -54,7 +54,6 @@ ActiveRecord::Base.transaction do
 
   # --- benefits ------------------------------------------------------------
   # Benefit stores default_amount; UsersBenefit stores the per-person amount.
-  # Both validate only_float, so these must be floats rather than integers.
   benefits = {
     'Health Insurance' => 15_000.0,
     'Transport'        => 5_000.0,

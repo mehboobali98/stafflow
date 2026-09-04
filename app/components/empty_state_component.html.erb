@@ -1,0 +1,7 @@
+<%= tag.div(**options) do %>
+  <p class="fs-5 mb-1"><%= title %></p>
+  <% if description.present? %>
+    <p class="mb-3 small"><%= description %></p>
+  <% end %>
+  <%= content %>
+<% end %>

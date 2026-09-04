@@ -1,4 +1,3 @@
-<%= javascript_include_tag "user_leaves" %>
 <div class="mt-2 p-3">
   <%= form_tag mass_create_member_user_leaves_path(@user), method: :post do %>
     <table class="table table-hover">
@@ -12,10 +11,13 @@
       <% if @available_leaves.present? %>
         <tbody>
           <% @available_leaves.each do |leave| %>
-            <tr>
-              <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, class: 'js-available-user-leave', data: { "selected-leave-count": ".js-leave-count-#{leave.id}" } %></td>
+            <tr data-controller="toggle-field">
+              <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, class: 'js-available-user-leave',
+                                    data: { action: 'change->toggle-field#toggle' } %></td>
               <td><%= leave.name %></td>
-              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count, disabled: true, class: "js-leave-count-#{leave.id}" %></td>
+              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count, disabled: true,
+                                       class: "js-leave-count-#{leave.id}",
+                                       data: { 'toggle-field-target': 'field' } %></td>
             </tr>
           <% end %>
           <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' if can?(:create, UserLeave) %>

@@ -14,6 +14,13 @@ module Stafflow
       html_tag.gsub("form-control", "form-control").html_safe
     end
     config.exceptions_app = self.routes # Add this line
+
+    # Previews live beside the specs rather than under test/, which this app
+    # does not have.
+    config.view_component.previews.paths << Rails.root.join('spec/components/previews')
+    # The default layout reaches for current_user, which a preview has no
+    # request to supply, so every preview 500s inside it.
+    config.view_component.previews.default_layout = 'component_preview'
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

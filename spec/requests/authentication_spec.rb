@@ -27,16 +27,29 @@ RSpec.describe 'authentication', type: :request do
     expect(response).to redirect_to(new_user_session_url(host: 'acme.localhost'))
   end
 
+  # 303 rather than the 302 this asserted before Devise's responder was
+  # configured. Turbo Drive follows a redirect with fetch, which downgrades a
+  # 302 to GET only when the request was a POST - a PATCH or PUT keeps its
+  # method and arrives at an action that does not answer it. 303 says "GET the
+  # other thing" for every method, which is why it is what Turbo wants.
   it 'signs in with the right password' do
     sign_in_as('employee@example.com')
-    expect(response).to have_http_status(:found)
+    expect(response).to have_http_status(:see_other)
 
     get '/dashboard', headers: host
     expect(response).to have_http_status(:ok)
   end
 
-  it 'refuses the wrong password' do
+  # The other half of the same setting, and the one with something to lose.
+  # Devise still defaults error_status to :ok, and Turbo Drive throws away a
+  # 200 answer to a form submission - so on the default the sign-in page would
+  # answer a wrong password with a body the browser never renders, leaving the
+  # form sitting there having apparently done nothing.
+  it 'refuses the wrong password with a status Turbo will render' do
     sign_in_as('employee@example.com', password: 'wrong-password')
+
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(response.body).to include(I18n.t('devise.failure.invalid', authentication_keys: 'email'))
 
     get '/dashboard', headers: host
     expect(response).not_to have_http_status(:ok)

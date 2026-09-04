@@ -4,21 +4,23 @@
     <title><%= t('appname') %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
     <%= stylesheet_link_tag 'sidebar' %>
     <%= stylesheet_link_tag 'dashboard' %>
-    <%= javascript_include_tag 'sidebar', 'data-turbolinks-track': 'reload' %>
   </head>
-  <body>
-    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+  <body data-controller="sidebar">
+    <div class="modal fade" tabindex="-1" aria-hidden="true" data-controller="modal">
+      <%= turbo_frame_tag 'modal', data: { modal_target: 'content' } %>
+    </div>
     <%= render partial: "shared/sidebar" %>
-    <div class="home-content">
+    <div class="home-content" data-sidebar-target="content">
       <%= render partial: "shared/dashboard_navbar" %>
-      <%= render partial: "shared/flash_message" %>
-      <%= render_breadcrumbs separator: ' / ' %>
-      <br><br><br>
-      <%= yield %>
+      <div id="flash_message"><%= render partial: "shared/flash_message" %></div>
+      <div class="page-shell">
+        <nav class="breadcrumbs"><%= render_breadcrumbs separator: ' / ' %></nav>
+        <%= yield %>
+      </div>
     </div>
   </body>
 </html>

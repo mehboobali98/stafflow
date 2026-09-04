@@ -1,0 +1,7 @@
+<%= form_tag approve_applied_leaves_path, method: :patch, id: 'mass_update_form' do %>
+  <%= hidden_field_tag :filter_type, params[:filter_type] %>
+  <%= render partial: 'applied_leaves_list', locals: { applied_leaves: applied_leaves } %>
+<% end %>
+<% if applied_leaves.empty? %>
+  <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
+<% end %>

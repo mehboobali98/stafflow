@@ -1,0 +1,5 @@
+<%= render(CardComponent.new) do |card| %>
+  <% card.with_header { 'Available reports' } %>
+  <% card.with_footer { render(ButtonComponent.new(size: :sm)) { 'Export' } } %>
+  Headcount by department, leave utilisation, payroll cost trend.
+<% end %>

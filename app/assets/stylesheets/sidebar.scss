@@ -1,6 +1,5 @@
-$background_color: #404040;
-$text_color: #fff;
-$hover_background_color: #fff;
+@import 'tokens';
+
 body {
   position: relative;
   min-height: 100vh;
@@ -11,14 +10,14 @@ body {
 .sidebar {
   position: fixed;
   height: 100%;
-  width: 75px;
-  background: $background_color;
+  width: $sidebar-width;
+  background: $surface-inverse;
   top: 0;
   left: 0;
   padding: 6px 14px;
-  transition: all 0.5s ease;
+  transition: all $transition-base;
   .logo-content .logo {
-    color: $text_color;
+    color: $text-on-inverse;
     display: flex;
     height: 50px;
     width: 100%;
@@ -36,7 +35,7 @@ body {
   }
   .css-sidebar-toggle {
     position: absolute;
-    color: $text_color;
+    color: $text-on-inverse;
     left: 40%;
     top: 6px;
     font-size: 20px;
@@ -61,24 +60,24 @@ body {
       list-style: none;
       line-height: 50px;
       a {
-        color: $text_color;
+        color: $text-on-inverse;
         display: flex;
         align-items: center;
         text-decoration: none;
-        transition: all 0.5s ease;
-        border-radius: 12px;
+        transition: all $transition-base;
+        border-radius: $radius-md;
         white-space: nowrap;
         i {
           height: 50px;
           min-width: 50px;
-          border-radius: 12px;
+          border-radius: $radius-md;
           line-height: 50px;
           text-align: center;
         }
       }
       a:hover {
-        color: $background_color;
-        background: $hover_background_color;
+        color: $surface-inverse;
+        background: $surface;
       }
     }
   }
@@ -88,8 +87,8 @@ body {
   }
 }
 
-.sidebar.active {
-  width: 240px;
+.sidebar.expanded {
+  width: $sidebar-width-expanded;
   .logo-content .logo {
     opacity: 1;
     pointer-events: none;
@@ -106,7 +105,15 @@ body {
 .home-content {
   position: absolute;
   height: 100%;
-  left: 75px;
-  width: calc(100% - 75px);
-  transition: all 0.5s ease;
+  left: $sidebar-width;
+  width: calc(100% - #{$sidebar-width});
+  transition: all $transition-base;
+
+  // The expanded panel is wider, so the content beside it starts further over.
+  // Only the two declarations that differ live here; the pair of near-identical
+  // rules this replaces is described in sidebar_controller.js.
+  &.expanded {
+    left: $sidebar-width-expanded;
+    width: calc(100% - #{$sidebar-width-expanded});
+  }
 }

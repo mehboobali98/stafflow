@@ -7,6 +7,6 @@ class UsersBenefit < ApplicationRecord
   belongs_to :company
   has_many :applied_benefits, dependent: :nullify
   validates :amount, presence: { message: I18n.t('users_benefit.validation.presence.') },
-                     numericality: { only_float: true, less_than: FLOAT_MAX, greater_than: FLOAT_MIN }
+                     numericality: { less_than: AMOUNT_MAX, greater_than: AMOUNT_MIN }
   validates :amount, numericality: { other_than: 0, message: I18n.t('benefit.validation.zero_check') }
 end

@@ -1,10 +1,10 @@
 <div class="simple-calendar container-fluid">
   <div class="calendar-heading d-flex flex-row justify-content-between">
-    <%= link_to calendar.url_for_previous_view, class: 'btn btn-outline-primary my-2', remote: true do %>
+    <%= link_to calendar.url_for_previous_view, class: 'btn btn-outline-primary my-2', data: { turbo_frame: 'event_calendar' } do %>
       <i class="fas fa-chevron-left"></i>
     <% end %>
     <span class="calendar-title font-weight-bold my-2"><u><%= t('date.month_names')[@start_date.month] %> <%= @start_date.year %></u></span>
-    <%= link_to calendar.url_for_next_view, class: 'btn btn-outline-primary my-2', remote: true do %>
+    <%= link_to calendar.url_for_next_view, class: 'btn btn-outline-primary my-2', data: { turbo_frame: 'event_calendar' } do %>
       <i class="fas fa-chevron-right"></i>
     <% end %>
   </div>

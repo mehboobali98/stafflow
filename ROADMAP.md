@@ -11,16 +11,17 @@ reads; everything after is depth.
 ## Where it stands
 
 The app runs from a clean clone in three commands, on a current stack, with a
-suite in front of it and the known defects cleared. What it still lacks is
-somewhere to run.
+suite in front of it and the known defects cleared. What it still lacks is an
+interface worth showing, and somewhere to show it — in that order, which is a
+reversal of the sequence this file was written with and is argued at the end.
 
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 235 examples, 0 pending |
+| Tests | 361 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 24 found, 24 fixed, 0 open |
+| Known defects | 38 found, 37 fixed, 1 open |
 
 ---
 
@@ -87,6 +88,37 @@ all fixed here because each one blocked the specs that found it:
 Three more were found and left recorded as pending specs rather than fixed
 here: see the backlog below.
 
+### Added after the phase shipped — browser coverage
+
+The phase shipped with nothing in front of the pages, and the README said so.
+What changed the calculation was two defects in one day, both found by a human
+opening a page and neither reachable by anything CI ran: `require.context`
+surviving the esbuild migration, and an I18n subtree printed into a table cell.
+
+- [x] **System specs driving a real browser.** Capybara 3.40 with Cuprite,
+      which speaks CDP to Chrome directly. No chromedriver, so none of the
+      version coupling that left `webdrivers` pinning `selenium-webdriver`
+      below 4.0 until both were deleted in phase 3. `js_errors: true` is the
+      part that earns its place: an uncaught exception in the page raises in
+      the example rather than sitting in a console nothing reads
+- [x] Eight examples over the three pages carrying the most JavaScript — the
+      landing page, sign-in through a subdomain to the dashboard, and the HR
+      leave queue. `chromium` is installed in the Dockerfile; CI installs no
+      browser, because the runner image already carries `google-chrome`
+
+Two things are worth recording about how this fits the rest of the suite.
+`driven_by :cuprite` does not look a driver up — Rails registers it itself and
+overwrites anything registered under that name first, so a
+`Capybara.register_driver(:cuprite)` block would have looked like configuration
+and silently done nothing. And a browser has no equivalent of `host!`: the
+tenant is steered by moving `Capybara.app_host` between the apex and a
+subdomain of it, which works because Chromium routes any `*.localhost` name to
+loopback without consulting DNS.
+
+The first run of the first browser spec found two defects. Both are fixed here,
+on the same reasoning as the three above: each one blocked the spec that found
+it. Both are in the backlog.
+
 ---
 
 ## Phase 2 — Clear the known defects ✅
@@ -142,6 +174,41 @@ static file server is on. It always is in test, and in production whenever
 `/403` have no static counterpart and render normally. Deleting the static
 files would fix it but costs the fallback that works when the app cannot boot,
 so it is a deployment decision rather than a defect.
+
+### Added after the phase shipped — the float columns
+
+Eleven columns held money and leave balances as `t.float`, and the note against
+them was always the same: flagged repeatedly, never filed, because nobody had
+demonstrated a failing case. Measuring the column produced one immediately.
+
+`t.float` on MySQL is `FLOAT(24)` — single precision, roughly seven significant
+decimal digits — not the `double` the name suggests. A salary needs more than
+seven. Read back from the column, `1234567.89` is `1234570.0` and `100000.10`
+is `100000.0`, and a payroll generated from a base of `100000.10` at 10% came
+out `$87.74` short on the gross. That is not a rounding artefact to argue
+about; it is a wrong payslip, and it was wrong for every salary carrying cents.
+
+All eleven moved to `decimal`. Money is `decimal(15, 2)`, the tax rate
+`decimal(6, 3)`, and leave counts `decimal(6, 2)`. Two things are worth being
+plain about:
+
+- **Leave counts were never demonstrably broken.** Three significant digits sit
+  well inside what a float holds, and `12.4`, `18.3` and forty half-days off a
+  balance of `20.0` all round-trip exactly. They moved anyway, because a leave
+  balance is a countable quantity compared for equality rather than a
+  measurement — but the justification is consistency, not a failure.
+- **The migration fixes writes, not history.** Whatever the float already
+  rounded away is gone from the table. Rows written before it carry the loss.
+
+Two findings came out of the same work and are recorded rather than counted as
+defects, neither having a demonstrated failure behind it. `only_float: true`,
+on four validations, does nothing at all — it is not an option Rails'
+numericality validator recognises, so it is carried and ignored, and an
+`Integer` or a `BigDecimal` validates exactly as a `Float` does. It is removed,
+and the seed comment that cited it is gone. And `FLOAT_MAX`, the bound those
+validations used, was `1e23` — above what `decimal(15, 2)` can hold, so a value
+between the two would have reached MySQL and raised out-of-range instead of
+failing validation. It is now `AMOUNT_MAX`, set to what the column takes.
 
 Two rows are left in the backlog below. Neither was in this phase's checklist
 and neither is reachable from ordinary use, so the phase closes here rather
@@ -587,6 +654,72 @@ work the framework bumps were blocking.
       went with the Webpack channels entry recorded in the defect backlog
       below, leaving four.
 
+      The verification those four were waiting on now exists — the system
+      specs in the phase 1 amendment assert the globals jquery, select2,
+      bootstrap and chartkick each leave on `window`, and fail on an uncaught
+      exception in the page. That is not the same as having verified them. The
+      specs reach three pages, and a major of any of the four can break a
+      fourth page they never load. Taking them means extending the specs to
+      whatever each one touches, which is work per PR rather than a rerun.
+
+      **select2 taken**, `4.1.0-rc.0` to `4.1.0` — a release candidate that had
+      been pinned since 2021 going to the release of the same number. Extending
+      the specs first is what the sentence above asked for, and it turned up
+      that the HR leave form is the only place select2 is attached to a real
+      element. Three examples now drive it: the control replaces the select,
+      typing in its search field appends what the request finds, and picking a
+      result fires `select2:select`, which is select2's own event rather than a
+      DOM one and only reaches its handler if the library is driving the
+      element. Getting those right took two attempts — the first raced the
+      per-keystroke AJAX against select2's re-render and passed or failed on
+      timing. A test that green-lights a dependency bump by accident is worse
+      than no test, so it waits for the append and types once more.
+
+      **`@rails/activestorage` taken**, `6.0.0` to `7.2.302`, matching the Rails
+      it ships beside. **`@rails/ujs` went with it**, `6.0.0` to `7.1.600`,
+      which Dependabot did not raise: 7.1.600 is the last release, because
+      Rails 8 removes the package. Holding it at 6.0.0 while its sibling moved
+      to 7.2 widens a mismatch rather than leaving one alone.
+
+      **chartkick taken**, and it is the one that was never a bump. chartkick.js
+      5 declares `chart.js: "4"` as a peer, so Chart.js crosses a major with it
+      and `chartjs-adapter-date-fns` and `date-fns` arrive behind it. The gem
+      moves too — it was pinned `= 4.0.5`, and the gem renders the tag the npm
+      package draws into, so a gem that predates the drawing code is the same
+      class of mismatch as holding `@rails/ujs` back. Four npm packages and one
+      gem in one step, because splitting them leaves a commit that cannot run.
+
+      The analytics page is what made this checkable. It is the only page
+      carrying both shapes chartkick offers — one chart handed its data inline
+      by the view, one given a path and left to fetch it — and it had no spec,
+      so the dashboard's two remote charts were the whole of the coverage. It
+      has one now, asserting both canvases and the absence of the message
+      chartkick writes into the container when it cannot draw. Both pages were
+      also looked at, because a canvas element existing is not the same as a
+      chart being on it: the stacked column, the line with its currency prefix
+      and rotated month labels, and the dashboard's two all render.
+
+      **jquery taken**, 3.6.0 to 4.0.0, and it is the one that found something.
+      Six pages load a bundle of their own and none of them were covered, so
+      they were specced first — each asserting the one thing its bundle does,
+      rather than that the page still renders. That surfaced three `$.ajax`
+      calls asking for `dataType: 'script'` from endpoints that answer
+      `format.json` and then running `JSON.parse` over the result: the employee
+      search and the leave-type cascade on the HR leave form, and the
+      department-to-designation cascade on the employee form.
+
+      They were never right. jQuery 3 sent `*/*` alongside `text/javascript`
+      in the Accept header, Rails fell back to JSON on it, and the response
+      came back as text that `JSON.parse` was happy with. jQuery 4 dropped the
+      wildcard, so Rails has nothing to negotiate and the request 404s. No
+      exception is thrown anywhere — the failure is a select that stays empty,
+      which is why nothing had noticed and why `js_errors` alone would not
+      have caught it either. All three now ask for JSON and read what they are
+      given.
+
+      The seven remaining `dataType: 'script'` calls are correct: those
+      endpoints render `.js.erb` templates and answer `format.js`.
+
       `jbuilder`, `capybara`, `selenium-webdriver` and `webdrivers` had no
       reference anywhere in `app`, `lib`, `config`, `spec`, `bin` or `db`,
       and no `.jbuilder` template exists. The system-test trio arrived with
@@ -596,6 +729,11 @@ work the framework bumps were blocking.
       six pulled in behind them. If system specs are written, they will want
       a current Capybara and a driver strategy chosen then, not a 2019
       Selenium held in place by a Gemfile.
+
+      They were, in the phase 1 amendment above: capybara 3.40 and cuprite,
+      eight gems back into the lockfile against the ten that came out. The
+      driver strategy chosen then was CDP rather than a driver binary, which
+      is the coupling `webdrivers` had been pinning around.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
@@ -632,6 +770,11 @@ work the framework bumps were blocking.
       integer ids and nothing else; and `.delay` is delayed_job's own API
       rather than Active Job, so the setting would not reach them regardless.
       It has nothing to land on.
+
+      One leg of that has since gone: the money columns are `decimal` now, so
+      payroll does arrive as `BigDecimal`. The conclusion is unchanged — the
+      `.delay` calls still pass integer ids and `.delay` is still not Active
+      Job — but the first reason no longer holds.
 
       `commit_transaction_on_non_local_return` is no longer a setting to
       enable. Rails 7.2 deprecates it and 8.0 removes it, having made the 7.1
@@ -741,7 +884,8 @@ the Active Storage advisory has no fix there.
 
 ## Phase 4 — Live demo
 
-Estimated 3–5 days.
+Estimated 3–5 days. **Now sequenced after phase 7** — see the note at the end
+of this file, which reverses the argument this document opens with.
 
 Most people who open the repo will never run it. A URL they can click, sign
 into as four different roles, and poke at is worth more than any amount of
@@ -813,13 +957,496 @@ spends about ninety seconds here.
 
 ---
 
+## Phase 7 — Rebuild the interface
+
+Estimated 2–3 weeks. Runs before phase 4.
+
+Every other phase has touched something. This one has not been touched at all:
+the interface is the 2021 original, and it is the first thing anybody sees.
+
+The problem is not that Bootstrap is the wrong framework. It is that Bootstrap
+was never configured. `@import 'bootstrap/scss/bootstrap'` pulls the whole
+default theme in and nothing overrides a single variable, so the app looks like
+the framework's documentation. Underneath that sit 693 lines of SCSS holding
+**22 hex colours picked one at a time**, one SCSS variable, and no scale of any
+kind. There is no component layer either: **49 views hand-write `btn btn-*`,
+20 hand-write `.card`, and 18 hand-write a `<table>` from scratch**.
+
+### What was considered
+
+Four options, decided on 31 Aug 2026.
+
+| | Approach | Why not |
+| --- | --- | --- |
+| A | **Hotwire + ViewComponent + Bootstrap 5.3, themed** | *Chosen* |
+| B | Hotwire + ViewComponent + Tailwind | Roughly double A for a similar result: a utility rewrite across 121 views, a select2 replacement, and restyling what simple_calendar, chartkick and will_paginate emit |
+| C | Inertia + React | Rewrites all 121 views including devise's 16, moves the 22 views that call `can?` into serialized props, and replaces will_paginate, simple_calendar, breadcrumbs and the chartkick helpers |
+| D | Full SPA on a JSON API | Needs the API phase 5 lists as unbuilt, plus devise moved to token auth. Stops being a restoration |
+
+One thing the table does not capture: A is the only option that ends with
+jQuery gone. Under it select2 is replaced rather than carried, which is what
+lets `jquery` leave `package.json` entirely — see the item below.
+
+The deciding argument is that **the design system is the ViewComponent layer,
+not the CSS framework**. Tokens, a component set, and a preview page are the
+same work under A or B; picking Bootstrap 5.3 underneath only makes it cheaper
+and keeps five ERB-coupled gems alive — devise, will_paginate, simple_calendar,
+breadcrumbs_on_rails and chartkick's helpers.
+
+### The work
+
+- [x] **Tokens before anything else.** `_tokens.scss` holds the ramps, type
+      scale, spacing, radius and shadow, and `_bootstrap_theme.scss` sets
+      Bootstrap's variables *from* them — imported before the framework,
+      because every one of those variables is `!default` and the first
+      assignment wins. Importing it afterwards would have changed nothing
+      while looking like it configured everything, which is roughly what the
+      app was doing already.
+
+      Bootstrap 5.0.2 → 5.3.8 rode along, and the pipeline turned out not to
+      need touching: `sassc` is libsass, dead since 2021, but it compiles 5.3
+      fine — 449 `--bs-` custom properties and the colour-mode blocks all
+      present in the output. Replacing it with dart-sass is worth doing and is
+      not blocking, so it is not done here.
+
+      All twenty-two colours are gone from the stylesheets, including the
+      separate palette the landing page kept — a cyan, a navy and two greys
+      that appeared nowhere else. Mapping it onto the shared ramps is the point
+      of the step: a second palette is a second system
+- [ ] **ViewComponent, and Lookbook in front of it.** Started: `Button`,
+      `Badge`, `Card`, `Table`, `PageHeader` and `EmptyState` exist with a
+      preview each, and the HR leave queue is converted as the proof. `FormField`
+      and `Modal` are still to come, along with the other 120 views.
+
+      Every component stamps `data-component` into its markup, and the system
+      specs key off that rather than off Bootstrap's class names — so restyling
+      a component cannot break a spec that was only ever asking whether the
+      thing is on the page. That was recorded as a cost of this phase; doing it
+      per component as they land is what stops it becoming one.
+
+      `TableComponent` wraps the shell and not the data. Eighteen views build a
+      table by hand and every one has a different row, so what they share is the
+      chrome; forcing a column API onto them would be a rewrite wearing a
+      component's name.
+
+      `FormField` is in, and it earned itself immediately. 34 labels across 12
+      views called `form.label t('forms.labels.x')`, which Rails reads as the
+      attribute name: every one wrote `for="user_Email"` against an input with
+      id `user_email`. The text was right and the association was not, so the
+      label focused nothing and a screen reader announced the field unlabelled.
+      The component takes the attribute and the text separately, so the mistake
+      is not expressible through it — and the eleven views not yet converted had
+      the association fixed in place rather than waiting for the migration.
+
+      Two things worth knowing. Previews render inside the app's default layout,
+      which reaches for `current_user` — every one of them 500s until a bare
+      preview layout is configured, and that was found by opening Lookbook
+      rather than by any check. `spec/components/previews_spec.rb` renders every
+      scenario now and does catch it: removing the layout config fails all ten.
+      And Lookbook is development-only, so whether the demo exposes the previews
+      is a phase 4 question, not settled here
+- [x] **Turbo replaces turbolinks.** The line above priced this as a rename,
+      and the renames were the smallest part of it. `turbolinks:load` becomes
+      `turbo:load` in two files, and `data-turbolinks-track` becomes
+      `data-turbo-track` in the seven places it sits in a `<head>` — it is
+      dropped from the seven where it does not, because Turbo compares tracked
+      elements between head snapshots only, so the attribute on a body script
+      was configuring nothing while looking like it configured something.
+
+      What the rename does not cover is that **Turbo Drive intercepts form
+      submissions and turbolinks did not**, and it throws away a 200 answer to
+      one without rendering it. Nine actions re-render a form with its errors
+      and every one answered 200 — including, a layer down, Devise, which still
+      defaults `error_status` to `:ok` for apps predating Turbo and whose
+      initializer here is from 2021. Left alone, a wrong password would have
+      answered with a body the browser never draws: the sign-in page sitting
+      unchanged, no message, nothing in the console either. All nine now say
+      `:unprocessable_content` — not the `:unprocessable_entity` every Rails
+      guide writes, which Rack 3.2 deprecates and warns on.
+
+      `redirect_status` goes to `:see_other` beside it, as precaution rather
+      than a fix, and the distinction is worth recording because the usual
+      explanation of this setting is wrong. fetch downgrades a redirect to GET
+      only when the request was a POST, so a genuine PATCH answered with 302
+      would come back as a PATCH — but no Rails form can produce that.
+      `form_with method: :patch` renders `method="post"` with a hidden
+      `_method`, which is what the settings form does when you read it off the
+      page. It becomes reachable only when a link carries `data-turbo-method`,
+      which Turbo does put on the wire literally.
+
+      **No `turbo-rails` gem.** It was taken first, on the assumption its Ruby
+      side was carrying something — a 303 default on redirects, or the mime
+      type registration that keeps the `Accept` header Turbo sends on every
+      form submission out of trouble. Neither holds: the gem has no redirect
+      patching in it at all, and with it removed the whole system and request
+      suite still passes, Turbo form submissions included, because Rails reads
+      past an unregistered type in `Accept` and answers the `text/html` behind
+      it. It goes back in when something here renders a `turbo_stream`, which
+      is the Stimulus step. The JavaScript comes from npm through esbuild like
+      everything else in the bundle.
+
+      **rails-ujs stays**, and keeps driving the `data-method` links and the
+      `.js.erb` responses until jQuery leaves. Both libraries want the same
+      clicks, and what keeps them apart is structural rather than lucky: ujs
+      delegates on `document` while Turbo's link observer is on `window`, so
+      ujs sees a click first and stops it propagating; and Turbo's form
+      observer ignores any submit whose default was already prevented, which is
+      what ujs does to a remote form. A system spec deletes a department
+      through a `data-method` link so that stops being an argument.
+
+      Two things this turned up that no amount of reading would have.
+
+      **The suite was green before any of it was true.** All 292 examples
+      passed with turbolinks swapped for Turbo underneath them and would have
+      passed with neither, because every system spec `visit`s rather than
+      navigates, and a `visit` is a full page load whichever library is on the
+      page. The seven examples in `spec/system/turbo_spec.rb` exist to make the
+      swap falsifiable, and each was checked by breaking the thing it covers:
+      without the Turbo import both navigation examples go red, with
+      `settings#update` back at 200 the error render vanishes with no message
+      anywhere, with Devise back on `:ok` the sign-in page answers a wrong
+      password with nothing at all. One drafted example asserted the form was
+      still on the page after a failed submission — it passed against the bug,
+      so it is not in the file.
+
+      **`sign_in_as` had to learn to wait, and the whole system suite runs on
+      it.** A native form submission blocks the browser until the next document
+      exists; Turbo submits with fetch, so `click_on` returns while the visit it
+      started is still in flight, and the `visit` after it raced Turbo — which
+      landed afterwards and replaced the page the example was about to work on.
+      It failed about one run in three, on whichever example got there first,
+      and it read as `fill_in` failing to find a field that is plainly on the
+      page it asked for. Found by running the new file eight times rather than
+      once, which is now the habit for anything that navigates.
+
+      One defect, in the backlog below: Turbo caches a snapshot of the page it
+      is leaving and restores it on a back navigation, and select2 injects its
+      control as a sibling of the select it wraps — so the snapshot carried the
+      control and the bundle re-running on restore built a second one beside it.
+      Two stacked dropdowns over one select. Attributed rather than assumed: the
+      same probe against develop under turbolinks reports one container either
+      way, so it arrived with Turbo
+- [ ] **Stimulus replaces jQuery.** Twelve entry points, roughly 360 lines.
+      Started: the seven with no AJAX in them are six controllers, and jQuery
+      is still here for the five that have.
+
+      Six rather than seven because two pairs were the same behaviour written
+      twice. `user_leaves.js` and `users_benefit_creation.js` both enabled the
+      field beside a ticked checkbox, and found that field differently — one
+      kept a CSS selector in a data attribute, the other an element id, and
+      neither could be read off the markup. And `signup.js` was character for
+      character the top of `user.js`, which is bundled into `application.js`
+      and therefore ran on every page: on the one page with a `#company` field
+      the slug was computed twice and written to the same two elements, which
+      is why neither copy was ever noticed. "One controller each" was the wrong
+      unit — the right one is one controller per behaviour.
+
+      Registrations are written out by hand in `controllers/index.js` rather
+      than swept up from the directory. The helpers that do the sweeping read
+      an importmap or a webpack `require.context`, and the second of those is
+      the defect that threw on every page of this application for two releases
+      after the esbuild migration. esbuild resolves imports statically, so a
+      name that is wrong here fails the build.
+
+      What this buys beyond the framework swap is that the per-page bundle goes
+      away: seven `javascript_include_tag` calls are gone from views, and with
+      them the arrangement recorded during the Turbo work where a body bundle
+      is re-executed on every visit and its document-level handlers accumulate
+      one copy per navigation.
+
+      The controllers set no initial state on connect. The disabled fields and
+      the disabled submit are rendered disabled, so a browser that never runs
+      the JavaScript still gets what the server meant; `toggle-field`'s
+      `connect` only re-syncs, which is what a Turbo cache restore needs.
+
+      Three dead things fell out of auditing what the bundles touched. Nothing
+      in this application carries `data-toggle="tooltip"` or
+      `data-toggle="popover"`, so the initialiser `application.js` ran on every
+      page load selected nothing — removed rather than converted. The one
+      `data-toggle` that does exist is a tab in Bootstrap 4's spelling, which 5
+      has not read since the framework moved, on a one-item strip with no pane
+      behind it, so renaming it would point Bootstrap at something that is not
+      there; it is a heading styled as a tab and is a `span` now. And
+      `layouts/_navbar.html.erb` is rendered by nothing — only
+      `shared/_dashboard_navbar` is, and the two had drifted apart.
+
+      The sidebar collapse was rewritten rather than transcribed, because it
+      did not toggle a class, it swapped one: `home-content` came off and
+      `sidebar-toggle` went on, so after a click the class the stylesheet keyed
+      off had left the document, and the two rules behind them repeated four of
+      their six declarations. One `expanded` modifier on each half replaces
+      both. Reviewed as screenshots in both states, which is also how a
+      font-load race was told apart from a regression — the first capture had
+      no icons in it because Sprockets was still compiling the webfonts.
+
+      `spec/javascript/bundling_spec.rb` strips comments before scanning. It
+      greps source text for `require.context`, and `controllers/index.js` is
+      exactly the file with a reason to name that defect in the comment
+      explaining itself. Checked that it still fails on a planted call.
+- [ ] **The `.js.erb` responses go.** Nine templates and five entry points that
+      fetch one and eval it. Started: the employee, leave and event lists are on
+      Turbo Frames, which is four of the nine gone.
+
+      **Frames rather than Streams for a list.** A Stream is for updating
+      something the request did not come from, or more than one thing at once.
+      A filter or a page link is neither: the list is where the click came from
+      and the list is what changes, so wrapping it in a frame means the server
+      answers with the ordinary HTML page it already renders and Turbo takes the
+      part that matters. No template per response, and `format.js` comes off the
+      action.
+
+      Turbo Drive alone would satisfy most of this, and it is worth being exact
+      about what the frame adds rather than taking it on faith. It replaces only
+      the list: the sidebar, navbar and notification badge around it are left
+      alone, where a Drive visit re-renders the whole body and re-runs the count
+      request on every keystroke. That is the one thing the specs assert about
+      the frame specifically — the other three employee-list examples pass
+      without it, which is correct, because filtering and linking and resetting
+      are behaviour rather than mechanism.
+
+      The filter form moves inside the frame so a navigation re-renders it and
+      the fields echo their params. That is what lets the reset link point at
+      the unfiltered URL instead of clearing inputs by hand, and it makes a
+      filtered list a URL you can send someone. Filtering is debounced: the old
+      handler fired one request per keystroke, which under
+      `data-turbo-action="advance"` would be one history entry per keystroke.
+
+      `turbo-rails` comes back for `turbo_frame_tag`, which is the condition the
+      Turbo step set when it took the gem out.
+
+      **Four defects, and the reason none of them was caught.** Nothing in the
+      suite rendered `/members`, `/leaves` or `/events`. All 301 examples passed
+      while three of the application's main pages answered 500 mid-change, and
+      that is also why the four below survived. `spec/requests/index_pages_spec.rb`
+      now GETs all ten index pages, empty and populated, which is twenty cheap
+      examples that would have caught every one of them.
+
+      The events index nested the whole table inside the link to the calendar.
+      An anchor cannot contain another, so the parser split it into six, and the
+      page rendered as four empty pill outlines with the table squeezed into a
+      column beside them. It also called
+      `render partial: 'no_events.html.erb'`, which Rails reads as a partial
+      *named* `no_events.html.erb`, so the page 500d for any company with no
+      events — the first thing a new tenant sees there.
+
+      The leave index rendered no pagination while the controller paginated to
+      `PAGE_SIZE`, which is 5, so a sixth leave type could not be reached. Its
+      `_leaves_list` partial does carry pagination but was rendered by nothing
+      except the dead `.js.erb` beside it, and had drifted to an older style, so
+      the index keeps its own table and gains the control.
+
+      `leaves/index.js.erb` and `events/index.js.erb` were both dead —
+      `events#index` answers html only, and both targeted ids no page has ever
+      contained — and the `.leave-pagination-wrapper` handler in
+      `application.js` was the same story in JavaScript, bound on every page
+      against a class no view carries.
+
+      **The notification list went with them**, and it needed the disagreement
+      between its two branches settled first: `format.html` answered with the
+      unread notifications and `format.js` with whatever `params[:status]`
+      asked for. A frame makes both the same request, so there is one branch
+      now, honouring the parameter and defaulting to unread — which is what the
+      page showed on load before, except that the bundle then had to force the
+      select to match it.
+
+      Marking as read gave no feedback at all. The button fired an `$.ajax`
+      POST with no success handler, so rows were marked read in the database
+      and stayed on screen until something else reloaded the page. It is an
+      ordinary form submission now — associated by id, since the button sits in
+      the header card rather than inside the form — and the redirect it already
+      answered with reloads the list. Confirmed by answering `head :ok` instead
+      and watching the original behaviour come back.
+
+      **The HR leave queue is the one place a stream is the right answer.**
+      Filtering and pagination are a frame like the others. Mass approve and
+      reject are not: they change the table and the flash message, the flash
+      sits outside the frame the click came from, and the request is a PATCH.
+      Two targets off a non-GET is exactly what a stream is for, and it is
+      worth having one case that earns it rather than reaching for streams
+      everywhere.
+
+      The confirmation had never been shown. `approve_leaves.js.erb` wrote the
+      flash into `$("#flash_message")`, and no element with that id exists
+      anywhere in this application — so the message counting how many of the
+      selected requests actually changed state, which is the one that matters
+      when some of them fail, went into an empty selection every time. The
+      layout carries the container now, and it is what the stream updates.
+
+      `filter_applied_leaves` is gone, action and route: filtering is
+      `all_applied_leaves` with a `filter_type` param, which is what the frame
+      navigates to, so the separate endpoint had nothing left to do.
+
+      Two behaviour changes rather than defects. The buttons were behind
+      `d-none` and revealed only when *more than one* row was checked, so
+      checking exactly one left the page looking inert; they are visible and
+      disabled until something is selected, matching the notification list.
+      And the queue keeps its filter across a mass update through a hidden
+      field rather than by reading the select back out of the DOM.
+
+      **The modal and the calendar close the item.** Nine templates that
+      returned JavaScript for the browser to eval are zero, and every
+      `remote: true` link and `dataType: 'script'` call in the application went
+      with them.
+
+      The calendar is a frame around the month with the previous and next links
+      naming it. The modal is a frame the edit links target, a stream on success
+      that updates the list, clears the frame and writes the flash, and a 422
+      re-render on failure that puts the errors back in the dialog. It replaces
+      a flow that rendered the dialog with `$("#modal").html(...)`, called
+      `.modal("show")`, and answered a successful save with
+      `render js: "window.location = ..."` — a full page reload written as a
+      string of JavaScript.
+
+      **Bootstrap's Modal is not used, and that is a decision rather than an
+      oversight.** It resolves `.modal-dialog` once, in its constructor, and
+      caches it: built against an empty frame it holds a null dialog for the
+      life of the instance and throws `Illegal invocation` inside
+      `_showElement`. Building it per dialog instead moves the problem rather
+      than solving it — replacing the dialog on a validation error tears the old
+      instance down while the new one is showing, and the teardown strips the
+      backdrop the new one just added, which failed three runs in five. Driving
+      the classes directly is a dozen lines with no instance to cache and no
+      lifecycle to race; the dialog is shown or hidden by whether the frame has
+      children, watched with a MutationObserver, so clearing the frame closes it
+      without the server saying so twice. The two dismiss buttons call the
+      controller rather than `data-bs-dismiss`.
+
+      Found by running the new file six times rather than once, which is the
+      habit the Turbo step started and the second flake it has caught.
+
+      **rails-ujs is gone.** Seventeen links carried `method:` and
+      `data-confirm` for it to intercept and carry `data-turbo-method` and
+      `data-turbo-confirm` now, with `ButtonComponent` emitting the same for
+      the two callers that pass `method:`. Nothing else used the library.
+
+      `payrolls/index` asked for `method: :create`, which is not an HTTP verb.
+      rails-ujs put it in a `_method` field, Rack's method override refused a
+      verb it does not recognise, and the request stayed the POST the route
+      wanted — the button worked by two mistakes cancelling out. It says
+      `turbo_method: :post` now.
+
+      Two of those links had no browser coverage, and one was signing out: the
+      only thing between the session and a link that had just changed shape was
+      a request spec that does not run JavaScript. Both have specs now.
+
+      `layouts/_table.html.erb` and `layouts/_form.html.erb` went with it —
+      both opened with a comment calling themselves references to copy from,
+      both addressed instance variables no layout sets, and nothing rendered
+      either. They were only read because one held a `data-method` link.
+
+      What is still here is jQuery, and its callers are down to two: the
+      department-to-designation cascade on the employee form, and select2
+- [x] **select2 is replaced rather than kept.** It is a jQuery plugin, so
+      leaving it in place would have kept jQuery in `package.json` for one
+      control. It attaches to exactly one element in the whole app — the member
+      select on the HR leave form — and everything it earns there is a search
+      box, a remote lookup on keyup and a `select2:select` event, all of which a
+      Stimulus controller does directly. Removing it also drops
+      `@import "select2/dist/css/select2"` and the override sitting under it in
+      `application.scss`.
+
+      Two costs, neither hidden. The three system specs on that form key off
+      `.select2-container`, `.select2-search__field` and
+      `.select2-results__option`, so all three are rewritten against the new
+      control. And select2 ships the accessibility a combobox needs — roles,
+      `aria-expanded`, `aria-activedescendant`, focus handling and keyboard
+      navigation — which becomes ours to write rather than ours to inherit.
+      That is the actual work in this item; the dropdown itself is an afternoon
+
+      **Taken, and the estimate held.** `ComboboxComponent` renders the WAI-ARIA
+      combobox-with-listbox pattern — the input owns `role="combobox"`,
+      `aria-expanded` and `aria-controls`, the listbox is a sibling it names,
+      focus never leaves the input and the active option is pointed at with
+      `aria-activedescendant` instead. `combobox_controller.js` drives it:
+      ArrowUp and ArrowDown wrap around the list, Home and End jump to its ends,
+      Enter picks, Escape closes, and a `role="status"` live region says how
+      many matches arrived. The value submits from a hidden field, so the form
+      still posts `applied_leave[member_id]` and the server did not move.
+
+      One thing is better than what it replaced rather than equal to it. The old
+      search fired one request per keystroke and raced its own re-render — the
+      spec for it had to wait for the DOM append and then type once more to
+      re-filter over what landed. The controller debounces and holds an
+      `AbortController`, so a keystroke cancels the request before it; the last
+      answer is the only one rendered and the workaround is gone from the spec.
+
+      The three specs became eleven, and the new ones are the accessibility:
+      picking an employee with the keyboard alone, `aria-activedescendant`
+      tracking the active option, exactly one option marked `aria-selected`,
+      Escape closing without picking, and editing the text after a pick clearing
+      the id — which the old control had no coverage for at all. Each was
+      confirmed by breaking the behaviour and watching only that example fail.
+
+      **The department-to-designation cascade went with it**, because it was
+      jQuery's other caller and `jquery` cannot leave `package.json` while it
+      stands. It is the same controller as the leave-type fill on the HR form —
+      `dependent_select_controller.js`, one select refilled from JSON when the
+      control it depends on changes — so two near-identical `$.ajax` blocks
+      became one controller used twice. The URL carries the literal token
+      `VALUE` where the chosen id goes, which lets both views build it from a
+      path helper whether the id belongs in the path (`fetch_designations`) or
+      in the query string (`get_available_user_leaves`).
+
+      That cascade had no browser coverage whatsoever — it is the third of the
+      three `dataType: 'script'` calls, it 404ed silently from the jquery 4 bump
+      onward, and nothing in 345 examples touched it. It has four specs now, one
+      of which carries a cascade-filled option through to a saved record.
+
+      **`jquery`, `select2`, `show_applied_leaves.js` and `user.js` are gone**,
+      and `app/javascript/` is `application.js` plus `controllers/`. The bundle
+      is one file where it was two: the `javascript_include_tag` the HR form
+      carried went with the second entrypoint. `landing_page_spec.rb` asserted
+      `window.jQuery`, `window.$` and `$.fn.select2` as bundle globals; it now
+      asserts jQuery is *not* on the window, which is the claim worth holding.
+      `$.fn.tooltip` was in that list too and nothing in 114 templates ever
+      called a tooltip
+- [ ] **Page by page**, layouts first, then the screens behind the sign-in
+- [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
+      so inline SVG is a live option and drops a gem
+
+### Two things to be honest about going in
+
+The 72 system specs are what makes this safe, and they are also going to get in
+the way. They assert behaviour rather than appearance, so a re-skin cannot
+silently break the app — but several key off framework classes
+(`.select2-container`, `.card`, `#read-button[disabled]`) and will need
+rewriting as components land. The right fix is for components to expose stable
+hooks so specs stop coupling to Bootstrap's vocabulary; doing that as each
+component arrives is part of the work, not a tax on it.
+
+And nothing in the behaviour suite covers appearance. This was demonstrated
+rather than argued: appending one plausible token mistake to `application.scss`
+— body text landing on the body background — rendered the payslip page
+completely blank, and all 21 system specs passed against it, including the
+three assertions on the currency figures a human could no longer see.
+
+So appearance is reviewed by eye at every step, and the screenshots are read
+rather than glanced at. Pixel comparison was considered and left out: on a
+design that changes every PR it produces diffs that are almost all intended,
+and a check people learn to click through is worse than no check.
+
+The one part of appearance that *is* measurable is colour, and that is
+enforced. `spec/system/colour_contrast_spec.rb` reads what the browser
+computed — walking up for the painted background, flattening any alpha — and
+fails anything under WCAG AA. It exists because the first token pass shipped a
+hero subtitle at 2.81:1 against a 3:1 floor, and nothing else would have
+caught it.
+
+**Done when:** no view hand-writes `btn btn-*`, tokens are the only source of a
+colour, the component previews are reachable, and jQuery and turbolinks are
+both out of `package.json`.
+
+---
+
 ## Defect backlog
 
 Line numbers current as of 29 Aug 2026.
 
 ### Open
 
-None.
+| Location | Problem |
+| --- | --- |
+| `config/environments/production.rb` | `config.action_mailer.default_url_options` is set in `development.rb` and nowhere else. Devise is `:confirmable`, so creating a user mails confirmation instructions, and that template builds a `confirmation_url` — with no host configured it raises `ArgumentError: Missing host to link to!`. **Creating an employee 500s in production.** It has never been covered: nothing in the suite POSTed `/members` until the cascade spec in the select2 item did, and it raised there for the same reason. Test now sets `host: 'localhost'`; production is left open deliberately, because the value is the deployed apex domain that the mailer appends a tenant subdomain to, and that is a phase 4 decision rather than a guess to make here |
 
 `payroll.rb` closed during the Rails 6.1 upgrade rather than on its own: the
 deprecation that forced the transaction block to be restructured took the
@@ -868,6 +1495,51 @@ repository runs:
 | `app/javascript/channels/index.js` | `require.context`, a Webpack API with no esbuild equivalent. The esbuild migration added `require("./channels")` to `application.js` and carried this file over unconverted. esbuild resolves `require.context` to a property on its own require shim rather than rejecting it, so the build stayed green and the bundle threw `Zh.context is not a function` on line 4 — taking every line below it with it, on every page. No jQuery global, no Bootstrap, no select2, no Chartkick, no tooltip or pagination handlers. The landing page rendered as an empty blue block because AOS never initialised and its elements hold `opacity: 0`. Nothing here has any channels: no `*_channel.js` file existed, nothing imported `consumer.js`, and the glob matched nothing even under Webpack |
 | `app/models/applied_leave.rb` | No validation on `leave_duration_type`, which is permitted straight from params, so any integer reached the column. The views render `t("applied_leave.links.#{leave_duration_name}")`, and `leave_duration_name` looks the value up in `LEAVE_DURATION.invert` — an unlisted value gives `nil`, the key interpolates to the bare `applied_leave.links.`, and I18n answers a bare key with the whole subtree. The HR review queue printed the entire `links` hash into the leave-duration cell, for every user of that tenant, from one crafted request by any employee. Found by taking a screenshot of the page for the phase 6 capture |
 
+Found by the first run of the first system spec, both fixed alongside it:
+
+| Location | Problem |
+| --- | --- |
+| `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
+| `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
+| `app/javascript/show_applied_leaves.js:83,102`, `app/javascript/user.js:50` | Three `$.ajax` calls asked for `dataType: 'script'` from endpoints answering `format.json`, then ran `JSON.parse` over the result. jQuery 3 sent `*/*` alongside `text/javascript` in the Accept header, Rails fell back to JSON on it, and the text parsed cleanly — so it worked by negotiation accident. jQuery 4 dropped the wildcard, leaving Rails nothing to match, and all three 404. Nothing throws: the employee search, the leave-type cascade on the HR leave form and the department-to-designation cascade on the employee form each just leave a select empty, which is why no console error and no green suite would have found it. Found by specs written for the jquery 4 bump before taking it |
+
+Found while replacing select2, in the endpoint the new control reads:
+
+| Location | Problem |
+| --- | --- |
+| `app/controllers/applied_leaves_controller.rb:181` | `render json: @users` over the relation sent every column Devise does not blacklist for serialization — base salary, date of birth, gender, home city, first and last name, and the department, designation and role ids — for every employee whose email matched the query. The control has only ever read `id` and `email` off each record, and the select2 handler that preceded it read the same two, so nothing ever wanted the rest. `.select(:id, :email)` is the fix, with a request spec asserting the key set rather than the values. `email LIKE?` in the same line also lost its missing space |
+
+Found while building the component that made it impossible:
+
+| Location | Problem |
+| --- | --- |
+| 34 labels across 12 views, including all six devise forms | `form.label t('forms.labels.email')` passes the translated string where Rails expects the attribute name, so the label was rendered as `for="user_Email"` against an input with id `user_email`. Nothing looks wrong — the text is correct — but the label is associated with no field: clicking it focuses nothing and a screen reader announces the input unlabelled. Two views moved to `FormFieldComponent`, which takes the attribute and the text separately; the other eleven had the association fixed where they stand |
+
+Found while moving the list pages onto Turbo Frames, all four on pages the
+suite rendered nowhere — 301 examples passed while three of them answered 500:
+
+| Location | Problem |
+| --- | --- |
+| `app/views/events/index.html.erb` | The events table, its heading, its Create button and every row's edit and delete link were nested inside the `link_to` to the calendar. An anchor cannot contain another, so the parser split it into six anchors and the page rendered as four empty pill outlines with the table squeezed into a column beside them. The `.js.erb` meant to refresh it targeted `#events_table` while the div carried `class="events_table"`, so it could not have repaired the page either |
+| `app/views/events/index.html.erb` | `render partial: 'no_events.html.erb'` names a partial `no_events.html.erb`, not the file of that name, so Rails looked for `_no_events.html.erb.html.erb` and raised. The events page 500d for any company with no events, which is the first thing a new tenant sees on it |
+| `app/views/leaves/index.html.erb` | The controller paginates to `PAGE_SIZE`, which is 5, and the view rendered no pagination control at all, so a company's sixth leave type could not be reached from the page. `_leaves_list.html.erb` does carry one, but was rendered by nothing except the dead `index.js.erb` beside it and had drifted to an older style — a dark header and text buttons against the themed icons the index uses |
+| `app/javascript/application.js`, `app/views/leaves/index.js.erb`, `app/views/events/index.js.erb` | Three pieces of machinery for a thing that could not happen. `events#index` answers `format.html` only, so its `.js.erb` was a template for a request the action rejects; both `.js.erb` files targeted ids no page has ever contained; and the `.leave-pagination-wrapper` handler was bound on every page load against a class no view carries |
+| `app/views/applied_leaves/approve_leaves.js.erb` | The mass approve and reject confirmation was written into `$("#flash_message")`, and no element with that id exists anywhere in the application. The message reports how many of the selected requests actually changed state — the number that matters when some of them cannot — and it went into an empty selection on every bulk action the application has ever processed |
+| `app/javascript/notifications.js` | Marking notifications as read gave no feedback. The button fired an `$.ajax` POST with no success handler, so the rows were marked read in the database and stayed on screen until something else reloaded the page — the click looked like it had done nothing |
+
+Found by navigating away from a page and pressing back, which is the first
+thing the Turbo swap made possible to get wrong:
+
+| Location | Problem |
+| --- | --- |
+| `app/javascript/application.js` | Turbo snapshots the page it is leaving and restores that snapshot on a back navigation, and select2 builds its control as a sibling of the select it wraps. So the snapshot carried the control, the body bundle re-ran on restore and built a second one, and the HR leave form came back with two dropdowns stacked over one select. turbolinks did not do this — the same probe on `develop` reports one container before and after — so it arrived with Turbo rather than being something Turbo exposed. Torn down on `turbo:before-cache`, from the bundle the layout loads in `<head>` rather than from the body bundle beside the `.select2()` call, because body bundles are re-executed on every visit and a listener added there accumulates one copy per navigation |
+
+Found by measuring what the column stores rather than by reading the schema:
+
+| Location | Problem |
+| --- | --- |
+| Eleven columns across `applied_benefits`, `benefits`, `leaves`, `payrolls`, `settings`, `user_leaves`, `users` and `users_benefits` | Money and leave balances declared `t.float`, which on MySQL is `FLOAT(24)` — single precision, about seven significant decimal digits, not the `double` the name suggests. Salaries need more. `1234567.89` read back as `1234570.0` and `100000.10` as `100000.0`, so a payroll generated from a base of `100000.10` at a 10% rate came out `$87.74` short on the gross, with the cents gone from every derived figure and from the rendered payslip. Now `decimal`: `(15, 2)` for money, `(6, 3)` for the tax rate, `(6, 2)` for leave counts. The leave columns were not demonstrably broken at their magnitudes and moved for consistency. What the float already rounded away stays rounded away — the migration fixes what is written from here on |
+
 ---
 
 ## Why this order
@@ -887,3 +1559,15 @@ explore does more for the project than a fifth module nobody can reach.
 modern, deployed, honestly-documented multi-tenant Rails application. That is
 already a strong piece of work. Only continue into Phase 5 if you want the
 project to be yours rather than the team's.
+
+**Reversed on the demo, 31 Aug 2026.** "The demo comes before new features"
+was written against phase 5 — a fifth module nobody can reach — and phase 7 is
+not that. It is the interface the demo would be showing. Deploying first would
+have put a URL in the README pointing at the one part of this project nobody
+has touched since 2021, and every argument above for shipping early assumes
+what ships is worth looking at.
+
+The cost is real and worth naming: the deploy work stays unvalidated for
+another two or three weeks, and phase 4 carries the unknowns — wildcard TLS,
+managed Elasticsearch, searchkick reindexing per tenant — that are easier to
+find early. Phase 7 runs first anyway.

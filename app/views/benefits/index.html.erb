@@ -31,7 +31,7 @@
             <% end %>
           <% end %>
           <% if can?(:destroy, benefit) %>
-            <%= link_to benefit, method: :delete, data: { confirm: t('form.message.confirmation') } do %>
+            <%= link_to benefit, data: { turbo_method: :delete, turbo_confirm: t('form.message.confirmation') } do %>
               <i class='fa fa-trash ms-3'></i>
             <% end %>
           <% end %>

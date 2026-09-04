@@ -20,12 +20,12 @@
           <% end %>
         <% end %>
         <% if can?(:edit, user_leave) %>
-          <%= link_to edit_member_user_leave_path(@user, user_leave), remote: true do %>
+          <%= link_to edit_member_user_leave_path(@user, user_leave), data: { turbo_frame: 'modal' } do %>
             <i class='fa fa-bars ms-3'></i>
           <% end %>
         <% end %>
         <% if can?(:destroy, user_leave) %>
-          <%= link_to member_user_leave_path(@user, user_leave), method: :delete, data: { confirm: t('user_leave.messages.confirmation.delete') } do %>
+          <%= link_to member_user_leave_path(@user, user_leave), data: { turbo_method: :delete, turbo_confirm: t('user_leave.messages.confirmation.delete') } do %>
             <i class='fa fa-trash ms-3'></i>
           <% end %>
         <% end %>

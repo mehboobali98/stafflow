@@ -3,7 +3,9 @@
     <h1><%= I18n.t('headings.edit_employee') %></h1>
     <hr>
     <div>
-      <%= form_with model: @user, local: true, url: member_path, class: 'card bg-light p-4' do |form| %>
+      <%= form_with model: @user, local: true, url: member_path, class: 'card bg-light p-4',
+                    data: { controller: 'dependent-select',
+                            dependent_select_url_value: fetch_designations_department_path('VALUE') } do |form| %>
         <div class='field mb-3'>
           <%= form.label I18n.t('forms.labels.fname') %><br />
           <%= form.text_field :first_name, required: true, class: 'form-control' %>
@@ -25,12 +27,12 @@
         </div>
 
         <div class='field mb-2'>
-          <%= form.label t('forms.labels.gender') %>
+          <%= form.label :gender, t('forms.labels.gender') %>
           <%= form.select :gender, options_for_select(genders), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
         </div>
         
         <div class='field mb-2'>
-          <%= form.label t('forms.labels.country') %><br />
+          <%= form.label :country, t('forms.labels.country') %><br />
           <%= form.select :country, options_for_select(COUNTRIES_LIST), { prompt: t('forms.labels.country')  }, class: 'form-control' %>
         </div>
         <% if !@user.account_owner? %>
@@ -43,13 +45,13 @@
           <% if can?(:update, @user, :department_id) %>
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.department') %><br />
-              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select' %>
+              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select', data: { action: 'change->dependent-select#load' } %>
             </div>
           <% end %>
           <% if can?(:update, @user, :designation_id) %>
             <div class='field mb-2'>
               <%= form.label I18n.t('forms.labels.designation') %><br />
-              <%= form.select :designation_id, options_from_collection_for_select(@designations, 'id', 'name'), { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select' %>
+              <%= form.select :designation_id, options_from_collection_for_select(@designations, 'id', 'name'), { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select', data: { dependent_select_target: 'select' } %>
             </div>
           <% end %>
           <% if can?(:update, @user, :base_salary) %>

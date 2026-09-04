@@ -1,35 +1,49 @@
-<%= javascript_include_tag "show_applied_leaves" %>
-<div class='stafflow-heading p-3'>
-  <div class='row'>
-    <div class='col-10'>
-      <h2 class="mb-3"><%= t('applied_leave.headings.applied_leaves') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('applied_leave.links.apply_for_leave'), new_member_applied_leave_path(current_user), class: 'btn btn-primary mb-2' if can?(:create, AppliedLeave) && !current_user.account_owner? %>
-    </div>
-  </div>
-  <%= link_to t('leave.all'), leaves_path, class: 'card-link' %>
-  <% unless current_user.account_owner? %>
-    <%= link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user), class: 'card-link' %>
-    <%= link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user), class: 'card-link' %>
+<%= render(PageHeaderComponent.new(title: t('applied_leave.headings.applied_leaves'))) do |header| %>
+  <% if can?(:create, AppliedLeave) && !current_user.account_owner? %>
+    <% header.with_actions do %>
+      <%= render(ButtonComponent.new(href: new_member_applied_leave_path(current_user))) do %>
+        <%= t('applied_leave.links.apply_for_leave') %>
+      <% end %>
+    <% end %>
   <% end %>
-</div>
-<br>
-<br>
-<div class='p-3'>
-  <div class="d-flex justify-content-between">
-    <%= select_tag "filter", options_for_select(leave_states), prompt: t('applied_leave.headings.select_filter'), class: 'form-select w-25 d-inline mb-2 p-2' if can?(:filter_applied_leaves, AppliedLeave) %>
-    <div id="submit_buttons" class="d-none">
-      <button type="button" id="approve_leaves_btn" class="btn btn-success mb-2 p-2 me-2"><%= t('applied_leave.links.approve_leaves') if can?(:approve_leaves, AppliedLeave) %></button>
-      <button type="button" id="reject_leaves_btn" class="btn btn-danger mb-2 p-2"><%= t('applied_leave.links.reject_leaves') if can?(:reject_leaves, AppliedLeave) %></button>
+  <% header.with_link { link_to t('leave.all'), leaves_path } %>
+  <% unless current_user.account_owner? %>
+    <% header.with_link { link_to t('user_leave.myappleaves'), member_applied_leaves_path(current_user) } %>
+    <% header.with_link { link_to t('user_leave.myavleaves'), member_user_leaves_path(current_user) } %>
+  <% end %>
+<% end %>
+
+<div data-controller="checkbox-group">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <%= form_tag all_applied_leaves_path, method: :get, id: 'filter_form',
+                                          data: { controller: 'auto-submit',
+                                                  turbo_frame: 'applied_leaves_list' } do %>
+      <%= select_tag 'filter_type', options_for_select(leave_states, params[:filter_type]),
+                     prompt: t('applied_leave.headings.select_filter'),
+                     class: 'form-select w-auto', id: 'filter',
+                     data: { action: 'change->auto-submit#submit' } %>
+    <% end %>
+    <div id="submit_buttons">
+      <% if can?(:approve_leaves, AppliedLeave) %>
+        <%= render(ButtonComponent.new(variant: :success, size: :sm, id: 'approve_leaves_btn', class: 'me-2',
+                                       type: 'submit', form: 'mass_update_form',
+                                       formaction: approve_applied_leaves_path, disabled: true,
+                                       data: { 'checkbox-group-target': 'submit' })) do %>
+          <%= t('applied_leave.links.approve_leaves') %>
+        <% end %>
+      <% end %>
+      <% if can?(:reject_leaves, AppliedLeave) %>
+        <%= render(ButtonComponent.new(variant: :danger, size: :sm, id: 'reject_leaves_btn',
+                                       type: 'submit', form: 'mass_update_form',
+                                       formaction: reject_applied_leaves_path, disabled: true,
+                                       data: { 'checkbox-group-target': 'submit' })) do %>
+          <%= t('applied_leave.links.reject_leaves') %>
+        <% end %>
+      <% end %>
     </div>
   </div>
-  <div id="applied_leaves_list_table">
-    <%= render partial: 'applied_leaves_list', locals: { applied_leaves: @applied_leaves } %>
-  </div>
-  <% if @applied_leaves.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
+
+  <%= turbo_frame_tag 'applied_leaves_list', data: { turbo_action: 'advance' } do %>
+    <%= render partial: 'applied_leaves_queue', locals: { applied_leaves: @applied_leaves } %>
   <% end %>
 </div>
