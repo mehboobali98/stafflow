@@ -1,44 +1,42 @@
-<div class='stafflow-heading p-3'>
-  <div class='row'>
-    <div class='col-10'>
-      <h2><%= t('designation.table_heading') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('designation.new_link_name'), new_designation_path, class: 'btn btn-primary mt-1' if can?(:create, Designation) %>
-    </div>
-  </div>
-</div>
-<div class='p-2'>
-  <br>
-  <br>
-  <table class="table table-hover">
-    <thead class="stafflow-table-header">
+<%= render(PageHeaderComponent.new(title: t('designation.table_heading'))) do |header| %>
+  <% if can?(:create, Designation) %>
+    <% header.with_actions do %>
+      <%= render(ButtonComponent.new(href: new_designation_path)) do %>
+        <%= t('designation.new_link_name') %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
+    <tr>
       <th><%= t('designation.table_cell_one_name') %></th>
       <th><%= t('designation.table_cell_three_name') %></th>
       <th><%= t('designation.table_cell_two_name') %></th>
-      <th></th>
-    </thead>
-    <tbody>
-      <% designations.each do |designation| %>
-        <tr>
-          <td><%= designation.name %></td>
-          <td><%= designation.users.size %></td>
-          <td><%= designation.department.name %></td>
-          <td>
-            <%= link_to edit_designation_path(designation) do %>
-              <i class='fa fa-bars ms-3'></i>
-            <% end %>
-            <%= link_to designation, data: { turbo_method: :delete, turbo_confirm: t('designation.sure_message') } do %>
-              <i class='fa fa-trash ms-3'></i>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <% if designations.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
+      <th class="text-end"><%= t('designation.table_options') %></th>
+    </tr>
   <% end %>
-</div>
+  <% table.with_body do %>
+    <% designations.each do |designation| %>
+      <tr>
+        <td><%= designation.name %></td>
+        <td><%= designation.users.size %></td>
+        <td><%= designation.department.name %></td>
+        <td class="text-end text-nowrap">
+          <%= link_to edit_designation_path(designation), 'aria-label': t('designation.links.edit') do %>
+            <i class='fa fa-bars'></i>
+          <% end %>
+          <%= link_to designation, class: 'ms-3', 'aria-label': t('designation.links.delete'),
+                                   data: { turbo_method: :delete,
+                                           turbo_confirm: t('designation.sure_message') } do %>
+            <i class='fa fa-trash'></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+<% end %>
+<% if designations.empty? %>
+  <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
+<% end %>
