@@ -545,6 +545,10 @@ en:
     change_image: "Change Image"
     apply_for_leave: 'Apply for leave'
     appliedleave: "Applied Leaves"
+    links:
+      view: "View employee"
+      edit: "Edit employee"
+      delete: "Delete employee"
   notifications:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"
