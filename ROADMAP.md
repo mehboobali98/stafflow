@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 379 examples, 0 pending |
+| Tests | 381 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1626,6 +1626,13 @@ Found by measuring what the column stores rather than by reading the schema:
 | Location | Problem |
 | --- | --- |
 | Eleven columns across `applied_benefits`, `benefits`, `leaves`, `payrolls`, `settings`, `user_leaves`, `users` and `users_benefits` | Money and leave balances declared `t.float`, which on MySQL is `FLOAT(24)` — single precision, about seven significant decimal digits, not the `double` the name suggests. Salaries need more. `1234567.89` read back as `1234570.0` and `100000.10` as `100000.0`, so a payroll generated from a base of `100000.10` at a 10% rate came out `$87.74` short on the gross, with the cents gone from every derived figure and from the rendered payslip. Now `decimal`: `(15, 2)` for money, `(6, 3)` for the tax rate, `(6, 2)` for leave counts. The leave columns were not demonstrably broken at their magnitudes and moved for consistency. What the float already rounded away stays rounded away — the migration fixes what is written from here on |
+
+Found by parsing the locale files rather than by reading them, and recorded
+here as the exception that proves the tally rather than as an entry in it:
+
+| Location | Problem |
+| --- | --- |
+| `config/locales/devise.en.yml:101,108,151` | `forms.labels.role`, `forms.labels.department` and `headings.change_password` were each defined twice. **Not counted as defects, because all three pairs hold identical values** — Psych keeps the last key it reads, so nothing was dropped and no screen was wrong, which is exactly what separates these from the four phase 0 closed and the `applied_leave.headings.leave_type` phase 2 closed, where the values differed and the wrong one won. What made them worth removing is that the trap is set either way: the copy a reader finds first is the one not in effect, so editing it changes nothing, silently. `spec/config/locale_files_spec.rb` now walks the Psych AST of every file in `config/locales` and fails on any key defined twice at any depth — it has to read the files as files, because by the time I18n has loaded them the duplicate is already gone |
 
 ---
 
