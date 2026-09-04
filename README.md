@@ -159,7 +159,7 @@ a background email.
 | Auth | Devise |
 | Authorization | CanCanCan |
 | Assets | esbuild + Sprockets, Bootstrap 5 |
-| Navigation | Turbo Drive, Frames and Streams; rails-ujs still drives the `data-method` links |
+| Navigation | Turbo Drive, Frames and Streams |
 | Behaviour | Stimulus controllers, with jQuery left only where a `.js.erb` is fetched |
 | Charts | Chartkick |
 | Scheduling | whenever |
@@ -190,14 +190,14 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 343 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 345 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are covered only where the system specs below
   reach them, and controllers only through request specs for authentication,
   tenant routing, the apex company lookup, search and its authorization,
   sign-out, leave updates, the HR leave form and the error paths.
 - **The browser is covered where the JavaScript is, not across the app.**
-  Seventy system specs drive headless Chromium through Capybara and Cuprite,
+  Seventy-two system specs drive headless Chromium through Capybara and Cuprite,
   and every page carrying a bundle of its own is now loaded by one that asserts
   what that bundle does: the landing page, sign-up, sign-in through a tenant
   subdomain to the dashboard, the HR leave queue, the HR leave form and its

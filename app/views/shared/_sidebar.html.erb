@@ -85,7 +85,7 @@
       <% end %>
     </li>
     <li>
-      <%= link_to destroy_user_session_url, method: :delete do %>
+      <%= link_to destroy_user_session_url, data: { turbo_method: :delete } do %>
         <i class="fas fa-sign-out-alt" id="log-out"></i>
         <span class="links-name"><%= t('sidebar.logout') %></span>
       <% end %>

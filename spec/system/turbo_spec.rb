@@ -135,26 +135,17 @@ RSpec.describe 'Turbo Drive', type: :system do
     end
   end
 
-  # rails-ujs is still here - it is what drives the `.js.erb` responses and the
-  # data-method links, and it leaves with jQuery in the Stimulus step rather
-  # than here. Both libraries want the same clicks, and the arrangement that
-  # keeps them apart is structural rather than lucky: ujs delegates on
-  # document, Turbo's link observer is on window, so ujs sees a click first and
-  # stops it propagating; and Turbo's form observer skips any submit event
-  # whose default was already prevented, which is what ujs does to a remote
-  # form. This example is what would notice if that stopped being true.
-  describe 'alongside rails-ujs' do
+  describe 'a link that deletes' do
     let!(:doomed) { as_tenant(company) { create(:department, company: company, name: 'Obsolete') } }
 
     before { sign_in_as(company, owner) }
 
-    it 'still deletes through a data-method link' do
+    it 'deletes through data-turbo-method' do
       visit_tenant(company, departments_path)
       expect(page).to have_content('Obsolete')
 
-      # Scoped to the row: the sidebar's sign-out is a data-method link too.
       row = find('tr', text: 'Obsolete')
-      accept_confirm { row.find("a[data-method='delete']").click }
+      accept_confirm { row.find("a[data-turbo-method='delete']").click }
 
       expect(page).to have_no_content('Obsolete')
       expect(as_tenant(company) { Department.exists?(doomed.id) }).to be false
