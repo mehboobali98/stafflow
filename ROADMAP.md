@@ -18,10 +18,10 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 361 examples, 0 pending |
+| Tests | 374 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 38 found, 37 fixed, 1 open |
+| Known defects | 40 found, 39 fixed, 1 open |
 
 ---
 
@@ -1401,6 +1401,47 @@ breadcrumbs_on_rails and chartkick's helpers.
       `$.fn.tooltip` was in that list too and nothing in 114 templates ever
       called a tooltip
 - [ ] **Page by page**, layouts first, then the screens behind the sign-in
+
+      **Layouts done.** The four HTML layouts each carried their own copy of
+      the same `<head>`, which is how all four came to be missing the same
+      three tags. There is one `layouts/_head` now, taking the extra
+      stylesheets as a local.
+
+      The tag that mattered is `<meta name="viewport">`, which the application
+      has never had. Without it a phone renders at roughly 980px and scales
+      down, so every `col-md-*` and `d-flex` in 121 views — the whole reason
+      Bootstrap is here — has been doing nothing on mobile since the beginning.
+      `<meta charset>` was missing outside the mailer layout, and `<html>`
+      carried no `lang`, which is WCAG 3.1.1 and what a screen reader picks its
+      pronunciation from.
+
+      Turning the viewport on is not cosmetic: it changes how every narrow
+      screen renders, for the first time. Measured rather than assumed, at
+      390px. Everything phase 7 has already rebuilt from components fits — the
+      HR leave form, the leave queue, the dashboard and settings all report no
+      horizontal overflow. What overflows is `users/index`, and the offenders
+      are precisely a hand-written `<table class="table table-hover">` that is
+      not `TableComponent` and two hand-written `btn btn-primary` links. So the
+      remaining page-by-page work now has a measurable acceptance test —
+      **fits at 390px** — and passing it is the same work as adopting the
+      components.
+
+      Three things in the shared chrome were fixed to get there: the page
+      header wraps instead of pushing its actions off the edge, `.page-shell`
+      drops to `$space-4` of horizontal padding below 768px, and the auth card
+      was `w-50`, which on a phone is half of nothing. It is a `max-width` that
+      goes full width when there is no room, and its brand mark takes its
+      colour from `$accent` rather than from `bg-primary text-white`.
+
+      Two smaller things. Every page in the application shared one identical
+      `<title>Stafflow</title>`; `page_title` puts the page's own name first
+      where a view sets `content_for :title`, and seven entry pages set one —
+      the rest fall back exactly as before and get theirs as they are rebuilt.
+      And the signup layout, which wraps both the marketing page and
+      registration, rendered no flash partial at all: `after_sign_out_path_for`
+      is devise's default of `root_path`, so signing out landed on a page with
+      nowhere to put "Signed out successfully" and looked like it had done
+      nothing
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
 
@@ -1502,6 +1543,13 @@ Found by the first run of the first system spec, both fixed alongside it:
 | `app/javascript/application.js:9` | `require("select2")` never registered anything. Under CommonJS select2's UMD wrapper exports a factory — `module.exports = function (root, jQuery)` — instead of calling it, so `$.fn.select2` was never defined and `show_applied_leaves.js` threw `$(...).select2 is not a function` on every page that loads it. That kills the rest of its `$(document).ready`, which is where the HR leave queue's mass approve and reject buttons and its filter are wired. The comment above the line asserted the opposite, that select2 registers itself on the jQuery above, and was the reason nobody looked. `require("select2")()` is the fix |
 | `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
 | `app/javascript/show_applied_leaves.js:83,102`, `app/javascript/user.js:50` | Three `$.ajax` calls asked for `dataType: 'script'` from endpoints answering `format.json`, then ran `JSON.parse` over the result. jQuery 3 sent `*/*` alongside `text/javascript` in the Accept header, Rails fell back to JSON on it, and the text parsed cleanly — so it worked by negotiation accident. jQuery 4 dropped the wildcard, leaving Rails nothing to match, and all three 404. Nothing throws: the employee search, the leave-type cascade on the HR leave form and the department-to-designation cascade on the employee form each just leave a select empty, which is why no console error and no green suite would have found it. Found by specs written for the jquery 4 bump before taking it |
+
+Found while consolidating the four layouts into one `<head>`:
+
+| Location | Problem |
+| --- | --- |
+| `app/views/layouts/application.html.erb`, `landing.html.erb`, `signup.html.erb`, `component_preview.html.erb` | No `<meta name="viewport">` in any layout, so every mobile browser rendered the application at roughly 980px and scaled it down. Bootstrap's grid is the layout system across all 121 views and none of it has ever reflowed on a phone. Also no `<meta charset>` outside the mailer layout, and no `lang` on `<html>` — WCAG 3.1.1, and what a screen reader takes its pronunciation rules from. All three were missing from all four layouts because the `<head>` was copy-pasted four times, which is the actual defect |
+| `app/views/layouts/signup.html.erb` | The layout rendered no flash partial. It wraps the marketing page, which is `root_path`, which is what devise's default `after_sign_out_path_for` returns — so "Signed out successfully" was written to a flash that the page it landed on had nowhere to render. Signing out worked and looked like it had not |
 
 Found while replacing select2, in the endpoint the new control reads:
 
