@@ -1,12 +1,6 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= t('appname') %></title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
-  </head>
+<html lang="<%= I18n.locale %>">
+  <%= render "layouts/head" %>
   <body>
     <%# Deliberately none of the app chrome. The default layout reaches for
         current_user, which a preview has no request to supply. %>

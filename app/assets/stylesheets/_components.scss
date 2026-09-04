@@ -8,6 +8,7 @@
 
   &__bar {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
     gap: $space-4;
@@ -61,7 +62,11 @@
 // The layout used three <br>s to clear the navbar and gave the breadcrumb no
 // styling at all, so it sat against the bar unreadably.
 .page-shell {
-  padding: 0 $space-6 $space-7;
+  padding: 0 $space-4 $space-7;
+
+  @media (min-width: 768px) {
+    padding: 0 $space-6 $space-7;
+  }
 }
 
 .breadcrumbs {
@@ -107,5 +112,38 @@
       background-color: $accent;
       color: $text-on-brand;
     }
+  }
+}
+
+.auth-shell {
+  display: flex;
+  justify-content: center;
+  padding: $space-5 $space-4;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 34rem;
+  padding: $space-5;
+
+  &__brand {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: $space-2;
+  }
+
+  &__mark {
+    background-color: $accent;
+    color: $text-on-brand;
+    border-radius: $radius-sm;
+    padding: $space-2 $space-3;
+    margin: 0;
+  }
+
+  &__tagline {
+    color: $text-secondary;
+    font-size: $text-base;
+    margin: 0;
   }
 }

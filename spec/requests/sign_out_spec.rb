@@ -44,4 +44,13 @@ RSpec.describe 'signing out', type: :request do
     get '/dashboard'
     expect(response).to redirect_to(new_user_session_url(host: 'acme.localhost'))
   end
+
+  # Sign-out lands on `root_path` - home#index, on the signup layout, which
+  # rendered no flash partial at all. The notice devise raises had nowhere to go.
+  it 'renders the notice on the page it lands on' do
+    delete '/users/sign_out'
+    follow_redirect!
+
+    expect(response.body).to include(I18n.t('devise.sessions.signed_out'))
+  end
 end
