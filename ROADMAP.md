@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 388 examples, 0 pending |
+| Tests | 393 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1517,6 +1517,41 @@ breadcrumbs_on_rails and chartkick's helpers.
       the element was being re-inserted on each navigation. It is a layout
       concern and now sits in the head the layouts pass consolidated, beside
       sidebar and dashboard.
+
+      **Then the eleven pages behind a member.** Four overflowed — the payroll
+      list at 449px, the leave allowance list at 442, the benefit allocation
+      list at 436 and the available benefits form at 498 — and a fifth,
+      `applied_leaves/index`, turned out to have been measured wrong.
+
+      **The false pass is the part worth keeping.** Visited as the account
+      owner, `/members/:id/applied_leaves` answers 403:
+      `applied_leave_abilities` grants the owner `approve`, `reject` and
+      `all_applied_leaves` and never `:read`. An error page fits at 390px, so
+      the first measurement reported a page that had never rendered as passing.
+      What caught it was the `find('.page-shell')` in the spec's own visit
+      helper, which waits for the application layout and fails on anything that
+      is not it — measured as HR the page renders, and overflows like the other
+      four. This is the 301-examples-green-while-three-pages-500 shape again,
+      one layer down: **a measurement that cannot tell "fits" from "never
+      rendered" is not a measurement.** The other six pages the probe called
+      passing were re-checked with the guard, and all six genuinely render and
+      genuinely fit.
+
+      Three more malformed tables went the way of the last three. payrolls and
+      users_benefits put `<th>` straight inside `<thead>` with no `<tr>`, and
+      users_benefits then closed a `<tr>` it had never opened; available
+      benefits opened its `<table>` outside the `present?` branch and closed it
+      inside, so the empty case emitted a table that was never closed. That
+      branch now wraps the whole form rather than splitting a tag across it.
+
+      Two smaller things. `available_benefits` dropped a `custom-control
+      custom-checkbox` wrapper — Bootstrap 4 class names, on an application
+      that has been on 5 since the tokens step, so they styled nothing and the
+      checkbox looks exactly as it did. And `applied_leave.links.edit`, `.show`
+      and `.delete` were dead keys rendered by nothing; two are repurposed as
+      the accessible names for the row's links. Adding a second `delete` beside
+      the existing one was caught by the locale spec above, which is the first
+      thing it has caught.
 
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
