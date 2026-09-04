@@ -73,6 +73,46 @@ RSpec.describe 'the pages at 390px', type: :system do
     expect(overflows_horizontally?).to be false
   end
 
+  describe 'the member-scoped pages' do
+    let!(:employee) do
+      as_tenant(company) do
+        create(:user, :employee, company: company, department: Department.first, email: 'grace@example.com')
+      end
+    end
+
+    before do
+      as_tenant(company) do
+        create(:payroll, company: company, user: employee)
+        user_leave = create(:user_leave, company: company, user: employee)
+        create(:applied_leave, company: company, user_leave: user_leave)
+        create(:users_benefit, company: company, user: employee)
+      end
+    end
+
+    {
+      'the payroll list' => :member_payrolls_path,
+      'the leave allowance list' => :member_user_leaves_path,
+      'the benefit allocation list' => :member_users_benefits_path,
+      'the available benefits form' => :available_benefits_member_users_benefits_path
+    }.each do |name, helper|
+      it "renders #{name} without scrolling sideways" do
+        visit_narrow(owner, public_send(helper, employee))
+
+        expect(overflows_horizontally?).to be false
+      end
+    end
+
+    # The account owner cannot read an AppliedLeave - it has approve and reject
+    # but no :read - so this one is measured as HR. Visited as the owner it
+    # answers 403, and an error page fits at 390px, which is exactly the false
+    # pass the .page-shell wait in visit_narrow exists to catch.
+    it 'renders the applied leave list without scrolling sideways' do
+      visit_narrow(hr, member_applied_leaves_path(employee))
+
+      expect(overflows_horizontally?).to be false
+    end
+  end
+
   it 'renders the HR leave form without scrolling sideways' do
     visit_narrow(hr, new_applied_leave_by_hr_applied_leaves_path)
 
