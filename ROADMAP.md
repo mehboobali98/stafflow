@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 374 examples, 0 pending |
+| Tests | 379 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1442,6 +1442,45 @@ breadcrumbs_on_rails and chartkick's helpers.
       is devise's default of `root_path`, so signing out landed on a page with
       nowhere to put "Signed out successfully" and looked like it had done
       nothing
+
+      **The employee list is the first screen taken, because it was the
+      measured failure.** At 390px the document scrolled sideways to 704px, and
+      the offenders were precisely the three things the page hand-wrote rather
+      than rendered: a bare `table table-hover` with no responsive wrapper, and
+      two `btn btn-primary` links, one of them shoved past the edge by an
+      `ms-5`. So passing the measurement and adopting the components were not
+      two jobs.
+
+      The heading block and its `col-10`/`col-2` grid are `PageHeaderComponent`.
+      The filter row is a flex-wrap strip of `w-auto` controls, replacing three
+      `w-25 d-inline` filters that were each claiming a quarter of a row that
+      does not exist at 390px. The table is `TableComponent`, and what fixes the
+      page is the `.table-responsive` the component already wrapped it in: the
+      table still wants 736px and still gets it, inside its own scroll
+      container, while the document sits at 390. The empty state is
+      `EmptyStateComponent`, matching the queue.
+
+      **The measurement is a spec now rather than a habit.**
+      `spec/system/narrow_screen_spec.rb` holds the five pages rebuilt so far
+      and grows by one line per page converted. It asks
+      `documentElement.scrollWidth > clientWidth`, which is deliberately not the
+      same question as "is anything on this page wider than the screen" — a
+      table scrolling inside `.table-responsive` is wider, and is correct. It
+      was checked the usual way: three separate 900px elements planted on three
+      different pages failed exactly those three examples and left the other two
+      green, and reverting this page's markup alone failed exactly this page.
+
+      Three classes went because nothing had read them since jQuery left —
+      `js-filter-select`, `js-pagination-wrapper`, and the `users_table_rows`
+      div the turbo frame had already made redundant.
+
+      One thing found rather than fixed, and it is not counted in the defect
+      tally because it is a gap rather than a bug: the three action links in
+      each row are icon-only, so a screen reader announced three unlabelled
+      links per row. They carry an `aria-label` here, but the same shape sits in
+      every list page in the application, so this is a pattern to carry through
+      the remaining views rather than something this page finished.
+
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
 

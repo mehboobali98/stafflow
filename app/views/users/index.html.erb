@@ -1,46 +1,35 @@
 <% content_for :title, t('headings.all_employees') %>
-<div class='stafflow-heading p-4'>
-  <div class='row'>
-    <div class='col-10'>
-      <h2><%= t('headings.all_employees') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('headings.create_employee'), new_member_path, class: 'btn btn-primary mt-1' if can?(:create, User) %>
-    </div>
-  </div>
-</div>
-<div class='me-3 ms-2'>
-  <br><br>
-  <%= turbo_frame_tag 'users_table', data: { turbo_action: 'advance' } do %>
-    <div class='mb-3'>
-      <%= form_tag members_path, method: :get, id: 'filter_form',
-                                 data: { controller: 'auto-submit' } do %>
-        <div class='row ms-3'>
-          <div class='col-10'>
-            <%= select_tag :department_id,
-                           options_from_collection_for_select(@departments, 'id', 'name', params[:department_id]),
-                           prompt: t('forms.labels.department'),
-                           class: 'form-control w-25 d-inline m-1 js-filter-select',
-                           data: { action: 'change->auto-submit#submit' } %>
-            <%= text_field_tag :match_users_name, params[:match_users_name],
-                               class: 'form-control w-25 d-inline m-1 js-filter-select',
-                               placeholder: t('forms.labels.name'),
-                               data: { action: 'input->auto-submit#submit' } %>
-            <%= select_tag :role_id, options_for_select(user_roles, params[:role_id]),
-                           prompt: t('forms.labels.role'),
-                           class: 'form-control w-25 d-inline m-1 js-filter-select',
-                           data: { action: 'change->auto-submit#submit' } %>
-          </div>
-          <div class='col-2'>
-            <%= link_to t('forms.buttons.reset_filters'), members_path,
-                        id: 'reset_filter_btn', class: 'btn btn-primary d-inline ms-5' %>
-          </div>
-        </div>
+<%= render(PageHeaderComponent.new(title: t('headings.all_employees'))) do |header| %>
+  <% if can?(:create, User) %>
+    <% header.with_actions do %>
+      <%= render(ButtonComponent.new(href: new_member_path)) do %>
+        <%= t('headings.create_employee') %>
       <% end %>
-    </div>
-    <br>
-    <div id='users_table_rows'>
-      <%= render partial: 'users_list', locals: { users: @users } %>
-    </div>
+    <% end %>
   <% end %>
-</div>
+<% end %>
+
+<%= turbo_frame_tag 'users_table', data: { turbo_action: 'advance' } do %>
+  <%= form_tag members_path, method: :get, id: 'filter_form',
+                             class: 'd-flex flex-wrap align-items-center gap-2 mb-3',
+                             data: { controller: 'auto-submit' } do %>
+    <%= select_tag :department_id,
+                   options_from_collection_for_select(@departments, 'id', 'name', params[:department_id]),
+                   prompt: t('forms.labels.department'),
+                   class: 'form-select w-auto',
+                   data: { action: 'change->auto-submit#submit' } %>
+    <%= text_field_tag :match_users_name, params[:match_users_name],
+                       class: 'form-control w-auto',
+                       placeholder: t('forms.labels.name'),
+                       data: { action: 'input->auto-submit#submit' } %>
+    <%= select_tag :role_id, options_for_select(user_roles, params[:role_id]),
+                   prompt: t('forms.labels.role'),
+                   class: 'form-select w-auto',
+                   data: { action: 'change->auto-submit#submit' } %>
+    <%= render(ButtonComponent.new(variant: :secondary, href: members_path, id: 'reset_filter_btn')) do %>
+      <%= t('forms.buttons.reset_filters') %>
+    <% end %>
+  <% end %>
+
+  <%= render partial: 'users_list', locals: { users: @users } %>
+<% end %>
