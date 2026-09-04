@@ -1,0 +1,10 @@
+<%= form_with scope: :applied_leave, url: '#' do |form| %>
+  <%= render(FormFieldComponent.new(form: form, attribute: :member_id, label: 'Employee',
+                                    id: 'preview_member_search')) do %>
+    <%= render(ComboboxComponent.new(form: form, attribute: :member_id,
+                                     url: '/applied_leaves/search_users',
+                                     id: 'preview_member_search',
+                                     label_attribute: 'email',
+                                     placeholder: 'Select employee')) %>
+  <% end %>
+<% end %>

@@ -14,22 +14,24 @@ RSpec.describe 'the landing page', type: :system do
     expect(page).to have_link(I18n.t('forms.buttons.signin'))
   end
 
-  # application.js is a single bundle, and these are the globals it hangs off
-  # window in order. A throw partway through leaves every later one undefined
-  # while the page still answers 200 with complete markup - the shape the
-  # require.context defect shipped in, through a review and two releases.
-  it 'leaves the bundle globals on window' do
-    expect(js_type('window.jQuery')).to eq('function')
-    expect(js_type('window.$')).to eq('function')
-    expect(js_type('window.jQuery?.fn?.select2')).to eq('function')
-    expect(js_type('window.jQuery?.fn?.tooltip')).to eq('function')
+  # application.js is a single bundle, and a throw partway through leaves
+  # everything below it undefined while the page still answers 200 with complete
+  # markup - the shape the require.context defect shipped in, through a review
+  # and two releases. Chartkick is the last thing the bundle registers, so it
+  # answering means the whole of it ran.
+  it 'runs the bundle to the end' do
     expect(js_type('window.Chartkick')).to eq('object')
   end
 
-  # landing_page.js is a second entrypoint that reads $ off the window above and
-  # calls AOS.init from $(document).ready. AOS marks the elements it takes over,
-  # so this asserts the dependency between the two bundles actually held.
-  it 'runs the second bundle that reads jQuery off that window' do
+  # jQuery left with select2. Nothing should be putting it back.
+  it 'needs no jQuery on the window' do
+    expect(js_type('window.jQuery')).to eq('undefined')
+    expect(js_type('window.$')).to eq('undefined')
+  end
+
+  # AOS marks the elements it takes over, so this is the Stimulus controller
+  # that starts it having connected.
+  it 'reveals the sections through the animate-on-scroll controller' do
     expect(page).to have_css('[data-aos].aos-init')
   end
 end
