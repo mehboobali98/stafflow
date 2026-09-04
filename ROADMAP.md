@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 343 examples, 0 pending |
+| Tests | 345 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 36 found, 36 fixed, 0 open |
@@ -1314,10 +1314,28 @@ breadcrumbs_on_rails and chartkick's helpers.
       Found by running the new file six times rather than once, which is the
       habit the Turbo step started and the second flake it has caught.
 
-      What is still here: `@rails/ujs`, for the `data-method` delete links and
-      their `data-confirm`, which become `data-turbo-method` and
-      `data-turbo-confirm`; and jQuery, whose remaining callers are the
-      department-to-designation cascade on the employee form and select2
+      **rails-ujs is gone.** Seventeen links carried `method:` and
+      `data-confirm` for it to intercept and carry `data-turbo-method` and
+      `data-turbo-confirm` now, with `ButtonComponent` emitting the same for
+      the two callers that pass `method:`. Nothing else used the library.
+
+      `payrolls/index` asked for `method: :create`, which is not an HTTP verb.
+      rails-ujs put it in a `_method` field, Rack's method override refused a
+      verb it does not recognise, and the request stayed the POST the route
+      wanted — the button worked by two mistakes cancelling out. It says
+      `turbo_method: :post` now.
+
+      Two of those links had no browser coverage, and one was signing out: the
+      only thing between the session and a link that had just changed shape was
+      a request spec that does not run JavaScript. Both have specs now.
+
+      `layouts/_table.html.erb` and `layouts/_form.html.erb` went with it —
+      both opened with a comment calling themselves references to copy from,
+      both addressed instance variables no layout sets, and nothing rendered
+      either. They were only read because one held a `data-method` link.
+
+      What is still here is jQuery, and its callers are down to two: the
+      department-to-designation cascade on the employee form, and select2
 - [ ] **select2 is replaced rather than kept.** It is a jQuery plugin, so
       leaving it in place would have kept jQuery in `package.json` for one
       control. It attaches to exactly one element in the whole app — the member
@@ -1340,7 +1358,7 @@ breadcrumbs_on_rails and chartkick's helpers.
 
 ### Two things to be honest about going in
 
-The 70 system specs are what makes this safe, and they are also going to get in
+The 72 system specs are what makes this safe, and they are also going to get in
 the way. They assert behaviour rather than appearance, so a re-skin cannot
 silently break the app — but several key off framework classes
 (`.select2-container`, `.card`, `#read-button[disabled]`) and will need

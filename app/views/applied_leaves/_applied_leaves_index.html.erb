@@ -11,7 +11,7 @@
         <% end %>
       <% end %>
       <% if applied_leave.pending? && can?(:delete, applied_leave) %>
-        <%= link_to member_applied_leave_path(@user, applied_leave), method: :delete, data: { confirm: t('applied_leave.messages.delete_confirm') } do %>
+        <%= link_to member_applied_leave_path(@user, applied_leave), data: { turbo_method: :delete, turbo_confirm: t('applied_leave.messages.delete_confirm') } do %>
           <i class='fa fa-trash ms-3'></i>
         <% end %>
       <% end %>

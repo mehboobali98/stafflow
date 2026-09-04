@@ -42,7 +42,7 @@
               <% end %>
             <% end %>
             <% if can?(:destroy, leave) %>
-              <%= link_to leave, method: :delete, data: { confirm: t('leave.messages.delete_confirm') } do %>
+              <%= link_to leave, data: { turbo_method: :delete, turbo_confirm: t('leave.messages.delete_confirm') } do %>
                 <i class='fa fa-trash ms-3'></i>
               <% end %>
             <% end %>

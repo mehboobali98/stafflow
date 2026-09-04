@@ -7,7 +7,6 @@
     "@hotwired/turbo": "8.0.23",
     "@popperjs/core": "2.9.3",
     "@rails/activestorage": "7.2.302",
-    "@rails/ujs": "7.1.600",
     "aos": "2.3.4",
     "bootstrap": "5.3.8",
     "chart.js": "4.5.1",
