@@ -1,3 +1,4 @@
+<% content_for :title, t('labels.signin') %>
 <% if !sub_domain?(request) %>
   <%= render partial: "find_by_email" %>
 <% else %>
