@@ -10,6 +10,14 @@ module ApplicationHelper
   # Palette for generated initials avatars.
   AVATAR_COLORS = %w[#37517e #47b2e4 #5a6f9e #2f7d95 #6b5b95 #3d7ea6].freeze
 
+  # The page's own title ahead of the application name, or just the
+  # application name where a view has set none.
+  #
+  # @return [String]
+  def page_title
+    [content_for(:title), t('appname')].compact_blank.join(' · ')
+  end
+
   def add_flash_bootstrap_class(message_type)
     FLASH_MESSAGE_COLOR.fetch(message_type.to_sym, 'alert alert-info')
   end
