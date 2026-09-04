@@ -1,0 +1,18 @@
+<%= tag.div(**component_attributes(class: 'combobox', data: controller_data)) do %>
+  <%= form.hidden_field attribute, data: { combobox_target: 'field' } %>
+  <input type="text"
+         id="<%= input_id %>"
+         class="form-control combobox__input"
+         role="combobox"
+         autocomplete="off"
+         aria-expanded="false"
+         aria-autocomplete="list"
+         aria-controls="<%= listbox_id %>"
+         placeholder="<%= placeholder %>"
+         <%= tag.attributes(data: input_data) %>>
+  <ul id="<%= listbox_id %>" class="combobox__listbox" role="listbox" hidden
+      aria-label="<%= t('combobox.listbox') %>"
+      <%= tag.attributes(data: listbox_data) %>></ul>
+  <div id="<%= status_id %>" class="visually-hidden" role="status" aria-live="polite"
+       data-combobox-target="status"></div>
+<% end %>

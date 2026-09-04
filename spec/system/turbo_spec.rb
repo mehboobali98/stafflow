@@ -107,12 +107,12 @@ RSpec.describe 'Turbo Drive', type: :system do
   end
 
   # Turbo caches a snapshot of the page it is leaving and restores it on a back
-  # navigation, which is a new hazard for anything that injects DOM of its own:
-  # the injected markup is in the snapshot, and the script that injected it
-  # runs again on restore. select2 is the one thing here that does that, and it
-  # produced two controls over one select. Measured against turbolinks before
-  # blaming Turbo for it - turbolinks gave one container either way.
-  describe 'a cached page carrying a select2 control' do
+  # navigation, which is a hazard for anything that injects DOM of its own: the
+  # injected markup is in the snapshot, and the script that injected it runs
+  # again on restore. select2 did exactly that and came back as two controls
+  # over one select. The combobox that replaced it is rendered by the template
+  # instead, so this holds it to that.
+  describe 'a cached page carrying a combobox' do
     let!(:hr) do
       as_tenant(company) do
         create(:user, :hr, company: company, department: department, email: 'hr@example.com')
@@ -121,9 +121,9 @@ RSpec.describe 'Turbo Drive', type: :system do
 
     before { sign_in_as(company, hr) }
 
-    it 'has one control per select after going away and coming back' do
+    it 'has one control per field after going away and coming back' do
       visit_tenant(company, new_applied_leave_by_hr_applied_leaves_path)
-      expect(page).to have_css('.select2-container')
+      expect(page).to have_css('[data-component=combobox]')
 
       click_on I18n.t('sidebar.departments')
       expect(page).to have_current_path(departments_path)
@@ -131,7 +131,8 @@ RSpec.describe 'Turbo Drive', type: :system do
 
       expect(page).to have_current_path(new_applied_leave_by_hr_applied_leaves_path)
       expect(page).to have_css('#applied_leave_member_id', visible: :all, count: 1)
-      expect(page).to have_css('.select2-container', count: 1)
+      expect(page).to have_css('[data-component=combobox]', count: 1)
+      expect(page).to have_css('[role=combobox]', count: 1)
     end
   end
 

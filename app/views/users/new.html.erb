@@ -1,6 +1,8 @@
 <%= render(PageHeaderComponent.new(title: t('headings.create_employee'))) %>
 
-<%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form' do |form| %>
+<%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form',
+              data: { controller: 'dependent-select',
+                      dependent_select_url_value: fetch_designations_department_path('VALUE') } do |form| %>
   <%= render(CardComponent.new) do %>
     <div class='row'>
       <div class='col-md-6'>
@@ -31,13 +33,15 @@
           <%= form.select :department_id,
                           options_from_collection_for_select(@departments, 'id', 'name'),
                           { prompt: t('forms.labels.department') },
-                          class: 'form-select', id: 'department_select' %>
+                          class: 'form-select', id: 'department_select',
+                          data: { action: 'change->dependent-select#load' } %>
         <% end %>
         <%= render(FormFieldComponent.new(form: form, attribute: :designation_id,
                                           label: t('forms.labels.designation'),
                                           id: 'designation_select')) do %>
           <%= form.select :designation_id, {}, { prompt: t('forms.labels.designation') },
-                          class: 'form-select', id: 'designation_select' %>
+                          class: 'form-select', id: 'designation_select',
+                          data: { dependent_select_target: 'select' } %>
         <% end %>
         <%= render(FormFieldComponent.new(form: form, attribute: :base_salary, as: :number_field,
                                           label: t('forms.labels.salary'), required: true,
