@@ -1,3 +1,4 @@
+<% content_for :title, t('headings.create_employee') %>
 <%= render(PageHeaderComponent.new(title: t('headings.create_employee'))) %>
 
 <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form',
