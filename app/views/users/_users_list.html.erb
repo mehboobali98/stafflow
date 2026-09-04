@@ -1,47 +1,46 @@
-<table class='table table-hover'>
-  <thead class='stafflow-table-header p-3 table-borderless'>
-    <th><%= t('forms.labels.full_name') %></th>
-    <th><%= t('forms.labels.department') %></th>
-    <th><%= t('forms.labels.email') %></th>
-    <th><%= t('forms.labels.role') %></th>
-    <th><%= t('forms.labels.actions') %></th>
-  </thead>
-  <tbody>
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
+    <tr>
+      <th><%= t('forms.labels.full_name') %></th>
+      <th><%= t('forms.labels.department') %></th>
+      <th><%= t('forms.labels.email') %></th>
+      <th><%= t('forms.labels.role') %></th>
+      <th class="text-end"><%= t('forms.labels.actions') %></th>
+    </tr>
+  <% end %>
+  <% table.with_body do %>
     <% users.each do |user| %>
       <tr>
         <td><%= user.full_name %></td>
         <td><%= user.department.name unless user.department.nil? %></td>
         <td><%= user.email %></td>
         <td><%= user.role %></td>
-        <td>
+        <td class="text-end text-nowrap">
           <% if can?(:read, user) %>
-            <%= link_to member_path(user) do %>
+            <%= link_to member_path(user), 'aria-label': t('user.links.view') do %>
               <i class='fa fa-eye fa-lg'></i>
             <% end %>
           <% end %>
-
           <% if can?(:update, user) %>
-            <%= link_to edit_member_path(user) do %>
-              <i class='fa fa-bars ms-3'></i>
+            <%= link_to edit_member_path(user), class: 'ms-3', 'aria-label': t('user.links.edit') do %>
+              <i class='fa fa-bars'></i>
             <% end %>
           <% end %>
-
           <% if can?(:destroy, user) %>
-            <%= link_to member_path(user), data: { turbo_method: :delete, turbo_confirm: t('messages.confirmation') } do %>
-              <i class='fa fa-trash ms-3'></i>
+            <%= link_to member_path(user), class: 'ms-3', 'aria-label': t('user.links.delete'),
+                                           data: { turbo_method: :delete,
+                                                   turbo_confirm: t('messages.confirmation') } do %>
+              <i class='fa fa-trash'></i>
             <% end %>
           <% end %>
         </td>
       </tr>
     <% end %>
-  </tbody>
-</table>
-<% if users.empty? %>
-  <div class="d-flex justify-content-md-center align-items-center mt-5">
-    <h1 class='text-muted'><%= t('nodata') %></h1>
-  </div>
+  <% end %>
 <% end %>
-
-<div class='js-pagination-wrapper pagination-wrapper'>
+<% if users.empty? %>
+  <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
+<% end %>
+<div class='pagination-wrapper'>
   <%= will_paginate users, container: false %>
 </div>
