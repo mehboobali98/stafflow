@@ -1,41 +1,36 @@
+<% content_for :title, t('payroll.headings.payroll') %>
+<%= render(PageHeaderComponent.new(title: t('payroll.headings.payroll'))) do |header| %>
+  <% if can?(:create, Payroll) %>
+    <% header.with_actions do %>
+      <%= render(ButtonComponent.new(href: member_payrolls_path(@user, @payroll), method: :post,
+                                     data: { turbo_confirm: t('payroll.messages.payroll_generation') })) do %>
+        <%= t('payroll.button.generate_payroll') %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
 
-<div class='stafflow-heading p-4'>
-  <div class='row'>
-    <div class='col-10'>
-      <h2><%= t('payroll.headings.payroll') %></h2>
-    </div>
-    <div class='col-2'>
-      <%= link_to t('payroll.button.generate_payroll'), member_payrolls_path(@user, @payroll), data: { turbo_method: :post, turbo_confirm: t('payroll.messages.payroll_generation') }, class: 'btn btn-primary' if can?(:create, Payroll) %>
-    </div>
-  </div>
-</div>
-<div class='p-3'>
-  <br>
-  <br><br>
-  <table class="table table-hover">
-    <thead class="stafflow-table-header">
+<%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+  <% table.with_head do %>
+    <tr>
       <th><%= t('payroll.table.salary_slip') %></th>
       <th><%= t('payroll.table.gross_salary') %></th>
       <th><%= t('payroll.table.month') %></th>
       <th><%= t('payroll.table.year') %></th>
-    </thead>
-    <% if @payrolls %>    
-      <tbody>
-        <% @payrolls.each do |payroll| %>
-          <tr>
-            <td><%= link_to payroll.sequence_num, member_payroll_path(id: payroll.sequence_num) %></td>
-            <td><%= number_to_currency(payroll.gross_salary, unit: t('currency.rupees')) %></td>
-            <td><%= t('date.month_names')[payroll.created_at.month] %></td>
-            <td><%= payroll.created_at.year %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    <% end %>
-  </table> 
-  <% if @payrolls.empty? %>
-    <div class="d-flex justify-content-md-center align-items-center mt-5">
-      <h1 class='text-muted'><%= t('nodata') %></h1>
-    </div>
+    </tr>
   <% end %>
-  <%= render partial: 'shared/pagination', locals: { resource: @payrolls } %>
-</div> 
+  <% table.with_body do %>
+    <% @payrolls.each do |payroll| %>
+      <tr>
+        <td><%= link_to payroll.sequence_num, member_payroll_path(id: payroll.sequence_num) %></td>
+        <td><%= number_to_currency(payroll.gross_salary, unit: t('currency.rupees')) %></td>
+        <td><%= t('date.month_names')[payroll.created_at.month] %></td>
+        <td><%= payroll.created_at.year %></td>
+      </tr>
+    <% end %>
+  <% end %>
+<% end %>
+<% if @payrolls.empty? %>
+  <%= render(EmptyStateComponent.new(title: t('nodata'))) %>
+<% end %>
+<%= render partial: 'shared/pagination', locals: { resource: @payrolls } %>

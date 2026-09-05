@@ -155,6 +155,10 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    links:
+      view: "View leave allowance"
+      edit: "Edit leave allowance"
+      delete: "Delete leave allowance"
     myappleaves: 'My Applied Leaves'
     myavleaves: "My Available Leaves"
     breadcrumbs:
@@ -259,8 +263,8 @@ en:
       approve: 'Approve'
       reject: 'Reject'
       show: 'Show'
-      edit: 'Edit'
-      delete: 'Delete'
+      edit: "Edit leave application"
+      delete: "Delete leave application"
       submit: 'Submit'
     labels:
       available_leaves: 'Available leaves'
@@ -344,6 +348,9 @@ en:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
   users_benefit:
+    links:
+      edit: "Edit benefit allocation"
+      delete: "Delete benefit allocation"
     breadcrumbs:
       home: "User Benefits"
       new: "New"
