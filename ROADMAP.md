@@ -1722,6 +1722,27 @@ breadcrumbs_on_rails and chartkick's helpers.
       dress up something that is not wired to anything; they want a decision,
       not a component.
 
+      **`dashboard/_form` got its decision: removed.** The first screen after
+      signing in showed a composer and four announcements, none of them real.
+      `_announcement_card` opened with `<!-- dummy data used !-->`, was rendered
+      four times, and carried a hard-coded name, designation and quote from
+      `en.yml` — one of the 2021 contributors, posting the same line four times,
+      each stamped "less than a minute ago" because the timestamp was
+      `DateTime.now`. The composer above it was a `<form>` with no action, two
+      `href="#"` icons and a submit wired to nothing.
+
+      **This is the category phase 0 cleared, and it survived that pass because
+      phase 0 was reading the landing page and this sits behind the sign-in.**
+      Worth recording as a limit on how that phase was done rather than as a
+      failure of it: "read the pages a visitor sees" finds branded copy on the
+      front door and nothing at all on the dashboard.
+
+      Removed rather than converted, and rather than built. Restyling dresses up
+      a control that does nothing; building it is a phase 5 feature, not part of
+      rebuilding an interface. What is left is what was already true — three
+      counts and two charts, all real queries — as a row of three cards above
+      the graphs, which is what the space is for once the feed is gone.
+
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
 
