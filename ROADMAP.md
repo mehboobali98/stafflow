@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 404 examples, 0 pending |
+| Tests | 406 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1016,7 +1016,8 @@ breadcrumbs_on_rails and chartkick's helpers.
 - [ ] **ViewComponent, and Lookbook in front of it.** Started: `Button`,
       `Badge`, `Card`, `Table`, `PageHeader` and `EmptyState` exist with a
       preview each, and the HR leave queue is converted as the proof. `FormField`
-      and `Modal` are still to come, along with the other 120 views.
+      and `Modal` have landed since, so the set the phase named is complete and
+      what is left is views rather than components.
 
       Every component stamps `data-component` into its markup, and the system
       specs key off that rather than off Bootstrap's class names — so restyling
@@ -1602,6 +1603,36 @@ breadcrumbs_on_rails and chartkick's helpers.
       390px, where the columns stack, that padding indented the time field out
       of line with the date above it. Only a screenshot at both widths would
       have shown that, which is what the phase says appearance review is for.
+
+      **`ModalComponent` closes the component set.** It is the one the plan
+      named and nothing had built: the leave allocation dialog hand-wrote
+      `modal-dialog`, `modal-content`, `modal-header`, `modal-body` and
+      `modal-footer`, its own close button, and `form.label` calls.
+
+      Bootstrap's Modal is still not used, for the reason recorded when the
+      dialog was first built, and `modal_controller.js` is unchanged — the
+      component renders what that controller shows.
+
+      **The form wraps the component rather than sitting in a slot**, and that
+      is the one design decision in it. The form has to span the body and the
+      footer, because the submit sits beside the dismiss and both belong inside
+      the same form element as the fields; slots are assigned in the component's
+      own block, so a form opened inside that block cannot contain them.
+      Wrapping puts `<form>` between `.modal` and `.modal-dialog`, which
+      Bootstrap's descendant selectors read through unchanged — confirmed by
+      screenshot rather than assumed. The slot is `messages` rather than
+      `flash`, which would shadow the Rails helper of that name inside the
+      template.
+
+      The dialog names itself now: the layout's modal carries `role="dialog"`,
+      `aria-modal="true"` and `aria-labelledby`, pointed at the component's
+      title, so a screen reader announces it by its heading instead of reading
+      an unnamed group. Removing the id from the title fails that example and
+      only that one.
+
+      `_user_leaves_table.html.erb` went with it — a copy of the rows in
+      `_user_leaves_list`, rendered by nothing since the frames work, still
+      carrying the pre-component icon links.
 
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
