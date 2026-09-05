@@ -18,19 +18,19 @@
         <td class="text-end text-nowrap">
           <% if can?(:read, user) %>
             <%= link_to member_path(user), 'aria-label': t('user.links.view') do %>
-              <i class='fa fa-eye fa-lg'></i>
+              <%= render(IconComponent.new(:'eye', size: :lg)) %>
             <% end %>
           <% end %>
           <% if can?(:update, user) %>
             <%= link_to edit_member_path(user), class: 'ms-3', 'aria-label': t('user.links.edit') do %>
-              <i class='fa fa-bars'></i>
+              <%= render(IconComponent.new(:'list')) %>
             <% end %>
           <% end %>
           <% if can?(:destroy, user) %>
             <%= link_to member_path(user), class: 'ms-3', 'aria-label': t('user.links.delete'),
                                            data: { turbo_method: :delete,
                                                    turbo_confirm: t('messages.confirmation') } do %>
-              <i class='fa fa-trash'></i>
+              <%= render(IconComponent.new(:'trash')) %>
             <% end %>
           <% end %>
         </td>

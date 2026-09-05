@@ -2,6 +2,7 @@
 <html lang="<%= I18n.locale %>">
   <%= render "layouts/head", stylesheets: %w[sidebar dashboard pagination] %>
   <body data-controller="sidebar">
+    <%= render partial: "shared/icon_sprite" %>
     <div class="modal fade" tabindex="-1" aria-hidden="true" role="dialog" aria-modal="true"
          aria-labelledby="modal_title" data-controller="modal">
       <%= turbo_frame_tag 'modal', data: { modal_target: 'content' } %>

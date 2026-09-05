@@ -1,0 +1,37 @@
+@import 'tokens';
+
+// The sprite is markup rather than an image, so it has to be taken out of flow
+// explicitly - a bare <svg> full of symbols still occupies a line box.
+.icon-sprite {
+  display: none;
+}
+
+// Sized in CSS rather than through the width attribute, which Chrome does not
+// accept in em: every icon stretched to its container and sat 16px tall. Sized
+// in em so an icon matches the text beside it, and nudged onto the text rather
+// than the baseline, which the webfont did for free.
+svg.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+}
+
+svg.icon--sm {
+  width: 0.875em;
+  height: 0.875em;
+}
+
+svg.icon--lg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+// An icon-only link still contains the whitespace the ERB block puts around the
+// icon, and Bootstrap underlines it - a stray dash beside every row action.
+// Selecting on the icon rather than adding a class to fourteen anchors; a
+// browser without :has() shows what it showed before, which is not a
+// regression.
+a:has(> svg.icon) {
+  text-decoration: none;
+}

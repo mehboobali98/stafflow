@@ -102,3 +102,15 @@ RSpec/DescribeClass:
     - 'spec/models/money_precision_spec.rb'
     - 'spec/components/previews_spec.rb'
     - 'spec/config/**/*'
+
+# lib/icon_sprite.rb is a standalone generator run by hand, not application
+# code: stdout is where a script that writes a file reports what it wrote.
+# inherit_mode as above, and for the same reason it is needed there: an Exclude
+# written out here replaces rubocop-rails' own, which is what keeps db/seeds.rb
+# quiet - without the merge, seventeen offenses appear in a file nobody touched.
+Rails/Output:
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - 'lib/icon_sprite.rb'

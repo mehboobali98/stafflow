@@ -67,6 +67,7 @@ en:
     server_error: '500 Error'
     format_error: 'The requested format is not supported'
   sidebar:
+    toggle: 'Toggle the sidebar'
     dashboard: 'Dashboard'
     users: 'Users'
     departments: 'Departments'
