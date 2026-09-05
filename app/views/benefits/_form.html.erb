@@ -1,19 +1,12 @@
-<div class="container-fluid">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class='card bg-light p-4'>
-        <%= form_for @benefit do |form| %>
-          <div class="mb-3">
-            <%= form.label :name, t('benefit.label.benefit_name'), { class: 'form-label' } %>
-            <%= form.text_field :name, { class: 'form-control', required: true, placeholder: t('form.field.benefit_name') } %>
-          </div>
-          <div class="mb-3">
-            <%= form.label :default_amount, t('benefit.label.amount'), { class: 'form-label' } %>
-            <%= form.number_field :default_amount, { class: 'form-control', required: true, placeholder: t('benefit.label.amount') } %>
-          </div>
-          <%= form.submit t('form.button.submit'), class: 'btn btn-primary' %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render(PageHeaderComponent.new(title: local_assigns[:heading])) %>
+
+<%= form_for @benefit do |form| %>
+  <%= render(CardComponent.new(class: 'form-card')) do %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :name, label: t('benefit.label.benefit_name'),
+                                      required: true, placeholder: t('form.field.benefit_name'))) %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :default_amount, as: :number_field,
+                                      label: t('benefit.label.amount'), required: true,
+                                      placeholder: t('benefit.label.amount'))) %>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('form.button.submit') } %>
+  <% end %>
+<% end %>

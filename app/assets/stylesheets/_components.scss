@@ -121,6 +121,14 @@
   padding: $space-5 $space-4;
 }
 
+// A form reads badly stretched across a desk monitor, and `col-md-6` bounded
+// it by column count rather than by measure. The card is what bounds it now,
+// the same way .auth-card bounds sign-in.
+.form-card {
+  width: 100%;
+  max-width: 40rem;
+}
+
 .auth-card {
   width: 100%;
   max-width: 34rem;

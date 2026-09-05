@@ -113,6 +113,22 @@ RSpec.describe 'the pages at 390px', type: :system do
     end
   end
 
+  describe 'the resource forms' do
+    {
+      'the department form' => :new_department_path,
+      'the designation form' => :new_designation_path,
+      'the leave form' => :new_leave_path,
+      'the benefit form' => :new_benefit_path,
+      'the event form' => :new_event_path
+    }.each do |name, helper|
+      it "renders #{name} without scrolling sideways" do
+        visit_narrow(owner, public_send(helper))
+
+        expect(overflows_horizontally?).to be false
+      end
+    end
+  end
+
   it 'renders the HR leave form without scrolling sideways' do
     visit_narrow(hr, new_applied_leave_by_hr_applied_leaves_path)
 
