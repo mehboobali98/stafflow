@@ -82,6 +82,10 @@ en:
       search_company: "Continue"
       details: "Details"
       delete: "Delete"
+    hints:
+      minimum_password_length:
+        one: "1 character minimum"
+        other: "%{count} characters minimum"
     labels:
       email: "Email"
       password: "Password"
