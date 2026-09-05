@@ -1,0 +1,18 @@
+<%# Shown in place rather than behind the frame, so the preview is of the
+    markup rather than of the controller that reveals it. %>
+<div class="modal show" style="display: block; position: static;">
+  <%= form_with scope: :user_leave, url: '#', method: :patch do |form| %>
+    <%= render(ModalComponent.new(title: 'Edit User Leave')) do |modal| %>
+      <% modal.with_body do %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :leave_name,
+                                          label: 'Leave name', disabled: true, value: 'Annual')) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :total_count, as: :number_field,
+                                          label: 'Leave count', value: 20)) %>
+      <% end %>
+      <% modal.with_footer do %>
+        <%= render(ButtonComponent.new(variant: :secondary)) { 'Close' } %>
+        <%= render(ButtonComponent.new(type: 'submit')) { 'Submit' } %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

@@ -29,6 +29,7 @@ RSpec.describe 'the leave allocation modal', type: :system do
     find("a[href='#{edit_member_user_leave_path(hr, user_leave)}']").click
 
     expect(page).to have_css('.modal.show')
+    expect(page).to have_css('[data-component=modal]')
     expect(page).to have_field('user_leave_total_count', with: '20.0')
   end
 
@@ -37,11 +38,19 @@ RSpec.describe 'the leave allocation modal', type: :system do
     expect(page).to have_css('.modal.show')
 
     fill_in 'user_leave_total_count', with: '15'
-    within('.modal.show') { find('input[type=submit]').click }
+    within('.modal.show') { click_on I18n.t('form.button.submit') }
 
     expect(page).to have_no_css('.modal.show')
     expect(page).to have_css('td', exact_text: '15.0')
     expect(user_leave.reload.total_count).to eq 15
+  end
+
+  it 'names the dialog for a screen reader' do
+    find("a[href='#{edit_member_user_leave_path(hr, user_leave)}']").click
+    expect(page).to have_css('.modal.show')
+
+    labelled_by = page.evaluate_script("document.querySelector('.modal').getAttribute('aria-labelledby')")
+    expect(page).to have_css("##{labelled_by}", text: I18n.t('user_leave.headings.edit_user_leave'))
   end
 
   it 'closes without saving when dismissed' do
@@ -60,7 +69,7 @@ RSpec.describe 'the leave allocation modal', type: :system do
     expect(page).to have_css('.modal.show')
 
     fill_in 'user_leave_total_count', with: MAX_LEAVE_COUNT
-    within('.modal.show') { find('input[type=submit]').click }
+    within('.modal.show') { click_on I18n.t('form.button.submit') }
 
     expect(page).to have_css('.modal.show')
     expect(page).to have_css('#modal_flash_message .flash-message')

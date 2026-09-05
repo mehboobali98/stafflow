@@ -104,6 +104,8 @@ en:
     payroll_x_axis_title: 'Months'
     payroll_y_axis_title: 'Amount'
     amount_prefix: 'Rs '
+  modal:
+    close: 'Close'
   combobox:
     listbox: 'Search results'
     no_results: 'No matches'

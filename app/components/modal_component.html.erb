@@ -1,0 +1,16 @@
+<%= tag.div(**options) do %>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="<%= title_id %>"><%= title %></h5>
+      <%= tag.button(type: 'button', class: 'btn-close', 'aria-label': t('modal.close'),
+                     data: { action: 'click->modal#close' }) %>
+    </div>
+    <% if messages? %>
+      <div id="modal_flash_message"><%= messages %></div>
+    <% end %>
+    <div class="modal-body"><%= body %></div>
+    <% if footer? %>
+      <div class="modal-footer"><%= footer %></div>
+    <% end %>
+  </div>
+<% end %>
