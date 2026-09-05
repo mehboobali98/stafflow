@@ -1676,6 +1676,52 @@ breadcrumbs_on_rails and chartkick's helpers.
       at their index instead, so where the button goes no longer depends on how
       the page was reached.
 
+      **Then devise and the chrome, which is where the item ends.** The five
+      devise forms with a label-beside-field grid, the signup submit, the navbar
+      search, the search result link, and the footer.
+
+      The devise forms stop putting their labels in a `col-3`. At 390px three of
+      twelve columns is about 65px, and "Password" already filled it edge to
+      edge on the sign-in page. Stacked `FormField` labels now, like every other
+      form here. None of the five was overflowing — measured first — so the
+      screenshots are the argument rather than the acceptance test.
+
+      **`registrations/new` keeps its floating labels, and that is a decision
+      left open rather than made.** `FormField` renders label-then-control and a
+      floating label needs the reverse, so converting it means either a floating
+      mode on the component or a design change to the front door. The
+      application therefore has two label patterns — stacked everywhere,
+      floating on signup — which by this phase's own "a second palette is a
+      second system" argument wants settling one way or the other.
+
+      `layouts/_footer.html.erb` is rendered by nothing. The landing page has
+      its own footer inline, and this one held six `href="#"` social links and a
+      hard-coded "© 2021 Copyright: Company". That is the fourth dead layout
+      partial found this way, after `_navbar`, `_table` and `_form`, and the
+      pattern is worth naming: **a partial nothing renders is invisible to every
+      check in this repository, including the ones added this phase.**
+
+      Two labels were rendering a Ruby symbol rather than a translation.
+      `link_to :details` on the search results and `submit_tag :search` in the
+      navbar both put the symbol's name on the button — "details" and "search",
+      lower case, in English whatever the locale, the second on every signed-in
+      page.
+
+      **`ButtonComponent` gained a `dark` variant, and the contrast spec is the
+      reason.** The navbar search moved to `:secondary` first, which is
+      `btn-outline-secondary`, and `colour_contrast_spec` failed it at 1.07:1
+      against the brand blue it sits on. `btn-dark` was load-bearing rather than
+      arbitrary, and that spec is the only thing in the suite that could have
+      said so.
+
+      What is left hand-writing `btn btn-*` is two views, both deliberately:
+      `simple_calendar/_month_calendar`, which is a gem template override whose
+      markup is simple_calendar's contract rather than ours, and
+      `dashboard/_form` — a `<form>` with no action, two `href="#"` icons and a
+      submit that does nothing, above a hard-coded feed. Converting either would
+      dress up something that is not wired to anything; they want a decision,
+      not a component.
+
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
 
