@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 406 examples, 0 pending |
+| Tests | 411 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1633,6 +1633,48 @@ breadcrumbs_on_rails and chartkick's helpers.
       `_user_leaves_table.html.erb` went with it — a copy of the rows in
       `_user_leaves_list`, rendered by nothing since the frames work, still
       carrying the pre-component icon links.
+
+      **Then the detail views** — users/edit, users/edit_password, users/new,
+      users/show, leaves/show, events/show, user_leaves/show, user_leaves/new,
+      notifications/index, settings/_form and the HR leave form's submit.
+
+      **A correction to this file, left standing beside what it corrects.** The
+      `FormField` item above says the eleven views not yet converted "had the
+      association fixed in place rather than waiting for the migration". Two of
+      them were not. `users/edit_password` had all three of its labels pointing
+      at nothing and `users/edit` had eight of ten, still calling the
+      one-argument `form.label` — `for="user_Current Password"` against an input
+      with id `user_current_password`. Measured before the change rather than
+      inferred: eleven orphaned labels, and zero after.
+
+      What made the claim survive is worth more than the fix. `forms_spec`
+      covered the employee, settings, benefit, department and designation forms
+      and the two signed-out ones — **which is exactly the set that had been
+      fixed.** The suite agreed with the record rather than with the
+      application, and a check that only looks where the work was done cannot
+      tell you the work was incomplete. Both pages are named in it now, and
+      reverting either fails its own example.
+
+      `.card-body p` in `dashboard.scss` was a dashboard stat style wearing a
+      global selector — centred, 4xl and bold on every paragraph in every card
+      in the application. It is `.stat-figure` now, on the three dashboard
+      numbers that wanted it. **Not counted as a defect**, and the distinction
+      was checked rather than assumed: `leaves/show` on develop already puts a
+      `<p>` inside a `.card-body`, so the rule was reaching it there too, and
+      inside a `text-center` card the result was plausibly intended. What is
+      wrong is the selector, not the appearance it happened to produce.
+
+      Two more markup faults of the shape this phase keeps finding:
+      `user_leaves/new` opened its `<table>` outside the `present?` branch and
+      closed it inside, with the submit button sitting between `<tbody>` and
+      `</tbody>`; and `users/show` wrapped the profile image in
+      `file btn btn-lg btn-primary` and then overrode the border, radius,
+      background and font-size in `.file`, so the only thing the button classes
+      contributed was a box. `.file` declares that box itself now.
+
+      Three "Back" links pointed at `:back`, which reads the Referer. They point
+      at their index instead, so where the button goes no longer depends on how
+      the page was reached.
 
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
