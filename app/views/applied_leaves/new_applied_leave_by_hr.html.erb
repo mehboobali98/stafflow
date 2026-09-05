@@ -35,6 +35,6 @@
     <%= render(FormFieldComponent.new(form: form, attribute: :applied_till, as: :date_field,
                                       label: t('applied_leave.labels.leave_to'), required: true)) %>
 
-    <%= form.submit t('applied_leave.links.submit'), class: 'btn btn-primary' %>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('applied_leave.links.submit') } %>
   <% end %>
 </div>

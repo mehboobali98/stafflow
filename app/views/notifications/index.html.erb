@@ -16,8 +16,11 @@
         <% end %>
       </div>
       <div class='bd-highlight me-5'>
-        <button class='btn btn-primary' id='read-button' form='mark_read_form' disabled
-                data-checkbox-group-target='submit'><%= t('notifications.markread') %></button>
+        <%= render(ButtonComponent.new(type: 'submit', id: 'read-button', form: 'mark_read_form',
+                                       disabled: true,
+                                       data: { 'checkbox-group-target': 'submit' })) do %>
+          <%= t('notifications.markread') %>
+        <% end %>
       </div>
     </div>
   </div>
