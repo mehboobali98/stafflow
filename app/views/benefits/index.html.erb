@@ -26,14 +26,14 @@
         <td class="text-end text-nowrap">
           <% if can?(:update, benefit) %>
             <%= link_to edit_benefit_path(benefit), 'aria-label': t('benefit.links.edit') do %>
-              <i class='fa fa-bars'></i>
+              <%= render(IconComponent.new(:'list')) %>
             <% end %>
           <% end %>
           <% if can?(:destroy, benefit) %>
             <%= link_to benefit, class: 'ms-3', 'aria-label': t('benefit.links.delete'),
                                  data: { turbo_method: :delete,
                                          turbo_confirm: t('form.message.confirmation') } do %>
-              <i class='fa fa-trash'></i>
+              <%= render(IconComponent.new(:'trash')) %>
             <% end %>
           <% end %>
         </td>

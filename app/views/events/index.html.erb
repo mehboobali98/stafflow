@@ -5,7 +5,7 @@
       <%= t('event.forms.links.create') %>
     <% end %>
     <%= render(ButtonComponent.new(variant: :secondary, href: display_calendar_events_path, class: 'ms-2')) do %>
-      <i class="fa fa-calendar me-1" aria-hidden="true"></i><%= t('event.forms.links.view_calendar') %>
+      <%= render(IconComponent.new(:'calendar-event', class: 'me-1')) %><%= t('event.forms.links.view_calendar') %>
     <% end %>
   <% end %>
 <% end %>

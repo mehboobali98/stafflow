@@ -1,92 +1,93 @@
 <div class="sidebar" data-sidebar-target="panel">
   <div class="logo-content">
     <div class="logo">
-      <i class="fab fa-fedora"></i>
+      <%= render(IconComponent.new(:'people-fill')) %>
       <div class="logo-name"><%= t('appname') %></div>
     </div>
-    <i class="fas fa-bars css-sidebar-toggle" id="sidebar_toggle_btn"
-       data-action="click->sidebar#toggle"></i>
+    <%= render(IconComponent.new(:list, class: 'css-sidebar-toggle', id: 'sidebar_toggle_btn',
+                                 label: t('sidebar.toggle'),
+                                 data: { action: 'click->sidebar#toggle' })) %>
   </div>
   <ul>
     <li>
       <%= link_to dashboard_path do %>
-        <i class="fas fa-border-none"></i>
+        <%= render(IconComponent.new(:'grid-3x3')) %>
         <span class="links-name"><%= t('sidebar.dashboard') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to members_path do %>
-        <i class="far fa-user"></i>
+        <%= render(IconComponent.new(:'person')) %>
         <span class="links-name"><%= t('sidebar.users') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to departments_path do %>
-        <i class="far fa-building"></i>
+        <%= render(IconComponent.new(:'building')) %>
         <span class="links-name"><%= t('sidebar.departments') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to designations_path do %>
-        <i class="far fa-building"></i>
+        <%= render(IconComponent.new(:'building')) %>
         <span class="links-name"><%= t('sidebar.designations') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to events_path do %>
-        <i class="far fa-calendar"></i>
+        <%= render(IconComponent.new(:'calendar-event')) %>
         <span class="links-name"><%= t('sidebar.events') %></span>
       <% end %>
     </li>
     <% unless current_user.account_owner? %>
       <li>
         <%= link_to member_payrolls_path(current_user) do %>
-          <i class="fas fa-receipt"></i>
+          <%= render(IconComponent.new(:'receipt')) %>
           <span class="links-name"><%= t('sidebar.payroll') %></span>
         <% end %>
       </li>
     <% end %>
     <li>
       <%= link_to leaves_path do %>
-        <i class="fas fa-tasks"></i>
+        <%= render(IconComponent.new(:'list-task')) %>
         <span class="links-name"><%= t('sidebar.leave') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to display_calendar_events_path do %>
-        <i class="far fa-calendar-plus"></i>
+        <%= render(IconComponent.new(:'calendar-plus')) %>
         <span class="links-name"><%= t('sidebar.calendar') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to analytics_path do %>
-        <i class="fas fa-chart-line"></i>
+        <%= render(IconComponent.new(:'graph-up')) %>
         <span class="links-name"><%= t('sidebar.analytics') %></span>
       <% end %>
     </li>
     <% if current_user.account_owner? || current_user.hr? %>
       <li>
         <%= link_to settings_path do %>
-          <i class="fas fa-cogs"></i>
+          <%= render(IconComponent.new(:'gear-wide-connected')) %>
           <span class="links-name"><%= t('sidebar.settings') %></span>
         <% end %>
       </li>
     <% end %>
     <li>
       <%= link_to edit_password_members_path do %>
-        <i class="fas fa-unlock-alt"></i>
+        <%= render(IconComponent.new(:'unlock')) %>
         <span class="links-name"><%= t('sidebar.cp') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to member_path(current_user) do %>
-        <i class="fas fa-user-edit"></i>
+        <%= render(IconComponent.new(:'person-gear')) %>
         <span class="links-name"><%= t('sidebar.view_profile') %></span>
       <% end %>
     </li>
     <li>
       <%= link_to destroy_user_session_url, data: { turbo_method: :delete } do %>
-        <i class="fas fa-sign-out-alt" id="log-out"></i>
+        <%= render(IconComponent.new(:'box-arrow-right', id: 'log-out')) %>
         <span class="links-name"><%= t('sidebar.logout') %></span>
       <% end %>
     </li>

@@ -27,14 +27,14 @@
           <% if can?(:update, users_benefit) %>
             <%= link_to edit_member_users_benefit_path(@user, users_benefit),
                         'aria-label': t('users_benefit.links.edit') do %>
-              <i class='fa fa-bars'></i>
+              <%= render(IconComponent.new(:'list')) %>
             <% end %>
           <% end %>
           <% if can?(:destroy, users_benefit) %>
             <%= link_to member_users_benefit_path(@user, users_benefit), class: 'ms-3',
                         'aria-label': t('users_benefit.links.delete'),
                         data: { turbo_method: :delete, turbo_confirm: t('form.message.confirmation') } do %>
-              <i class='fa fa-trash'></i>
+              <%= render(IconComponent.new(:'trash')) %>
             <% end %>
           <% end %>
         </td>
