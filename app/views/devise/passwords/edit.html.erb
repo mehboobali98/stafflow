@@ -3,31 +3,15 @@
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |form| %>
   <%= render "devise/shared/error_messages", resource: resource %>
   <%= form.hidden_field :reset_password_token %>
-
-  <div class="row mb-3">
-    <div class="col-3 mt-2">
-      <%= form.label :password, t('forms.labels.password') %><br />
-      <% if @minimum_password_length %>
-        <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-      <% end %>
-    </div>
-    <div class='col-9'>
-      <%= form.password_field :password, autofocus: true, class: 'form-control pl-5 pr-5', required: true%>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-3 mt-2">
-      <%= form.label :password_confirmation, t('forms.labels.confirm_password') %><br />
-    </div>
-    <div class='col-9'>
-      <%= form.password_field :password_confirmation, class: 'form-control pl-5 pr-5', required: true %>
-    </div>
-  </div>
-
-  <div class="actions mb-2 mt-4">
-    <%= form.submit t('forms.buttons.change_password'), class:'btn btn-primary w-100' %>
-  </div>
+  <%= render(FormFieldComponent.new(form: form, attribute: :password, as: :password_field,
+                                    label: t('forms.labels.password'), required: true, autofocus: true,
+                                    hint: @minimum_password_length &&
+                                          t('forms.hints.minimum_password_length',
+                                            count: @minimum_password_length))) %>
+  <%= render(FormFieldComponent.new(form: form, attribute: :password_confirmation, as: :password_field,
+                                    label: t('forms.labels.confirm_password'), required: true)) %>
+  <%= render(ButtonComponent.new(type: 'submit', class: 'w-100')) do %>
+    <%= t('forms.buttons.change_password') %>
+  <% end %>
 <% end %>
-
 <%= render "devise/shared/links" %>

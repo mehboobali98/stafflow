@@ -58,8 +58,11 @@ RSpec.describe 'the layout head', type: :system do
   end
 
   describe 'the title' do
+    # Pages gain their own title as they are rebuilt, so this needs one that has
+    # not been reached yet rather than whichever was convenient when it was
+    # written - new_user_confirmation_path set none until the devise pass.
     it 'falls back to the application name where a view sets none' do
-      visit_tenant(company, new_user_confirmation_path)
+      visit_apex '/'
 
       expect(page.title).to eq(I18n.t('appname'))
     end
