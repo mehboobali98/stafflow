@@ -1,30 +1,34 @@
-<div class="mt-2 p-3">
+<% content_for :title, t('user_leave.headings.add_user_leave') %>
+<%= render(PageHeaderComponent.new(title: t('user_leave.headings.add_user_leave'))) %>
+
+<% if @available_leaves.present? %>
   <%= form_tag mass_create_member_user_leaves_path(@user), method: :post do %>
-    <table class="table table-hover">
-      <thead class="stafflow-table-header">
+    <%= render(TableComponent.new(class: 'table-hover')) do |table| %>
+      <% table.with_head do %>
         <tr>
-          <th></th>
+          <th><%= t('users_benefit.table.select') %></th>
           <th><%= t('user_leave.headings.leave_type') %></th>
           <th><%= t('user_leave.headings.leave_count') %></th>
         </tr>
-      </thead>
-      <% if @available_leaves.present? %>
-        <tbody>
-          <% @available_leaves.each do |leave| %>
-            <tr data-controller="toggle-field">
-              <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false, class: 'js-available-user-leave',
-                                    data: { action: 'change->toggle-field#toggle' } %></td>
-              <td><%= leave.name %></td>
-              <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count, disabled: true,
-                                       class: "js-leave-count-#{leave.id}",
-                                       data: { 'toggle-field-target': 'field' } %></td>
-            </tr>
-          <% end %>
-          <%= submit_tag t('user_leave.buttons.add_leaves'), class: 'btn btn-primary my-2' if can?(:create, UserLeave) %>
-        </tbody>
-      <% else %>
-        <p class="text-danger"><%= t('user_leave.messages.info.no_leave_remaining') %></p>
       <% end %>
-    </table>
+      <% table.with_body do %>
+        <% @available_leaves.each do |leave| %>
+          <tr data-controller="toggle-field">
+            <td><%= check_box_tag "leave[#{leave.id}][leave_id]", leave.id, false,
+                                  class: 'js-available-user-leave form-check-input',
+                                  data: { action: 'change->toggle-field#toggle' } %></td>
+            <td><%= leave.name %></td>
+            <td><%= number_field_tag "leave[#{leave.id}][total_count]", leave.default_count,
+                                     disabled: true, class: "js-leave-count-#{leave.id} form-control w-auto",
+                                     data: { 'toggle-field-target': 'field' } %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if can?(:create, UserLeave) %>
+      <%= render(ButtonComponent.new(type: 'submit')) { t('user_leave.buttons.add_leaves') } %>
+    <% end %>
   <% end %>
-</div>
+<% else %>
+  <%= render(EmptyStateComponent.new(title: t('user_leave.messages.info.no_leave_remaining'))) %>
+<% end %>
