@@ -112,6 +112,7 @@ en:
     results: '%{count} matches'
   common:
     back: "Back"
+    details: "Details"
     user_not_found: "User with the given id does not exist"
     search: "Search"
     all: "All"

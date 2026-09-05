@@ -4,7 +4,9 @@
     <div class="d-flex justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
       <%= form_tag search_data_search_index_path, method: "get", class: "d-flex" do %>
         <%= text_field_tag :search_query, nil, placeholder: t('common.search'), class: "form-control me-2" %>
-        <%= submit_tag :search, class: "btn btn-dark" %>
+        <%= render(ButtonComponent.new(type: 'submit', variant: :dark)) do %>
+          <%= t('navbar.search') %>
+        <% end %>
       <% end %>
       <div class="notification-container">
         <%= link_to notifications_path, class: 'nav-item text-white' do %>
