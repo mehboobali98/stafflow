@@ -504,6 +504,7 @@ en:
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
   settings:
+    save: "Save Setting"
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"

@@ -54,6 +54,6 @@
         <% end %>
       </div>
     </div>
-    <%= form.submit t('forms.buttons.create'), class: 'btn btn-primary w-100 mt-2' %>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('forms.buttons.create') } %>
   <% end %>
 <% end %>

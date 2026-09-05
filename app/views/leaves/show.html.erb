@@ -1,20 +1,26 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card text-center">
-        <div class="card-header">
-          <%= t('leave.headings.featured_leave') %>
-        </div>
-        <div class="card-body">
-          <h1 class="card-title"><%= @leave.name %></h1>
-          <p class="card-text"><%= @leave.default_count %></p>
-        </div>
-        <div class="card-footer">
-          <%= link_to t('leave.forms.links.edit'), edit_leave_path(@leave), class: 'btn btn-secondary' if can?(:show, @leave) %>
-          <%= link_to t('leave.forms.links.delete'), leave_path(@leave), class: 'btn btn-danger', data: { turbo_method: :delete, turbo_confirm: t('leave.messages.delete_confirm') } if can?(:destroy, @leave) %>
-          <%= link_to t('common.back'), :back, class: 'btn btn-outline-primary' if can?(:index, Leave) %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<% content_for :title, @leave.name %>
+<%= render(PageHeaderComponent.new(title: t('leave.headings.featured_leave'))) %>
+
+<%= render(CardComponent.new(class: 'form-card')) do |card| %>
+  <h2 class="h4 mb-1"><%= @leave.name %></h2>
+  <p class="text-secondary mb-0"><%= @leave.default_count %></p>
+  <% card.with_footer do %>
+    <% if can?(:show, @leave) %>
+      <%= render(ButtonComponent.new(variant: :secondary, href: edit_leave_path(@leave))) do %>
+        <%= t('leave.forms.links.edit') %>
+      <% end %>
+    <% end %>
+    <% if can?(:destroy, @leave) %>
+      <%= render(ButtonComponent.new(variant: :danger, href: leave_path(@leave), method: :delete,
+                                     class: 'ms-2',
+                                     data: { turbo_confirm: t('leave.messages.delete_confirm') })) do %>
+        <%= t('leave.forms.links.delete') %>
+      <% end %>
+    <% end %>
+    <% if can?(:index, Leave) %>
+      <%= render(ButtonComponent.new(variant: :ghost, href: leaves_path, class: 'ms-2')) do %>
+        <%= t('common.back') %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

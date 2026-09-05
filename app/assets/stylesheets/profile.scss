@@ -12,6 +12,8 @@
       height: 200px;
     }
     .file {
+      display: inline-block;
+      padding: $space-2 $space-4;
       position: relative;
       overflow: hidden;
       margin-top: -20%;
