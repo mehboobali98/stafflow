@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 393 examples, 0 pending |
+| Tests | 404 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1552,6 +1552,56 @@ breadcrumbs_on_rails and chartkick's helpers.
       the accessible names for the row's links. Adding a second `delete` beside
       the existing one was caught by the locale spec above, which is the first
       thing it has caught.
+
+      **Then the seven resource forms** — department, designation, leave,
+      benefit, event, applied leave and benefit allocation. These fitted at
+      390px already, so this is the first step of the page-by-page work with no
+      measured failure behind it: the argument is the component layer rather
+      than the acceptance test.
+
+      `.form-card` is a max-width rather than a column count, which is the one
+      design decision in it. Every form was bounded by `col-md-6` or `w-50` —
+      a fraction of the viewport, not a measure — so the same form was half of
+      nothing on a phone and 900px of input on a desk monitor.
+
+      **The specs are the point of this step, not the markup.** Moving to
+      `FormFieldComponent` changes the markup around every control and replaces
+      an `<input type=submit>` with a `<button>`. `forms_spec` covers label
+      association and `narrow_screen_spec` covers width, and **neither can see
+      whether the value still reaches the database.** The department form was
+      already carried end to end by `turbo_spec`; the other six were not, and
+      `spec/system/resource_forms_spec.rb` carries each one from a filled field
+      to a saved record. Each was confirmed by disabling the control it depends
+      on and watching only that example fail.
+
+      Writing them turned up nothing wrong with the application and two things
+      wrong with the first draft of the specs, both worth naming because both
+      read as defects at first. `designation.department` evaluated outside the
+      `as_tenant` block comes back nil, which looks exactly like the form
+      having dropped the value — the trap this file already records, met from
+      the other direction. And `fill_in` with a String into an
+      `<input type="date">` can leave the control invalid, so `required` blocks
+      the submit in the browser and the page sits there with no request made
+      and no error shown, which is indistinguishable from a form that does not
+      work. Passing a `Date` is what makes it submit. The event form was never
+      broken, and the copy on `develop` failed the same probe identically —
+      which is how that was settled rather than assumed.
+
+      A third false reading came from the width probe rather than a spec:
+      `users_benefits#edit` is `load_and_authorize_resource ... find_by:
+      :sequence_num`, so a URL built from `id` 404s. The probe had built one by
+      hand; the spec beside it used the path helper and was fine. Twice now the
+      throwaway probe has been wrong where the spec was right, which is the
+      argument for the `.page-shell` guard being in the spec's helper rather
+      than in the probe.
+
+      Two markup faults fixed on the way: `users_benefits/_form` opened a `row`
+      and a `col-md-4` and closed neither, and `.event-date` / `.event-time`
+      carried `padding-right` and `padding-left` from when those halves were a
+      flex row — as a Bootstrap row the gutter already spaces them, and at
+      390px, where the columns stack, that padding indented the time field out
+      of line with the date above it. Only a screenshot at both widths would
+      have shown that, which is what the phase says appearance review is for.
 
 - [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
       so inline SVG is a live option and drops a gem
