@@ -55,7 +55,7 @@
           </div>
 
           <div class="actions">
-            <%= f.submit t('forms.buttons.signup'), class: 'btn btn-primary w-100 p-3' %>
+            <%= render(ButtonComponent.new(type: 'submit', size: :lg, class: 'w-100')) { t('forms.buttons.signup') } %>
           </div>
           <br>
         <% end %>
