@@ -1,0 +1,6 @@
+<%= render partial: 'shared/icon_sprite' %>
+<p class="fs-6">Small <%= render(IconComponent.new(:trash, size: :sm)) %></p>
+<p class="fs-5">Default <%= render(IconComponent.new(:trash)) %></p>
+<p class="fs-3">Large <%= render(IconComponent.new(:trash, size: :lg)) %></p>
+<p>Labelled, for an icon that is the only thing in its control:
+  <%= render(IconComponent.new(:trash, label: 'Delete employee')) %></p>

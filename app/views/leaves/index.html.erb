@@ -34,19 +34,19 @@
           <td class="text-end text-nowrap">
             <% if can?(:show, leave) %>
               <%= link_to leave, 'aria-label': t('leave.links.view') do %>
-                <i class='fa fa-eye fa-lg'></i>
+                <%= render(IconComponent.new(:'eye', size: :lg)) %>
               <% end %>
             <% end %>
             <% if can?(:edit, leave) %>
               <%= link_to edit_leave_path(leave), class: 'ms-3', 'aria-label': t('leave.links.edit') do %>
-                <i class='fa fa-bars'></i>
+                <%= render(IconComponent.new(:'list')) %>
               <% end %>
             <% end %>
             <% if can?(:destroy, leave) %>
               <%= link_to leave, class: 'ms-3', 'aria-label': t('leave.links.delete'),
                                  data: { turbo_method: :delete,
                                          turbo_confirm: t('leave.messages.delete_confirm') } do %>
-                <i class='fa fa-trash'></i>
+                <%= render(IconComponent.new(:'trash')) %>
               <% end %>
             <% end %>
           </td>

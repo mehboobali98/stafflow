@@ -14,19 +14,19 @@
         <td class="text-end text-nowrap">
           <% if can?(:show, event) %>
             <%= link_to event, 'aria-label': t('event.links.view') do %>
-              <i class='fa fa-eye fa-lg'></i>
+              <%= render(IconComponent.new(:'eye', size: :lg)) %>
             <% end %>
           <% end %>
           <% if can?(:edit, event) %>
             <%= link_to edit_event_path(event), class: 'ms-3', 'aria-label': t('event.links.edit') do %>
-              <i class='fa fa-bars'></i>
+              <%= render(IconComponent.new(:'list')) %>
             <% end %>
           <% end %>
           <% if can?(:delete, event) %>
             <%= link_to event, class: 'ms-3', 'aria-label': t('event.links.delete'),
                                data: { turbo_method: :delete,
                                        turbo_confirm: t('event.forms.confirmation.deletion') } do %>
-              <i class='fa fa-trash'></i>
+              <%= render(IconComponent.new(:'trash')) %>
             <% end %>
           <% end %>
         </td>
