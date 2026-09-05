@@ -90,6 +90,7 @@ en:
       new_password: "New Password"
       remember_me: "Remember Me"
       actions: "Actions"
+      select: "Select"
       fname: "First Name"
       lname: "Last Name"
       dob: "Date Of Birth"

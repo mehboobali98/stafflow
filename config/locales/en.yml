@@ -332,6 +332,8 @@ en:
       duplicate_error: 'Benefit with the given name already exists'
     headings:
       benefit: "Benefits"
+      add: "Add Benefit"
+      edit: "Edit Benefit"
     label:
       benefit_name: "Benefit Name"
       benefit_type: "Benefit Type"
@@ -366,6 +368,7 @@ en:
       all_benefits_alloted: "All the benefits are already given to the user"
     headings:
       users_benefits: "User Benefits"
+      edit: "Edit Benefit Allocation"
     table:
       benefit_amount: "Benefit Amount"
       active: "Active"
