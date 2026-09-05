@@ -1,34 +1,43 @@
-<div class="contrainer">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card text-center">
-        <div class="card-header">
-          <%= t('user_leave.headings.feature_user_leave') %>
-        </div>
-        <div class="card-body">
-          <table class="table table-striped table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th><%= t('user_leave.headings.leave_type') %></th>
-                <th><%= t('user_leave.headings.leave_count') %></th>
-                <th><%= t('user_leave.headings.leave_remaining_count') %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><%= @user_leave.leave.name %></td>
-                <td><%= @user_leave.total_count %></td>
-                <td><%= @user_leave.remaining_count %></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card-footer">
-          <%= link_to t('user_leave.headings.edit'), edit_member_user_leave_path(@user, @user_leave), class: "btn btn-secondary", data: { turbo_frame: 'modal' } if can?(:show, @user_leave) %>
-          <%= link_to t('user_leave.headings.delete'), member_user_leave_path(@user, @user_leave), data: { turbo_method: :delete, turbo_confirm: t('user_leave.messages.confirmation.delete') }, class: 'btn btn-danger' if can?(:edit, @user_leave) %>
-          <%= link_to t('user_leave.headings.back'), :back, class: 'btn btn-outline-primary' if can?(:index, UserLeave) %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<% content_for :title, t('user_leave.headings.feature_user_leave') %>
+<%= render(PageHeaderComponent.new(title: t('user_leave.headings.feature_user_leave'))) %>
+
+<%= render(CardComponent.new) do |card| %>
+  <%= render(TableComponent.new) do |table| %>
+    <% table.with_head do %>
+      <tr>
+        <th><%= t('user_leave.headings.leave_type') %></th>
+        <th><%= t('user_leave.headings.leave_count') %></th>
+        <th><%= t('user_leave.headings.leave_remaining_count') %></th>
+      </tr>
+    <% end %>
+    <% table.with_body do %>
+      <tr>
+        <td><%= @user_leave.leave.name %></td>
+        <td><%= @user_leave.total_count %></td>
+        <td><%= @user_leave.remaining_count %></td>
+      </tr>
+    <% end %>
+  <% end %>
+  <% card.with_footer do %>
+    <% if can?(:show, @user_leave) %>
+      <%= render(ButtonComponent.new(variant: :secondary,
+                                     href: edit_member_user_leave_path(@user, @user_leave),
+                                     data: { turbo_frame: 'modal' })) do %>
+        <%= t('user_leave.headings.edit') %>
+      <% end %>
+    <% end %>
+    <% if can?(:edit, @user_leave) %>
+      <%= render(ButtonComponent.new(variant: :danger, class: 'ms-2', method: :delete,
+                                     href: member_user_leave_path(@user, @user_leave),
+                                     data: { turbo_confirm: t('user_leave.messages.confirmation.delete') })) do %>
+        <%= t('user_leave.headings.delete') %>
+      <% end %>
+    <% end %>
+    <% if can?(:index, UserLeave) %>
+      <%= render(ButtonComponent.new(variant: :ghost, class: 'ms-2',
+                                     href: member_user_leaves_path(@user))) do %>
+        <%= t('user_leave.headings.back') %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

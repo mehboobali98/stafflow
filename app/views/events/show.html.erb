@@ -1,20 +1,26 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card text-center">
-        <div class="card-header">
-          <%= t('event.forms.headings.show') %>
-        </div>
-        <div class="card-body">
-          <h1 class="card-title"><%= @event.name %></h1>
-          <small><%= format_date(@event.starts_at) %></small>
-        </div>
-        <div class="card-footer">
-          <%= link_to t('event.forms.links.edit'), edit_event_path(@event), class: 'btn btn-secondary' if can?(:edit, @event) %>
-          <%= link_to t('event.forms.links.delete'), event_path(@event), class: 'btn btn-danger', data: { turbo_method: :delete, turbo_confirm: t('event.forms.confirmation.deletion') } if can?(:delete, @event) %>
-          <%= link_to t('event.forms.links.back'), :back, class: 'btn btn-outline-primary' if can?(:index, Event) %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<% content_for :title, @event.name %>
+<%= render(PageHeaderComponent.new(title: t('event.forms.headings.show'))) %>
+
+<%= render(CardComponent.new(class: 'form-card')) do |card| %>
+  <h2 class="h4 mb-1"><%= @event.name %></h2>
+  <p class="text-secondary mb-0"><%= format_date(@event.starts_at) %></p>
+  <% card.with_footer do %>
+    <% if can?(:edit, @event) %>
+      <%= render(ButtonComponent.new(variant: :secondary, href: edit_event_path(@event))) do %>
+        <%= t('event.forms.links.edit') %>
+      <% end %>
+    <% end %>
+    <% if can?(:delete, @event) %>
+      <%= render(ButtonComponent.new(variant: :danger, href: event_path(@event), method: :delete,
+                                     class: 'ms-2',
+                                     data: { turbo_confirm: t('event.forms.confirmation.deletion') })) do %>
+        <%= t('event.forms.links.delete') %>
+      <% end %>
+    <% end %>
+    <% if can?(:index, Event) %>
+      <%= render(ButtonComponent.new(variant: :ghost, href: events_path, class: 'ms-2')) do %>
+        <%= t('event.forms.links.back') %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
