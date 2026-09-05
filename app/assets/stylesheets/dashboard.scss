@@ -10,19 +10,3 @@
 .card {
   border-radius: $radius-lg;
 }
-
-.announcement-card {
-  border-radius: 0px !important;
-  .employee-profile-picture {
-    background-repeat: no-repeat;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-  }
-}
-
-.announcement-form {
-  .announcement-post-btn {
-    float: right;
-  }
-}

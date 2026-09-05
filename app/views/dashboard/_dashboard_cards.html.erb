@@ -1,28 +1,24 @@
-<div class="card">
-  <div class="card-header">
-    <h3 class="text-center"><%= t('cards.total_events') %></h3>
+<div class="row g-3">
+  <div class="col-md-4">
+    <%= render(CardComponent.new(class: 'h-100')) do |card| %>
+      <% card.with_header { t('cards.total_events') } %>
+      <p class="stat-figure text-info fs-1"><%= events_count %></p>
+      <% card.with_footer do %>
+        <span><%= t('cards.upcoming_events') %>:</span>
+        <span class="fw-semibold"><%= upcoming_events_count %></span>
+      <% end %>
+    <% end %>
   </div>
-  <div class="card-body">
-    <p class="stat-figure text-info fs-1"><%= events_count %></p>
+  <div class="col-md-4">
+    <%= render(CardComponent.new(class: 'h-100')) do |card| %>
+      <% card.with_header { t('cards.total_employees') } %>
+      <p class="stat-figure text-secondary"><%= users_count %></p>
+    <% end %>
   </div>
-  <div class="card-footer text-center">
-    <span class="text-black"><%= t('cards.upcoming_events') %>: </span>
-    <span class="text-danger"><%= upcoming_events_count %></span>
-  </div>
-</div>
-<div class="card mt-2">
-  <div class="card-header">
-    <h3 class="text-center"><%= t('cards.total_employees') %></h3>
-  </div>
-  <div class="card-body">
-    <p class="stat-figure text-secondary"><%= users_count %></p>
-  </div>
-</div>
-<div class="card mt-2">
-  <div class="card-header">
-    <h3 class="text-center"><%= t('cards.total_departments') %></h3>
-  </div>
-  <div class="card-body">
-    <p class="stat-figure text-primary"><%= departments_count %></p>
+  <div class="col-md-4">
+    <%= render(CardComponent.new(class: 'h-100')) do |card| %>
+      <% card.with_header { t('cards.total_departments') } %>
+      <p class="stat-figure text-primary"><%= departments_count %></p>
+    <% end %>
   </div>
 </div>
