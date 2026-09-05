@@ -18,7 +18,7 @@ reversal of the sequence this file was written with and is argued at the end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 411 examples, 0 pending |
+| Tests | 416 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
 | Known defects | 40 found, 39 fixed, 1 open |
@@ -1722,8 +1722,57 @@ breadcrumbs_on_rails and chartkick's helpers.
       dress up something that is not wired to anything; they want a decision,
       not a component.
 
-- [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
-      so inline SVG is a live option and drops a gem
+- [x] **font-awesome is out.** The choice this item framed as 5→6 or removal
+      was settled by counting: the application draws 21 distinct icons in 32
+      places. A 5→6 bump renames the class on every one of those 32 call sites,
+      so both options cost the same edit and only one ends with a dependency
+      fewer — and with the webfont, and the font-load race screenshots had to
+      wait out, gone with it.
+
+      **Bootstrap Icons rather than Font Awesome's own SVGs, and the licence is
+      why.** Font Awesome Free's icons are CC BY 4.0, which wants attribution
+      wherever they appear. Bootstrap Icons are MIT. For a repository presented
+      as portfolio work, the set that needs no notice attached to the interface
+      is the right one — a consideration this item did not have when it was
+      written.
+
+      The paths are copied from the package rather than written by hand.
+      `lib/icon_sprite.rb` reads `node_modules/bootstrap-icons/icons/*.svg` and
+      writes `shared/_icon_sprite.html.erb`, which is committed;
+      `bootstrap-icons` is a devDependency for regeneration and ships nothing.
+
+      Three things it turned up.
+
+      **Sizing an SVG through the width attribute does not work.** Chrome does
+      not accept `em` there, so every icon stretched to its container and sat
+      16px tall — 48x16 where 16x16 was meant. Found by measuring the boxes
+      rather than by looking, because at a glance the sidebar looked fine.
+
+      **The sidebar styled `i` elements** — `font-size` and `line-height` on
+      `.logo i`, `a i` and `.css-sidebar-toggle`, none of which move an `<svg>`.
+      Restated against `.icon`, keeping the 50px column that aligns the nav
+      icons: a viewBox'd svg letterboxes inside a wider box, so the alignment
+      survives without stretching the glyph.
+
+      **Boxicons was never installed.** Four `<i class="bx bx-…">` on the
+      landing page name a library that is in no package file and no stylesheet,
+      so the features section has had four empty icon slots since the template
+      it came from was borrowed. This is the third icon system found in one
+      application — font-awesome, an uninstalled Boxicons, and the inline
+      unDraw art — and only one of them was ever real.
+
+      Two smaller things. The sidebar's brand mark was `fab fa-fedora`, the
+      Fedora Linux logo standing in as this application's identity, which is the
+      category phase 0 cleared; it is a neutral glyph until there is a real
+      mark. And an icon-only link still contains the whitespace the ERB block
+      puts around it, which Bootstrap underlines — a stray dash beside every row
+      action since the icons went in.
+
+      `spec/views/icon_sprite_spec.rb` is the guard, and it matters because an
+      icon whose name is not in the sprite renders an **empty `<svg>`**: the
+      page loads, no request fails, nothing is logged. It asserts both
+      directions — every name a view asks for is defined, and every symbol
+      defined is asked for.
 
 ### Two things to be honest about going in
 
