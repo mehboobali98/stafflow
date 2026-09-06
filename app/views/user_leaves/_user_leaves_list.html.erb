@@ -17,13 +17,13 @@
           <% if can?(:show, user_leave) %>
             <%= link_to member_user_leave_path(@user, user_leave),
                         'aria-label': t('user_leave.links.view') do %>
-              <i class='fa fa-eye fa-lg'></i>
+              <%= render(IconComponent.new(:'eye', size: :lg)) %>
             <% end %>
           <% end %>
           <% if can?(:edit, user_leave) %>
             <%= link_to edit_member_user_leave_path(@user, user_leave), class: 'ms-3',
                         'aria-label': t('user_leave.links.edit'), data: { turbo_frame: 'modal' } do %>
-              <i class='fa fa-bars'></i>
+              <%= render(IconComponent.new(:'list')) %>
             <% end %>
           <% end %>
           <% if can?(:destroy, user_leave) %>
@@ -31,7 +31,7 @@
                         'aria-label': t('user_leave.links.delete'),
                         data: { turbo_method: :delete,
                                 turbo_confirm: t('user_leave.messages.confirmation.delete') } do %>
-              <i class='fa fa-trash'></i>
+              <%= render(IconComponent.new(:'trash')) %>
             <% end %>
           <% end %>
         </td>

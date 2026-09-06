@@ -17,12 +17,6 @@ gem 'puma', '~> 8.0'
 gem 'sass-rails', '>= 6'
 # esbuild builds into app/assets/builds; Sprockets fingerprints and serves it.
 gem 'jsbundling-rails', '~> 1.3'
-# Font Awesome through Sprockets rather than the bundler. The npm package ships
-# plain CSS whose font URLs esbuild rewrites at build time, which Sprockets then
-# fingerprints a second time - so the URLs in the stylesheet point at names that
-# only exist undigested, and every icon 404s once assets are precompiled. This
-# gem uses the asset helpers, so the digests match.
-gem 'font-awesome-sass', '~> 5.15.1'
 # Turbo's Ruby side. The JavaScript comes from npm through esbuild; this is here
 # for turbo_frame_tag and the turbo_stream format.
 gem 'turbo-rails', '~> 2.0'
