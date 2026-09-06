@@ -31,7 +31,7 @@ gem 'image_processing', '~> 1.12'
 # upload types by hand is where this kind of code goes wrong, so it is left to
 # a gem that validates the analysed type rather than the declared one.
 gem 'active_storage_validations', '~> 1.1'
-gem 'will_paginate', '=3.3.0'
+gem 'will_paginate', '4.0.1'
 # additional gems
 gem 'cancancan'
 gem 'devise', '~> 5.0'
