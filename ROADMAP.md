@@ -11,16 +11,17 @@ reads; everything after is depth.
 ## Where it stands
 
 The app runs from a clean clone in three commands, on a current stack, with a
-suite in front of it and the known defects cleared. What it still lacks is an
-interface worth showing, and somewhere to show it — in that order, which is a
-reversal of the sequence this file was written with and is argued at the end.
+suite in front of it, the known defects cleared and the interface rebuilt from
+a component layer. What it still lacks is somewhere to show it — which is phase
+4, and which this file resequenced behind phase 7 for the reason argued at the
+end.
 
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 416 examples, 0 pending |
+| Tests | 418 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
-| Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
+| Lines in `app/` | 5,303 across 22 controllers, 30 models, 111 views and 10 components |
 | Known defects | 40 found, 39 fixed, 1 open |
 
 ---
@@ -957,9 +958,11 @@ spends about ninety seconds here.
 
 ---
 
-## Phase 7 — Rebuild the interface
+## Phase 7 — Rebuild the interface ✅
 
-Estimated 2–3 weeks. Runs before phase 4.
+*Shipped.*
+
+Estimated 2–3 weeks. Ran before phase 4.
 
 Every other phase has touched something. This one has not been touched at all:
 the interface is the 2021 original, and it is the first thing anybody sees.
@@ -1013,11 +1016,13 @@ breadcrumbs_on_rails and chartkick's helpers.
       separate palette the landing page kept — a cyan, a navy and two greys
       that appeared nowhere else. Mapping it onto the shared ramps is the point
       of the step: a second palette is a second system
-- [ ] **ViewComponent, and Lookbook in front of it.** Started: `Button`,
-      `Badge`, `Card`, `Table`, `PageHeader` and `EmptyState` exist with a
-      preview each, and the HR leave queue is converted as the proof. `FormField`
-      and `Modal` have landed since, so the set the phase named is complete and
-      what is left is views rather than components.
+- [x] **ViewComponent, and Lookbook in front of it.** `Button`, `Badge`,
+      `Card`, `Table`, `PageHeader` and `EmptyState` came first, with a preview
+      each and the HR leave queue converted as the proof. `FormField` and
+      `Modal` followed and completed the set this phase named; two more arrived
+      from items below rather than from this one — `Combobox` when select2 was
+      replaced, `Icon` when font-awesome left. Ten components, ten previews, and
+      `spec/components/previews_spec.rb` renders every scenario.
 
       Every component stamps `data-component` into its markup, and the system
       specs key off that rather than off Bootstrap's class names — so restyling
@@ -1127,9 +1132,11 @@ breadcrumbs_on_rails and chartkick's helpers.
       Two stacked dropdowns over one select. Attributed rather than assumed: the
       same probe against develop under turbolinks reports one container either
       way, so it arrived with Turbo
-- [ ] **Stimulus replaces jQuery.** Twelve entry points, roughly 360 lines.
-      Started: the seven with no AJAX in them are six controllers, and jQuery
-      is still here for the five that have.
+- [x] **Stimulus replaces jQuery.** Twelve entry points, roughly 360 lines. The
+      seven with no AJAX in them became six controllers here; the five that had
+      it were finished by the two items below, and `jquery` left `package.json`
+      with select2. `app/javascript/` is `application.js` and twelve
+      controllers.
 
       Six rather than seven because two pairs were the same behaviour written
       twice. `user_leaves.js` and `users_benefit_creation.js` both enabled the
@@ -1184,9 +1191,10 @@ breadcrumbs_on_rails and chartkick's helpers.
       greps source text for `require.context`, and `controllers/index.js` is
       exactly the file with a reason to name that defect in the comment
       explaining itself. Checked that it still fails on a planted call.
-- [ ] **The `.js.erb` responses go.** Nine templates and five entry points that
-      fetch one and eval it. Started: the employee, leave and event lists are on
-      Turbo Frames, which is four of the nine gone.
+- [x] **The `.js.erb` responses go.** Nine templates and five entry points that
+      fetch one and eval it. The employee, leave and event lists went onto Turbo
+      Frames first; the notification list, the leave queue, the modal and the
+      calendar closed it, and `app/views` holds no `.js.erb` at all.
 
       **Frames rather than Streams for a list.** A Stream is for updating
       something the request did not come from, or more than one thing at once.
@@ -1401,7 +1409,7 @@ breadcrumbs_on_rails and chartkick's helpers.
       asserts jQuery is *not* on the window, which is the claim worth holding.
       `$.fn.tooltip` was in that list too and nothing in 114 templates ever
       called a tooltip
-- [ ] **Page by page**, layouts first, then the screens behind the sign-in
+- [x] **Page by page**, layouts first, then the screens behind the sign-in
 
       **Layouts done.** The four HTML layouts each carried their own copy of
       the same `<head>`, which is how all four came to be missing the same
@@ -1743,6 +1751,57 @@ breadcrumbs_on_rails and chartkick's helpers.
       counts and two charts, all real queries — as a row of three cards above
       the graphs, which is what the space is for once the feed is gone.
 
+      **A correction to this item, found while closing it.** The lists above are
+      the whole of what page-by-page took, and two screens behind the sign-in
+      are in none of them: `payrolls/show` and `search/search_data`.
+
+      The payslip still hand-writes `table table-hover`, and it puts `<th>`
+      straight inside `<thead>` with no `<tr>` — the seventh instance of the
+      malformed table this phase found, and the only one left standing. The six
+      that were fixed were fixed because `TableComponent` arrived at the page;
+      this one never had a component arrive at it.
+
+      The search results still hand-write their cards at `w-75` with an inline
+      `margin-left: 10%` — a fraction of the viewport, which is the thing
+      `.form-card` became a max-width to stop being — and print
+      `<%= result.class %>` as each card's heading, so the page announces
+      "User", "Department" and "Designation", in English whatever the locale and
+      naming the Ruby class rather than the thing. That is the same fault as the
+      `link_to :details` and `submit_tag :search` symbols this item fixed, on
+      the very page one of those two fixes was standing on: the search result
+      *link* was taken and the search result *page* was not.
+
+      **Both fit at 390px, which is why nothing caught them.** The acceptance
+      test asks whether the document scrolls sideways, and neither page does — a
+      two-column payslip is narrow, and a card at 75% of the viewport cannot be
+      wider than it. So the measurement was never going to name these two, and
+      the enumeration was the only thing that could have. **A page that passes
+      the test is not the same as a page that was looked at**, which is the
+      403-fits-at-390px lesson one level further out: there the guard was
+      missing from the probe, here it is missing from the list.
+
+      They are in `narrow_screen_spec` now, at 24 examples — measured before
+      they are rebuilt rather than after, so that rebuilding them cannot quietly
+      cost what they already have. Both were confirmed as tripwires the usual
+      way: a 900px element planted on each failed exactly those two examples and
+      left the other twenty-two green.
+
+      The search example asserts a rendered result before it measures, and that
+      guard earned itself immediately. The empty branch of that page draws a
+      *narrower* card than its results branch, so a query finding nothing
+      reports a page that fits without having drawn the thing being measured.
+      Swapping the tenant reindex for a no-tenant one — an empty index — fails
+      the example on the card rather than on the width, which is the third time
+      in this phase that a measurement has had to be taught the difference
+      between fitting and never rendering.
+
+      **Not counted in the defect tally**, on the same reading as the two symbol
+      labels above: the pages render, nothing 500s, and what is wrong is markup
+      and copy rather than behaviour. Recorded here as work this item did not
+      do. The phase's "done when" holds either way — this is a gap in the
+      enumeration, not in the criterion, and the criterion could not have found
+      it
+
 - [x] **font-awesome is out.** The choice this item framed as 5→6 or removal
       was settled by counting: the application draws 21 distinct icons in 32
       places. A 5→6 bump renames the class on every one of those 32 call sites,
@@ -1826,6 +1885,19 @@ caught it.
 **Done when:** no view hand-writes `btn btn-*`, tokens are the only source of a
 colour, the component previews are reachable, and jQuery and turbolinks are
 both out of `package.json`.
+
+All four hold, and each was measured rather than recalled. One view hand-writes
+`btn btn-*` and it is `simple_calendar/_month_calendar`, the gem template
+override whose markup is simple_calendar's contract rather than ours — named as
+the exception when the criterion was written and still the only one. No
+stylesheet outside `_tokens.scss` names a hex colour. Lookbook is mounted, in
+development, and whether the demo exposes it stays a phase 4 question. And
+`package.json` carries neither jQuery nor turbolinks, nor select2, rails-ujs or
+font-awesome, none of which the line thought to ask about.
+
+What the criterion does not reach is the enumeration gap recorded against
+page-by-page above: two pages satisfy every clause of it and were still never
+taken.
 
 ---
 
