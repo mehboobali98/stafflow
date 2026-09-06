@@ -22,14 +22,14 @@
         <td class="text-end text-nowrap">
           <% if can?(:update, department) %>
             <%= link_to edit_department_path(department), 'aria-label': t('department.links.edit') do %>
-              <i class='fa fa-bars'></i>
+              <%= render(IconComponent.new(:'list')) %>
             <% end %>
           <% end %>
           <% if can?(:destroy, department) %>
             <%= link_to department, class: 'ms-3', 'aria-label': t('department.links.delete'),
                                     data: { turbo_method: :delete,
                                             turbo_confirm: t('department.sure_message') } do %>
-              <i class='fa fa-trash'></i>
+              <%= render(IconComponent.new(:'trash')) %>
             <% end %>
           <% end %>
         </td>

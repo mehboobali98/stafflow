@@ -12,7 +12,7 @@
       <% if applied_leave.pending? && can?(:edit, applied_leave) %>
         <%= link_to edit_member_applied_leave_path(@user, applied_leave),
                     'aria-label': t('applied_leave.links.edit') do %>
-          <i class='fa fa-bars'></i>
+          <%= render(IconComponent.new(:'list')) %>
         <% end %>
       <% end %>
       <% if applied_leave.pending? && can?(:delete, applied_leave) %>
@@ -20,7 +20,7 @@
                     'aria-label': t('applied_leave.links.delete'),
                     data: { turbo_method: :delete,
                             turbo_confirm: t('applied_leave.messages.delete_confirm') } do %>
-          <i class='fa fa-trash'></i>
+          <%= render(IconComponent.new(:'trash')) %>
         <% end %>
       <% end %>
     </td>

@@ -25,12 +25,12 @@
         <td><%= designation.department.name %></td>
         <td class="text-end text-nowrap">
           <%= link_to edit_designation_path(designation), 'aria-label': t('designation.links.edit') do %>
-            <i class='fa fa-bars'></i>
+            <%= render(IconComponent.new(:'list')) %>
           <% end %>
           <%= link_to designation, class: 'ms-3', 'aria-label': t('designation.links.delete'),
                                    data: { turbo_method: :delete,
                                            turbo_confirm: t('designation.sure_message') } do %>
-            <i class='fa fa-trash'></i>
+            <%= render(IconComponent.new(:'trash')) %>
           <% end %>
         </td>
       </tr>
