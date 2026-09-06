@@ -134,4 +134,49 @@ RSpec.describe 'the pages at 390px', type: :system do
 
     expect(overflows_horizontally?).to be false
   end
+
+  # The page-by-page item enumerated the screens it took, and these two were in
+  # neither list: the payslip still hand-writes its table and the search results
+  # still hand-write their cards. Both fit at 390px as they stand, which is why
+  # they are measured now rather than when they are rebuilt - a rebuild should
+  # not be free to cost them what they already have.
+  describe 'the pages the page-by-page work did not enumerate' do
+    it 'renders the payslip without scrolling sideways' do
+      payroll = as_tenant(company) do
+        Setting.unscoped.find_by!(company_id: company.id).update!(tax_rate: 10)
+        employee = create(:user, :employee, company: company, department: Department.first,
+                                            email: 'payslip@example.com',
+                                            base_salary: BigDecimal('100000.10'))
+        create(:users_benefit, company: company, user: employee, benefit: Benefit.first,
+                               amount: BigDecimal('15000.33'))
+        Payroll.generate_payroll(employee)
+      end
+
+      visit_narrow(owner, member_payroll_path(payroll.user, payroll))
+
+      expect(overflows_horizontally?).to be false
+    end
+
+    # The assertion on a rendered result is not decoration. This page has an
+    # empty branch that draws a narrower card than its results branch, so a query
+    # that found nothing would report a page that fits without ever having drawn
+    # the thing being measured - the false pass the .page-shell wait in
+    # visit_narrow exists to catch, one layer in.
+    #
+    # Elasticsearch is not rolled back with the test transaction, so the index
+    # has to be rebuilt here. Reindexing inside the tenant block is what makes it
+    # a clean slate holding exactly this company's records, and it covers all
+    # three models TenantSearch spans rather than only the two this page shows:
+    # the search is one query across three indices.
+    it 'renders the search results without scrolling sideways' do
+      models = [User, Department, Designation]
+      as_tenant(company) { models.each(&:reindex) }
+      models.each { |model| model.search_index.refresh }
+
+      visit_narrow(owner, "#{search_data_search_index_path}?search_query=Engineering")
+
+      expect(page).to have_css('.card-data', text: 'Engineering')
+      expect(overflows_horizontally?).to be false
+    end
+  end
 end
