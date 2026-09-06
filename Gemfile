@@ -61,7 +61,7 @@ gem 'simple_calendar', '=2.4.3'
 gem 'chartkick', '~> 5.2'
 
 # elastic search
-gem 'searchkick', '~> 5.3'
+gem 'searchkick', '~> 6.1'
 # searchkick 5 dropped its dependency on a client gem so it can drive either
 # Elasticsearch or OpenSearch. The client is ours to choose and ours to keep in
 # step with the server: this tracks the Elasticsearch 7 that docker-compose and
