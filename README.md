@@ -190,7 +190,7 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 418 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 419 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are covered only where the system specs below
   reach them, and controllers only through request specs for authentication,

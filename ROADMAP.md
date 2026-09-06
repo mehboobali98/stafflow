@@ -19,7 +19,7 @@ end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 418 examples, 0 pending |
+| Tests | 419 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,303 across 22 controllers, 30 models, 111 views and 10 components |
 | Known defects | 40 found, 39 fixed, 1 open |
