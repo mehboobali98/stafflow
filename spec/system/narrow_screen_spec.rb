@@ -169,9 +169,7 @@ RSpec.describe 'the pages at 390px', type: :system do
     # three models TenantSearch spans rather than only the two this page shows:
     # the search is one query across three indices.
     it 'renders the search results without scrolling sideways' do
-      models = [User, Department, Designation]
-      as_tenant(company) { models.each(&:reindex) }
-      models.each { |model| model.search_index.refresh }
+      as_tenant(company) { TenantSearch::MODELS.each(&:reindex) }
 
       visit_narrow(owner, "#{search_data_search_index_path}?search_query=Engineering")
 
