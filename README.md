@@ -114,12 +114,17 @@ and turned out to carry three faults — one of which failed open. That is
 written up in [docs/tenant-isolation.md](docs/tenant-isolation.md).
 
 Search is the one exception, because it does not begin at Active Record.
-Searchkick asks Elasticsearch for ids, and the default scope only narrows the
-records loaded for them — the hit count, and anything else read from the
-response, would still describe every tenant. `TenantSearch` puts the same
-`company_id` on the Elasticsearch query. An unset tenant there matches
-documents with no `company_id`, of which there are none, so it fails closed the
-way the default scope does.
+Elasticsearch answers with ids and the default scope only narrows the records
+loaded for them — the hit count, and anything else read from the response, would
+still describe every tenant. `TenantSearch` puts the same `company_id` on the
+query as a filter. An unset tenant filters on `company_id: 0`, which no record
+has, so it finds nothing rather than everything and fails closed the way the
+default scope does.
+
+The documents themselves hold only the column being searched and `company_id`.
+That is `as_indexed_json`, and it is deliberate: whatever a search cluster holds
+is a second copy of your data living outside the database, so it should be the
+smallest copy that answers the query.
 
 ### Authorization
 
@@ -153,7 +158,7 @@ a background email.
 | --- | --- |
 | Ruby / Rails | 3.3.12 with YJIT / 7.2.3.2, `load_defaults 7.2` |
 | Database | MySQL 8 |
-| Search | Elasticsearch 7 via Searchkick |
+| Search | Elasticsearch 8.19 via elasticsearch-model / elasticsearch-rails |
 | Attachments | Active Storage, variants via libvips, declared type checked against bytes with `file` |
 | Background jobs | delayed_job |
 | Auth | Devise |
@@ -190,7 +195,7 @@ Honest list of what this project does not have yet. [ROADMAP.md](ROADMAP.md)
 sequences the work to close these, and carries the full defect backlog with
 line numbers.
 
-- **Coverage is deliberately partial.** 418 specs cover tenant isolation, the
+- **Coverage is deliberately partial.** 421 specs cover tenant isolation, the
   permission matrix, payroll calculation, the leave workflow, error handling
   and user validations. Views are covered only where the system specs below
   reach them, and controllers only through request specs for authentication,
