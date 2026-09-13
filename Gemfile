@@ -26,7 +26,7 @@ gem 'turbo-rails', '~> 2.0'
 # gem 'bcrypt', '~> 3.1.7'
 # Active Storage variants. The 7.0 framework defaults select the vips
 # processor, so the image is built with libvips rather than ImageMagick.
-gem 'image_processing', '~> 1.12'
+gem 'image_processing', '~> 2.1'
 # Active Storage ships no content-type or size validators of its own. Sniffing
 # upload types by hand is where this kind of code goes wrong, so it is left to
 # a gem that validates the analysed type rather than the declared one.
