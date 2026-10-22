@@ -149,3 +149,11 @@ ActiveRecord::Base.transaction do
 ensure
   Company.current_company_id = nil
 end
+
+# Last, and after the records rather than before them. The indexing callbacks
+# have already written to Elasticsearch by this point, and a callback writing to
+# an index that does not exist is what makes Elasticsearch invent one from a
+# dynamic mapping - which has no prefix analyzer on it, so partial-word search
+# would quietly match nothing. This rebuilds each index from its mapping.
+TenantSearch.reindex_all!
+puts "  search indexed #{TenantSearch::MODELS.map(&:index_name).join(', ')}"
