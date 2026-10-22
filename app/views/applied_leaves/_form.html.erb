@@ -1,24 +1,21 @@
-<div class="container py-4 card bg-light p-4">
-  <h1><%= t('applied_leave.headings.new_leave_application') %></h1>
-  <%= form_with **applied_leave_form_values(user, applied_leave) do |form| %>
-    <div class="form mb-4">
-      <%= form.label :user_leave_id, t('applied_leave.labels.available_leaves'), class: "form-label" %>
-      <%= collection_select(:applied_leave, :user_leave_id, available_user_leaves, :id, :name, {}, { class: "form-control" }) %>
-    </div>
-    <div class="form mb-4">
-      <%= form.label :leave_duration_type, t('applied_leave.labels.leave_duration') %>
-      <%= form.select :leave_duration_type, options_for_select(leave_duration_type), {}, class: "form-control" %>
-    </div>
-    <div class="form mb-4">
-      <%= form.label :applied_from, t('applied_leave.labels.leave_from'), class: "form-label" %>
-      <%= form.date_field :applied_from, required: true, class: "form-control" %>
-    </div>
-    <div class="form mb-4">
-      <%= form.label :applied_till, t('applied_leave.labels.leave_to'), class: "form-label" %>
-      <%= form.date_field :applied_till, required: true, class: "form-control" %>
-    </div>
-    <div class="form mb-4">
-      <%= form.submit t('applied_leave.links.submit'), class: "btn btn-primary w-100" %>
-    </div>
+<%= render(PageHeaderComponent.new(title: local_assigns[:heading])) %>
+
+<%= form_with **applied_leave_form_values(user, applied_leave) do |form| %>
+  <%= render(CardComponent.new(class: 'form-card')) do %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :user_leave_id,
+                                      label: t('applied_leave.labels.available_leaves'))) do %>
+      <%= collection_select(:applied_leave, :user_leave_id, available_user_leaves, :id, :name, {},
+                            { class: 'form-select' }) %>
+    <% end %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :leave_duration_type, as: :select,
+                                      label: t('applied_leave.labels.leave_duration'))) do %>
+      <%= form.select :leave_duration_type, options_for_select(leave_duration_type), {},
+                      { class: 'form-select' } %>
+    <% end %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :applied_from, as: :date_field,
+                                      label: t('applied_leave.labels.leave_from'), required: true)) %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :applied_till, as: :date_field,
+                                      label: t('applied_leave.labels.leave_to'), required: true)) %>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('applied_leave.links.submit') } %>
   <% end %>
-</div>
+<% end %>

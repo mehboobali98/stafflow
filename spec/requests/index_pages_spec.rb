@@ -61,4 +61,20 @@ RSpec.describe 'the index pages', type: :request do
       end
     end
   end
+
+  # will_paginate renders nothing at all when everything fits on one page, so
+  # the fixtures above call the helper and never reach the code that builds a
+  # link. PAGE_SIZE is 5; this is the only example in the suite that sees the
+  # control rendered rather than merely called.
+  context 'with more rows than fit on a page' do
+    before do
+      as_tenant(company) { create_list(:leave, PAGE_SIZE + 2, company: company) }
+    end
+
+    it 'renders the leave list with a link to the second page' do
+      get '/leaves', headers: host
+
+      expect(response.body).to include('page=2')
+    end
+  end
 end

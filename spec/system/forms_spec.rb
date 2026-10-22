@@ -48,6 +48,33 @@ RSpec.describe 'the forms', type: :system do
     end
   end
 
+  # Both of these were still calling the one-argument `form.label`, which reads
+  # its translated string as the attribute name: eleven labels between them
+  # pointed at ids like `user_Current Password`. The fix-in-place pass recorded
+  # against phase 7 had missed them, and nothing here covered either page, so
+  # they are named individually rather than left to a shared example.
+  describe 'the change password form' do
+    before { visit_tenant(company, edit_password_members_path) }
+
+    it_behaves_like 'a form whose labels point at its fields'
+
+    it 'renders each field through the component' do
+      expect(page).to have_css('[data-component=form-field]', count: 3)
+    end
+  end
+
+  describe 'the employee edit form' do
+    let!(:employee) do
+      as_tenant(company) do
+        create(:user, :employee, company: company, department: department, email: 'ada@example.com')
+      end
+    end
+
+    before { visit_tenant(company, edit_member_path(employee)) }
+
+    it_behaves_like 'a form whose labels point at its fields'
+  end
+
   # These are not converted to components yet. The association was fixed in
   # place, because a label pointing at nothing is a defect on its own and does
   # not need to wait for the view around it to be rebuilt.

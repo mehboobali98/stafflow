@@ -1,0 +1,8 @@
+<%# Every symbol in the sprite, so a name that stops resolving is visible here
+    as well as failing icon_sprite_spec. %>
+<%= render partial: 'shared/icon_sprite' %>
+<div class="d-flex flex-wrap gap-4 fs-3">
+  <% IconSpriteHelper.icon_names.each do |name| %>
+    <span title="<%= name %>"><%= render(IconComponent.new(name)) %></span>
+  <% end %>
+</div>

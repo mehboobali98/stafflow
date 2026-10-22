@@ -36,7 +36,10 @@
                   <small><%= result.email.presence %> </small>
                 </div>
               </div>
-              <%= link_to :details, member_path(result), class:"btn btn-primary w-100 text-center search-btn" %>
+              <%= render(ButtonComponent.new(href: member_path(result),
+                                             class: 'w-100 text-center search-btn')) do %>
+                <%= t('common.details') %>
+              <% end %>
             <% elsif result.instance_of? Department %>
               <div class="col-2">
                 <% if result.avatar.attached? %>

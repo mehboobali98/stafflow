@@ -1,70 +1,69 @@
-<div class='d-flex justify-content-around'> 
-  <div class='pb-3 w-50 m-4'>
-    <h1><%= I18n.t('headings.edit_employee') %></h1>
-    <hr>
-    <div>
-      <%= form_with model: @user, local: true, url: member_path, class: 'card bg-light p-4',
-                    data: { controller: 'dependent-select',
-                            dependent_select_url_value: fetch_designations_department_path('VALUE') } do |form| %>
-        <div class='field mb-3'>
-          <%= form.label I18n.t('forms.labels.fname') %><br />
-          <%= form.text_field :first_name, required: true, class: 'form-control' %>
-        </div>
+<% content_for :title, t('headings.edit_employee') %>
+<%= render(PageHeaderComponent.new(title: t('headings.edit_employee'))) %>
 
-        <div class='field mb-3'>
-          <%= form.label I18n.t('forms.labels.lname') %><br />
-          <%= form.text_field :last_name, required: true, class: 'form-control' %>
-        </div>
-
-        <div class='field mb-3'>
-          <%= form.label I18n.t('forms.labels.dob') %><br />
-          <%= form.date_field :date_of_birth, required: true, class: 'form-control' %>
-        </div>
-
-        <div class='field mb-3'>
-          <%= form.label I18n.t('forms.labels.image') %><br />
-          <%= form.file_field :image, class: 'form-control' %>
-        </div>
-
-        <div class='field mb-2'>
-          <%= form.label :gender, t('forms.labels.gender') %>
-          <%= form.select :gender, options_for_select(genders), { prompt: t('forms.labels.gender') }, class: 'form-control' %>
-        </div>
-        
-        <div class='field mb-2'>
-          <%= form.label :country, t('forms.labels.country') %><br />
-          <%= form.select :country, options_for_select(COUNTRIES_LIST), { prompt: t('forms.labels.country')  }, class: 'form-control' %>
-        </div>
-        <% if !@user.account_owner? %>
+<%= form_with model: @user, local: true, url: member_path,
+              data: { controller: 'dependent-select',
+                      dependent_select_url_value: fetch_designations_department_path('VALUE') } do |form| %>
+  <%= render(CardComponent.new) do %>
+    <div class='row'>
+      <div class='col-md-6'>
+        <%= render(FormFieldComponent.new(form: form, attribute: :first_name,
+                                          label: t('forms.labels.fname'), required: true)) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :last_name,
+                                          label: t('forms.labels.lname'), required: true)) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :date_of_birth, as: :date_field,
+                                          label: t('forms.labels.dob'), required: true)) %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :image, as: :file_field,
+                                          label: t('forms.labels.image'))) %>
+      </div>
+      <div class='col-md-6'>
+        <%= render(FormFieldComponent.new(form: form, attribute: :gender,
+                                          label: t('forms.labels.gender'))) do %>
+          <%= form.select :gender, options_for_select(genders),
+                          { prompt: t('forms.labels.gender') }, class: 'form-select' %>
+        <% end %>
+        <%= render(FormFieldComponent.new(form: form, attribute: :country,
+                                          label: t('forms.labels.country'))) do %>
+          <%= form.select :country, options_for_select(COUNTRIES_LIST),
+                          { prompt: t('forms.labels.country') }, class: 'form-select' %>
+        <% end %>
+        <% unless @user.account_owner? %>
           <% if can?(:update, @user, :role_id) %>
-            <div class='field mb-3'>
-              <%= form.label I18n.t('forms.labels.role') %><br />
-              <%= form.select :role_id, options_for_select(user_roles_except_admin), {}, class: 'form-control' %>
-            </div>
+            <%= render(FormFieldComponent.new(form: form, attribute: :role_id,
+                                              label: t('forms.labels.role'))) do %>
+              <%= form.select :role_id, options_for_select(user_roles_except_admin), {},
+                              class: 'form-select' %>
+            <% end %>
           <% end %>
           <% if can?(:update, @user, :department_id) %>
-            <div class='field mb-2'>
-              <%= form.label I18n.t('forms.labels.department') %><br />
-              <%= form.select :department_id, options_from_collection_for_select(@departments, 'id', 'name'), { prompt: t('forms.labels.department') }, class: 'form-control', id: 'department_select', data: { action: 'change->dependent-select#load' } %>
-            </div>
+            <%= render(FormFieldComponent.new(form: form, attribute: :department_id,
+                                              label: t('forms.labels.department'),
+                                              id: 'department_select')) do %>
+              <%= form.select :department_id,
+                              options_from_collection_for_select(@departments, 'id', 'name'),
+                              { prompt: t('forms.labels.department') },
+                              class: 'form-select', id: 'department_select',
+                              data: { action: 'change->dependent-select#load' } %>
+            <% end %>
           <% end %>
           <% if can?(:update, @user, :designation_id) %>
-            <div class='field mb-2'>
-              <%= form.label I18n.t('forms.labels.designation') %><br />
-              <%= form.select :designation_id, options_from_collection_for_select(@designations, 'id', 'name'), { prompt: t('forms.labels.designation') }, class: 'form-control', id: 'designation_select', data: { dependent_select_target: 'select' } %>
-            </div>
+            <%= render(FormFieldComponent.new(form: form, attribute: :designation_id,
+                                              label: t('forms.labels.designation'),
+                                              id: 'designation_select')) do %>
+              <%= form.select :designation_id,
+                              options_from_collection_for_select(@designations, 'id', 'name'),
+                              { prompt: t('forms.labels.designation') },
+                              class: 'form-select', id: 'designation_select',
+                              data: { dependent_select_target: 'select' } %>
+            <% end %>
           <% end %>
           <% if can?(:update, @user, :base_salary) %>
-            <div class='field mb-2'>
-              <%= form.label I18n.t('forms.labels.salary') %><br />
-              <%= form.number_field :base_salary, required: true, class: 'form-control' %>
-            </div>
+            <%= render(FormFieldComponent.new(form: form, attribute: :base_salary, as: :number_field,
+                                              label: t('forms.labels.salary'), required: true)) %>
           <% end %>
         <% end %>
-        <div class='actions'>
-          <%= form.submit t('forms.buttons.update'), class: 'btn btn-primary w-100 mt-3' %>
-        </div>
-      <% end %>
+      </div>
     </div>
-  </div>
-</div>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('forms.buttons.update') } %>
+  <% end %>
+<% end %>

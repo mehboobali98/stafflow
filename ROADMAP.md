@@ -11,17 +11,18 @@ reads; everything after is depth.
 ## Where it stands
 
 The app runs from a clean clone in three commands, on a current stack, with a
-suite in front of it and the known defects cleared. What it still lacks is an
-interface worth showing, and somewhere to show it — in that order, which is a
-reversal of the sequence this file was written with and is argued at the end.
+suite in front of it, the known defects cleared and the interface rebuilt from
+a component layer. What it still lacks is somewhere to show it — which is phase
+4, and which this file resequenced behind phase 7 for the reason argued at the
+end.
 
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 361 examples, 0 pending |
+| Tests | 421 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
-| Lines in `app/` | 4,939 across 22 controllers, 30 models, 121 views |
-| Known defects | 38 found, 37 fixed, 1 open |
+| Lines in `app/` | 5,303 across 22 controllers, 30 models, 111 views and 10 components |
+| Known defects | 41 found, 40 fixed, 1 open |
 
 ---
 
@@ -734,6 +735,14 @@ work the framework bumps were blocking.
       eight gems back into the lockfile against the ten that came out. The
       driver strategy chosen then was CDP rather than a driver binary, which
       is the coupling `webdrivers` had been pinning around.
+
+      The Rails 8.1 pull request then sat open for two months, which reads as
+      a bump nobody looked at rather than one held on purpose. It is closed,
+      and `.github/dependabot.yml` now skips major versions of the Rails group
+      and of the `@rails/*` npm packages. Those have to match the gem they
+      ship beside, which is also why `@rails/activestorage` 8.1 was not taken
+      onto Rails 7.2. Patch and minor releases still arrive. The Rails 8.1
+      upgrade stays a phase of its own.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
@@ -899,8 +908,63 @@ README prose.
 - [ ] **Wildcard subdomain routing and a wildcard TLS certificate.**
       Non-negotiable — without `*.domain` the multi-tenancy cannot be
       demonstrated at all
-- [ ] Managed Elasticsearch, or make Searchkick optional so search degrades
-      rather than breaks
+- [x] **The search library, settled ahead of the hosting.** This line offered
+      managed Elasticsearch or a Searchkick made optional "so search degrades
+      rather than breaks", and the measurement that settled it fitted neither.
+      With the cluster unreachable, `Department.create!` raises
+      `Faraday::ConnectionFailed` — the indexing callbacks fire on save, so
+      Elasticsearch is not a search dependency in this application, it is a
+      **write** dependency on three of its core models. A degrading search would
+      have left creating an employee, a department or a designation broken,
+      which is most of what a demo visitor does. The option this line describes
+      was never the cheap one it sounds like.
+
+      So search stays real, and the library changed instead: searchkick out,
+      `elasticsearch-model` and `elasticsearch-rails` in, against Elasticsearch
+      8.19 in docker-compose and in CI. The three gems and the server move
+      together — that is the version note the Gemfile already carried for the
+      searchkick client, still true and now spanning one more gem.
+
+      **The index stopped holding data it never read.** searchkick indexes
+      `serializable_hash` unless a model overrides it and none did, so a user
+      document carried base salary, date of birth, gender and the role,
+      department and designation ids — fifteen fields, measured off a real
+      document, for a search that matches `first_name` and then loads the record
+      from MySQL by id. `user.rb` names three of those in `SENSITIVE_ATTRIBUTES`.
+      `as_indexed_json` makes it two fields, and a spec reads the document back
+      out of Elasticsearch rather than asserting our own intent. This is the
+      `render json: @users` defect again with a search cluster as the sink, and
+      it is in the backlog below as one.
+
+      **The trap the new gem sets, and the guard against it.** Elasticsearch
+      builds an index from a dynamic mapping the first time a document is
+      written to a name that does not exist — and an indexing callback on a
+      first save is exactly that. An index made that way has no prefix analyzer,
+      so `Zephyr` stops finding `Zephyrine` while whole words still match, every
+      request still answers 200 and nothing is logged. searchkick could not do
+      this because it owned index creation itself; this gem hands it to you.
+      `TenantSearch.reindex_all!` is the only thing that builds an index from
+      its mapping, `db/seeds.rb` calls it last — after the callbacks, so it
+      replaces what they left — and `rails elasticsearch:reindex` is the same
+      thing for a deploy. The spec that holds it is a partial-word search, which
+      is the one behaviour that changes when the mapping is missing.
+
+      Index names carry the environment, as searchkick's did. One Elasticsearch
+      serves development and test here, and the gem's default name is the
+      model's collection, so both would have written to `users`.
+
+      Two smaller things. The searchkick indices had to be deleted by hand
+      before the new ones could be created: searchkick writes `users_test` as an
+      *alias* over a timestamped index, and an alias of that name blocks an
+      index of that name. And on the very first index creation the client logs
+      "unable to verify that the server is Elasticsearch" — `create_index!`
+      deletes before it creates, the delete 404s when there is nothing there,
+      and a 404 carries no `X-elastic-product` header for the client to check.
+      It does not recur once the indices exist, and ES does send the header on
+      every real response
+- [ ] Managed Elasticsearch for the demo, or the same single node beside the
+      app. Now a hosting question only — the library and the server version are
+      settled above
 - [ ] Nightly job that resets the demo tenant to seed state
 - [ ] Sign-in credentials for all four roles printed on the demo landing page
 
@@ -957,9 +1021,11 @@ spends about ninety seconds here.
 
 ---
 
-## Phase 7 — Rebuild the interface
+## Phase 7 — Rebuild the interface ✅
 
-Estimated 2–3 weeks. Runs before phase 4.
+*Shipped.*
+
+Estimated 2–3 weeks. Ran before phase 4.
 
 Every other phase has touched something. This one has not been touched at all:
 the interface is the 2021 original, and it is the first thing anybody sees.
@@ -1013,10 +1079,13 @@ breadcrumbs_on_rails and chartkick's helpers.
       separate palette the landing page kept — a cyan, a navy and two greys
       that appeared nowhere else. Mapping it onto the shared ramps is the point
       of the step: a second palette is a second system
-- [ ] **ViewComponent, and Lookbook in front of it.** Started: `Button`,
-      `Badge`, `Card`, `Table`, `PageHeader` and `EmptyState` exist with a
-      preview each, and the HR leave queue is converted as the proof. `FormField`
-      and `Modal` are still to come, along with the other 120 views.
+- [x] **ViewComponent, and Lookbook in front of it.** `Button`, `Badge`,
+      `Card`, `Table`, `PageHeader` and `EmptyState` came first, with a preview
+      each and the HR leave queue converted as the proof. `FormField` and
+      `Modal` followed and completed the set this phase named; two more arrived
+      from items below rather than from this one — `Combobox` when select2 was
+      replaced, `Icon` when font-awesome left. Ten components, ten previews, and
+      `spec/components/previews_spec.rb` renders every scenario.
 
       Every component stamps `data-component` into its markup, and the system
       specs key off that rather than off Bootstrap's class names — so restyling
@@ -1126,9 +1195,11 @@ breadcrumbs_on_rails and chartkick's helpers.
       Two stacked dropdowns over one select. Attributed rather than assumed: the
       same probe against develop under turbolinks reports one container either
       way, so it arrived with Turbo
-- [ ] **Stimulus replaces jQuery.** Twelve entry points, roughly 360 lines.
-      Started: the seven with no AJAX in them are six controllers, and jQuery
-      is still here for the five that have.
+- [x] **Stimulus replaces jQuery.** Twelve entry points, roughly 360 lines. The
+      seven with no AJAX in them became six controllers here; the five that had
+      it were finished by the two items below, and `jquery` left `package.json`
+      with select2. `app/javascript/` is `application.js` and twelve
+      controllers.
 
       Six rather than seven because two pairs were the same behaviour written
       twice. `user_leaves.js` and `users_benefit_creation.js` both enabled the
@@ -1183,9 +1254,10 @@ breadcrumbs_on_rails and chartkick's helpers.
       greps source text for `require.context`, and `controllers/index.js` is
       exactly the file with a reason to name that defect in the comment
       explaining itself. Checked that it still fails on a planted call.
-- [ ] **The `.js.erb` responses go.** Nine templates and five entry points that
-      fetch one and eval it. Started: the employee, leave and event lists are on
-      Turbo Frames, which is four of the nine gone.
+- [x] **The `.js.erb` responses go.** Nine templates and five entry points that
+      fetch one and eval it. The employee, leave and event lists went onto Turbo
+      Frames first; the notification list, the leave queue, the modal and the
+      calendar closed it, and `app/views` holds no `.js.erb` at all.
 
       **Frames rather than Streams for a list.** A Stream is for updating
       something the request did not come from, or more than one thing at once.
@@ -1400,9 +1472,450 @@ breadcrumbs_on_rails and chartkick's helpers.
       asserts jQuery is *not* on the window, which is the claim worth holding.
       `$.fn.tooltip` was in that list too and nothing in 114 templates ever
       called a tooltip
-- [ ] **Page by page**, layouts first, then the screens behind the sign-in
-- [ ] **font-awesome 5.15 → 6, or out.** `app/views/shared/svgs` already exists,
-      so inline SVG is a live option and drops a gem
+- [x] **Page by page**, layouts first, then the screens behind the sign-in
+
+      **Layouts done.** The four HTML layouts each carried their own copy of
+      the same `<head>`, which is how all four came to be missing the same
+      three tags. There is one `layouts/_head` now, taking the extra
+      stylesheets as a local.
+
+      The tag that mattered is `<meta name="viewport">`, which the application
+      has never had. Without it a phone renders at roughly 980px and scales
+      down, so every `col-md-*` and `d-flex` in 121 views — the whole reason
+      Bootstrap is here — has been doing nothing on mobile since the beginning.
+      `<meta charset>` was missing outside the mailer layout, and `<html>`
+      carried no `lang`, which is WCAG 3.1.1 and what a screen reader picks its
+      pronunciation from.
+
+      Turning the viewport on is not cosmetic: it changes how every narrow
+      screen renders, for the first time. Measured rather than assumed, at
+      390px. Everything phase 7 has already rebuilt from components fits — the
+      HR leave form, the leave queue, the dashboard and settings all report no
+      horizontal overflow. What overflows is `users/index`, and the offenders
+      are precisely a hand-written `<table class="table table-hover">` that is
+      not `TableComponent` and two hand-written `btn btn-primary` links. So the
+      remaining page-by-page work now has a measurable acceptance test —
+      **fits at 390px** — and passing it is the same work as adopting the
+      components.
+
+      Three things in the shared chrome were fixed to get there: the page
+      header wraps instead of pushing its actions off the edge, `.page-shell`
+      drops to `$space-4` of horizontal padding below 768px, and the auth card
+      was `w-50`, which on a phone is half of nothing. It is a `max-width` that
+      goes full width when there is no room, and its brand mark takes its
+      colour from `$accent` rather than from `bg-primary text-white`.
+
+      Two smaller things. Every page in the application shared one identical
+      `<title>Stafflow</title>`; `page_title` puts the page's own name first
+      where a view sets `content_for :title`, and seven entry pages set one —
+      the rest fall back exactly as before and get theirs as they are rebuilt.
+      And the signup layout, which wraps both the marketing page and
+      registration, rendered no flash partial at all: `after_sign_out_path_for`
+      is devise's default of `root_path`, so signing out landed on a page with
+      nowhere to put "Signed out successfully" and looked like it had done
+      nothing
+
+      **The employee list is the first screen taken, because it was the
+      measured failure.** At 390px the document scrolled sideways to 704px, and
+      the offenders were precisely the three things the page hand-wrote rather
+      than rendered: a bare `table table-hover` with no responsive wrapper, and
+      two `btn btn-primary` links, one of them shoved past the edge by an
+      `ms-5`. So passing the measurement and adopting the components were not
+      two jobs.
+
+      The heading block and its `col-10`/`col-2` grid are `PageHeaderComponent`.
+      The filter row is a flex-wrap strip of `w-auto` controls, replacing three
+      `w-25 d-inline` filters that were each claiming a quarter of a row that
+      does not exist at 390px. The table is `TableComponent`, and what fixes the
+      page is the `.table-responsive` the component already wrapped it in: the
+      table still wants 736px and still gets it, inside its own scroll
+      container, while the document sits at 390. The empty state is
+      `EmptyStateComponent`, matching the queue.
+
+      **The measurement is a spec now rather than a habit.**
+      `spec/system/narrow_screen_spec.rb` holds the five pages rebuilt so far
+      and grows by one line per page converted. It asks
+      `documentElement.scrollWidth > clientWidth`, which is deliberately not the
+      same question as "is anything on this page wider than the screen" — a
+      table scrolling inside `.table-responsive` is wider, and is correct. It
+      was checked the usual way: three separate 900px elements planted on three
+      different pages failed exactly those three examples and left the other two
+      green, and reverting this page's markup alone failed exactly this page.
+
+      Three classes went because nothing had read them since jQuery left —
+      `js-filter-select`, `js-pagination-wrapper`, and the `users_table_rows`
+      div the turbo frame had already made redundant.
+
+      One thing found rather than fixed, and it is not counted in the defect
+      tally because it is a gap rather than a bug: the three action links in
+      each row are icon-only, so a screen reader announced three unlabelled
+      links per row. They carry an `aria-label` here, but the same shape sits in
+      every list page in the application, so this is a pattern to carry through
+      the remaining views rather than something this page finished.
+
+      **Then the other nine index pages, measured as a set rather than one at
+      a time.** Five scrolled sideways — departments at 459px, designations at
+      498, leaves and events at 410, benefits at 414 — and every one failed on
+      the same `col-10`/`col-2` heading block with a `btn btn-primary` in the
+      narrow column that the employee list had. That is what made it one change
+      rather than five. All ten fit now; the four already passing were not
+      touched.
+
+      Only designations was overflowing on its table too. The other four fit at
+      the row counts a fixture produces and would not have at real ones, so
+      they moved for the same reason rather than waiting to fail — what
+      `.table-responsive` buys is that a table's width stops being the
+      document's problem at any row count.
+
+      Three tables were malformed and the component fixed them as a
+      consequence rather than as an aim: departments and designations put `<th>`
+      straight inside `<thead>` with no `<tr>`, and benefits closed a `<tr>` it
+      had never opened. Browsers repair all three, which is why nothing had
+      noticed in five years.
+
+      `events/_no_events.html.erb` is gone. It was the events empty branch and
+      held its own copies of the create and calendar buttons, so those moved up
+      into the page header where they render either way. It was also styled in
+      `max-wd-md`, `my-10`, `p-12`, `text-indigo-darker` and `text-t2xl` —
+      Tailwind class names, in an application that has never had Tailwind,
+      inherited from whatever template the 2021 build borrowed the page from.
+      Every one of them resolved to nothing.
+
+      One thing found by reading what the list pages render rather than by
+      measuring them: `shared/_pagination` opened with
+      `stylesheet_link_tag 'pagination'`, which put a `<link>` in the middle of
+      the `<body>` on all eight pages that render it. Under turbolinks that was
+      merely wrong; under Turbo Drive the body is replaced on every visit, so
+      the element was being re-inserted on each navigation. It is a layout
+      concern and now sits in the head the layouts pass consolidated, beside
+      sidebar and dashboard.
+
+      **Then the eleven pages behind a member.** Four overflowed — the payroll
+      list at 449px, the leave allowance list at 442, the benefit allocation
+      list at 436 and the available benefits form at 498 — and a fifth,
+      `applied_leaves/index`, turned out to have been measured wrong.
+
+      **The false pass is the part worth keeping.** Visited as the account
+      owner, `/members/:id/applied_leaves` answers 403:
+      `applied_leave_abilities` grants the owner `approve`, `reject` and
+      `all_applied_leaves` and never `:read`. An error page fits at 390px, so
+      the first measurement reported a page that had never rendered as passing.
+      What caught it was the `find('.page-shell')` in the spec's own visit
+      helper, which waits for the application layout and fails on anything that
+      is not it — measured as HR the page renders, and overflows like the other
+      four. This is the 301-examples-green-while-three-pages-500 shape again,
+      one layer down: **a measurement that cannot tell "fits" from "never
+      rendered" is not a measurement.** The other six pages the probe called
+      passing were re-checked with the guard, and all six genuinely render and
+      genuinely fit.
+
+      Three more malformed tables went the way of the last three. payrolls and
+      users_benefits put `<th>` straight inside `<thead>` with no `<tr>`, and
+      users_benefits then closed a `<tr>` it had never opened; available
+      benefits opened its `<table>` outside the `present?` branch and closed it
+      inside, so the empty case emitted a table that was never closed. That
+      branch now wraps the whole form rather than splitting a tag across it.
+
+      Two smaller things. `available_benefits` dropped a `custom-control
+      custom-checkbox` wrapper — Bootstrap 4 class names, on an application
+      that has been on 5 since the tokens step, so they styled nothing and the
+      checkbox looks exactly as it did. And `applied_leave.links.edit`, `.show`
+      and `.delete` were dead keys rendered by nothing; two are repurposed as
+      the accessible names for the row's links. Adding a second `delete` beside
+      the existing one was caught by the locale spec above, which is the first
+      thing it has caught.
+
+      **Then the seven resource forms** — department, designation, leave,
+      benefit, event, applied leave and benefit allocation. These fitted at
+      390px already, so this is the first step of the page-by-page work with no
+      measured failure behind it: the argument is the component layer rather
+      than the acceptance test.
+
+      `.form-card` is a max-width rather than a column count, which is the one
+      design decision in it. Every form was bounded by `col-md-6` or `w-50` —
+      a fraction of the viewport, not a measure — so the same form was half of
+      nothing on a phone and 900px of input on a desk monitor.
+
+      **The specs are the point of this step, not the markup.** Moving to
+      `FormFieldComponent` changes the markup around every control and replaces
+      an `<input type=submit>` with a `<button>`. `forms_spec` covers label
+      association and `narrow_screen_spec` covers width, and **neither can see
+      whether the value still reaches the database.** The department form was
+      already carried end to end by `turbo_spec`; the other six were not, and
+      `spec/system/resource_forms_spec.rb` carries each one from a filled field
+      to a saved record. Each was confirmed by disabling the control it depends
+      on and watching only that example fail.
+
+      Writing them turned up nothing wrong with the application and two things
+      wrong with the first draft of the specs, both worth naming because both
+      read as defects at first. `designation.department` evaluated outside the
+      `as_tenant` block comes back nil, which looks exactly like the form
+      having dropped the value — the trap this file already records, met from
+      the other direction. And `fill_in` with a String into an
+      `<input type="date">` can leave the control invalid, so `required` blocks
+      the submit in the browser and the page sits there with no request made
+      and no error shown, which is indistinguishable from a form that does not
+      work. Passing a `Date` is what makes it submit. The event form was never
+      broken, and the copy on `develop` failed the same probe identically —
+      which is how that was settled rather than assumed.
+
+      A third false reading came from the width probe rather than a spec:
+      `users_benefits#edit` is `load_and_authorize_resource ... find_by:
+      :sequence_num`, so a URL built from `id` 404s. The probe had built one by
+      hand; the spec beside it used the path helper and was fine. Twice now the
+      throwaway probe has been wrong where the spec was right, which is the
+      argument for the `.page-shell` guard being in the spec's helper rather
+      than in the probe.
+
+      Two markup faults fixed on the way: `users_benefits/_form` opened a `row`
+      and a `col-md-4` and closed neither, and `.event-date` / `.event-time`
+      carried `padding-right` and `padding-left` from when those halves were a
+      flex row — as a Bootstrap row the gutter already spaces them, and at
+      390px, where the columns stack, that padding indented the time field out
+      of line with the date above it. Only a screenshot at both widths would
+      have shown that, which is what the phase says appearance review is for.
+
+      **`ModalComponent` closes the component set.** It is the one the plan
+      named and nothing had built: the leave allocation dialog hand-wrote
+      `modal-dialog`, `modal-content`, `modal-header`, `modal-body` and
+      `modal-footer`, its own close button, and `form.label` calls.
+
+      Bootstrap's Modal is still not used, for the reason recorded when the
+      dialog was first built, and `modal_controller.js` is unchanged — the
+      component renders what that controller shows.
+
+      **The form wraps the component rather than sitting in a slot**, and that
+      is the one design decision in it. The form has to span the body and the
+      footer, because the submit sits beside the dismiss and both belong inside
+      the same form element as the fields; slots are assigned in the component's
+      own block, so a form opened inside that block cannot contain them.
+      Wrapping puts `<form>` between `.modal` and `.modal-dialog`, which
+      Bootstrap's descendant selectors read through unchanged — confirmed by
+      screenshot rather than assumed. The slot is `messages` rather than
+      `flash`, which would shadow the Rails helper of that name inside the
+      template.
+
+      The dialog names itself now: the layout's modal carries `role="dialog"`,
+      `aria-modal="true"` and `aria-labelledby`, pointed at the component's
+      title, so a screen reader announces it by its heading instead of reading
+      an unnamed group. Removing the id from the title fails that example and
+      only that one.
+
+      `_user_leaves_table.html.erb` went with it — a copy of the rows in
+      `_user_leaves_list`, rendered by nothing since the frames work, still
+      carrying the pre-component icon links.
+
+      **Then the detail views** — users/edit, users/edit_password, users/new,
+      users/show, leaves/show, events/show, user_leaves/show, user_leaves/new,
+      notifications/index, settings/_form and the HR leave form's submit.
+
+      **A correction to this file, left standing beside what it corrects.** The
+      `FormField` item above says the eleven views not yet converted "had the
+      association fixed in place rather than waiting for the migration". Two of
+      them were not. `users/edit_password` had all three of its labels pointing
+      at nothing and `users/edit` had eight of ten, still calling the
+      one-argument `form.label` — `for="user_Current Password"` against an input
+      with id `user_current_password`. Measured before the change rather than
+      inferred: eleven orphaned labels, and zero after.
+
+      What made the claim survive is worth more than the fix. `forms_spec`
+      covered the employee, settings, benefit, department and designation forms
+      and the two signed-out ones — **which is exactly the set that had been
+      fixed.** The suite agreed with the record rather than with the
+      application, and a check that only looks where the work was done cannot
+      tell you the work was incomplete. Both pages are named in it now, and
+      reverting either fails its own example.
+
+      `.card-body p` in `dashboard.scss` was a dashboard stat style wearing a
+      global selector — centred, 4xl and bold on every paragraph in every card
+      in the application. It is `.stat-figure` now, on the three dashboard
+      numbers that wanted it. **Not counted as a defect**, and the distinction
+      was checked rather than assumed: `leaves/show` on develop already puts a
+      `<p>` inside a `.card-body`, so the rule was reaching it there too, and
+      inside a `text-center` card the result was plausibly intended. What is
+      wrong is the selector, not the appearance it happened to produce.
+
+      Two more markup faults of the shape this phase keeps finding:
+      `user_leaves/new` opened its `<table>` outside the `present?` branch and
+      closed it inside, with the submit button sitting between `<tbody>` and
+      `</tbody>`; and `users/show` wrapped the profile image in
+      `file btn btn-lg btn-primary` and then overrode the border, radius,
+      background and font-size in `.file`, so the only thing the button classes
+      contributed was a box. `.file` declares that box itself now.
+
+      Three "Back" links pointed at `:back`, which reads the Referer. They point
+      at their index instead, so where the button goes no longer depends on how
+      the page was reached.
+
+      **Then devise and the chrome, which is where the item ends.** The five
+      devise forms with a label-beside-field grid, the signup submit, the navbar
+      search, the search result link, and the footer.
+
+      The devise forms stop putting their labels in a `col-3`. At 390px three of
+      twelve columns is about 65px, and "Password" already filled it edge to
+      edge on the sign-in page. Stacked `FormField` labels now, like every other
+      form here. None of the five was overflowing — measured first — so the
+      screenshots are the argument rather than the acceptance test.
+
+      **`registrations/new` keeps its floating labels, and that is a decision
+      left open rather than made.** `FormField` renders label-then-control and a
+      floating label needs the reverse, so converting it means either a floating
+      mode on the component or a design change to the front door. The
+      application therefore has two label patterns — stacked everywhere,
+      floating on signup — which by this phase's own "a second palette is a
+      second system" argument wants settling one way or the other.
+
+      `layouts/_footer.html.erb` is rendered by nothing. The landing page has
+      its own footer inline, and this one held six `href="#"` social links and a
+      hard-coded "© 2021 Copyright: Company". That is the fourth dead layout
+      partial found this way, after `_navbar`, `_table` and `_form`, and the
+      pattern is worth naming: **a partial nothing renders is invisible to every
+      check in this repository, including the ones added this phase.**
+
+      Two labels were rendering a Ruby symbol rather than a translation.
+      `link_to :details` on the search results and `submit_tag :search` in the
+      navbar both put the symbol's name on the button — "details" and "search",
+      lower case, in English whatever the locale, the second on every signed-in
+      page.
+
+      **`ButtonComponent` gained a `dark` variant, and the contrast spec is the
+      reason.** The navbar search moved to `:secondary` first, which is
+      `btn-outline-secondary`, and `colour_contrast_spec` failed it at 1.07:1
+      against the brand blue it sits on. `btn-dark` was load-bearing rather than
+      arbitrary, and that spec is the only thing in the suite that could have
+      said so.
+
+      What is left hand-writing `btn btn-*` is two views, both deliberately:
+      `simple_calendar/_month_calendar`, which is a gem template override whose
+      markup is simple_calendar's contract rather than ours, and
+      `dashboard/_form` — a `<form>` with no action, two `href="#"` icons and a
+      submit that does nothing, above a hard-coded feed. Converting either would
+      dress up something that is not wired to anything; they want a decision,
+      not a component.
+
+      **`dashboard/_form` got its decision: removed.** The first screen after
+      signing in showed a composer and four announcements, none of them real.
+      `_announcement_card` opened with `<!-- dummy data used !-->`, was rendered
+      four times, and carried a hard-coded name, designation and quote from
+      `en.yml` — one of the 2021 contributors, posting the same line four times,
+      each stamped "less than a minute ago" because the timestamp was
+      `DateTime.now`. The composer above it was a `<form>` with no action, two
+      `href="#"` icons and a submit wired to nothing.
+
+      **This is the category phase 0 cleared, and it survived that pass because
+      phase 0 was reading the landing page and this sits behind the sign-in.**
+      Worth recording as a limit on how that phase was done rather than as a
+      failure of it: "read the pages a visitor sees" finds branded copy on the
+      front door and nothing at all on the dashboard.
+
+      Removed rather than converted, and rather than built. Restyling dresses up
+      a control that does nothing; building it is a phase 5 feature, not part of
+      rebuilding an interface. What is left is what was already true — three
+      counts and two charts, all real queries — as a row of three cards above
+      the graphs, which is what the space is for once the feed is gone.
+
+      **A correction to this item, found while closing it.** The lists above are
+      the whole of what page-by-page took, and two screens behind the sign-in
+      are in none of them: `payrolls/show` and `search/search_data`.
+
+      The payslip still hand-writes `table table-hover`, and it puts `<th>`
+      straight inside `<thead>` with no `<tr>` — the seventh instance of the
+      malformed table this phase found, and the only one left standing. The six
+      that were fixed were fixed because `TableComponent` arrived at the page;
+      this one never had a component arrive at it.
+
+      The search results still hand-write their cards at `w-75` with an inline
+      `margin-left: 10%` — a fraction of the viewport, which is the thing
+      `.form-card` became a max-width to stop being — and print
+      `<%= result.class %>` as each card's heading, so the page announces
+      "User", "Department" and "Designation", in English whatever the locale and
+      naming the Ruby class rather than the thing. That is the same fault as the
+      `link_to :details` and `submit_tag :search` symbols this item fixed, on
+      the very page one of those two fixes was standing on: the search result
+      *link* was taken and the search result *page* was not.
+
+      **Both fit at 390px, which is why nothing caught them.** The acceptance
+      test asks whether the document scrolls sideways, and neither page does — a
+      two-column payslip is narrow, and a card at 75% of the viewport cannot be
+      wider than it. So the measurement was never going to name these two, and
+      the enumeration was the only thing that could have. **A page that passes
+      the test is not the same as a page that was looked at**, which is the
+      403-fits-at-390px lesson one level further out: there the guard was
+      missing from the probe, here it is missing from the list.
+
+      They are in `narrow_screen_spec` now, at 24 examples — measured before
+      they are rebuilt rather than after, so that rebuilding them cannot quietly
+      cost what they already have. Both were confirmed as tripwires the usual
+      way: a 900px element planted on each failed exactly those two examples and
+      left the other twenty-two green.
+
+      The search example asserts a rendered result before it measures, and that
+      guard earned itself immediately. The empty branch of that page draws a
+      *narrower* card than its results branch, so a query finding nothing
+      reports a page that fits without having drawn the thing being measured.
+      Swapping the tenant reindex for a no-tenant one — an empty index — fails
+      the example on the card rather than on the width, which is the third time
+      in this phase that a measurement has had to be taught the difference
+      between fitting and never rendering.
+
+      **Not counted in the defect tally**, on the same reading as the two symbol
+      labels above: the pages render, nothing 500s, and what is wrong is markup
+      and copy rather than behaviour. Recorded here as work this item did not
+      do. The phase's "done when" holds either way — this is a gap in the
+      enumeration, not in the criterion, and the criterion could not have found
+      it
+
+- [x] **font-awesome is out.** The choice this item framed as 5→6 or removal
+      was settled by counting: the application draws 21 distinct icons in 32
+      places. A 5→6 bump renames the class on every one of those 32 call sites,
+      so both options cost the same edit and only one ends with a dependency
+      fewer — and with the webfont, and the font-load race screenshots had to
+      wait out, gone with it.
+
+      **Bootstrap Icons rather than Font Awesome's own SVGs, and the licence is
+      why.** Font Awesome Free's icons are CC BY 4.0, which wants attribution
+      wherever they appear. Bootstrap Icons are MIT. For a repository presented
+      as portfolio work, the set that needs no notice attached to the interface
+      is the right one — a consideration this item did not have when it was
+      written.
+
+      The paths are copied from the package rather than written by hand.
+      `lib/icon_sprite.rb` reads `node_modules/bootstrap-icons/icons/*.svg` and
+      writes `shared/_icon_sprite.html.erb`, which is committed;
+      `bootstrap-icons` is a devDependency for regeneration and ships nothing.
+
+      Three things it turned up.
+
+      **Sizing an SVG through the width attribute does not work.** Chrome does
+      not accept `em` there, so every icon stretched to its container and sat
+      16px tall — 48x16 where 16x16 was meant. Found by measuring the boxes
+      rather than by looking, because at a glance the sidebar looked fine.
+
+      **The sidebar styled `i` elements** — `font-size` and `line-height` on
+      `.logo i`, `a i` and `.css-sidebar-toggle`, none of which move an `<svg>`.
+      Restated against `.icon`, keeping the 50px column that aligns the nav
+      icons: a viewBox'd svg letterboxes inside a wider box, so the alignment
+      survives without stretching the glyph.
+
+      **Boxicons was never installed.** Four `<i class="bx bx-…">` on the
+      landing page name a library that is in no package file and no stylesheet,
+      so the features section has had four empty icon slots since the template
+      it came from was borrowed. This is the third icon system found in one
+      application — font-awesome, an uninstalled Boxicons, and the inline
+      unDraw art — and only one of them was ever real.
+
+      Two smaller things. The sidebar's brand mark was `fab fa-fedora`, the
+      Fedora Linux logo standing in as this application's identity, which is the
+      category phase 0 cleared; it is a neutral glyph until there is a real
+      mark. And an icon-only link still contains the whitespace the ERB block
+      puts around it, which Bootstrap underlines — a stray dash beside every row
+      action since the icons went in.
+
+      `spec/views/icon_sprite_spec.rb` is the guard, and it matters because an
+      icon whose name is not in the sprite renders an **empty `<svg>`**: the
+      page loads, no request fails, nothing is logged. It asserts both
+      directions — every name a view asks for is defined, and every symbol
+      defined is asked for.
 
 ### Two things to be honest about going in
 
@@ -1435,6 +1948,19 @@ caught it.
 **Done when:** no view hand-writes `btn btn-*`, tokens are the only source of a
 colour, the component previews are reachable, and jQuery and turbolinks are
 both out of `package.json`.
+
+All four hold, and each was measured rather than recalled. One view hand-writes
+`btn btn-*` and it is `simple_calendar/_month_calendar`, the gem template
+override whose markup is simple_calendar's contract rather than ours — named as
+the exception when the criterion was written and still the only one. No
+stylesheet outside `_tokens.scss` names a hex colour. Lookbook is mounted, in
+development, and whether the demo exposes it stays a phase 4 question. And
+`package.json` carries neither jQuery nor turbolinks, nor select2, rails-ujs or
+font-awesome, none of which the line thought to ask about.
+
+What the criterion does not reach is the enumeration gap recorded against
+page-by-page above: two pages satisfy every clause of it and were still never
+taken.
 
 ---
 
@@ -1503,11 +2029,25 @@ Found by the first run of the first system spec, both fixed alongside it:
 | `app/views/applied_leaves/_applied_leaves_list.html.erb:21,24`, `app/views/applied_leaves/_applied_leaves_index.html.erb:6` | Both interpolated cells looked their keys up under `applied_leave.links`, which holds action labels. The states and durations are under `applied_leave.labels`. A key the view interpolates its way to and misses does not raise: `translate` renders `<span class="translation_missing">` around the humanised last segment, so `full_day` printed as "Full Day" and `pending` as "Pending" — close enough to the real labels to survive every review and every screenshot. This also moves the subtree the defect above it returns from `links` to `labels`; the validation added there still guards it |
 | `app/javascript/show_applied_leaves.js:83,102`, `app/javascript/user.js:50` | Three `$.ajax` calls asked for `dataType: 'script'` from endpoints answering `format.json`, then ran `JSON.parse` over the result. jQuery 3 sent `*/*` alongside `text/javascript` in the Accept header, Rails fell back to JSON on it, and the text parsed cleanly — so it worked by negotiation accident. jQuery 4 dropped the wildcard, leaving Rails nothing to match, and all three 404. Nothing throws: the employee search, the leave-type cascade on the HR leave form and the department-to-designation cascade on the employee form each just leave a select empty, which is why no console error and no green suite would have found it. Found by specs written for the jquery 4 bump before taking it |
 
+Found while consolidating the four layouts into one `<head>`:
+
+| Location | Problem |
+| --- | --- |
+| `app/views/layouts/application.html.erb`, `landing.html.erb`, `signup.html.erb`, `component_preview.html.erb` | No `<meta name="viewport">` in any layout, so every mobile browser rendered the application at roughly 980px and scaled it down. Bootstrap's grid is the layout system across all 121 views and none of it has ever reflowed on a phone. Also no `<meta charset>` outside the mailer layout, and no `lang` on `<html>` — WCAG 3.1.1, and what a screen reader takes its pronunciation rules from. All three were missing from all four layouts because the `<head>` was copy-pasted four times, which is the actual defect |
+| `app/views/layouts/signup.html.erb` | The layout rendered no flash partial. It wraps the marketing page, which is `root_path`, which is what devise's default `after_sign_out_path_for` returns — so "Signed out successfully" was written to a flash that the page it landed on had nowhere to render. Signing out worked and looked like it had not |
+
 Found while replacing select2, in the endpoint the new control reads:
 
 | Location | Problem |
 | --- | --- |
 | `app/controllers/applied_leaves_controller.rb:181` | `render json: @users` over the relation sent every column Devise does not blacklist for serialization — base salary, date of birth, gender, home city, first and last name, and the department, designation and role ids — for every employee whose email matched the query. The control has only ever read `id` and `email` off each record, and the select2 handler that preceded it read the same two, so nothing ever wanted the rest. `.select(:id, :email)` is the fix, with a request spec asserting the key set rather than the values. `email LIKE?` in the same line also lost its missing space |
+
+Found while replacing searchkick, by reading a document out of the index rather
+than by reading the code that writes it:
+
+| Location | Problem |
+| --- | --- |
+| `app/models/user.rb`, `department.rb`, `designation.rb` | searchkick indexes `serializable_hash` unless a model overrides it, and none of the three did, so every document held every serializable column. A user document carried base salary, date of birth, gender, city, country, email, last name and the role, department and designation ids — fifteen fields, counted off a real document — while the search matches on `first_name` alone and then loads the record from MySQL by id. Nothing ever read the rest. `user.rb:46` names `base_salary`, `department_id`, `designation_id` and `role_id` in `SENSITIVE_ATTRIBUTES`, and three of those four were in the index. This is the same fault as the `render json: @users` entry above with a search cluster as the sink instead of an HTTP response, and worse in the same way a second system is always worse: whatever the index holds is a copy of the data living outside the database, and in production that is a separate service. `as_indexed_json` now returns the searched column and `company_id`, which is two fields; the spec reads the document back out of Elasticsearch rather than asserting the method, because the method is the thing that was wrong |
 
 Found while building the component that made it impossible:
 
@@ -1539,6 +2079,13 @@ Found by measuring what the column stores rather than by reading the schema:
 | Location | Problem |
 | --- | --- |
 | Eleven columns across `applied_benefits`, `benefits`, `leaves`, `payrolls`, `settings`, `user_leaves`, `users` and `users_benefits` | Money and leave balances declared `t.float`, which on MySQL is `FLOAT(24)` — single precision, about seven significant decimal digits, not the `double` the name suggests. Salaries need more. `1234567.89` read back as `1234570.0` and `100000.10` as `100000.0`, so a payroll generated from a base of `100000.10` at a 10% rate came out `$87.74` short on the gross, with the cents gone from every derived figure and from the rendered payslip. Now `decimal`: `(15, 2)` for money, `(6, 3)` for the tax rate, `(6, 2)` for leave counts. The leave columns were not demonstrably broken at their magnitudes and moved for consistency. What the float already rounded away stays rounded away — the migration fixes what is written from here on |
+
+Found by parsing the locale files rather than by reading them, and recorded
+here as the exception that proves the tally rather than as an entry in it:
+
+| Location | Problem |
+| --- | --- |
+| `config/locales/devise.en.yml:101,108,151` | `forms.labels.role`, `forms.labels.department` and `headings.change_password` were each defined twice. **Not counted as defects, because all three pairs hold identical values** — Psych keeps the last key it reads, so nothing was dropped and no screen was wrong, which is exactly what separates these from the four phase 0 closed and the `applied_leave.headings.leave_type` phase 2 closed, where the values differed and the wrong one won. What made them worth removing is that the trap is set either way: the copy a reader finds first is the one not in effect, so editing it changes nothing, silently. `spec/config/locale_files_spec.rb` now walks the Psych AST of every file in `config/locales` and fails on any key defined twice at any depth — it has to read the files as files, because by the time I18n has loaded them the duplicate is already gone |
 
 ---
 
