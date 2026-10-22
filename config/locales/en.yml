@@ -67,6 +67,7 @@ en:
     server_error: '500 Error'
     format_error: 'The requested format is not supported'
   sidebar:
+    toggle: 'Toggle the sidebar'
     dashboard: 'Dashboard'
     users: 'Users'
     departments: 'Departments'
@@ -89,12 +90,6 @@ en:
     total_employees: 'Total employees'
     total_departments: 'Total departments'
     available_reports: 'Available reports'
-    alt_dp: 'Profile picture'
-    announcement_placeholder: 'Create your announcements'
-    post: 'Post'
-    name: 'Basit Ali'
-    designation: 'SWE'
-    quote: 'Either you run the day or the the day runs you. - Jim Rohn'
   chartkick:
     loading: 'Loading...'
     employee_per_dept: 'Employees per department'
@@ -104,16 +99,23 @@ en:
     payroll_x_axis_title: 'Months'
     payroll_y_axis_title: 'Amount'
     amount_prefix: 'Rs '
+  modal:
+    close: 'Close'
   combobox:
     listbox: 'Search results'
     no_results: 'No matches'
     results: '%{count} matches'
   common:
     back: "Back"
+    details: "Details"
     user_not_found: "User with the given id does not exist"
     search: "Search"
     all: "All"
   leave:
+    links:
+      view: "View leave"
+      edit: "Edit leave"
+      delete: "Delete leave"
     all: "All Leaves"
     breadcrumbs:
       home: "Leave"
@@ -151,6 +153,10 @@ en:
         delete: 'Delete'
         view_all: 'View all leave(s)'
   user_leave:
+    links:
+      view: "View leave allowance"
+      edit: "Edit leave allowance"
+      delete: "Delete leave allowance"
     myappleaves: 'My Applied Leaves'
     myavleaves: "My Available Leaves"
     breadcrumbs:
@@ -255,8 +261,8 @@ en:
       approve: 'Approve'
       reject: 'Reject'
       show: 'Show'
-      edit: 'Edit'
-      delete: 'Delete'
+      edit: "Edit leave application"
+      delete: "Delete leave application"
       submit: 'Submit'
     labels:
       available_leaves: 'Available leaves'
@@ -298,6 +304,10 @@ en:
       payroll_generation: "Are you sure you want to generate new payroll?"
 
   benefit:
+    links:
+      view: "View benefit"
+      edit: "Edit benefit"
+      delete: "Delete benefit"
     breadcrumbs:
       home: "Benefits"
       new: "New"
@@ -320,6 +330,8 @@ en:
       duplicate_error: 'Benefit with the given name already exists'
     headings:
       benefit: "Benefits"
+      add: "Add Benefit"
+      edit: "Edit Benefit"
     label:
       benefit_name: "Benefit Name"
       benefit_type: "Benefit Type"
@@ -336,6 +348,9 @@ en:
       benefit_type: "Benefit Type"
       benefit_name: "Benefit Name"
   users_benefit:
+    links:
+      edit: "Edit benefit allocation"
+      delete: "Delete benefit allocation"
     breadcrumbs:
       home: "User Benefits"
       new: "New"
@@ -351,6 +366,7 @@ en:
       all_benefits_alloted: "All the benefits are already given to the user"
     headings:
       users_benefits: "User Benefits"
+      edit: "Edit Benefit Allocation"
     table:
       benefit_amount: "Benefit Amount"
       active: "Active"
@@ -417,6 +433,10 @@ en:
       text_two: "Stafflow"
       text_three: ". All Rights Reserved"
   department:
+    links:
+      view: "View department"
+      edit: "Edit department"
+      delete: "Delete department"
     name_lable: "Department Name"
     select_image_lable: "Cover Photo"
     table_heading: "All Departments"
@@ -441,6 +461,10 @@ en:
     sure_message: "Are You Sure?"
 
   designation:
+    links:
+      view: "View designation"
+      edit: "Edit designation"
+      delete: "Delete designation"
     name_lable: "Designation Name"
     select_department: "Select Department"
     table_heading: "All Designations"
@@ -476,10 +500,15 @@ en:
     nocompanies: "No Companies Found"
     choosecompany: "Choose your organization"
   settings:
+    save: "Save Setting"
     updated: "Settings were successfully updated"
     not_updated: "Settings were not updated due to an error"
     title: "Settings"
   event:
+    links:
+      view: "View event"
+      edit: "Edit event"
+      delete: "Delete event"
     no_events: 'It lookes like you have not scheduled an event yet'
     create_new_event: 'Create a new event'
     breadcrumbs:
@@ -545,6 +574,10 @@ en:
     change_image: "Change Image"
     apply_for_leave: 'Apply for leave'
     appliedleave: "Applied Leaves"
+    links:
+      view: "View employee"
+      edit: "Edit employee"
+      delete: "Delete employee"
   notifications:
     new_leave: "A leave has been applied by %{full_name}"
     leave_reject_self: "Your request for a leave from %{from} to %{to} has been rejected"

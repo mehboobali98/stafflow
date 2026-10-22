@@ -7,7 +7,9 @@
                                       in: MIN_TAX_RATE..MAX_TAX_RATE, step: 0.1, required: true)) %>
     <%= render(FormFieldComponent.new(form: form, attribute: :leave_resets_at, as: :date_field,
                                       required: true)) %>
-    <%= form.submit disabled: true, class: 'btn btn-primary', id: 'submit_button',
-                    data: { 'dirty-form-target': 'submit' } %>
+    <%= render(ButtonComponent.new(type: 'submit', id: 'submit_button', disabled: true,
+                                   data: { 'dirty-form-target': 'submit' })) do %>
+      <%= t('settings.save') %>
+    <% end %>
   <% end %>
 <% end %>

@@ -1,10 +1,5 @@
 @import 'tokens';
 
-// font-awesome-sprockets must come first: it points the icon font path at
-// Sprockets' font-path helper, so the URLs carry digests.
-@import "font-awesome-sprockets";
-@import "font-awesome";
-
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -28,6 +23,7 @@
 @import 'bootstrap/scss/bootstrap';
 @import "simple_calendar";
 @import 'components';
+@import 'icons';
 
 .body-wrapper {
   height: 100%;
@@ -113,16 +109,6 @@
   color: $text-on-brand;
   margin-top: 1%;
 }
-
-.event-form {
-  .event-date {
-    padding-right: 1.5em;
-  }
-  .event-time {
-    padding-left: 1.5em;
-  }
-}
-//end
 
 //dashboard navbar: start
 .dashboard-navbar {

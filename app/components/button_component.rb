@@ -6,7 +6,11 @@ class ButtonComponent < BaseComponent
     secondary: 'btn-outline-secondary',
     success: 'btn-success',
     danger: 'btn-danger',
-    ghost: 'btn-link'
+    ghost: 'btn-link',
+    # For chrome that sits on the brand colour, where an outline button lands at
+    # 1.07:1 against it - which is what colour_contrast_spec caught when the
+    # navbar search button was moved to :secondary.
+    dark: 'btn-dark'
   }.freeze
 
   SIZES = { sm: 'btn-sm', md: nil, lg: 'btn-lg' }.freeze

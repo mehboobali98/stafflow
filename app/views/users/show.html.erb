@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="profile-img pt-4">
-        <div class="file btn btn-lg btn-primary">
+        <div class="file">
           <% if @user.image.attached? %>
             <%= image_tag @user.image.variant(:medium) %>
           <% else %>

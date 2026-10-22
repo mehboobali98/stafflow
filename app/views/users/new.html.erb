@@ -1,3 +1,4 @@
+<% content_for :title, t('headings.create_employee') %>
 <%= render(PageHeaderComponent.new(title: t('headings.create_employee'))) %>
 
 <%= form_with model: @user, url: members_path, local: true, id: 'new_employee_form',
@@ -53,6 +54,6 @@
         <% end %>
       </div>
     </div>
-    <%= form.submit t('forms.buttons.create'), class: 'btn btn-primary w-100 mt-2' %>
+    <%= render(ButtonComponent.new(type: 'submit')) { t('forms.buttons.create') } %>
   <% end %>
 <% end %>

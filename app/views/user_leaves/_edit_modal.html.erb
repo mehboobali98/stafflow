@@ -1,26 +1,21 @@
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title"><%= t('user_leave.headings.edit_user_leave') %></h5>
-      <button type="button" class="btn-close" aria-label="Close" data-action="click->modal#close"></button>
-    </div>
-    <div id="modal_flash_message"><%= render partial: 'shared/flash_message' %></div>
-    <%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch,
-                  html: { class: 'card p-3 bg-light' } do |form| %>
-      <div class="modal-body">
-        <div class="form-group mb-3">
-          <%= form.label :leave_name, t('leave.forms.labels.name'), class: 'text-grey-darkest' %>
-          <%= form.text_field :leave_name, disabled: true, value: user_leave.leave.name, class: 'form-control' %>
-        </div>
-        <div class="form-group mb-3">
-          <%= form.label :total_count, t('leave.forms.labels.count'), class: 'text-grey-darkest' %>
-          <%= form.number_field :total_count, in: MIN_LEAVE_COUNT..MAX_LEAVE_COUNT, required: true, step: LEAVE_COUNT_SCALE, class: 'form-control' %>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-action="click->modal#close"><%= t('user_leave.headings.close') %></button>
-        <%= form.submit class: 'card-link btn btn-primary' %>
-      </div>
+<%= form_with scope: :user_leave, url: member_user_leave_path(user, user_leave), method: :patch do |form| %>
+  <%= render(ModalComponent.new(title: t('user_leave.headings.edit_user_leave'))) do |modal| %>
+    <% modal.with_messages { render partial: 'shared/flash_message' } %>
+    <% modal.with_body do %>
+      <%= render(FormFieldComponent.new(form: form, attribute: :leave_name,
+                                        label: t('leave.forms.labels.name'),
+                                        disabled: true, value: user_leave.leave.name)) %>
+      <%= render(FormFieldComponent.new(form: form, attribute: :total_count, as: :number_field,
+                                        label: t('leave.forms.labels.count'), required: true,
+                                        in: MIN_LEAVE_COUNT..MAX_LEAVE_COUNT,
+                                        step: LEAVE_COUNT_SCALE)) %>
     <% end %>
-  </div>
-</div>
+    <% modal.with_footer do %>
+      <%= render(ButtonComponent.new(variant: :secondary,
+                                     data: { action: 'click->modal#close' })) do %>
+        <%= t('user_leave.headings.close') %>
+      <% end %>
+      <%= render(ButtonComponent.new(type: 'submit')) { t('form.button.submit') } %>
+    <% end %>
+  <% end %>
+<% end %>

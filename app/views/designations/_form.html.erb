@@ -1,21 +1,14 @@
-<div class='d-flex justify-content-around'> 
-  <div class='pb-3 w-50 m-4'>
-    <h1><%= local_assigns[:heading] %></h1>
-    <hr>
-    <div  class='card bg-light p-4'>
-      <%= form_for @designation do |form| %>
-        <div class="field mb-3">
-          <%= form.label :name, t('designation.name_lable') %>
-          <%= form.text_field :name, required: true, class: 'form-control' %>
-        </div>
-        <div class="field mb-3">
-          <%= form.label :department_id, t('designation.select_department') %>
-          <%= form.select :department_id, options_from_collection_for_select(@departments, :id, :name),{ prompt:'select' },{ class: "form-control" } %>    
-        </div>
-        <div class="actions">
-          <%= form.submit local_assigns[:label_to_show], class: 'btn btn-primary w-100 mt-3' %>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render(PageHeaderComponent.new(title: local_assigns[:heading])) %>
+
+<%= form_for @designation do |form| %>
+  <%= render(CardComponent.new(class: 'form-card')) do %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :name, label: t('designation.name_lable'),
+                                      required: true)) %>
+    <%= render(FormFieldComponent.new(form: form, attribute: :department_id,
+                                      label: t('designation.select_department'))) do %>
+      <%= form.collection_select :department_id, @departments, :id, :name,
+                                 { prompt: t('forms.labels.select') }, { class: 'form-select' } %>
+    <% end %>
+    <%= render(ButtonComponent.new(type: 'submit')) { local_assigns[:label_to_show] } %>
+  <% end %>
+<% end %>
