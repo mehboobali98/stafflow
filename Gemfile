@@ -55,12 +55,13 @@ gem 'simple_calendar', '=2.4.3'
 gem 'chartkick', '~> 5.2'
 
 # elastic search
-gem 'searchkick', '~> 5.3'
-# searchkick 5 dropped its dependency on a client gem so it can drive either
-# Elasticsearch or OpenSearch. The client is ours to choose and ours to keep in
-# step with the server: this tracks the Elasticsearch 7 that docker-compose and
-# CI run, and has to move with them.
-gem 'elasticsearch', '~> 7.17'
+# elasticsearch-model carries the Active Record integration and the query DSL;
+# elasticsearch-rails adds the rake tasks and the log subscriber. Both are
+# versioned in lockstep with the server, so the major here, the client below and
+# the image in docker-compose.yml and CI all have to move together.
+gem 'elasticsearch-model', '~> 8.0'
+gem 'elasticsearch-rails', '~> 8.0'
+gem 'elasticsearch', '~> 8.19'
 
 # faker gem to seed database
 gem 'faker', '=2.19.0'
