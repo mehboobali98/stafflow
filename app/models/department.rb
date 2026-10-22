@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Department < ApplicationRecord
-  searchkick word_start: [:name], inheritance: true, searchable: [:name]
+  include TenantSearchable
+  searchable_on :name
   belongs_to :company
   has_many :users, dependent: :restrict_with_error
   has_many :designations, dependent: :restrict_with_error

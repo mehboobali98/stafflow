@@ -19,10 +19,10 @@ end.
 | | |
 | --- | --- |
 | Commands to run from a clean clone | 3 |
-| Tests | 418 examples, 0 pending |
+| Tests | 421 examples, 0 pending |
 | CI workflows | RSpec, RuboCop and Brakeman on push and PR |
 | Lines in `app/` | 5,303 across 22 controllers, 30 models, 111 views and 10 components |
-| Known defects | 40 found, 39 fixed, 1 open |
+| Known defects | 41 found, 40 fixed, 1 open |
 
 ---
 
@@ -900,8 +900,63 @@ README prose.
 - [ ] **Wildcard subdomain routing and a wildcard TLS certificate.**
       Non-negotiable — without `*.domain` the multi-tenancy cannot be
       demonstrated at all
-- [ ] Managed Elasticsearch, or make Searchkick optional so search degrades
-      rather than breaks
+- [x] **The search library, settled ahead of the hosting.** This line offered
+      managed Elasticsearch or a Searchkick made optional "so search degrades
+      rather than breaks", and the measurement that settled it fitted neither.
+      With the cluster unreachable, `Department.create!` raises
+      `Faraday::ConnectionFailed` — the indexing callbacks fire on save, so
+      Elasticsearch is not a search dependency in this application, it is a
+      **write** dependency on three of its core models. A degrading search would
+      have left creating an employee, a department or a designation broken,
+      which is most of what a demo visitor does. The option this line describes
+      was never the cheap one it sounds like.
+
+      So search stays real, and the library changed instead: searchkick out,
+      `elasticsearch-model` and `elasticsearch-rails` in, against Elasticsearch
+      8.19 in docker-compose and in CI. The three gems and the server move
+      together — that is the version note the Gemfile already carried for the
+      searchkick client, still true and now spanning one more gem.
+
+      **The index stopped holding data it never read.** searchkick indexes
+      `serializable_hash` unless a model overrides it and none did, so a user
+      document carried base salary, date of birth, gender and the role,
+      department and designation ids — fifteen fields, measured off a real
+      document, for a search that matches `first_name` and then loads the record
+      from MySQL by id. `user.rb` names three of those in `SENSITIVE_ATTRIBUTES`.
+      `as_indexed_json` makes it two fields, and a spec reads the document back
+      out of Elasticsearch rather than asserting our own intent. This is the
+      `render json: @users` defect again with a search cluster as the sink, and
+      it is in the backlog below as one.
+
+      **The trap the new gem sets, and the guard against it.** Elasticsearch
+      builds an index from a dynamic mapping the first time a document is
+      written to a name that does not exist — and an indexing callback on a
+      first save is exactly that. An index made that way has no prefix analyzer,
+      so `Zephyr` stops finding `Zephyrine` while whole words still match, every
+      request still answers 200 and nothing is logged. searchkick could not do
+      this because it owned index creation itself; this gem hands it to you.
+      `TenantSearch.reindex_all!` is the only thing that builds an index from
+      its mapping, `db/seeds.rb` calls it last — after the callbacks, so it
+      replaces what they left — and `rails elasticsearch:reindex` is the same
+      thing for a deploy. The spec that holds it is a partial-word search, which
+      is the one behaviour that changes when the mapping is missing.
+
+      Index names carry the environment, as searchkick's did. One Elasticsearch
+      serves development and test here, and the gem's default name is the
+      model's collection, so both would have written to `users`.
+
+      Two smaller things. The searchkick indices had to be deleted by hand
+      before the new ones could be created: searchkick writes `users_test` as an
+      *alias* over a timestamped index, and an alias of that name blocks an
+      index of that name. And on the very first index creation the client logs
+      "unable to verify that the server is Elasticsearch" — `create_index!`
+      deletes before it creates, the delete 404s when there is nothing there,
+      and a 404 carries no `X-elastic-product` header for the client to check.
+      It does not recur once the indices exist, and ES does send the header on
+      every real response
+- [ ] Managed Elasticsearch for the demo, or the same single node beside the
+      app. Now a hosting question only — the library and the server version are
+      settled above
 - [ ] Nightly job that resets the demo tenant to seed state
 - [ ] Sign-in credentials for all four roles printed on the demo landing page
 
@@ -1978,6 +2033,13 @@ Found while replacing select2, in the endpoint the new control reads:
 | Location | Problem |
 | --- | --- |
 | `app/controllers/applied_leaves_controller.rb:181` | `render json: @users` over the relation sent every column Devise does not blacklist for serialization — base salary, date of birth, gender, home city, first and last name, and the department, designation and role ids — for every employee whose email matched the query. The control has only ever read `id` and `email` off each record, and the select2 handler that preceded it read the same two, so nothing ever wanted the rest. `.select(:id, :email)` is the fix, with a request spec asserting the key set rather than the values. `email LIKE?` in the same line also lost its missing space |
+
+Found while replacing searchkick, by reading a document out of the index rather
+than by reading the code that writes it:
+
+| Location | Problem |
+| --- | --- |
+| `app/models/user.rb`, `department.rb`, `designation.rb` | searchkick indexes `serializable_hash` unless a model overrides it, and none of the three did, so every document held every serializable column. A user document carried base salary, date of birth, gender, city, country, email, last name and the role, department and designation ids — fifteen fields, counted off a real document — while the search matches on `first_name` alone and then loads the record from MySQL by id. Nothing ever read the rest. `user.rb:46` names `base_salary`, `department_id`, `designation_id` and `role_id` in `SENSITIVE_ATTRIBUTES`, and three of those four were in the index. This is the same fault as the `render json: @users` entry above with a search cluster as the sink instead of an HTTP response, and worse in the same way a second system is always worse: whatever the index holds is a copy of the data living outside the database, and in production that is a separate service. `as_indexed_json` now returns the searched column and `company_id`, which is two fields; the spec reads the document back out of Elasticsearch rather than asserting the method, because the method is the thing that was wrong |
 
 Found while building the component that made it impossible:
 
