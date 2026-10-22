@@ -735,6 +735,14 @@ work the framework bumps were blocking.
       eight gems back into the lockfile against the ten that came out. The
       driver strategy chosen then was CDP rather than a driver binary, which
       is the coupling `webdrivers` had been pinning around.
+
+      The Rails 8.1 pull request then sat open for two months, which reads as
+      a bump nobody looked at rather than one held on purpose. It is closed,
+      and `.github/dependabot.yml` now skips major versions of the Rails group
+      and of the `@rails/*` npm packages. Those have to match the gem they
+      ship beside, which is also why `@rails/activestorage` 8.1 was not taken
+      onto Rails 7.2. Patch and minor releases still arrive. The Rails 8.1
+      upgrade stays a phase of its own.
 - [x] Rails 7.1 → 7.2. Held on `config.load_defaults 7.0`: the version bump and
       the framework defaults are separate steps, because the defaults are where
       behaviour changes and the bump is what carries the security fix.
