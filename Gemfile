@@ -101,7 +101,7 @@ group :development do
 end
 
 group :test do
-  gem 'shoulda-matchers', '~> 5.0'
+  gem 'shoulda-matchers', '~> 8.0'
   gem 'capybara', '~> 3.40'
   # Cuprite drives Chrome over CDP, so there is no chromedriver to keep in step
   # with the browser - the coupling that left `webdrivers` pinning selenium
