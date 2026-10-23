@@ -8,7 +8,7 @@ ruby '3.3.12'
 # The lower bound is a security floor rather than a preference. 7.2.3.2 carries
 # the fix for GHSA-xr9x-r78c-5hrm, arbitrary file read through Active Storage
 # variant processing, and `~> 7.2.3` on its own resolves to 7.2.3.
-gem 'rails', '~> 7.2.3', '>= 7.2.3.2'
+gem 'rails', '~> 7.2.4'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'
 # Use Puma as the app server
