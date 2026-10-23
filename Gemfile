@@ -8,7 +8,7 @@ ruby '3.3.12'
 # The lower bound is a security floor rather than a preference. 7.2.3.2 carries
 # the fix for GHSA-xr9x-r78c-5hrm, arbitrary file read through Active Storage
 # variant processing, and `~> 7.2.3` on its own resolves to 7.2.3.
-gem 'rails', '~> 7.2.3', '>= 7.2.3.2'
+gem 'rails', '~> 7.2.4'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'
 # Use Puma as the app server
@@ -74,7 +74,7 @@ gem 'breadcrumbs_on_rails', '=4.1.0'
 
 # The component layer. Views hand-wrote `btn btn-*` in 49 places and a bare
 # `<table>` in 18 before this; the point is one place to change each of them.
-gem 'view_component', '~> 4.0'
+gem 'view_component', '~> 4.16'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -82,7 +82,7 @@ group :development, :test do
   gem 'brakeman', '~> 5.2', require: false
   gem 'factory_bot', '~> 6.4'
   gem 'factory_bot_rails', '~> 6.5'
-  gem 'rspec-rails', '~> 6.1'
+  gem 'rspec-rails', '~> 8.0'
   gem 'rubocop', '~> 1.28', require: false
   gem 'rubocop-rails', '~> 2.14', require: false
   gem 'rubocop-rspec', '~> 2.10', require: false
@@ -101,7 +101,7 @@ group :development do
 end
 
 group :test do
-  gem 'shoulda-matchers', '~> 5.0'
+  gem 'shoulda-matchers', '~> 8.0'
   gem 'capybara', '~> 3.40'
   # Cuprite drives Chrome over CDP, so there is no chromedriver to keep in step
   # with the browser - the coupling that left `webdrivers` pinning selenium
