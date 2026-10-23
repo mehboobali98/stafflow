@@ -82,7 +82,7 @@ group :development, :test do
   gem 'brakeman', '~> 5.2', require: false
   gem 'factory_bot', '~> 6.4'
   gem 'factory_bot_rails', '~> 6.5'
-  gem 'rspec-rails', '~> 6.1'
+  gem 'rspec-rails', '~> 8.0'
   gem 'rubocop', '~> 1.28', require: false
   gem 'rubocop-rails', '~> 2.14', require: false
   gem 'rubocop-rspec', '~> 2.10', require: false
