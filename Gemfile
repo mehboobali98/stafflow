@@ -47,7 +47,7 @@ gem 'transitions', '=1.2.1', require: %w[transitions active_model/transitions]
 gem 'whenever', '=1.0.0', require: false
 
 # calendar gem
-gem 'simple_calendar', '=2.4.3'
+gem 'simple_calendar', '3.1.3'
 
 # graphs
 # The gem renders the tag and the npm package draws into it, so the two move
