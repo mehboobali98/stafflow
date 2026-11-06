@@ -85,7 +85,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 8.0'
   gem 'rubocop', '~> 1.28', require: false
   gem 'rubocop-rails', '~> 2.14', require: false
-  gem 'rubocop-rspec', '~> 2.10', require: false
+  gem 'rubocop-rspec', '~> 3.10', require: false
 end
 
 group :development do
