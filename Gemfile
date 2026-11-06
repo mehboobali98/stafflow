@@ -36,7 +36,7 @@ gem 'will_paginate', '4.0.1'
 # additional gems
 gem 'cancancan'
 gem 'devise', '~> 5.0'
-gem 'has_scope', '0.8.0'
+gem 'has_scope', '0.9.0'
 gem 'pry', '~> 0.14.1'
 gem 'pry-rails', '~> 0.3.9'
 gem 'delayed_job', '~> 4.1'
